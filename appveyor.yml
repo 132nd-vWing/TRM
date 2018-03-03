@@ -28,8 +28,8 @@ cache:
   - C:\ProgramData\chocolatey\bin
 
 build_script:
-  - cmd: for /f "delims=" %%i in ('git describe --tags') do set TRMT_VERSION=%%i
-  - cmd: appveyor UpdateBuild -Version "%TRMT_VERSION%.%APPVEYOR_BUILD_NUMBER%"
+  - cmd: for /f "delims=" %%i in ('git describe --tags') do set TRM_VERSION=%%i
+  - cmd: appveyor UpdateBuild -Version "%TRM_VERSION%.%APPVEYOR_BUILD_NUMBER%"
   - cmd: 7za a -bb0 dummy.miz D:\DCS_Missions\TRM\* -xr!.git -x!*.miz -x!*.yml
   - cmd: IF /I "%APPVEYOR_REPO_TAG%"=="true" (ren dummy.miz TRM_%APPVEYOR_REPO_TAG_NAME%.miz) ELSE (ren dummy.miz TRM_%APPVEYOR_BUILD_VERSION%.miz)
 
