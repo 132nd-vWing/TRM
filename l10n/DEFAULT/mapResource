@@ -1,8 +1,6 @@
 mapResource = 
 {
-<<<<<<< HEAD
-=======
     ["ResKey_Action_1692"] = "Moose_.lua",
-    ["ResKey_Action_1693"] = "MissileTrainer.lua",
->>>>>>> origin/master
+    ["ResKey_Action_1694"] = "MissileTrainer.lua",
+    ["ResKey_Action_1791"] = "T1.1.lua",
 } -- end of mapResource
