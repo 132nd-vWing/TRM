@@ -12455,6 +12455,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -12540,6 +12544,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -12640,6 +12648,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -12751,6 +12763,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -12832,6 +12848,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -12898,6 +12918,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -13028,6 +13052,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -13158,6 +13186,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -13243,6 +13275,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -22340,6 +22376,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -22421,6 +22461,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -22502,6 +22546,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -22613,6 +22661,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -22679,6 +22731,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -22760,6 +22816,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -22871,6 +22931,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -22937,6 +23001,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -23003,6 +23071,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -23114,6 +23186,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -23180,6 +23256,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -23246,6 +23326,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -23327,6 +23411,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -23393,6 +23481,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -23459,6 +23551,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -23540,6 +23636,10 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+<<<<<<< HEAD
+=======
+                                ["taskSelected"] = true,
+>>>>>>> origin/master
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -25261,7 +25361,11 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
+<<<<<<< HEAD
     ["currentKey"] = 151954,
+=======
+    ["currentKey"] = 155808,
+>>>>>>> origin/master
     ["date"] =
     {
         ["Day"] = 1,
@@ -25314,11 +25418,19 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
+<<<<<<< HEAD
         ["centerX"] = -6530.6279999986,
         ["centerY"] = 131871.32314286,
         ["zoom"] = 130454,
     }, -- end of ["map"]
     ["maxDictId"] = 1690,
+=======
+        ["centerX"] = -369301.364,
+        ["centerY"] = 739567.59085715,
+        ["zoom"] = 629726,
+    }, -- end of ["map"]
+    ["maxDictId"] = 1693,
+>>>>>>> origin/master
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
@@ -25379,9 +25491,19 @@ mission =
     {
         ["actions"] =
         {
+<<<<<<< HEAD
         }, -- end of ["actions"]
         ["conditions"] =
         {
+=======
+            [1] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_1692\"));",
+            [2] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_1693\")); mission.trig.func[2]=nil;",
+        }, -- end of ["actions"]
+        ["conditions"] =
+        {
+            [1] = "return(true)",
+            [2] = "return(c_coalition_has_airdrome(2, 29) )",
+>>>>>>> origin/master
         }, -- end of ["conditions"]
         ["custom"] =
         {
@@ -25394,12 +25516,25 @@ mission =
         }, -- end of ["events"]
         ["flag"] =
         {
+<<<<<<< HEAD
         }, -- end of ["flag"]
         ["func"] =
         {
         }, -- end of ["func"]
         ["funcStartup"] =
         {
+=======
+            [1] = true,
+            [2] = true,
+        }, -- end of ["flag"]
+        ["func"] =
+        {
+            [2] = "if mission.trig.conditions[2]() then mission.trig.actions[2]() end",
+        }, -- end of ["func"]
+        ["funcStartup"] =
+        {
+            [1] = "if mission.trig.conditions[1]() then mission.trig.actions[1]() end",
+>>>>>>> origin/master
         }, -- end of ["funcStartup"]
     }, -- end of ["trig"]
     ["triggers"] =
@@ -25506,6 +25641,62 @@ mission =
     }, -- end of ["triggers"]
     ["trigrules"] =
     {
+<<<<<<< HEAD
+=======
+        [1] =
+        {
+            ["actions"] =
+            {
+                [1] =
+                {
+                    ["KeyDict_text"] = "DictKey_ActionText_1691",
+                    ["ai_task"] =
+                    {
+                        [1] = "",
+                        [2] = "",
+                    }, -- end of ["ai_task"]
+                    ["file"] = "ResKey_Action_1692",
+                    ["predicate"] = "a_do_script_file",
+                    ["text"] = "DictKey_ActionText_1691",
+                }, -- end of [1]
+            }, -- end of ["actions"]
+            ["comment"] = "Moose",
+            ["eventlist"] = "",
+            ["predicate"] = "triggerStart",
+            ["rules"] =
+            {
+            }, -- end of ["rules"]
+        }, -- end of [1]
+        [2] =
+        {
+            ["actions"] =
+            {
+                [1] =
+                {
+                    ["ai_task"] =
+                    {
+                        [1] = "",
+                        [2] = "",
+                    }, -- end of ["ai_task"]
+                    ["file"] = "ResKey_Action_1693",
+                    ["predicate"] = "a_do_script_file",
+                }, -- end of [1]
+            }, -- end of ["actions"]
+            ["comment"] = "Missile Trainer",
+            ["eventlist"] = "",
+            ["predicate"] = "triggerOnce",
+            ["rules"] =
+            {
+                [1] =
+                {
+                    ["airdromelist"] = 29,
+                    ["coalitionlist"] = 2,
+                    ["predicate"] = "c_coalition_has_airdrome",
+                    ["zone"] = 2525,
+                }, -- end of [1]
+            }, -- end of ["rules"]
+        }, -- end of [2]
+>>>>>>> origin/master
     }, -- end of ["trigrules"]
     ["version"] = 14,
     ["weather"] =
