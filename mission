@@ -897,7 +897,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["heading"] = 3.1940558913503,
+                                        ["heading"] = -3.0891294158292,
                                         ["name"] = "DictKey_UnitName_1705",
                                         ["playerCanDrive"] = true,
                                         ["skill"] = "Average",
@@ -4231,7 +4231,7 @@ mission =
                                         }, -- end of [3]
                                         [4] =
                                         {
-                                            ["ETA"] = 406.0218625833,
+                                            ["ETA"] = 401.00176859394,
                                             ["ETA_locked"] = false,
                                             ["action"] = "Diamond",
                                             ["alt"] = 715,
@@ -4432,7 +4432,7 @@ mission =
                                         }, -- end of [3]
                                         [4] =
                                         {
-                                            ["ETA"] = 409.73554096151,
+                                            ["ETA"] = 409.73554096153,
                                             ["ETA_locked"] = false,
                                             ["action"] = "Diamond",
                                             ["alt"] = 691,
@@ -4633,7 +4633,7 @@ mission =
                                         }, -- end of [3]
                                         [4] =
                                         {
-                                            ["ETA"] = 367.49666780486,
+                                            ["ETA"] = 367.496667805,
                                             ["ETA_locked"] = false,
                                             ["action"] = "Vee",
                                             ["alt"] = 682,
@@ -29855,6 +29855,21 @@ mission =
                                         ["x"] = -347123.60142859,
                                         ["y"] = 660992.08314285,
                                     }, -- end of [1]
+                                    [2] =
+                                    {
+                                        ["heading"] = 4.2411500823462,
+                                        ["name"] = "DictKey_UnitName_1794",
+                                        ["playerCanDrive"] = true,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "Ural-375",
+                                        ["unitId"] = 571,
+                                        ["x"] = -347131.16085714,
+                                        ["y"] = 661006.80142857,
+                                    }, -- end of [2]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
                                 ["x"] = -347123.60142859,
@@ -30059,8 +30074,8 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "Kub 1S91 str",
                                         ["unitId"] = 468,
-                                        ["x"] = -358478.19057145,
-                                        ["y"] = 717038.30000001,
+                                        ["x"] = -358481.24685714,
+                                        ["y"] = 717034.07028571,
                                     }, -- end of [4]
                                     [5] =
                                     {
@@ -30576,7 +30591,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 212457,
+    ["currentKey"] = 216574,
     ["date"] =
     {
         ["Day"] = 1,
@@ -30629,11 +30644,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -336978.55185714,
-        ["centerY"] = 713734.112,
-        ["zoom"] = 261437,
+        ["centerX"] = -353039.113,
+        ["centerY"] = 664705.10314285,
+        ["zoom"] = 297391,
     }, -- end of ["map"]
-    ["maxDictId"] = 1793,
+    ["maxDictId"] = 1794,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
