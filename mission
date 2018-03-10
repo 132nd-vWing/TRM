@@ -897,7 +897,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["heading"] = -3.0891294158292,
+                                        ["heading"] = 3.1940558913503,
                                         ["name"] = "DictKey_UnitName_1705",
                                         ["playerCanDrive"] = true,
                                         ["skill"] = "Average",
@@ -2529,7 +2529,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["heading"] = -3.0121500443362,
+                                        ["heading"] = 3.2710352628434,
                                         ["name"] = "DictKey_UnitName_1712",
                                         ["playerCanDrive"] = true,
                                         ["skill"] = "Average",
@@ -4126,7 +4126,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["heading"] = -2.3534717019795,
+                                        ["heading"] = 3.9297136052001,
                                         ["name"] = "DictKey_UnitName_1719",
                                         ["playerCanDrive"] = true,
                                         ["skill"] = "Average",
@@ -4528,7 +4528,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["heading"] = -2.9953501679113,
+                                        ["heading"] = 3.2878351392683,
                                         ["name"] = "DictKey_UnitName_1743",
                                         ["playerCanDrive"] = true,
                                         ["skill"] = "Average",
@@ -4729,7 +4729,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["heading"] = -3.0571754964987,
+                                        ["heading"] = 3.2260098106809,
                                         ["name"] = "DictKey_UnitName_1746",
                                         ["playerCanDrive"] = true,
                                         ["skill"] = "Average",
@@ -5342,12 +5342,13 @@ mission =
                                         {
                                             ["ETA"] = 0,
                                             ["ETA_locked"] = true,
-                                            ["action"] = "Turning Point",
-                                            ["alt"] = 500,
+                                            ["action"] = "From Parking Area",
+                                            ["airdromeId"] = 25,
+                                            ["alt"] = 45,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_1477",
-                                            ["speed"] = 55.555555555556,
+                                            ["speed"] = 41.666666666667,
                                             ["speed_locked"] = true,
                                             ["task"] =
                                             {
@@ -5359,9 +5360,9 @@ mission =
                                                     }, -- end of ["tasks"]
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
-                                            ["type"] = "Turning Point",
-                                            ["x"] = -284522.82028572,
-                                            ["y"] = 684040.21171428,
+                                            ["type"] = "TakeOffParking",
+                                            ["x"] = -284525.5,
+                                            ["y"] = 682446,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                 }, -- end of ["route"]
@@ -5431,7 +5432,7 @@ mission =
                                                 }, -- end of ["channels"]
                                             }, -- end of [2]
                                         }, -- end of ["Radio"]
-                                        ["alt"] = 500,
+                                        ["alt"] = 45,
                                         ["alt_type"] = "BARO",
                                         ["callsign"] =
                                         {
@@ -5445,6 +5446,8 @@ mission =
                                         ["livery_id"] = "132 259th Dejjvid",
                                         ["name"] = "DictKey_UnitName_1476",
                                         ["onboard_num"] = "050",
+                                        ["parking"] = "2",
+                                        ["parking_id"] = "14",
                                         ["payload"] =
                                         {
                                             ["chaff"] = 0,
@@ -5458,15 +5461,15 @@ mission =
                                         ["psi"] = 0,
                                         ["ropeLength"] = 15,
                                         ["skill"] = "Client",
-                                        ["speed"] = 55.555555555556,
+                                        ["speed"] = 41.666666666667,
                                         ["type"] = "Mi-8MT",
                                         ["unitId"] = 462,
-                                        ["x"] = -284522.82028572,
-                                        ["y"] = 684040.21171428,
+                                        ["x"] = -284525.5,
+                                        ["y"] = 682446,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
-                                ["x"] = -284522.82028572,
-                                ["y"] = 684040.21171428,
+                                ["x"] = -284525.5,
+                                ["y"] = 682446,
                             }, -- end of [2]
                         }, -- end of ["group"]
                     }, -- end of ["helicopter"]
@@ -11576,46 +11579,6 @@ mission =
                             [17] =
                             {
                                 ["dead"] = false,
-                                ["groupId"] = 26,
-                                ["heading"] = 0.47123889803847,
-                                ["name"] = "DictKey_GroupName_81",
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["action"] = "",
-                                            ["alt"] = 0,
-                                            ["formation_template"] = "",
-                                            ["name"] = "",
-                                            ["speed"] = 0,
-                                            ["type"] = "",
-                                            ["x"] = -318304.67142857,
-                                            ["y"] = 719619.22142857,
-                                        }, -- end of [1]
-                                    }, -- end of ["points"]
-                                }, -- end of ["route"]
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["category"] = "Fortifications",
-                                        ["heading"] = 0.47123889803847,
-                                        ["name"] = "DictKey_GroupName_81",
-                                        ["rate"] = 1,
-                                        ["type"] = "NTTR Target 76-01 DMPI 306",
-                                        ["unitId"] = 26,
-                                        ["x"] = -318304.67142857,
-                                        ["y"] = 719619.22142857,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-                                ["x"] = -318304.67142857,
-                                ["y"] = 719619.22142857,
-                            }, -- end of [17]
-                            [18] =
-                            {
-                                ["dead"] = false,
                                 ["groupId"] = 41,
                                 ["heading"] = 0,
                                 ["name"] = "DictKey_GroupName_147",
@@ -11651,8 +11614,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -345907.23314286,
                                 ["y"] = 739600.06200002,
-                            }, -- end of [18]
-                            [19] =
+                            }, -- end of [17]
+                            [18] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 42,
@@ -11691,8 +11654,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -345926.18971429,
                                 ["y"] = 739634.98200002,
-                            }, -- end of [19]
-                            [20] =
+                            }, -- end of [18]
+                            [19] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 43,
@@ -11731,8 +11694,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -345952.62914286,
                                 ["y"] = 739661.42142859,
-                            }, -- end of [20]
-                            [21] =
+                            }, -- end of [19]
+                            [20] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 44,
@@ -11771,8 +11734,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -345939.65885714,
                                 ["y"] = 739572.62485716,
-                            }, -- end of [21]
-                            [22] =
+                            }, -- end of [20]
+                            [21] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 45,
@@ -11810,8 +11773,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -341980.93571429,
                                 ["y"] = 741557.74771433,
-                            }, -- end of [22]
-                            [23] =
+                            }, -- end of [21]
+                            [22] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 46,
@@ -11850,8 +11813,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -342010.308,
                                 ["y"] = 741380.67885716,
-                            }, -- end of [23]
-                            [24] =
+                            }, -- end of [22]
+                            [23] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 47,
@@ -11890,8 +11853,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -342114.096,
                                 ["y"] = 741414.15885716,
-                            }, -- end of [24]
-                            [25] =
+                            }, -- end of [23]
+                            [24] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 48,
@@ -11930,8 +11893,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -340650.18228572,
                                 ["y"] = 738190.16428574,
-                            }, -- end of [25]
-                            [26] =
+                            }, -- end of [24]
+                            [25] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 49,
@@ -11970,8 +11933,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -340637.57085714,
                                 ["y"] = 737950.54714288,
-                            }, -- end of [26]
-                            [27] =
+                            }, -- end of [25]
+                            [26] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 50,
@@ -12010,8 +11973,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -340496.32285714,
                                 ["y"] = 738192.68657145,
-                            }, -- end of [27]
-                            [28] =
+                            }, -- end of [26]
+                            [27] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 51,
@@ -12050,8 +12013,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -340981.78257143,
                                 ["y"] = 738396.98057146,
-                            }, -- end of [28]
-                            [29] =
+                            }, -- end of [27]
+                            [28] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 57,
@@ -12089,8 +12052,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348281.27314285,
                                 ["y"] = 656522.61914286,
-                            }, -- end of [29]
-                            [30] =
+                            }, -- end of [28]
+                            [29] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 58,
@@ -12128,8 +12091,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348497.82314285,
                                 ["y"] = 651019.63228572,
-                            }, -- end of [30]
-                            [31] =
+                            }, -- end of [29]
+                            [30] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 60,
@@ -12171,8 +12134,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -358034.66942857,
                                 ["y"] = 771475.17514288,
-                            }, -- end of [31]
-                            [32] =
+                            }, -- end of [30]
+                            [31] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 61,
@@ -12211,8 +12174,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -358037.99742857,
                                 ["y"] = 771305.44714288,
-                            }, -- end of [32]
-                            [33] =
+                            }, -- end of [31]
+                            [32] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 62,
@@ -12254,8 +12217,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -358035.70742857,
                                 ["y"] = 771568.05600003,
-                            }, -- end of [33]
-                            [34] =
+                            }, -- end of [32]
+                            [33] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 63,
@@ -12297,8 +12260,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -358035.70742857,
                                 ["y"] = 771521.09885717,
-                            }, -- end of [34]
-                            [35] =
+                            }, -- end of [33]
+                            [34] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 64,
@@ -12340,8 +12303,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -357943.67142857,
                                 ["y"] = 771476.02000003,
-                            }, -- end of [35]
-                            [36] =
+                            }, -- end of [34]
+                            [35] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 65,
@@ -12383,8 +12346,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -357943.67142857,
                                 ["y"] = 771518.2814286,
-                            }, -- end of [36]
-                            [37] =
+                            }, -- end of [35]
+                            [36] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 66,
@@ -12425,8 +12388,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -358156.97485715,
                                 ["y"] = 771737.44914288,
-                            }, -- end of [37]
-                            [38] =
+                            }, -- end of [36]
+                            [37] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 67,
@@ -12468,8 +12431,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -357942.73228572,
                                 ["y"] = 771567.11685717,
-                            }, -- end of [38]
-                            [39] =
+                            }, -- end of [37]
+                            [38] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 68,
@@ -12510,8 +12473,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -358018.468,
                                 ["y"] = 771521.96057145,
-                            }, -- end of [39]
-                            [40] =
+                            }, -- end of [38]
+                            [39] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 69,
@@ -12552,8 +12515,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -357962.01428572,
                                 ["y"] = 771566.10714288,
-                            }, -- end of [40]
-                            [41] =
+                            }, -- end of [39]
+                            [40] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 70,
@@ -12594,8 +12557,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -358121.81485714,
                                 ["y"] = 771687.52657146,
-                            }, -- end of [41]
-                            [42] =
+                            }, -- end of [40]
+                            [41] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 71,
@@ -12636,8 +12599,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -358119.30285714,
                                 ["y"] = 771788.00657146,
-                            }, -- end of [42]
-                            [43] =
+                            }, -- end of [41]
+                            [42] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 72,
@@ -12678,8 +12641,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -358149.74371429,
                                 ["y"] = 771736.95485717,
-                            }, -- end of [43]
-                            [44] =
+                            }, -- end of [42]
+                            [43] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 73,
@@ -12718,8 +12681,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -294229.60800003,
                                 ["y"] = 643351.07028572,
-                            }, -- end of [44]
-                            [45] =
+                            }, -- end of [43]
+                            [44] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 74,
@@ -12758,8 +12721,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -293431.27200002,
                                 ["y"] = 644074.94342858,
-                            }, -- end of [45]
-                            [46] =
+                            }, -- end of [44]
+                            [45] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 75,
@@ -12798,8 +12761,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -294802.17257145,
                                 ["y"] = 640863.03428572,
-                            }, -- end of [46]
-                            [47] =
+                            }, -- end of [45]
+                            [46] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 76,
@@ -12838,8 +12801,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -293971.38400003,
                                 ["y"] = 642469.95428572,
-                            }, -- end of [47]
-                            [48] =
+                            }, -- end of [46]
+                            [47] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 77,
@@ -12878,8 +12841,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -293765.59200003,
                                 ["y"] = 643366.78314286,
-                            }, -- end of [48]
-                            [49] =
+                            }, -- end of [47]
+                            [48] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 150,
@@ -12920,8 +12883,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -357990.25142857,
                                 ["y"] = 772125.97285714,
-                            }, -- end of [49]
-                            [50] =
+                            }, -- end of [48]
+                            [49] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 151,
@@ -12962,8 +12925,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -357951.72457142,
                                 ["y"] = 772081.52142857,
-                            }, -- end of [50]
-                            [51] =
+                            }, -- end of [49]
+                            [50] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 262,
@@ -13001,8 +12964,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -222703.46114286,
                                 ["y"] = 678150.05200001,
-                            }, -- end of [51]
-                            [52] =
+                            }, -- end of [50]
+                            [51] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 263,
@@ -13041,8 +13004,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -222573.56685714,
                                 ["y"] = 678344.29542857,
-                            }, -- end of [52]
-                            [53] =
+                            }, -- end of [51]
+                            [52] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 264,
@@ -13081,8 +13044,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -222595.56685714,
                                 ["y"] = 678312.86685714,
-                            }, -- end of [53]
-                            [54] =
+                            }, -- end of [52]
+                            [53] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 265,
@@ -13121,8 +13084,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -222521.17542857,
                                 ["y"] = 678371.19485715,
-                            }, -- end of [54]
-                            [55] =
+                            }, -- end of [53]
+                            [54] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 266,
@@ -13161,8 +13124,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -222662.03257143,
                                 ["y"] = 678264.90914287,
-                            }, -- end of [55]
-                            [56] =
+                            }, -- end of [54]
+                            [55] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 267,
@@ -13201,8 +13164,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -222480.03257143,
                                 ["y"] = 678423.48057144,
-                            }, -- end of [56]
-                            [57] =
+                            }, -- end of [55]
+                            [56] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 268,
@@ -13241,8 +13204,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -222537.46114286,
                                 ["y"] = 678567.76628573,
-                            }, -- end of [57]
-                            [58] =
+                            }, -- end of [56]
+                            [57] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 269,
@@ -13281,8 +13244,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -222545.29685714,
                                 ["y"] = 678673.07914286,
-                            }, -- end of [58]
-                            [59] =
+                            }, -- end of [57]
+                            [58] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 271,
@@ -13321,8 +13284,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -222539.17542857,
                                 ["y"] = 678413.19485715,
-                            }, -- end of [59]
-                            [60] =
+                            }, -- end of [58]
+                            [59] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 287,
@@ -13362,8 +13325,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -276683.494,
                                 ["y"] = 699339.80942858,
-                            }, -- end of [60]
-                            [61] =
+                            }, -- end of [59]
+                            [60] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 288,
@@ -13402,48 +13365,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -320198.04628571,
                                 ["y"] = 720013.21228571,
-                            }, -- end of [61]
-                            [62] =
-                            {
-                                ["dead"] = false,
-                                ["groupId"] = 289,
-                                ["heading"] = 0.47123889803847,
-                                ["name"] = "DictKey_GroupName_933",
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["action"] = "",
-                                            ["alt"] = 0,
-                                            ["formation_template"] = "",
-                                            ["name"] = "",
-                                            ["speed"] = 0,
-                                            ["type"] = "",
-                                            ["x"] = -318328.12542857,
-                                            ["y"] = 719592.19142854,
-                                        }, -- end of [1]
-                                    }, -- end of ["points"]
-                                }, -- end of ["route"]
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["category"] = "Fortifications",
-                                        ["heading"] = 0.47123889803847,
-                                        ["name"] = "DictKey_GroupName_933",
-                                        ["rate"] = 1,
-                                        ["type"] = "NTTR Target 76-11 DMPI 04",
-                                        ["unitId"] = 289,
-                                        ["x"] = -318328.12542857,
-                                        ["y"] = 719592.19142854,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-                                ["x"] = -318328.12542857,
-                                ["y"] = 719592.19142854,
-                            }, -- end of [62]
-                            [63] =
+                            }, -- end of [60]
+                            [61] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 290,
@@ -13461,8 +13384,8 @@ mission =
                                             ["name"] = "",
                                             ["speed"] = 0,
                                             ["type"] = "",
-                                            ["x"] = -318402.40171428,
-                                            ["y"] = 719560.23628571,
+                                            ["x"] = -318426.86800001,
+                                            ["y"] = 719552.56428572,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                 }, -- end of ["route"]
@@ -13474,96 +13397,16 @@ mission =
                                         ["heading"] = 5.3930673886625,
                                         ["name"] = "DictKey_GroupName_936",
                                         ["rate"] = 1,
-                                        ["type"] = "NTTR Target 71-12 DMPI 01",
+                                        ["type"] = "NTTR Target 62-12 DMPI 203",
                                         ["unitId"] = 290,
-                                        ["x"] = -318402.40171428,
-                                        ["y"] = 719560.23628571,
+                                        ["x"] = -318426.86800001,
+                                        ["y"] = 719552.56428572,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
-                                ["x"] = -318402.40171428,
-                                ["y"] = 719560.23628571,
-                            }, -- end of [63]
-                            [64] =
-                            {
-                                ["dead"] = false,
-                                ["groupId"] = 291,
-                                ["heading"] = 5.3581608036226,
-                                ["name"] = "DictKey_GroupName_939",
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["action"] = "",
-                                            ["alt"] = 0,
-                                            ["formation_template"] = "",
-                                            ["name"] = "",
-                                            ["speed"] = 0,
-                                            ["type"] = "",
-                                            ["x"] = -318366.548,
-                                            ["y"] = 719594.64428571,
-                                        }, -- end of [1]
-                                    }, -- end of ["points"]
-                                }, -- end of ["route"]
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["category"] = "Fortifications",
-                                        ["heading"] = 5.3581608036226,
-                                        ["name"] = "DictKey_GroupName_939",
-                                        ["rate"] = 1,
-                                        ["type"] = "NTTR Target 66-07 DMPI 04",
-                                        ["unitId"] = 291,
-                                        ["x"] = -318366.548,
-                                        ["y"] = 719594.64428571,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-                                ["x"] = -318366.548,
-                                ["y"] = 719594.64428571,
-                            }, -- end of [64]
-                            [65] =
-                            {
-                                ["dead"] = false,
-                                ["groupId"] = 292,
-                                ["heading"] = 5.3581608036226,
-                                ["name"] = "DictKey_GroupName_942",
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["action"] = "",
-                                            ["alt"] = 0,
-                                            ["formation_template"] = "",
-                                            ["name"] = "",
-                                            ["speed"] = 0,
-                                            ["type"] = "",
-                                            ["x"] = -318345.43657143,
-                                            ["y"] = 719520.89971428,
-                                        }, -- end of [1]
-                                    }, -- end of ["points"]
-                                }, -- end of ["route"]
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["category"] = "Fortifications",
-                                        ["heading"] = 5.3581608036226,
-                                        ["name"] = "DictKey_GroupName_942",
-                                        ["rate"] = 1,
-                                        ["type"] = "NTTR Target 62-93 DMPI 301",
-                                        ["unitId"] = 292,
-                                        ["x"] = -318345.43657143,
-                                        ["y"] = 719520.89971428,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-                                ["x"] = -318345.43657143,
-                                ["y"] = 719520.89971428,
-                            }, -- end of [65]
-                            [66] =
+                                ["x"] = -318426.86800001,
+                                ["y"] = 719552.56428572,
+                            }, -- end of [61]
+                            [62] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 293,
@@ -13602,8 +13445,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -343628.17085714,
                                 ["y"] = 738261.10885712,
-                            }, -- end of [66]
-                            [67] =
+                            }, -- end of [62]
+                            [63] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 294,
@@ -13642,8 +13485,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -343653.50685714,
                                 ["y"] = 738290.96914283,
-                            }, -- end of [67]
-                            [68] =
+                            }, -- end of [63]
+                            [64] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 301,
@@ -13682,8 +13525,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -347487.228,
                                 ["y"] = 654470.08542857,
-                            }, -- end of [68]
-                            [69] =
+                            }, -- end of [64]
+                            [65] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 302,
@@ -13721,8 +13564,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -347521.94771431,
                                 ["y"] = 654519.27942858,
-                            }, -- end of [69]
-                            [70] =
+                            }, -- end of [65]
+                            [66] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 308,
@@ -13761,8 +13604,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348399.0048571,
                                 ["y"] = 672601.28228577,
-                            }, -- end of [70]
-                            [71] =
+                            }, -- end of [66]
+                            [67] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 312,
@@ -13801,8 +13644,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348436.68771425,
                                 ["y"] = 672489.66685718,
-                            }, -- end of [71]
-                            [72] =
+                            }, -- end of [67]
+                            [68] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 314,
@@ -13841,8 +13684,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348457.87628567,
                                 ["y"] = 672611.24514291,
-                            }, -- end of [72]
-                            [73] =
+                            }, -- end of [68]
+                            [69] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 315,
@@ -13881,8 +13724,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348406.97342853,
                                 ["y"] = 672523.09542861,
-                            }, -- end of [73]
-                            [74] =
+                            }, -- end of [69]
+                            [70] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 316,
@@ -13921,8 +13764,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348476.40199996,
                                 ["y"] = 672503.3811429,
-                            }, -- end of [74]
-                            [75] =
+                            }, -- end of [70]
+                            [71] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 317,
@@ -13961,8 +13804,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348473.83057139,
                                 ["y"] = 672588.80971432,
-                            }, -- end of [75]
-                            [76] =
+                            }, -- end of [71]
+                            [72] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 319,
@@ -14001,8 +13844,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348489.54485712,
                                 ["y"] = 672991.66685715,
-                            }, -- end of [76]
-                            [77] =
+                            }, -- end of [72]
+                            [73] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 350,
@@ -14044,8 +13887,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -333880.75857145,
                                 ["y"] = 722335.43799998,
-                            }, -- end of [77]
-                            [78] =
+                            }, -- end of [73]
+                            [74] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 360,
@@ -14084,8 +13927,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -333831.00514287,
                                 ["y"] = 721978.13942857,
-                            }, -- end of [78]
-                            [79] =
+                            }, -- end of [74]
+                            [75] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 361,
@@ -14124,8 +13967,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -317435.436,
                                 ["y"] = 768684.45857142,
-                            }, -- end of [79]
-                            [80] =
+                            }, -- end of [75]
+                            [76] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 375,
@@ -14164,8 +14007,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -340919.10142857,
                                 ["y"] = 737764.94571431,
-                            }, -- end of [80]
-                            [81] =
+                            }, -- end of [76]
+                            [77] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 376,
@@ -14204,8 +14047,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -340976.55914286,
                                 ["y"] = 737686.59428574,
-                            }, -- end of [81]
-                            [82] =
+                            }, -- end of [77]
+                            [78] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 377,
@@ -14244,8 +14087,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -341031.40514286,
                                 ["y"] = 737613.46628574,
-                            }, -- end of [82]
-                            [83] =
+                            }, -- end of [78]
+                            [79] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 378,
@@ -14284,8 +14127,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -341088.86285714,
                                 ["y"] = 737535.11485717,
-                            }, -- end of [83]
-                            [84] =
+                            }, -- end of [79]
+                            [80] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 379,
@@ -14324,8 +14167,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -341114.98,
                                 ["y"] = 737665.70057146,
-                            }, -- end of [84]
-                            [85] =
+                            }, -- end of [80]
+                            [81] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 380,
@@ -14364,8 +14207,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -341060.134,
                                 ["y"] = 737741.44028574,
-                            }, -- end of [85]
-                            [86] =
+                            }, -- end of [81]
+                            [82] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 381,
@@ -14404,8 +14247,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -340960.88885714,
                                 ["y"] = 737895.5314286,
-                            }, -- end of [86]
-                            [87] =
+                            }, -- end of [82]
+                            [83] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 382,
@@ -14444,8 +14287,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -341013.12314286,
                                 ["y"] = 737817.18000003,
-                            }, -- end of [87]
-                            [88] =
+                            }, -- end of [83]
+                            [84] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 383,
@@ -14484,8 +14327,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -340798.262,
                                 ["y"] = 738923.77800003,
-                            }, -- end of [88]
-                            [89] =
+                            }, -- end of [84]
+                            [85] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 384,
@@ -14524,8 +14367,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -340825.69571429,
                                 ["y"] = 738868.20714288,
-                            }, -- end of [89]
-                            [90] =
+                            }, -- end of [85]
+                            [86] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 385,
@@ -14564,8 +14407,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -340766.60771429,
                                 ["y"] = 738987.08657146,
-                            }, -- end of [90]
-                            [91] =
+                            }, -- end of [86]
+                            [87] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 389,
@@ -14604,8 +14447,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -318336.51057143,
                                 ["y"] = 639068.62914284,
-                            }, -- end of [91]
-                            [92] =
+                            }, -- end of [87]
+                            [88] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 390,
@@ -14644,8 +14487,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -354404.4411428,
                                 ["y"] = 619149.38571425,
-                            }, -- end of [92]
-                            [93] =
+                            }, -- end of [88]
+                            [89] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 391,
@@ -14686,8 +14529,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -334008.70199995,
                                 ["y"] = 721991.96314282,
-                            }, -- end of [93]
-                            [94] =
+                            }, -- end of [89]
+                            [90] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 392,
@@ -14728,8 +14571,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -334009.63799995,
                                 ["y"] = 721942.70257139,
-                            }, -- end of [94]
-                            [95] =
+                            }, -- end of [90]
+                            [91] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 393,
@@ -14770,8 +14613,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -334024.13057138,
                                 ["y"] = 721943.39171424,
-                            }, -- end of [95]
-                            [96] =
+                            }, -- end of [91]
+                            [92] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 394,
@@ -14812,8 +14655,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -334009.55914281,
                                 ["y"] = 721966.2488571,
-                            }, -- end of [96]
-                            [97] =
+                            }, -- end of [92]
+                            [93] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 395,
@@ -14854,8 +14697,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -334024.98771424,
                                 ["y"] = 721966.2488571,
-                            }, -- end of [97]
-                            [98] =
+                            }, -- end of [93]
+                            [94] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 396,
@@ -14896,8 +14739,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -334036.98771424,
                                 ["y"] = 721964.53457139,
-                            }, -- end of [98]
-                            [99] =
+                            }, -- end of [94]
+                            [95] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 397,
@@ -14938,8 +14781,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -334024.13057138,
                                 ["y"] = 721991.39171424,
-                            }, -- end of [99]
-                            [100] =
+                            }, -- end of [95]
+                            [96] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 398,
@@ -14980,8 +14823,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -334036.70199995,
                                 ["y"] = 721941.96314282,
-                            }, -- end of [100]
-                            [101] =
+                            }, -- end of [96]
+                            [97] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 399,
@@ -15022,8 +14865,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -334038.41628567,
                                 ["y"] = 721991.39171424,
-                            }, -- end of [101]
-                            [102] =
+                            }, -- end of [97]
+                            [98] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 401,
@@ -15063,8 +14906,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -353974.68799994,
                                 ["y"] = 618996.64857139,
-                            }, -- end of [102]
-                            [103] =
+                            }, -- end of [98]
+                            [99] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 404,
@@ -15106,8 +14949,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -350775.36657136,
                                 ["y"] = 621842.47371424,
-                            }, -- end of [103]
-                            [104] =
+                            }, -- end of [99]
+                            [100] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 405,
@@ -15149,8 +14992,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -350790.22371422,
                                 ["y"] = 621823.90228567,
-                            }, -- end of [104]
-                            [105] =
+                            }, -- end of [100]
+                            [101] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 406,
@@ -15192,8 +15035,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -350782.50942851,
                                 ["y"] = 621832.47371424,
-                            }, -- end of [105]
-                            [106] =
+                            }, -- end of [101]
+                            [102] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 407,
@@ -15235,8 +15078,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -350773.08085708,
                                 ["y"] = 621822.18799996,
-                            }, -- end of [106]
-                            [107] =
+                            }, -- end of [102]
+                            [103] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 408,
@@ -15278,8 +15121,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -350780.79514279,
                                 ["y"] = 621812.75942853,
-                            }, -- end of [107]
-                            [108] =
+                            }, -- end of [103]
+                            [104] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 409,
@@ -15321,8 +15164,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -350763.65228565,
                                 ["y"] = 621832.18799996,
-                            }, -- end of [108]
-                            [109] =
+                            }, -- end of [104]
+                            [105] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 410,
@@ -15360,8 +15203,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -333026.34199999,
                                 ["y"] = 824247.82114286,
-                            }, -- end of [109]
-                            [110] =
+                            }, -- end of [105]
+                            [106] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 411,
@@ -15400,8 +15243,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -314685.09885714,
                                 ["y"] = 761594.49542857,
-                            }, -- end of [110]
-                            [111] =
+                            }, -- end of [106]
+                            [107] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 412,
@@ -15440,8 +15283,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -314655.16542857,
                                 ["y"] = 761619.82142857,
-                            }, -- end of [111]
-                            [112] =
+                            }, -- end of [107]
+                            [108] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 437,
@@ -15481,8 +15324,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -314905.43485712,
                                 ["y"] = 764719.874,
-                            }, -- end of [112]
-                            [113] =
+                            }, -- end of [108]
+                            [109] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 440,
@@ -15521,8 +15364,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -314896.29199998,
                                 ["y"] = 764692.15971429,
-                            }, -- end of [113]
-                            [114] =
+                            }, -- end of [109]
+                            [110] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 441,
@@ -15562,8 +15405,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -314917.43485712,
                                 ["y"] = 764606.44542858,
-                            }, -- end of [114]
-                            [115] =
+                            }, -- end of [110]
+                            [111] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 442,
@@ -15602,8 +15445,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -314915.14914283,
                                 ["y"] = 764661.01685715,
-                            }, -- end of [115]
-                            [116] =
+                            }, -- end of [111]
+                            [112] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 443,
@@ -15643,8 +15486,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -314896.57771426,
                                 ["y"] = 764606.73114286,
-                            }, -- end of [116]
-                            [117] =
+                            }, -- end of [112]
+                            [113] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 444,
@@ -15684,8 +15527,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -314885.14914283,
                                 ["y"] = 764621.01685715,
-                            }, -- end of [117]
-                            [118] =
+                            }, -- end of [113]
+                            [114] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 514,
@@ -15724,8 +15567,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348508.40199997,
                                 ["y"] = 672822.80971431,
-                            }, -- end of [118]
-                            [119] =
+                            }, -- end of [114]
+                            [115] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 515,
@@ -15764,8 +15607,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348418.82599996,
                                 ["y"] = 672901.70885719,
-                            }, -- end of [119]
-                            [120] =
+                            }, -- end of [115]
+                            [116] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 516,
@@ -15804,8 +15647,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348523.8305714,
                                 ["y"] = 672887.38114288,
-                            }, -- end of [120]
-                            [121] =
+                            }, -- end of [116]
+                            [117] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 517,
@@ -15844,8 +15687,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348503.8305714,
                                 ["y"] = 672857.0954286,
-                            }, -- end of [121]
-                            [122] =
+                            }, -- end of [117]
+                            [118] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 518,
@@ -15884,8 +15727,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348498.63342853,
                                 ["y"] = 672900.16800006,
-                            }, -- end of [122]
-                            [123] =
+                            }, -- end of [118]
+                            [119] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 519,
@@ -15924,8 +15767,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348601.8305714,
                                 ["y"] = 672688.80971431,
-                            }, -- end of [123]
-                            [124] =
+                            }, -- end of [119]
+                            [120] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 520,
@@ -15964,8 +15807,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348533.8305714,
                                 ["y"] = 672841.95257145,
-                            }, -- end of [124]
-                            [125] =
+                            }, -- end of [120]
+                            [121] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 521,
@@ -16004,8 +15847,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348533.8305714,
                                 ["y"] = 672807.09542859,
-                            }, -- end of [125]
-                            [126] =
+                            }, -- end of [121]
+                            [122] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 522,
@@ -16044,8 +15887,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348548.68771426,
                                 ["y"] = 672722.52400002,
-                            }, -- end of [126]
-                            [127] =
+                            }, -- end of [122]
+                            [123] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 523,
@@ -16084,8 +15927,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348538.9328571,
                                 ["y"] = 673167.35628577,
-                            }, -- end of [127]
-                            [128] =
+                            }, -- end of [123]
+                            [124] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 524,
@@ -16124,8 +15967,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348560.68771426,
                                 ["y"] = 672869.95257145,
-                            }, -- end of [128]
-                            [129] =
+                            }, -- end of [124]
+                            [125] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 525,
@@ -16164,8 +16007,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348394.11628568,
                                 ["y"] = 672435.66685718,
-                            }, -- end of [129]
-                            [130] =
+                            }, -- end of [125]
+                            [126] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 526,
@@ -16204,8 +16047,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348571.99628567,
                                 ["y"] = 672832.23942863,
-                            }, -- end of [130]
-                            [131] =
+                            }, -- end of [126]
+                            [127] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 527,
@@ -16244,8 +16087,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348460.82599996,
                                 ["y"] = 672841.70885719,
-                            }, -- end of [131]
-                            [132] =
+                            }, -- end of [127]
+                            [128] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 528,
@@ -16284,8 +16127,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348543.11171425,
                                 ["y"] = 672983.13742862,
-                            }, -- end of [132]
-                            [133] =
+                            }, -- end of [128]
+                            [129] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 529,
@@ -16324,8 +16167,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348564.97342855,
                                 ["y"] = 673071.66685715,
-                            }, -- end of [133]
-                            [134] =
+                            }, -- end of [129]
+                            [130] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 530,
@@ -16364,8 +16207,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348491.39742854,
                                 ["y"] = 673099.99457148,
-                            }, -- end of [134]
-                            [135] =
+                            }, -- end of [130]
+                            [131] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 531,
@@ -16404,8 +16247,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348572.68771426,
                                 ["y"] = 672784.23828574,
-                            }, -- end of [135]
-                            [136] =
+                            }, -- end of [131]
+                            [132] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 532,
@@ -16444,8 +16287,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348554.97342854,
                                 ["y"] = 672909.38114288,
-                            }, -- end of [136]
-                            [137] =
+                            }, -- end of [132]
+                            [133] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 533,
@@ -16484,8 +16327,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348494.1048571,
                                 ["y"] = 672552.37371434,
-                            }, -- end of [137]
-                            [138] =
+                            }, -- end of [133]
+                            [134] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 534,
@@ -16524,8 +16367,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348529.74457141,
                                 ["y"] = 672773.45771429,
-                            }, -- end of [138]
-                            [139] =
+                            }, -- end of [134]
+                            [135] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 535,
@@ -16564,8 +16407,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348474.74971424,
                                 ["y"] = 673028.32400006,
-                            }, -- end of [139]
-                            [140] =
+                            }, -- end of [135]
+                            [136] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 536,
@@ -16604,8 +16447,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348475.25914283,
                                 ["y"] = 673071.38114286,
-                            }, -- end of [140]
-                            [141] =
+                            }, -- end of [136]
+                            [137] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 537,
@@ -16644,8 +16487,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348354.82599996,
                                 ["y"] = 672867.70885719,
-                            }, -- end of [141]
-                            [142] =
+                            }, -- end of [137]
+                            [138] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 538,
@@ -16684,8 +16527,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348440.42628567,
                                 ["y"] = 673106.66914291,
-                            }, -- end of [142]
-                            [143] =
+                            }, -- end of [138]
+                            [139] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 539,
@@ -16724,8 +16567,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348438.71199996,
                                 ["y"] = 673076.9548572,
-                            }, -- end of [143]
-                            [144] =
+                            }, -- end of [139]
+                            [140] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 540,
@@ -16764,8 +16607,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348440.14057138,
                                 ["y"] = 673048.09771434,
-                            }, -- end of [144]
-                            [145] =
+                            }, -- end of [140]
+                            [141] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 541,
@@ -16804,8 +16647,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348608.68771426,
                                 ["y"] = 673011.09542858,
-                            }, -- end of [145]
-                            [146] =
+                            }, -- end of [141]
+                            [142] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 542,
@@ -16844,8 +16687,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348618.40199998,
                                 ["y"] = 673106.524,
-                            }, -- end of [146]
-                            [147] =
+                            }, -- end of [142]
+                            [143] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 543,
@@ -16884,8 +16727,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348351.39742853,
                                 ["y"] = 672941.13742862,
-                            }, -- end of [147]
-                            [148] =
+                            }, -- end of [143]
+                            [144] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 544,
@@ -16924,7 +16767,447 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348448.97342853,
                                 ["y"] = 672547.09542861,
+                            }, -- end of [144]
+                            [145] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 562,
+                                ["heading"] = 5.3930673886625,
+                                ["name"] = "DictKey_GroupName_1942",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -318311.15371429,
+                                            ["y"] = 719585.70714286,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 5.3930673886625,
+                                        ["name"] = "DictKey_GroupName_1942",
+                                        ["rate"] = 1,
+                                        ["type"] = "NTTR Target 62-12 DMPI 203",
+                                        ["unitId"] = 621,
+                                        ["x"] = -318311.15371429,
+                                        ["y"] = 719585.70714286,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -318311.15371429,
+                                ["y"] = 719585.70714286,
+                            }, -- end of [145]
+                            [146] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 563,
+                                ["heading"] = 5.3930673886625,
+                                ["name"] = "DictKey_GroupName_1945",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -318411.43942858,
+                                            ["y"] = 719608.27857143,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 5.3930673886625,
+                                        ["name"] = "DictKey_GroupName_1945",
+                                        ["rate"] = 1,
+                                        ["type"] = "NTTR Target 62-13 DMPI 310",
+                                        ["unitId"] = 622,
+                                        ["x"] = -318411.43942858,
+                                        ["y"] = 719608.27857143,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -318411.43942858,
+                                ["y"] = 719608.27857143,
+                            }, -- end of [146]
+                            [147] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 564,
+                                ["heading"] = 5.3930673886625,
+                                ["name"] = "DictKey_GroupName_1948",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -318354.01085715,
+                                            ["y"] = 719639.99285715,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 5.3930673886625,
+                                        ["name"] = "DictKey_GroupName_1948",
+                                        ["rate"] = 1,
+                                        ["type"] = "NTTR Target 62-13 DMPI 313",
+                                        ["unitId"] = 623,
+                                        ["x"] = -318354.01085715,
+                                        ["y"] = 719639.99285715,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -318354.01085715,
+                                ["y"] = 719639.99285715,
+                            }, -- end of [147]
+                            [148] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 565,
+                                ["heading"] = 5.3930673886625,
+                                ["name"] = "DictKey_GroupName_1951",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -318352.52342858,
+                                            ["y"] = 719413.93628571,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 5.3930673886625,
+                                        ["name"] = "DictKey_GroupName_1951",
+                                        ["rate"] = 1,
+                                        ["type"] = "NTTR Target 62-13 DMPI 321",
+                                        ["unitId"] = 624,
+                                        ["x"] = -318352.52342858,
+                                        ["y"] = 719413.93628571,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -318352.52342858,
+                                ["y"] = 719413.93628571,
                             }, -- end of [148]
+                            [149] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 566,
+                                ["heading"] = 5.3930673886625,
+                                ["name"] = "DictKey_GroupName_1954",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -318232.86800001,
+                                            ["y"] = 719626.85000001,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 5.3930673886625,
+                                        ["name"] = "DictKey_GroupName_1954",
+                                        ["rate"] = 1,
+                                        ["type"] = "NTTR Target 62-13 DMPI 313",
+                                        ["unitId"] = 625,
+                                        ["x"] = -318232.86800001,
+                                        ["y"] = 719626.85000001,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -318232.86800001,
+                                ["y"] = 719626.85000001,
+                            }, -- end of [149]
+                            [150] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 567,
+                                ["heading"] = 0.6457718232379,
+                                ["name"] = "DictKey_GroupName_1957",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -318473.15371429,
+                                            ["y"] = 719507.42142858,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 0.6457718232379,
+                                        ["name"] = "DictKey_GroupName_1957",
+                                        ["rate"] = 1,
+                                        ["type"] = "NTTR Target 62-13 DMPI 344",
+                                        ["unitId"] = 626,
+                                        ["x"] = -318473.15371429,
+                                        ["y"] = 719507.42142858,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -318473.15371429,
+                                ["y"] = 719507.42142858,
+                            }, -- end of [150]
+                            [151] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 568,
+                                ["heading"] = 3.7524578917878,
+                                ["name"] = "DictKey_GroupName_1960",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -318419.43942858,
+                                            ["y"] = 719413.42142858,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 3.7524578917878,
+                                        ["name"] = "DictKey_GroupName_1960",
+                                        ["rate"] = 1,
+                                        ["type"] = "NTTR Target 62-13 DMPI 334",
+                                        ["unitId"] = 627,
+                                        ["x"] = -318419.43942858,
+                                        ["y"] = 719413.42142858,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -318419.43942858,
+                                ["y"] = 719413.42142858,
+                            }, -- end of [151]
+                            [152] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 569,
+                                ["heading"] = 0.75049157835756,
+                                ["name"] = "DictKey_GroupName_1963",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -318333.72514287,
+                                            ["y"] = 719534.27857143,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 0.75049157835756,
+                                        ["name"] = "DictKey_GroupName_1963",
+                                        ["rate"] = 1,
+                                        ["type"] = "NTTR Target 62-13 DMPI 334",
+                                        ["unitId"] = 628,
+                                        ["x"] = -318333.72514287,
+                                        ["y"] = 719534.27857143,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -318333.72514287,
+                                ["y"] = 719534.27857143,
+                            }, -- end of [152]
+                            [153] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 570,
+                                ["heading"] = 5.3930673886625,
+                                ["name"] = "DictKey_GroupName_1966",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -318380.29657143,
+                                            ["y"] = 719499.99285715,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 5.3930673886625,
+                                        ["name"] = "DictKey_GroupName_1966",
+                                        ["rate"] = 1,
+                                        ["type"] = "NTTR Target 62-13 DMPI 344",
+                                        ["unitId"] = 629,
+                                        ["x"] = -318380.29657143,
+                                        ["y"] = 719499.99285715,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -318380.29657143,
+                                ["y"] = 719499.99285715,
+                            }, -- end of [153]
+                            [154] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 571,
+                                ["heading"] = 5.3930673886625,
+                                ["name"] = "DictKey_GroupName_1969",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -318193.15371429,
+                                            ["y"] = 719700.56428572,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 5.3930673886625,
+                                        ["name"] = "DictKey_GroupName_1969",
+                                        ["rate"] = 1,
+                                        ["type"] = "NTTR Target 62-41 DMPI 121",
+                                        ["unitId"] = 630,
+                                        ["x"] = -318193.15371429,
+                                        ["y"] = 719700.56428572,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -318193.15371429,
+                                ["y"] = 719700.56428572,
+                            }, -- end of [154]
+                            [155] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 572,
+                                ["heading"] = 5.3930673886625,
+                                ["name"] = "DictKey_GroupName_1972",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -318284.56914286,
+                                            ["y"] = 719480.758,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 5.3930673886625,
+                                        ["name"] = "DictKey_GroupName_1972",
+                                        ["rate"] = 1,
+                                        ["type"] = "NTTR Target 62-21 DMPI 128",
+                                        ["unitId"] = 631,
+                                        ["x"] = -318284.56914286,
+                                        ["y"] = 719480.758,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -318284.56914286,
+                                ["y"] = 719480.758,
+                            }, -- end of [155]
                         }, -- end of ["group"]
                     }, -- end of ["static"]
                     ["vehicle"] =
@@ -16932,73 +17215,6 @@ mission =
                         ["group"] =
                         {
                             [1] =
-                            {
-                                ["groupId"] = 1,
-                                ["hidden"] = false,
-                                ["name"] = "DictKey_GroupName_6",
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["ETA"] = 0,
-                                            ["ETA_locked"] = true,
-                                            ["action"] = "Off Road",
-                                            ["alt"] = 20,
-                                            ["alt_type"] = "BARO",
-                                            ["formation_template"] = "",
-                                            ["name"] = "DictKey_WptName_8",
-                                            ["speed"] = 5.5555555555556,
-                                            ["speed_locked"] = true,
-                                            ["task"] =
-                                            {
-                                                ["id"] = "ComboTask",
-                                                ["params"] =
-                                                {
-                                                    ["tasks"] =
-                                                    {
-                                                    }, -- end of ["tasks"]
-                                                }, -- end of ["params"]
-                                            }, -- end of ["task"]
-                                            ["type"] = "Turning Point",
-                                            ["x"] = -323433.72342857,
-                                            ["y"] = 635919.31057143,
-                                        }, -- end of [1]
-                                    }, -- end of ["points"]
-                                    ["spans"] =
-                                    {
-                                    }, -- end of ["spans"]
-                                }, -- end of ["route"]
-                                ["start_time"] = 0,
-                                ["task"] = "Ground Nothing",
-                                ["taskSelected"] = true,
-                                ["tasks"] =
-                                {
-                                }, -- end of ["tasks"]
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["heading"] = 0,
-                                        ["name"] = "DictKey_UnitName_7",
-                                        ["playerCanDrive"] = true,
-                                        ["skill"] = "Average",
-                                        ["transportable"] =
-                                        {
-                                            ["randomTransportable"] = false,
-                                        }, -- end of ["transportable"]
-                                        ["type"] = "AAV7",
-                                        ["unitId"] = 1,
-                                        ["x"] = -323433.72342857,
-                                        ["y"] = 635919.31057143,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-                                ["visible"] = false,
-                                ["x"] = -323433.72342857,
-                                ["y"] = 635919.31057143,
-                            }, -- end of [1]
-                            [2] =
                             {
                                 ["groupId"] = 53,
                                 ["hidden"] = false,
@@ -17077,8 +17293,8 @@ mission =
                                 ["visible"] = false,
                                 ["x"] = -342931.04771429,
                                 ["y"] = 740696.71285714,
-                            }, -- end of [2]
-                            [3] =
+                            }, -- end of [1]
+                            [2] =
                             {
                                 ["groupId"] = 54,
                                 ["hidden"] = false,
@@ -17157,8 +17373,8 @@ mission =
                                 ["visible"] = false,
                                 ["x"] = -349215.52714285,
                                 ["y"] = 651113.33114286,
-                            }, -- end of [3]
-                            [4] =
+                            }, -- end of [2]
+                            [3] =
                             {
                                 ["groupId"] = 55,
                                 ["hidden"] = false,
@@ -17224,8 +17440,8 @@ mission =
                                 ["visible"] = false,
                                 ["x"] = -348904.10914285,
                                 ["y"] = 655767.53714286,
-                            }, -- end of [4]
-                            [5] =
+                            }, -- end of [3]
+                            [4] =
                             {
                                 ["groupId"] = 225,
                                 ["hidden"] = false,
@@ -17344,8 +17560,8 @@ mission =
                                 ["visible"] = false,
                                 ["x"] = -358052.53742856,
                                 ["y"] = 774365.95628577,
-                            }, -- end of [5]
-                            [6] =
+                            }, -- end of [4]
+                            [5] =
                             {
                                 ["groupId"] = 226,
                                 ["hidden"] = false,
@@ -17464,8 +17680,8 @@ mission =
                                 ["visible"] = false,
                                 ["x"] = -358006.92399997,
                                 ["y"] = 774363.8362858,
-                            }, -- end of [6]
-                            [7] =
+                            }, -- end of [5]
+                            [6] =
                             {
                                 ["groupId"] = 275,
                                 ["hidden"] = false,
@@ -17610,8 +17826,8 @@ mission =
                                 ["visible"] = false,
                                 ["x"] = -356112.81228565,
                                 ["y"] = 641297.03514282,
-                            }, -- end of [7]
-                            [8] =
+                            }, -- end of [6]
+                            [7] =
                             {
                                 ["groupId"] = 276,
                                 ["hidden"] = false,
@@ -17756,8 +17972,8 @@ mission =
                                 ["visible"] = false,
                                 ["x"] = -333490.40400002,
                                 ["y"] = 722316.08399998,
-                            }, -- end of [8]
-                            [9] =
+                            }, -- end of [7]
+                            [8] =
                             {
                                 ["groupId"] = 277,
                                 ["hidden"] = false,
@@ -17872,8 +18088,8 @@ mission =
                                 ["visible"] = false,
                                 ["x"] = -312814.95,
                                 ["y"] = 709166.79257143,
-                            }, -- end of [9]
-                            [10] =
+                            }, -- end of [8]
+                            [9] =
                             {
                                 ["groupId"] = 413,
                                 ["hidden"] = false,
@@ -18016,8 +18232,8 @@ mission =
                                 ["visible"] = false,
                                 ["x"] = -314659.43428571,
                                 ["y"] = 761711.794,
-                            }, -- end of [10]
-                            [11] =
+                            }, -- end of [9]
+                            [10] =
                             {
                                 ["groupId"] = 477,
                                 ["hidden"] = false,
@@ -18102,8 +18318,8 @@ mission =
                                 ["visible"] = false,
                                 ["x"] = 268.78600000415,
                                 ["y"] = 150254.972,
-                            }, -- end of [11]
-                            [12] =
+                            }, -- end of [10]
+                            [11] =
                             {
                                 ["groupId"] = 478,
                                 ["hidden"] = false,
@@ -18203,8 +18419,8 @@ mission =
                                 ["visible"] = false,
                                 ["x"] = -348.00600000013,
                                 ["y"] = 150271.14085714,
-                            }, -- end of [12]
-                            [13] =
+                            }, -- end of [11]
+                            [12] =
                             {
                                 ["groupId"] = 479,
                                 ["hidden"] = false,
@@ -18334,8 +18550,8 @@ mission =
                                 ["visible"] = false,
                                 ["x"] = -922.29685713872,
                                 ["y"] = 150247.73314286,
-                            }, -- end of [13]
-                            [14] =
+                            }, -- end of [12]
+                            [13] =
                             {
                                 ["groupId"] = 480,
                                 ["hidden"] = false,
@@ -18416,8 +18632,8 @@ mission =
                                 ["visible"] = false,
                                 ["x"] = -254.26314285299,
                                 ["y"] = 150894.25428571,
-                            }, -- end of [14]
-                            [15] =
+                            }, -- end of [13]
+                            [14] =
                             {
                                 ["groupId"] = 481,
                                 ["hidden"] = false,
@@ -18483,8 +18699,8 @@ mission =
                                 ["visible"] = false,
                                 ["x"] = 269.65514286129,
                                 ["y"] = 150880.10571428,
-                            }, -- end of [15]
-                            [16] =
+                            }, -- end of [14]
+                            [15] =
                             {
                                 ["groupId"] = 482,
                                 ["hidden"] = false,
@@ -18595,8 +18811,8 @@ mission =
                                 ["visible"] = false,
                                 ["x"] = -908.07457142442,
                                 ["y"] = 150879.72514286,
-                            }, -- end of [16]
-                            [17] =
+                            }, -- end of [15]
+                            [16] =
                             {
                                 ["groupId"] = 483,
                                 ["hidden"] = false,
@@ -18726,8 +18942,8 @@ mission =
                                 ["visible"] = false,
                                 ["x"] = -926.45742857156,
                                 ["y"] = 151413.93514286,
-                            }, -- end of [17]
-                            [18] =
+                            }, -- end of [16]
+                            [17] =
                             {
                                 ["groupId"] = 484,
                                 ["hidden"] = false,
@@ -18812,8 +19028,8 @@ mission =
                                 ["visible"] = false,
                                 ["x"] = 283.31514286129,
                                 ["y"] = 151482.68457143,
-                            }, -- end of [18]
-                            [19] =
+                            }, -- end of [17]
+                            [18] =
                             {
                                 ["groupId"] = 485,
                                 ["hidden"] = false,
@@ -18913,7 +19129,7 @@ mission =
                                 ["visible"] = false,
                                 ["x"] = -291.57171428585,
                                 ["y"] = 151378.66371429,
-                            }, -- end of [19]
+                            }, -- end of [18]
                         }, -- end of ["group"]
                     }, -- end of ["vehicle"]
                 }, -- end of [50]
@@ -31790,7 +32006,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 231709,
+    ["currentKey"] = 240728,
     ["date"] =
     {
         ["Day"] = 1,
@@ -31843,11 +32059,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -348431.81057138,
-        ["centerY"] = 673571.59371435,
-        ["zoom"] = 7386,
+        ["centerX"] = -255942.69042857,
+        ["centerY"] = 493613.08714286,
+        ["zoom"] = 2382197,
     }, -- end of ["map"]
-    ["maxDictId"] = 1938,
+    ["maxDictId"] = 1974,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
@@ -31902,7 +32118,7 @@ mission =
         ["total"] = 0,
     }, -- end of ["result"]
     ["sortie"] = "DictKey_sortie_5",
-    ["start_time"] = 28800,
+    ["start_time"] = 61200,
     ["theatre"] = "Caucasus",
     ["trig"] =
     {
