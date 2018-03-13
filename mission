@@ -13316,8 +13316,8 @@ mission =
                                             ["name"] = "",
                                             ["speed"] = 0,
                                             ["type"] = "",
-                                            ["x"] = -347516.45628571,
-                                            ["y"] = 654510.914,
+                                            ["x"] = -347346.41057142,
+                                            ["y"] = 654473.11628571,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                 }, -- end of ["route"]
@@ -13330,12 +13330,12 @@ mission =
                                         ["name"] = "DictKey_GroupName_972",
                                         ["type"] = "Range_Tower_Main",
                                         ["unitId"] = 302,
-                                        ["x"] = -347516.45628571,
-                                        ["y"] = 654510.914,
+                                        ["x"] = -347346.41057142,
+                                        ["y"] = 654473.11628571,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
-                                ["x"] = -347516.45628571,
-                                ["y"] = 654510.914,
+                                ["x"] = -347346.41057142,
+                                ["y"] = 654473.11628571,
                             }, -- end of [65]
                             [66] =
                             {
@@ -17733,6 +17733,87 @@ mission =
                                 ["x"] = -354390.49485714,
                                 ["y"] = 619145.17914285,
                             }, -- end of [173]
+                            [174] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 676,
+                                ["heading"] = 4.2935099599061,
+                                ["name"] = "DictKey_GroupName_2378",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -299144.62657141,
+                                            ["y"] = 715162.9902857,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 4.2935099599061,
+                                        ["name"] = "DictKey_GroupName_2378",
+                                        ["shape_name"] = "Hospital",
+                                        ["type"] = "hospital",
+                                        ["unitId"] = 769,
+                                        ["x"] = -299144.62657141,
+                                        ["y"] = 715162.9902857,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -299144.62657141,
+                                ["y"] = 715162.9902857,
+                            }, -- end of [174]
+                            [175] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 679,
+                                ["heading"] = 5.8643062867009,
+                                ["name"] = "DictKey_GroupName_2387",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -299352.4622857,
+                                            ["y"] = 715073.66885713,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 5.8643062867009,
+                                        ["name"] = "DictKey_GroupName_2387",
+                                        ["rate"] = 100,
+                                        ["shape_name"] = "tele_bash",
+                                        ["type"] = "TV tower",
+                                        ["unitId"] = 772,
+                                        ["x"] = -299352.4622857,
+                                        ["y"] = 715073.66885713,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -299352.4622857,
+                                ["y"] = 715073.66885713,
+                            }, -- end of [175]
                         }, -- end of ["group"]
                     }, -- end of ["static"]
                     ["vehicle"] =
@@ -37422,7 +37503,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 385304,
+    ["currentKey"] = 401214,
     ["date"] =
     {
         ["Day"] = 1,
@@ -37475,11 +37556,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -331192.22085714,
-        ["centerY"] = 827176.57628571,
-        ["zoom"] = 1000,
+        ["centerX"] = -335051.8742857,
+        ["centerY"] = 697803.52857142,
+        ["zoom"] = 316120,
     }, -- end of ["map"]
-    ["maxDictId"] = 2377,
+    ["maxDictId"] = 2392,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
