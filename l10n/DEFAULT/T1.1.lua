@@ -15,7 +15,7 @@ T1_1_table_blue_IFV = { "Template 2.1: IFV vehicle", "Template 2.2: IFV section"
 T1_1_table_blue_MBT = { "Template 3.1: MBT vehicle", "Template 3.2: MBT section", "Template 3.3: MBT platoon" } -- table for the blue MBT 
 -- BLUE Table
 
-
+function SpawnTargets ()
 -- RED Spawners
 T1_1_red_recon = SPAWN:New("T1_1_red_recon"):InitRandomizeTemplate(T1_1_table_red_recon):InitRandomizeRoute(3,0,100):Spawn()  
 T1_1_red_IFV = SPAWN:New("T1_1_red_IFV"):InitRandomizeTemplate(T1_1_table_red_IFV):InitRandomizeRoute(3,0,100):Spawn()
@@ -29,7 +29,8 @@ T1_1_blue_recon = SPAWN:New("T1_1_blue_recon"):InitRandomizeTemplate(T1_1_table_
 T1_1_blue_IFV = SPAWN:New("T1_1_blue_IFV"):InitRandomizeTemplate(T1_1_table_blue_IFV):InitRandomizeRoute(3,0,100):Spawn()
 T1_1_blue_MBT = SPAWN:New("T1_1_blue_MBT"):InitRandomizeTemplate(T1_1_table_blue_MBT):InitRandomizeRoute(3,0,100):Spawn()
 -- BLUE Spawners
-
+spawn_menu:Remove()
+spreadout_menu = MENU_MISSION_COMMAND:New("Spread out targets",Menu_Range_T1_1,Spreadout)
 SCHEDULER:New(nil,function()
 T1_1_red_recon:SetCommand(T1_1_red_recon:CommandStopRoute( true ))
 T1_1_red_IFV:SetCommand(T1_1_red_IFV:CommandStopRoute( true ))
@@ -40,6 +41,8 @@ T1_1_blue_recon:SetCommand(T1_1_blue_recon:CommandStopRoute( true ))
 T1_1_blue_IFV:SetCommand(T1_1_blue_IFV:CommandStopRoute( true ))
 T1_1_blue_MBT:SetCommand(T1_1_blue_MBT:CommandStopRoute( true ))
 end,{},3,5,0,10)
+end
+
 
 function Spreadout ()
 T1_1_red_recon:SetCommand(T1_1_red_recon:CommandStopRoute( false ))
@@ -70,8 +73,40 @@ end,{},3,120)
 end
  
 
+-- ON DEMAND SPAWNING -- 
+BlueSpawnerT1_1 = UNIT:FindByName("BlueInfantryT1.1")
+Recon_HMMWV_vehicle = SPAWN:New("_ON_DEMAND_1: Recon_HMMWV_vehicle")
+Recon_HMMWV_section = SPAWN:NewWithAlias("_ON_DEMAND_1: Recon_HMMWV_section",Recon_HMMWV_section)
+
+
+
+function _ON_DEMAND_1_Recon_HMMWV_vehicle ()
+Recon_HMMWV_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
+end
+
+function _ON_DEMAND_1_Recon_HMMWV_section ()
+Recon_HMMWV_section:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
+end
+
+
+
+
+
+
+
+
+
+
 Menu_Range_Options = MENU_MISSION:New("Range Options")
 Menu_Range_T1_1 = MENU_MISSION:New("Range T1.1", Menu_Range_Options)
-spreadout_menu = MENU_MISSION_COMMAND:New("Spread out targets",Menu_Range_T1_1,Spreadout)
+spawn_menu = MENU_MISSION_COMMAND:New("Spawn in Range Targets",Menu_Range_T1_1,SpawnTargets)
+spawn_menu_OD = MENU_MISSION:New("On Demand Spawning",Menu_Range_T1_1)
+spawn_menu_OD_Recon = MENU_MISSION:New("On Demand Spawning - RECON",spawn_menu_OD)
+spawn_menu_OD_IFV = MENU_MISSION:New("On Demand Spawning - IFV",spawn_menu_OD)
+spawn_menu_OD_MBT = MENU_MISSION:New("On Demand Spawning - MBT",spawn_menu_OD)  
+
+menu_ON_DEMAND_1_Recon_HMMWV_vehicle = MENU_MISSION_COMMAND:New("Spawn in Recon HMMWV Vehicle",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_HMMWV_vehicle)
+menu_ON_DEMAND_1_Recon_HMMWV_section = MENU_MISSION_COMMAND:New("Spawn in Recon HMMWV section",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_HMMWV_section)
+
 
 
