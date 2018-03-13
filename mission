@@ -30932,6 +30932,414 @@ mission =
                                 ["x"] = -331604.43428571,
                                 ["y"] = 828146.52657143,
                             }, -- end of [259]
+                            [260] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 666,
+                                ["heading"] = 4.1189770347066,
+                                ["name"] = "DictKey_GroupName_2348",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -331228.078,
+                                            ["y"] = 827098.86199999,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 4.1189770347066,
+                                        ["name"] = "DictKey_GroupName_2348",
+                                        ["shape_name"] = "teplowoz",
+                                        ["type"] = "Locomotive",
+                                        ["unitId"] = 759,
+                                        ["x"] = -331228.078,
+                                        ["y"] = 827098.86199999,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -331228.078,
+                                ["y"] = 827098.86199999,
+                            }, -- end of [260]
+                            [261] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 667,
+                                ["heading"] = 4.1189770347066,
+                                ["name"] = "DictKey_GroupName_2351",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -331212.64942857,
+                                            ["y"] = 827124.00485714,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 4.1189770347066,
+                                        ["name"] = "DictKey_GroupName_2351",
+                                        ["rate"] = 100,
+                                        ["shape_name"] = "wagon-cisterna_yellow",
+                                        ["type"] = "Coach a tank yellow",
+                                        ["unitId"] = 760,
+                                        ["x"] = -331212.64942857,
+                                        ["y"] = 827124.00485714,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -331212.64942857,
+                                ["y"] = 827124.00485714,
+                            }, -- end of [261]
+                            [262] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 668,
+                                ["heading"] = 4.1189770347066,
+                                ["name"] = "DictKey_GroupName_2354",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -331219.22085714,
+                                            ["y"] = 827113.71914285,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 4.1189770347066,
+                                        ["name"] = "DictKey_GroupName_2354",
+                                        ["rate"] = 100,
+                                        ["shape_name"] = "wagon-gruz",
+                                        ["type"] = "Coach cargo",
+                                        ["unitId"] = 761,
+                                        ["x"] = -331219.22085714,
+                                        ["y"] = 827113.71914285,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -331219.22085714,
+                                ["y"] = 827113.71914285,
+                            }, -- end of [262]
+                            [263] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 669,
+                                ["heading"] = 4.1189770347066,
+                                ["name"] = "DictKey_GroupName_2357",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -331206.36371428,
+                                            ["y"] = 827133.71914285,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 4.1189770347066,
+                                        ["name"] = "DictKey_GroupName_2357",
+                                        ["rate"] = 100,
+                                        ["shape_name"] = "wagon-cisterna_yellow",
+                                        ["type"] = "Coach a tank yellow",
+                                        ["unitId"] = 762,
+                                        ["x"] = -331206.36371428,
+                                        ["y"] = 827133.71914285,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -331206.36371428,
+                                ["y"] = 827133.71914285,
+                            }, -- end of [263]
+                            [264] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 670,
+                                ["heading"] = 4.1189770347066,
+                                ["name"] = "DictKey_GroupName_2360",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -331199.50657143,
+                                            ["y"] = 827143.14771428,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 4.1189770347066,
+                                        ["name"] = "DictKey_GroupName_2360",
+                                        ["rate"] = 100,
+                                        ["shape_name"] = "wagon-cisterna_blue",
+                                        ["type"] = "Coach a tank blue",
+                                        ["unitId"] = 763,
+                                        ["x"] = -331199.50657143,
+                                        ["y"] = 827143.14771428,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -331199.50657143,
+                                ["y"] = 827143.14771428,
+                            }, -- end of [264]
+                            [265] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 671,
+                                ["heading"] = 4.1189770347066,
+                                ["name"] = "DictKey_GroupName_2363",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -331193.22085714,
+                                            ["y"] = 827153.71914285,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 4.1189770347066,
+                                        ["name"] = "DictKey_GroupName_2363",
+                                        ["rate"] = 100,
+                                        ["shape_name"] = "wagon-cisterna_blue",
+                                        ["type"] = "Coach a tank blue",
+                                        ["unitId"] = 764,
+                                        ["x"] = -331193.22085714,
+                                        ["y"] = 827153.71914285,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -331193.22085714,
+                                ["y"] = 827153.71914285,
+                            }, -- end of [265]
+                            [266] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 672,
+                                ["heading"] = 4.1189770347066,
+                                ["name"] = "DictKey_GroupName_2366",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -331187.22085714,
+                                            ["y"] = 827162.862,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 4.1189770347066,
+                                        ["name"] = "DictKey_GroupName_2366",
+                                        ["rate"] = 100,
+                                        ["shape_name"] = "wagon-cisterna_blue",
+                                        ["type"] = "Coach a tank blue",
+                                        ["unitId"] = 765,
+                                        ["x"] = -331187.22085714,
+                                        ["y"] = 827162.862,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -331187.22085714,
+                                ["y"] = 827162.862,
+                            }, -- end of [266]
+                            [267] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 673,
+                                ["heading"] = 4.1189770347066,
+                                ["name"] = "DictKey_GroupName_2369",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -331181.79228571,
+                                            ["y"] = 827172.00485714,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 4.1189770347066,
+                                        ["name"] = "DictKey_GroupName_2369",
+                                        ["rate"] = 100,
+                                        ["shape_name"] = "wagon-cisterna_blue",
+                                        ["type"] = "Coach a tank blue",
+                                        ["unitId"] = 766,
+                                        ["x"] = -331181.79228571,
+                                        ["y"] = 827172.00485714,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -331181.79228571,
+                                ["y"] = 827172.00485714,
+                            }, -- end of [267]
+                            [268] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 674,
+                                ["heading"] = 0.99483767363677,
+                                ["name"] = "DictKey_GroupName_2372",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -331187.79228571,
+                                            ["y"] = 827125.14771428,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 0.99483767363677,
+                                        ["name"] = "DictKey_GroupName_2372",
+                                        ["rate"] = 1,
+                                        ["type"] = "NTTR Target 62-61 DMPI 102",
+                                        ["unitId"] = 767,
+                                        ["x"] = -331187.79228571,
+                                        ["y"] = 827125.14771428,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -331187.79228571,
+                                ["y"] = 827125.14771428,
+                            }, -- end of [268]
+                            [269] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 675,
+                                ["heading"] = 4.1189770347066,
+                                ["name"] = "DictKey_GroupName_2375",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -331175.79228571,
+                                            ["y"] = 827181.14771428,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 4.1189770347066,
+                                        ["name"] = "DictKey_GroupName_2375",
+                                        ["rate"] = 100,
+                                        ["shape_name"] = "wagon-cisterna_blue",
+                                        ["type"] = "Coach a tank blue",
+                                        ["unitId"] = 768,
+                                        ["x"] = -331175.79228571,
+                                        ["y"] = 827181.14771428,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -331175.79228571,
+                                ["y"] = 827181.14771428,
+                            }, -- end of [269]
                         }, -- end of ["group"]
                     }, -- end of ["static"]
                     ["vehicle"] =
@@ -35378,6 +35786,22 @@ mission =
                     ["x"] = -331629.31885714,
                     ["y"] = 828125.30514285,
                 }, -- end of [41]
+                [42] =
+                {
+                    ["callsignStr"] = "T4B.6",
+                    ["comment"] = "",
+                    ["id"] = 3024,
+                    ["properties"] =
+                    {
+                        ["angle"] = 0,
+                        ["scale"] = 0,
+                        ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
+                    }, -- end of ["properties"]
+                    ["x"] = -331215.32799999,
+                    ["y"] = 827146.77314285,
+                }, -- end of [42]
             }, -- end of ["nav_points"]
         }, -- end of ["blue"]
         ["red"] =
@@ -36998,7 +37422,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 374724,
+    ["currentKey"] = 385304,
     ["date"] =
     {
         ["Day"] = 1,
@@ -37051,11 +37475,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -311761.38685714,
-        ["centerY"] = 706149.86628571,
-        ["zoom"] = 42982,
+        ["centerX"] = -331192.22085714,
+        ["centerY"] = 827176.57628571,
+        ["zoom"] = 1000,
     }, -- end of ["map"]
-    ["maxDictId"] = 2347,
+    ["maxDictId"] = 2377,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
