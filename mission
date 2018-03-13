@@ -35136,7 +35136,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 304479,
+    ["currentKey"] = 309347,
     ["date"] =
     {
         ["Day"] = 1,
@@ -35189,11 +35189,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -333551.65842857,
-        ["centerY"] = 828759.95228571,
-        ["zoom"] = 33919,
+        ["centerX"] = -347380.42514286,
+        ["centerY"] = 654505.02628571,
+        ["zoom"] = 8668,
     }, -- end of ["map"]
-    ["maxDictId"] = 2180,
+    ["maxDictId"] = 2182,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
@@ -35254,8 +35254,8 @@ mission =
     {
         ["actions"] =
         {
-            [1] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_1692\"));",
-            [2] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_1694\")); mission.trig.func[2]=nil;",
+            [1] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2182\"));",
+            [2] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2181\")); mission.trig.func[2]=nil;",
             [3] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_1791\")); mission.trig.func[3]=nil;",
         }, -- end of ["actions"]
         ["conditions"] =
@@ -35415,15 +35415,13 @@ mission =
             {
                 [1] =
                 {
-                    ["KeyDict_text"] = "DictKey_ActionText_1691",
                     ["ai_task"] =
                     {
                         [1] = "",
                         [2] = "",
                     }, -- end of ["ai_task"]
-                    ["file"] = "ResKey_Action_1692",
+                    ["file"] = "ResKey_Action_2182",
                     ["predicate"] = "a_do_script_file",
-                    ["text"] = "DictKey_ActionText_1691",
                 }, -- end of [1]
             }, -- end of ["actions"]
             ["comment"] = "Moose",
@@ -35444,7 +35442,7 @@ mission =
                         [1] = "",
                         [2] = "",
                     }, -- end of ["ai_task"]
-                    ["file"] = "ResKey_Action_1694",
+                    ["file"] = "ResKey_Action_2181",
                     ["predicate"] = "a_do_script_file",
                 }, -- end of [1]
             }, -- end of ["actions"]
