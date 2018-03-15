@@ -1,5 +1,25 @@
 --- T1.1 ---
 
+-- Sam Sites--
+
+t1_1_threat = GROUP:FindByName("THREAT SITE 1")
+t1_1_threat:SetAIOff()
+
+function t1_1_threat_on()
+t1_1_threat:SetAIOn()
+t1_1_Threat_On:Remove()
+t1_1_Threat_Off = MENU_MISSION_COMMAND:New("Deactivate Threat Site",Menu_Range_T1_1,t1_1_threat_off)
+end
+
+
+function t1_1_threat_off()
+t1_1_threat:SetAIOff()
+t1_1_Threat_Off:Remove()
+t1_1_Threat_On = MENU_MISSION_COMMAND:New("Activate Threat Site",Menu_Range_T1_1,t1_1_threat_on)
+end
+
+-- Sam Sites--
+
 -- RED TABLE
 T1_1_table_red_recon = { "Template 8.3: Recon platoon", "Template 8.2: Recon section", "Template 8.1: Recon vehicle" } -- table for the red recon
 T1_1_table_red_IFV = { "Template 9.3: IFV platoon", "Template 9.2: IFV section", "Template 9.1: IFV vehicle" } -- table for the red IFV
@@ -105,6 +125,9 @@ spawn_menu_OD = MENU_MISSION:New("On Demand Spawning",Menu_Range_T1_1)
 spawn_menu_OD_Recon = MENU_MISSION:New("On Demand Spawning - RECON",spawn_menu_OD)
 spawn_menu_OD_IFV = MENU_MISSION:New("On Demand Spawning - IFV",spawn_menu_OD)
 spawn_menu_OD_MBT = MENU_MISSION:New("On Demand Spawning - MBT",spawn_menu_OD)  
+
+t1_1_Threat_On = MENU_MISSION_COMMAND:New("Activate Threat Site",Menu_Range_T1_1,t1_1_threat_on)
+
 
 menu_ON_DEMAND_1_Recon_HMMWV_vehicle = MENU_MISSION_COMMAND:New("Spawn in Recon HMMWV Vehicle",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_HMMWV_vehicle)
 menu_ON_DEMAND_1_Recon_HMMWV_section = MENU_MISSION_COMMAND:New("Spawn in Recon HMMWV section",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_HMMWV_section)

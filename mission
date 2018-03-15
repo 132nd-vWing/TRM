@@ -36748,8 +36748,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = -347123.60142859,
-                                            ["y"] = 660992.08314285,
+                                            ["x"] = -347127.69342858,
+                                            ["y"] = 660994.83285715,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                     ["spans"] =
@@ -36776,8 +36776,8 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "Osa 9A33 ln",
                                         ["unitId"] = 374,
-                                        ["x"] = -347123.60142859,
-                                        ["y"] = 660992.08314285,
+                                        ["x"] = -347127.69342858,
+                                        ["y"] = 660994.83285715,
                                     }, -- end of [1]
                                     [2] =
                                     {
@@ -36791,13 +36791,13 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "Ural-375",
                                         ["unitId"] = 571,
-                                        ["x"] = -347131.16085714,
-                                        ["y"] = 661006.80142857,
+                                        ["x"] = -347135.25285713,
+                                        ["y"] = 661009.55114287,
                                     }, -- end of [2]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
-                                ["x"] = -347123.60142859,
-                                ["y"] = 660992.08314285,
+                                ["x"] = -347127.69342858,
+                                ["y"] = 660994.83285715,
                             }, -- end of [2]
                             [3] =
                             {
@@ -38071,7 +38071,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 425574,
+    ["currentKey"] = 436330,
     ["date"] =
     {
         ["Day"] = 1,
@@ -41313,11 +41313,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -347469.30371429,
-        ["centerY"] = 654468.46057143,
-        ["zoom"] = 1000,
+        ["centerX"] = -347271.94428572,
+        ["centerY"] = 660992.834,
+        ["zoom"] = 2332,
     }, -- end of ["map"]
-    ["maxDictId"] = 2444,
+    ["maxDictId"] = 2448,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
@@ -41382,7 +41382,7 @@ mission =
         {
             [1] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2182\"));",
             [2] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2181\")); mission.trig.func[2]=nil;",
-            [3] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2444\")); mission.trig.func[3]=nil;",
+            [3] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2448\")); mission.trig.func[3]=nil;",
         }, -- end of ["actions"]
         ["conditions"] =
         {
@@ -41597,7 +41597,7 @@ mission =
                         [1] = "",
                         [2] = "",
                     }, -- end of ["ai_task"]
-                    ["file"] = "ResKey_Action_2444",
+                    ["file"] = "ResKey_Action_2448",
                     ["predicate"] = "a_do_script_file",
                 }, -- end of [1]
             }, -- end of ["actions"]
