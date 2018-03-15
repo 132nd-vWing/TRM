@@ -30,55 +30,35 @@ T1_1_blue_IFV = SPAWN:New("T1_1_blue_IFV"):InitRandomizeTemplate(T1_1_table_blue
 T1_1_blue_MBT = SPAWN:New("T1_1_blue_MBT"):InitRandomizeTemplate(T1_1_table_blue_MBT):InitRandomizeRoute(3,0,100):Spawn()
 -- BLUE Spawners
 spawn_menu:Remove()
-spreadout_menu = MENU_MISSION_COMMAND:New("Spread out targets",Menu_Range_T1_1,Spreadout)
-SCHEDULER:New(nil,function()
-T1_1_red_recon:SetCommand(T1_1_red_recon:CommandStopRoute( true ))
-T1_1_red_IFV:SetCommand(T1_1_red_IFV:CommandStopRoute( true ))
-T1_1_red_MBT:SetCommand(T1_1_red_MBT:CommandStopRoute( true ))
-T1_1_red_AAA:SetCommand(T1_1_red_AAA:CommandStopRoute( true ))
-T1_1_red_misc:SetCommand(T1_1_red_misc:CommandStopRoute( true ))
-T1_1_blue_recon:SetCommand(T1_1_blue_recon:CommandStopRoute( true ))
-T1_1_blue_IFV:SetCommand(T1_1_blue_IFV:CommandStopRoute( true ))
-T1_1_blue_MBT:SetCommand(T1_1_blue_MBT:CommandStopRoute( true ))
-end,{},3,5,0,10)
-end
-
-
-function Spreadout ()
-T1_1_red_recon:SetCommand(T1_1_red_recon:CommandStopRoute( false ))
-T1_1_red_IFV:SetCommand(T1_1_red_IFV:CommandStopRoute( false ))
-T1_1_red_MBT:SetCommand(T1_1_red_MBT:CommandStopRoute( false ))
-T1_1_red_AAA:SetCommand(T1_1_red_AAA:CommandStopRoute( false ))
-T1_1_red_misc:SetCommand(T1_1_red_misc:CommandStopRoute( false ))
-T1_1_blue_recon:SetCommand(T1_1_blue_recon:CommandStopRoute( false ))
-T1_1_blue_IFV:SetCommand(T1_1_blue_IFV:CommandStopRoute( false ))
-T1_1_blue_MBT:SetCommand(T1_1_blue_MBT:CommandStopRoute( false ))
--- patrol_menu = MENU_MISSION_COMMAND:New("Start Patrolling",Menu_Range_T1_1,patrolRed)
-spreadout_menu:Remove()
 
 end
+
 
 
 t1_1_redzone = ZONE_POLYGON:New("t1_1_redzone", GROUP:FindByName( "t1.1_redzone" ))
 
-function patrolRed ()
-SCHEDULER:New(nil,function()
-T1_1_red_recon:RouteToVec3((t1_1_redzone:GetRandomPointVec3()),25)
-T1_1_red_IFV:RouteToVec3((t1_1_redzone:GetRandomPointVec3()),25)
-T1_1_red_MBT:RouteToVec3((t1_1_redzone:GetRandomPointVec3()),25)
-T1_1_red_AAA:RouteToVec3((t1_1_redzone:GetRandomPointVec3()),25)
-T1_1_red_misc:RouteToVec3((t1_1_redzone:GetRandomPointVec3()),25)
-patrol_menu:Remove()
-end,{},3,120)
-end
+--function patrolRed ()
+--SCHEDULER:New(nil,function()
+--T1_1_red_recon:RouteToVec3((t1_1_redzone:GetRandomPointVec3()),25)
+--T1_1_red_IFV:RouteToVec3((t1_1_redzone:GetRandomPointVec3()),25)
+--T1_1_red_MBT:RouteToVec3((t1_1_redzone:GetRandomPointVec3()),25)
+--T1_1_red_AAA:RouteToVec3((t1_1_redzone:GetRandomPointVec3()),25)
+--T1_1_red_misc:RouteToVec3((t1_1_redzone:GetRandomPointVec3()),25)
+--patrol_menu:Remove()
+--end,{},3,120)
+--end
  
 
 -- ON DEMAND SPAWNING -- 
 BlueSpawnerT1_1 = UNIT:FindByName("BlueInfantryT1.1")
+RedSpawnerT1_1 = UNIT:FindByName("REDInfantryT1.1")
+
 Recon_HMMWV_vehicle = SPAWN:New("_ON_DEMAND_1: Recon_HMMWV_vehicle")
-Recon_HMMWV_section = SPAWN:NewWithAlias("_ON_DEMAND_1: Recon_HMMWV_section",Recon_HMMWV_section)
-
-
+Recon_HMMWV_section = SPAWN:New("_ON_DEMAND_1: Recon_HMMWV_section")
+Recon_BRDM_vehicle = SPAWN:New("_ON_DEMAND_1: Recon_BRDM_vehicle")
+Recon_BRDM_section = SPAWN:New("_ON_DEMAND_1: Recon_BRDM_section")
+Recon_STRYKER_vehicle = SPAWN:New("_ON_DEMAND_1: Recon_stryker_vehicle")
+Recon_STRYKER_section = SPAWN:New("_ON_DEMAND_1: Recon_stryker_section")
 
 function _ON_DEMAND_1_Recon_HMMWV_vehicle ()
 Recon_HMMWV_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
@@ -87,6 +67,27 @@ end
 function _ON_DEMAND_1_Recon_HMMWV_section ()
 Recon_HMMWV_section:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
 end
+
+function _ON_DEMAND_1_Recon_BRDM_vehicle ()
+Recon_BRDM_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
+end
+
+function _ON_DEMAND_1_Recon_BRDM_section ()
+Recon_BRDM_section:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
+end
+
+function _ON_DEMAND_1_Recon_STRYKER_vehicle ()
+Recon_STRYKER_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
+end
+
+function _ON_DEMAND_1_Recon_STRYKER_section ()
+Recon_STRYKER_section:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
+end
+
+
+
+
+
 
 
 
@@ -99,7 +100,7 @@ end
 
 Menu_Range_Options = MENU_MISSION:New("Range Options")
 Menu_Range_T1_1 = MENU_MISSION:New("Range T1.1", Menu_Range_Options)
-spawn_menu = MENU_MISSION_COMMAND:New("Spawn in Range Targets",Menu_Range_T1_1,SpawnTargets)
+spawn_menu = MENU_MISSION_COMMAND:New("Set up the Range dynamically",Menu_Range_T1_1,SpawnTargets)
 spawn_menu_OD = MENU_MISSION:New("On Demand Spawning",Menu_Range_T1_1)
 spawn_menu_OD_Recon = MENU_MISSION:New("On Demand Spawning - RECON",spawn_menu_OD)
 spawn_menu_OD_IFV = MENU_MISSION:New("On Demand Spawning - IFV",spawn_menu_OD)
@@ -107,6 +108,10 @@ spawn_menu_OD_MBT = MENU_MISSION:New("On Demand Spawning - MBT",spawn_menu_OD)
 
 menu_ON_DEMAND_1_Recon_HMMWV_vehicle = MENU_MISSION_COMMAND:New("Spawn in Recon HMMWV Vehicle",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_HMMWV_vehicle)
 menu_ON_DEMAND_1_Recon_HMMWV_section = MENU_MISSION_COMMAND:New("Spawn in Recon HMMWV section",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_HMMWV_section)
+menu_ON_DEMAND_1_Recon_BRDM_vehicle = MENU_MISSION_COMMAND:New("Spawn in Recon BRDM Vehicle",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_BRDM_vehicle)
+menu_ON_DEMAND_1_Recon_BRDM_section = MENU_MISSION_COMMAND:New("Spawn in Recon BRDM section",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_BRDM_section)
+menu_ON_DEMAND_1_Recon_STRYKER_vehicle = MENU_MISSION_COMMAND:New("Spawn in Recon STRYKER Vehicle",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_STRYKER_vehicle)
+menu_ON_DEMAND_1_Recon_STRYKER_section = MENU_MISSION_COMMAND:New("Spawn in Recon STRYKER section",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_STRYKER_section)
 
 
 
