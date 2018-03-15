@@ -35927,21 +35927,6 @@ mission =
                 }, -- end of [7]
                 [8] =
                 {
-                    ["callsignStr"] = "R9SE",
-                    ["id"] = 45,
-                    ["properties"] =
-                    {
-                        ["angle"] = 0,
-                        ["scale"] = 0,
-                        ["steer"] = 2,
-                        ["vangle"] = 0,
-                        ["vnav"] = 1,
-                    }, -- end of ["properties"]
-                    ["x"] = -178199.99999999,
-                    ["y"] = 797440.85714286,
-                }, -- end of [8]
-                [9] =
-                {
                     ["callsignStr"] = "UG26 ECHO",
                     ["id"] = 49,
                     ["properties"] =
@@ -35954,8 +35939,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -280548,
                     ["y"] = 700634.85714288,
-                }, -- end of [9]
-                [10] =
+                }, -- end of [8]
+                [9] =
                 {
                     ["callsignStr"] = "UGKS ZENI",
                     ["id"] = 51,
@@ -35969,8 +35954,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -274727.71428572,
                     ["y"] = 635157.42857143,
-                }, -- end of [10]
-                [11] =
+                }, -- end of [9]
+                [10] =
                 {
                     ["callsignStr"] = "UGSS EAST",
                     ["id"] = 52,
@@ -35984,8 +35969,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -225860.28571429,
                     ["y"] = 577560.85714289,
-                }, -- end of [11]
-                [12] =
+                }, -- end of [10]
+                [11] =
                 {
                     ["callsignStr"] = "TISOT",
                     ["id"] = 56,
@@ -35999,8 +35984,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -360828.57142856,
                     ["y"] = 896871.42857146,
-                }, -- end of [12]
-                [13] =
+                }, -- end of [11]
+                [12] =
                 {
                     ["callsignStr"] = "BARUS",
                     ["id"] = 62,
@@ -36014,8 +35999,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -311813.42857143,
                     ["y"] = 717068.85714287,
-                }, -- end of [13]
-                [14] =
+                }, -- end of [12]
+                [13] =
                 {
                     ["callsignStr"] = "TETRO",
                     ["id"] = 64,
@@ -36029,8 +36014,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -337385.71428571,
                     ["y"] = 721544.28571431,
-                }, -- end of [14]
-                [15] =
+                }, -- end of [13]
+                [14] =
                 {
                     ["callsignStr"] = "UG5X SOUTH",
                     ["id"] = 68,
@@ -36044,8 +36029,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -330561.14285715,
                     ["y"] = 629329.71428573,
-                }, -- end of [15]
-                [16] =
+                }, -- end of [14]
+                [15] =
                 {
                     ["callsignStr"] = "MYS SUKHUMSKIJ/NDB",
                     ["id"] = 80,
@@ -36059,8 +36044,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -207923.14285714,
                     ["y"] = 551227.14285714,
-                }, -- end of [16]
-                [17] =
+                }, -- end of [15]
+                [16] =
                 {
                     ["callsignStr"] = "GORI/NDB",
                     ["id"] = 85,
@@ -36074,8 +36059,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -286113.71428571,
                     ["y"] = 822770.85714285,
-                }, -- end of [17]
-                [18] =
+                }, -- end of [16]
+                [17] =
                 {
                     ["callsignStr"] = "NOLGA",
                     ["id"] = 87,
@@ -36089,8 +36074,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -363442.85714284,
                     ["y"] = 734668.57142863,
-                }, -- end of [18]
-                [19] =
+                }, -- end of [17]
+                [18] =
                 {
                     ["callsignStr"] = "GRONZYJ/NDB",
                     ["id"] = 102,
@@ -36104,8 +36089,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -115717.71428571,
                     ["y"] = 929610.85714286,
-                }, -- end of [19]
-                [20] =
+                }, -- end of [18]
+                [19] =
                 {
                     ["callsignStr"] = "NA/LOM",
                     ["id"] = 103,
@@ -36119,8 +36104,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -318914.28571428,
                     ["y"] = 900782.28571427,
-                }, -- end of [20]
-                [21] =
+                }, -- end of [19]
+                [20] =
                 {
                     ["callsignStr"] = "UGSB EAST",
                     ["id"] = 128,
@@ -36134,8 +36119,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -362401.14285714,
                     ["y"] = 627895.14285717,
-                }, -- end of [21]
-                [22] =
+                }, -- end of [20]
+                [21] =
                 {
                     ["callsignStr"] = "UGSS SOUTH",
                     ["id"] = 133,
@@ -36149,8 +36134,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -228592.57142857,
                     ["y"] = 568282.85714289,
-                }, -- end of [22]
-                [23] =
+                }, -- end of [21]
+                [22] =
                 {
                     ["callsignStr"] = "PICUNDA/NDB",
                     ["id"] = 151,
@@ -36164,8 +36149,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -192327.42857143,
                     ["y"] = 497002.85714285,
-                }, -- end of [23]
-                [24] =
+                }, -- end of [22]
+                [23] =
                 {
                     ["callsignStr"] = "UG23 WEST",
                     ["id"] = 159,
@@ -36179,8 +36164,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -194835.42857143,
                     ["y"] = 497790.28571429,
-                }, -- end of [24]
-                [25] =
+                }, -- end of [23]
+                [24] =
                 {
                     ["callsignStr"] = "UGTB6",
                     ["id"] = 165,
@@ -36194,8 +36179,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -345786.57142855,
                     ["y"] = 908750,
-                }, -- end of [25]
-                [26] =
+                }, -- end of [24]
+                [25] =
                 {
                     ["callsignStr"] = "UG26 NOVEMBER",
                     ["id"] = 168,
@@ -36209,8 +36194,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -272193.14285715,
                     ["y"] = 692302.2857143,
-                }, -- end of [26]
-                [27] =
+                }, -- end of [25]
+                [26] =
                 {
                     ["callsignStr"] = "OGEVI",
                     ["id"] = 182,
@@ -36224,8 +36209,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -387871.42857142,
                     ["y"] = 806442.85714288,
-                }, -- end of [27]
-                [28] =
+                }, -- end of [26]
+                [27] =
                 {
                     ["callsignStr"] = "TAVRO",
                     ["id"] = 187,
@@ -36239,8 +36224,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -373762.85714285,
                     ["y"] = 865814.28571429,
-                }, -- end of [28]
-                [29] =
+                }, -- end of [27]
+                [28] =
                 {
                     ["callsignStr"] = "GABARDIANI",
                     ["id"] = 188,
@@ -36254,8 +36239,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -336188.85714288,
                     ["y"] = 911628.5714285,
-                }, -- end of [29]
-                [30] =
+                }, -- end of [28]
+                [29] =
                 {
                     ["callsignStr"] = "LEGVI",
                     ["id"] = 191,
@@ -36269,8 +36254,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -342423.99999999,
                     ["y"] = 921078.57142857,
-                }, -- end of [30]
-                [31] =
+                }, -- end of [29]
+                [30] =
                 {
                     ["callsignStr"] = "MUKHRANI/NDB",
                     ["id"] = 197,
@@ -36284,8 +36269,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -292408.28571428,
                     ["y"] = 860239.71428571,
-                }, -- end of [31]
-                [32] =
+                }, -- end of [30]
+                [31] =
                 {
                     ["callsignStr"] = "UGKS KETILARI",
                     ["id"] = 201,
@@ -36299,8 +36284,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -289213.14285714,
                     ["y"] = 658296.28571431,
-                }, -- end of [32]
-                [33] =
+                }, -- end of [31]
+                [32] =
                 {
                     ["callsignStr"] = "UGKO NORTH",
                     ["id"] = 203,
@@ -36314,8 +36299,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -274940.85714287,
                     ["y"] = 684426.57142858,
-                }, -- end of [33]
-                [34] =
+                }, -- end of [32]
+                [33] =
                 {
                     ["callsignStr"] = "KUTAISI/NDB",
                     ["id"] = 206,
@@ -36329,8 +36314,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -285506.85714285,
                     ["y"] = 681680,
-                }, -- end of [34]
-                [35] =
+                }, -- end of [33]
+                [34] =
                 {
                     ["callsignStr"] = "IBERI",
                     ["id"] = 207,
@@ -36344,8 +36329,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -293412.85714286,
                     ["y"] = 621060.00000001,
-                }, -- end of [35]
-                [36] =
+                }, -- end of [34]
+                [35] =
                 {
                     ["callsignStr"] = "ALI/NDB",
                     ["id"] = 213,
@@ -36359,8 +36344,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -282484.57142856,
                     ["y"] = 781224,
-                }, -- end of [36]
-                [37] =
+                }, -- end of [35]
+                [36] =
                 {
                     ["callsignStr"] = "DEDON",
                     ["id"] = 214,
@@ -36374,8 +36359,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -306764.28571429,
                     ["y"] = 920027.14285714,
-                }, -- end of [37]
-                [38] =
+                }, -- end of [36]
+                [37] =
                 {
                     ["callsignStr"] = "LOCHINI/DVOR",
                     ["id"] = 219,
@@ -36389,8 +36374,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -315388.57142857,
                     ["y"] = 895794.85714286,
-                }, -- end of [38]
-                [39] =
+                }, -- end of [37]
+                [38] =
                 {
                     ["callsignStr"] = "VP/LOM",
                     ["id"] = 227,
@@ -36404,8 +36389,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -312191.7142857,
                     ["y"] = 892177.71428571,
-                }, -- end of [39]
-                [40] =
+                }, -- end of [38]
+                [39] =
                 {
                     ["callsignStr"] = "TAGAR",
                     ["id"] = 230,
@@ -36419,8 +36404,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -267959.99999999,
                     ["y"] = 731030.00000001,
-                }, -- end of [40]
-                [41] =
+                }, -- end of [39]
+                [40] =
                 {
                     ["callsignStr"] = "V/LMM",
                     ["id"] = 233,
@@ -36434,8 +36419,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -313853.71428571,
                     ["y"] = 894305.7142857,
-                }, -- end of [41]
-                [42] =
+                }, -- end of [40]
+                [41] =
                 {
                     ["callsignStr"] = "UG27 FOXTROTT",
                     ["id"] = 235,
@@ -36449,8 +36434,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -312286.57142858,
                     ["y"] = 912494.85714287,
-                }, -- end of [42]
-                [43] =
+                }, -- end of [41]
+                [42] =
                 {
                     ["callsignStr"] = "BAGEM",
                     ["id"] = 237,
@@ -36464,8 +36449,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -328649.71428571,
                     ["y"] = 857880.85714283,
-                }, -- end of [43]
-                [44] =
+                }, -- end of [42]
+                [43] =
                 {
                     ["callsignStr"] = "UG24 LAKE",
                     ["id"] = 254,
@@ -36479,8 +36464,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -324895.42857144,
                     ["y"] = 889901.42857144,
-                }, -- end of [44]
-                [45] =
+                }, -- end of [43]
+                [44] =
                 {
                     ["callsignStr"] = "UG24 SOUTH",
                     ["id"] = 255,
@@ -36494,8 +36479,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -330402.28571429,
                     ["y"] = 901648.85714287,
-                }, -- end of [45]
-                [46] =
+                }, -- end of [44]
+                [45] =
                 {
                     ["callsignStr"] = "LU/NDB",
                     ["id"] = 259,
@@ -36509,8 +36494,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -356579.71428571,
                     ["y"] = 618590.57142858,
-                }, -- end of [46]
-                [47] =
+                }, -- end of [45]
+                [46] =
                 {
                     ["callsignStr"] = "N/LMM",
                     ["id"] = 273,
@@ -36524,8 +36509,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -317252.00000002,
                     ["y"] = 898654.2857142,
-                }, -- end of [47]
-                [48] =
+                }, -- end of [46]
+                [47] =
                 {
                     ["callsignStr"] = "SOSED",
                     ["id"] = 277,
@@ -36539,8 +36524,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -304958.28571428,
                     ["y"] = 562252.00000003,
-                }, -- end of [48]
-                [49] =
+                }, -- end of [47]
+                [48] =
                 {
                     ["callsignStr"] = "GUSLI",
                     ["id"] = 284,
@@ -36554,8 +36539,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -194642.85714286,
                     ["y"] = 740000.00000001,
-                }, -- end of [49]
-                [50] =
+                }, -- end of [48]
+                [49] =
                 {
                     ["callsignStr"] = "ALIKA",
                     ["id"] = 289,
@@ -36569,8 +36554,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -284782.85714285,
                     ["y"] = 604581.42857146,
-                }, -- end of [50]
-                [51] =
+                }, -- end of [49]
+                [50] =
                 {
                     ["callsignStr"] = "MAKHINJAURI",
                     ["id"] = 293,
@@ -36584,8 +36569,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -348870.28571431,
                     ["y"] = 623405.71428562,
-                }, -- end of [51]
-                [52] =
+                }, -- end of [50]
+                [51] =
                 {
                     ["callsignStr"] = "NEDEK",
                     ["id"] = 295,
@@ -36599,8 +36584,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -312136.85714285,
                     ["y"] = 612194.85714287,
-                }, -- end of [52]
-                [53] =
+                }, -- end of [51]
+                [52] =
                 {
                     ["callsignStr"] = "DABLAGOMI",
                     ["id"] = 302,
@@ -36614,8 +36599,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -290538.28571429,
                     ["y"] = 674162.00000002,
-                }, -- end of [53]
-                [54] =
+                }, -- end of [52]
+                [53] =
                 {
                     ["callsignStr"] = "UGSS NORTH",
                     ["id"] = 305,
@@ -36629,8 +36614,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -213318.28571429,
                     ["y"] = 568118.85714289,
-                }, -- end of [54]
-                [55] =
+                }, -- end of [53]
+                [54] =
                 {
                     ["callsignStr"] = "ODILI",
                     ["id"] = 310,
@@ -36644,8 +36629,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -339042.85714285,
                     ["y"] = 657135.71428572,
-                }, -- end of [55]
-                [56] =
+                }, -- end of [54]
+                [55] =
                 {
                     ["callsignStr"] = "UG23 NORTH",
                     ["id"] = 314,
@@ -36659,8 +36644,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -186777.14285715,
                     ["y"] = 510182.85714286,
-                }, -- end of [56]
-                [57] =
+                }, -- end of [55]
+                [56] =
                 {
                     ["callsignStr"] = "UG23 EAST",
                     ["id"] = 317,
@@ -36674,8 +36659,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -197076.57142858,
                     ["y"] = 526547.14285715,
-                }, -- end of [57]
-                [58] =
+                }, -- end of [56]
+                [57] =
                 {
                     ["callsignStr"] = "UGKS NOSIRI",
                     ["id"] = 326,
@@ -36689,8 +36674,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -276227.14285714,
                     ["y"] = 654740.57142857,
-                }, -- end of [58]
-                [59] =
+                }, -- end of [57]
+                [58] =
                 {
                     ["callsignStr"] = "BANUT",
                     ["id"] = 337,
@@ -36704,8 +36689,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -214580.57142857,
                     ["y"] = 469793.71428573,
-                }, -- end of [59]
-                [60] =
+                }, -- end of [58]
+                [59] =
                 {
                     ["callsignStr"] = "KALAUS/NDB",
                     ["id"] = 338,
@@ -36719,8 +36704,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -112400.85714286,
                     ["y"] = 889039.42857143,
-                }, -- end of [60]
-                [61] =
+                }, -- end of [59]
+                [60] =
                 {
                     ["callsignStr"] = "UG5X EAST",
                     ["id"] = 341,
@@ -36734,8 +36719,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -318928.57142858,
                     ["y"] = 647862.57142859,
-                }, -- end of [61]
-                [62] =
+                }, -- end of [60]
+                [61] =
                 {
                     ["callsignStr"] = "R3C",
                     ["id"] = 349,
@@ -36749,8 +36734,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -308892.00000001,
                     ["y"] = 625475.71428571,
-                }, -- end of [62]
-                [63] =
+                }, -- end of [61]
+                [62] =
                 {
                     ["callsignStr"] = "UGSS SUKHUMI",
                     ["id"] = 354,
@@ -36764,8 +36749,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -208534,
                     ["y"] = 550374.28571432,
-                }, -- end of [63]
-                [64] =
+                }, -- end of [62]
+                [63] =
                 {
                     ["callsignStr"] = "KVARIATI",
                     ["id"] = 357,
@@ -36779,8 +36764,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -364624.5714286,
                     ["y"] = 614534.28571419,
-                }, -- end of [64]
-                [65] =
+                }, -- end of [63]
+                [64] =
                 {
                     ["callsignStr"] = "G1NE",
                     ["id"] = 358,
@@ -36794,8 +36779,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -6022.0000000016,
                     ["y"] = 242016.28571428,
-                }, -- end of [65]
-                [66] =
+                }, -- end of [64]
+                [65] =
                 {
                     ["callsignStr"] = "OPSHKVITI",
                     ["id"] = 363,
@@ -36809,8 +36794,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -291575.42857143,
                     ["y"] = 692786.28571431,
-                }, -- end of [66]
-                [67] =
+                }, -- end of [65]
+                [66] =
                 {
                     ["callsignStr"] = "UGKO SOUTH",
                     ["id"] = 372,
@@ -36824,8 +36809,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -292545.14285715,
                     ["y"] = 688834.57142858,
-                }, -- end of [67]
-                [68] =
+                }, -- end of [66]
+                [67] =
                 {
                     ["callsignStr"] = "LAGAS",
                     ["id"] = 376,
@@ -36839,8 +36824,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -334423.99999999,
                     ["y"] = 837462.00000005,
-                }, -- end of [68]
-                [69] =
+                }, -- end of [67]
+                [68] =
                 {
                     ["callsignStr"] = "UGSB SOUTH",
                     ["id"] = 392,
@@ -36854,8 +36839,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -363744.57142857,
                     ["y"] = 614134.85714289,
-                }, -- end of [69]
-                [70] =
+                }, -- end of [68]
+                [69] =
                 {
                     ["callsignStr"] = "GLDANI",
                     ["id"] = 393,
@@ -36869,8 +36854,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -300062.00000001,
                     ["y"] = 883579.14285711,
-                }, -- end of [70]
-                [71] =
+                }, -- end of [69]
+                [70] =
                 {
                     ["callsignStr"] = "GONIO",
                     ["id"] = 401,
@@ -36884,8 +36869,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -359170.28571432,
                     ["y"] = 615654.2857142,
-                }, -- end of [71]
-                [72] =
+                }, -- end of [70]
+                [71] =
                 {
                     ["callsignStr"] = "BATUMI/NDB",
                     ["id"] = 406,
@@ -36899,8 +36884,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -355250.85714285,
                     ["y"] = 617872.57142857,
-                }, -- end of [72]
-                [73] =
+                }, -- end of [71]
+                [72] =
                 {
                     ["callsignStr"] = "UG5X BLACK SEA",
                     ["id"] = 418,
@@ -36914,8 +36899,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -309040.28571429,
                     ["y"] = 625384.85714287,
-                }, -- end of [73]
-                [74] =
+                }, -- end of [72]
+                [73] =
                 {
                     ["callsignStr"] = "MAGLAKI",
                     ["id"] = 420,
@@ -36929,8 +36914,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -274386.85714285,
                     ["y"] = 687527.71428574,
-                }, -- end of [74]
-                [75] =
+                }, -- end of [73]
+                [74] =
                 {
                     ["callsignStr"] = "UGKS RIVER WEST",
                     ["id"] = 441,
@@ -36944,8 +36929,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -288380.57142857,
                     ["y"] = 637445.71428571,
-                }, -- end of [75]
-                [76] =
+                }, -- end of [74]
+                [75] =
                 {
                     ["callsignStr"] = "ONISA",
                     ["id"] = 453,
@@ -36959,8 +36944,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -230235.71428571,
                     ["y"] = 758135.71428573,
-                }, -- end of [76]
-                [77] =
+                }, -- end of [75]
+                [76] =
                 {
                     ["callsignStr"] = "OBORA",
                     ["id"] = 459,
@@ -36974,8 +36959,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -302711.71428574,
                     ["y"] = 853102.85714277,
-                }, -- end of [77]
-                [78] =
+                }, -- end of [76]
+                [77] =
                 {
                     ["callsignStr"] = "BARAD",
                     ["id"] = 460,
@@ -36989,8 +36974,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -348415.71428571,
                     ["y"] = 912044.28571429,
-                }, -- end of [78]
-                [79] =
+                }, -- end of [77]
+                [78] =
                 {
                     ["callsignStr"] = "UGKO EAST",
                     ["id"] = 461,
@@ -37004,8 +36989,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -280475.14285715,
                     ["y"] = 697689.14285715,
-                }, -- end of [79]
-                [80] =
+                }, -- end of [78]
+                [79] =
                 {
                     ["callsignStr"] = "LOBIN",
                     ["id"] = 463,
@@ -37019,8 +37004,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -278348.57142857,
                     ["y"] = 735438.57142858,
-                }, -- end of [80]
-                [81] =
+                }, -- end of [79]
+                [80] =
                 {
                     ["callsignStr"] = "Belosarajskij/NDB",
                     ["id"] = 467,
@@ -37034,8 +37019,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -350280,
                     ["y"] = 620269.71428571,
-                }, -- end of [81]
-                [82] =
+                }, -- end of [80]
+                [81] =
                 {
                     ["callsignStr"] = "KUTAISI/VOR",
                     ["id"] = 469,
@@ -37049,8 +37034,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -285486.57142856,
                     ["y"] = 681747.42857143,
-                }, -- end of [82]
-                [83] =
+                }, -- end of [81]
+                [82] =
                 {
                     ["callsignStr"] = "UG24 NORTH",
                     ["id"] = 478,
@@ -37064,8 +37049,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -313416.28571429,
                     ["y"] = 883724.85714286,
-                }, -- end of [83]
-                [84] =
+                }, -- end of [82]
+                [83] =
                 {
                     ["callsignStr"] = "POTIJSKIJ/NDB",
                     ["id"] = 480,
@@ -37079,8 +37064,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -296780.28571429,
                     ["y"] = 617868.57142856,
-                }, -- end of [84]
-                [85] =
+                }, -- end of [83]
+                [84] =
                 {
                     ["callsignStr"] = "UGSB NORTH",
                     ["id"] = 486,
@@ -37094,8 +37079,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -342704.57142857,
                     ["y"] = 626430.00000003,
-                }, -- end of [85]
-                [86] =
+                }, -- end of [84]
+                [85] =
                 {
                     ["callsignStr"] = "SARPI",
                     ["id"] = 493,
@@ -37109,8 +37094,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -363742.57142858,
                     ["y"] = 605313.42857143,
-                }, -- end of [86]
-                [87] =
+                }, -- end of [85]
+                [86] =
                 {
                     ["callsignStr"] = "ROLIN",
                     ["id"] = 496,
@@ -37124,8 +37109,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -342128.57142857,
                     ["y"] = 536557.14285715,
-                }, -- end of [87]
-                [88] =
+                }, -- end of [86]
+                [87] =
                 {
                     ["callsignStr"] = "BASHLANI",
                     ["id"] = 498,
@@ -37139,8 +37124,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -288772.57142857,
                     ["y"] = 684329.14285716,
-                }, -- end of [88]
-                [89] =
+                }, -- end of [87]
+                [88] =
                 {
                     ["callsignStr"] = "ASELI",
                     ["id"] = 515,
@@ -37154,8 +37139,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -230964.28571427,
                     ["y"] = 825171.42857149,
-                }, -- end of [89]
-                [90] =
+                }, -- end of [88]
+                [89] =
                 {
                     ["callsignStr"] = "MAKHO",
                     ["id"] = 519,
@@ -37169,8 +37154,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -359927.42857146,
                     ["y"] = 625488.57142848,
-                }, -- end of [90]
-                [91] =
+                }, -- end of [89]
+                [90] =
                 {
                     ["callsignStr"] = "GANIRI",
                     ["id"] = 531,
@@ -37184,8 +37169,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -278449.71428571,
                     ["y"] = 674664.85714288,
-                }, -- end of [91]
-                [92] =
+                }, -- end of [90]
+                [91] =
                 {
                     ["callsignStr"] = "R2C",
                     ["id"] = 539,
@@ -37199,8 +37184,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -362094.85714286,
                     ["y"] = 628824.28571428,
-                }, -- end of [92]
-                [93] =
+                }, -- end of [91]
+                [92] =
                 {
                     ["callsignStr"] = "GALI/NDB",
                     ["id"] = 542,
@@ -37214,8 +37199,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -244167.71428571,
                     ["y"] = 621256.85714285,
-                }, -- end of [93]
-                [94] =
+                }, -- end of [92]
+                [93] =
                 {
                     ["callsignStr"] = "B/LMM",
                     ["comment"] = "",
@@ -37230,8 +37215,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -281572.85714285,
                     ["y"] = 644781.42857143,
-                }, -- end of [94]
-                [95] =
+                }, -- end of [93]
+                [94] =
                 {
                     ["callsignStr"] = "BI/LOM",
                     ["comment"] = "",
@@ -37246,8 +37231,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -281354.28571428,
                     ["y"] = 642090,
-                }, -- end of [95]
-                [96] =
+                }, -- end of [94]
+                [95] =
                 {
                     ["callsignStr"] = "T/LMM",
                     ["comment"] = "",
@@ -37262,8 +37247,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -318812.28571428,
                     ["y"] = 633300.28571429,
-                }, -- end of [96]
-                [97] =
+                }, -- end of [95]
+                [96] =
                 {
                     ["callsignStr"] = "KT/LOM",
                     ["comment"] = "",
@@ -37278,8 +37263,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -319735.71428571,
                     ["y"] = 630763.14285714,
-                }, -- end of [97]
-                [98] =
+                }, -- end of [96]
+                [97] =
                 {
                     ["callsignStr"] = "A/LMM",
                     ["comment"] = "",
@@ -37294,8 +37279,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -221964.85714285,
                     ["y"] = 567145.42857143,
-                }, -- end of [98]
-                [99] =
+                }, -- end of [97]
+                [98] =
                 {
                     ["callsignStr"] = "AV/LOM",
                     ["comment"] = "",
@@ -37310,8 +37295,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -223168.85714285,
                     ["y"] = 569562.28571429,
-                }, -- end of [99]
-                [100] =
+                }, -- end of [98]
+                [99] =
                 {
                     ["callsignStr"] = "XC/LOM",
                     ["comment"] = "",
@@ -37326,8 +37311,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -198335.42857142,
                     ["y"] = 517352.28571429,
-                }, -- end of [100]
-                [101] =
+                }, -- end of [99]
+                [100] =
                 {
                     ["callsignStr"] = "FARP DUSHETI",
                     ["comment"] = "",
@@ -37342,40 +37327,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -280027.42857141,
                     ["y"] = 862214.28571431,
-                }, -- end of [101]
-                [102] =
-                {
-                    ["callsignStr"] = "SA15",
-                    ["comment"] = "",
-                    ["id"] = 3854,
-                    ["properties"] =
-                    {
-                        ["angle"] = 0,
-                        ["scale"] = 0,
-                        ["steer"] = 2,
-                        ["vangle"] = 0,
-                        ["vnav"] = 1,
-                    }, -- end of ["properties"]
-                    ["x"] = -409190.85714284,
-                    ["y"] = 841536.5714286,
-                }, -- end of [102]
-                [103] =
-                {
-                    ["callsignStr"] = "SA8",
-                    ["comment"] = "",
-                    ["id"] = 3856,
-                    ["properties"] =
-                    {
-                        ["angle"] = 0,
-                        ["scale"] = 0,
-                        ["steer"] = 2,
-                        ["vangle"] = 0,
-                        ["vnav"] = 1,
-                    }, -- end of ["properties"]
-                    ["x"] = -392666.57142855,
-                    ["y"] = 823079.14285717,
-                }, -- end of [103]
-                [104] =
+                }, -- end of [100]
+                [101] =
                 {
                     ["callsignStr"] = "T2A.1",
                     ["comment"] = "Argo City",
@@ -37390,8 +37343,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -318357.48314287,
                     ["y"] = 719566.54371429,
-                }, -- end of [104]
-                [105] =
+                }, -- end of [101]
+                [102] =
                 {
                     ["callsignStr"] = "T1.1",
                     ["comment"] = "",
@@ -37406,8 +37359,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -348484.13514285,
                     ["y"] = 651047.50428571,
-                }, -- end of [105]
-                [106] =
+                }, -- end of [102]
+                [103] =
                 {
                     ["callsignStr"] = "T1.2",
                     ["comment"] = "",
@@ -37422,8 +37375,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -348245.296,
                     ["y"] = 656705.35057143,
-                }, -- end of [106]
-                [107] =
+                }, -- end of [103]
+                [104] =
                 {
                     ["callsignStr"] = "T1.3",
                     ["comment"] = "Smallville",
@@ -37438,8 +37391,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -348499.98114286,
                     ["y"] = 672948.66057143,
-                }, -- end of [107]
-                [108] =
+                }, -- end of [104]
+                [105] =
                 {
                     ["callsignStr"] = "T2A.2",
                     ["comment"] = "",
@@ -37454,8 +37407,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -322362.72800001,
                     ["y"] = 718827.48599999,
-                }, -- end of [108]
-                [109] =
+                }, -- end of [105]
+                [106] =
                 {
                     ["callsignStr"] = "T2A.3",
                     ["comment"] = "",
@@ -37470,8 +37423,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -325134.17257143,
                     ["y"] = 718798.00285713,
-                }, -- end of [109]
-                [110] =
+                }, -- end of [106]
+                [107] =
                 {
                     ["callsignStr"] = "T2A.4",
                     ["comment"] = "",
@@ -37486,8 +37439,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -326780.98228572,
                     ["y"] = 718657.59742856,
-                }, -- end of [110]
-                [111] =
+                }, -- end of [107]
+                [108] =
                 {
                     ["callsignStr"] = "T2A.5",
                     ["comment"] = "",
@@ -37502,8 +37455,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -327664.07742858,
                     ["y"] = 718199.26885712,
-                }, -- end of [111]
-                [112] =
+                }, -- end of [108]
+                [109] =
                 {
                     ["callsignStr"] = "T2A.6",
                     ["comment"] = "",
@@ -37518,8 +37471,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -328266.41714286,
                     ["y"] = 717236.12571427,
-                }, -- end of [112]
-                [113] =
+                }, -- end of [109]
+                [110] =
                 {
                     ["callsignStr"] = "T2A.7",
                     ["comment"] = "",
@@ -37534,8 +37487,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -329487.80428572,
                     ["y"] = 718504.0385714,
-                }, -- end of [113]
-                [114] =
+                }, -- end of [110]
+                [111] =
                 {
                     ["callsignStr"] = "T2B.1",
                     ["comment"] = "",
@@ -37550,8 +37503,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -338495.89428572,
                     ["y"] = 704276.66828569,
-                }, -- end of [114]
-                [115] =
+                }, -- end of [111]
+                [112] =
                 {
                     ["callsignStr"] = "T2B.2",
                     ["comment"] = "",
@@ -37566,8 +37519,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -338444.13942858,
                     ["y"] = 719057.53485714,
-                }, -- end of [115]
-                [116] =
+                }, -- end of [112]
+                [113] =
                 {
                     ["callsignStr"] = "T2B.3",
                     ["comment"] = "",
@@ -37582,8 +37535,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -366648.13342859,
                     ["y"] = 702950.51085714,
-                }, -- end of [116]
-                [117] =
+                }, -- end of [113]
+                [114] =
                 {
                     ["callsignStr"] = "T2B.4",
                     ["comment"] = "",
@@ -37598,8 +37551,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -368069.36000001,
                     ["y"] = 701219.06199999,
-                }, -- end of [117]
-                [118] =
+                }, -- end of [114]
+                [115] =
                 {
                     ["callsignStr"] = "T3B.1",
                     ["comment"] = "",
@@ -37614,8 +37567,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -336416.87200001,
                     ["y"] = 729187.53285715,
-                }, -- end of [118]
-                [119] =
+                }, -- end of [115]
+                [116] =
                 {
                     ["callsignStr"] = "T3B.2",
                     ["comment"] = "",
@@ -37630,8 +37583,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -334207.83457144,
                     ["y"] = 731959.77571429,
-                }, -- end of [119]
-                [120] =
+                }, -- end of [116]
+                [117] =
                 {
                     ["callsignStr"] = "T3B.3",
                     ["comment"] = "",
@@ -37646,8 +37599,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -339357.81828571,
                     ["y"] = 732069.292,
-                }, -- end of [120]
-                [121] =
+                }, -- end of [117]
+                [118] =
                 {
                     ["callsignStr"] = "T3B.4",
                     ["comment"] = "Central city",
@@ -37662,8 +37615,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -340602.73142857,
                     ["y"] = 738328.24314286,
-                }, -- end of [121]
-                [122] =
+                }, -- end of [118]
+                [119] =
                 {
                     ["callsignStr"] = "T3B.5",
                     ["comment"] = "Kandor",
@@ -37678,8 +37631,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -342038.41257143,
                     ["y"] = 741482.07200001,
-                }, -- end of [122]
-                [123] =
+                }, -- end of [119]
+                [120] =
                 {
                     ["callsignStr"] = "T3B.6",
                     ["comment"] = "Astro City",
@@ -37694,8 +37647,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -345951.05942857,
                     ["y"] = 739599.90342858,
-                }, -- end of [123]
-                [124] =
+                }, -- end of [120]
+                [121] =
                 {
                     ["callsignStr"] = "T3B.7",
                     ["comment"] = "",
@@ -37710,8 +37663,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -330926.92171428,
                     ["y"] = 745722.54600001,
-                }, -- end of [124]
-                [125] =
+                }, -- end of [121]
+                [122] =
                 {
                     ["callsignStr"] = "T3B.8",
                     ["comment"] = "",
@@ -37726,8 +37679,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -339663.63285714,
                     ["y"] = 754541.84800001,
-                }, -- end of [125]
-                [126] =
+                }, -- end of [122]
+                [123] =
                 {
                     ["callsignStr"] = "T3B.9",
                     ["comment"] = "",
@@ -37742,8 +37695,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -349988.31971428,
                     ["y"] = 779062.53800003,
-                }, -- end of [126]
-                [127] =
+                }, -- end of [123]
+                [124] =
                 {
                     ["callsignStr"] = "T3B.10",
                     ["comment"] = "",
@@ -37758,8 +37711,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -358023.23942857,
                     ["y"] = 773135.25171432,
-                }, -- end of [127]
-                [128] =
+                }, -- end of [124]
+                [125] =
                 {
                     ["callsignStr"] = "T3A.1_stop",
                     ["comment"] = "Moving tgt along road ",
@@ -37774,8 +37727,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -323253.41114286,
                     ["y"] = 752294.35571429,
-                }, -- end of [128]
-                [129] =
+                }, -- end of [125]
+                [126] =
                 {
                     ["callsignStr"] = "T3A.1_Start",
                     ["comment"] = "Moving tgt along road ",
@@ -37790,8 +37743,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -316433.61628572,
                     ["y"] = 760497.69371429,
-                }, -- end of [129]
-                [130] =
+                }, -- end of [126]
+                [127] =
                 {
                     ["callsignStr"] = "T3A.5",
                     ["comment"] = "",
@@ -37806,8 +37759,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -317414.466,
                     ["y"] = 768672.56428571,
-                }, -- end of [130]
-                [131] =
+                }, -- end of [127]
+                [128] =
                 {
                     ["callsignStr"] = "T3A.2",
                     ["comment"] = "",
@@ -37822,8 +37775,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -313339.80685713,
                     ["y"] = 762945.17199999,
-                }, -- end of [131]
-                [132] =
+                }, -- end of [128]
+                [129] =
                 {
                     ["callsignStr"] = "T3A.4",
                     ["comment"] = "",
@@ -37838,8 +37791,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -315934.3242857,
                     ["y"] = 765237.176,
-                }, -- end of [132]
-                [133] =
+                }, -- end of [129]
+                [130] =
                 {
                     ["callsignStr"] = "T3A.3",
                     ["comment"] = "",
@@ -37854,8 +37807,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -314900.64142855,
                     ["y"] = 764646.02285714,
-                }, -- end of [133]
-                [134] =
+                }, -- end of [130]
+                [131] =
                 {
                     ["callsignStr"] = "T3A.6",
                     ["comment"] = "",
@@ -37870,8 +37823,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -318687.79857141,
                     ["y"] = 771311.79342857,
-                }, -- end of [134]
-                [135] =
+                }, -- end of [131]
+                [132] =
                 {
                     ["callsignStr"] = "T3B.11",
                     ["comment"] = "",
@@ -37886,8 +37839,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -352642.69057141,
                     ["y"] = 753831.182,
-                }, -- end of [135]
-                [136] =
+                }, -- end of [132]
+                [133] =
                 {
                     ["callsignStr"] = "T3B.12",
                     ["comment"] = "",
@@ -37902,8 +37855,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -364368.58914284,
                     ["y"] = 753733.73885714,
-                }, -- end of [136]
-                [137] =
+                }, -- end of [133]
+                [134] =
                 {
                     ["callsignStr"] = "T4A.1",
                     ["comment"] = "Keystone city",
@@ -37918,8 +37871,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -300715.95114285,
                     ["y"] = 815559.2897143,
-                }, -- end of [137]
-                [138] =
+                }, -- end of [134]
+                [135] =
                 {
                     ["callsignStr"] = "T4B.1",
                     ["comment"] = "GOTHAM City",
@@ -37934,8 +37887,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -330748.2082857,
                     ["y"] = 828310.15942858,
-                }, -- end of [138]
-                [139] =
+                }, -- end of [135]
+                [136] =
                 {
                     ["callsignStr"] = "T4B.2",
                     ["comment"] = "",
@@ -37950,8 +37903,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -331248.3822857,
                     ["y"] = 827821.13914287,
-                }, -- end of [139]
-                [140] =
+                }, -- end of [136]
+                [137] =
                 {
                     ["callsignStr"] = "T4B.3",
                     ["comment"] = "",
@@ -37966,8 +37919,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -333020.76285713,
                     ["y"] = 824269.5937143,
-                }, -- end of [140]
-                [141] =
+                }, -- end of [137]
+                [138] =
                 {
                     ["callsignStr"] = "T3A.7",
                     ["comment"] = "",
@@ -37982,8 +37935,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -323653.71942859,
                     ["y"] = 752327.38914285,
-                }, -- end of [141]
-                [142] =
+                }, -- end of [138]
+                [139] =
                 {
                     ["callsignStr"] = "T2B.5",
                     ["comment"] = "",
@@ -37998,8 +37951,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -339372.68514287,
                     ["y"] = 703430.02114285,
-                }, -- end of [142]
-                [143] =
+                }, -- end of [139]
+                [140] =
                 {
                     ["callsignStr"] = "T2B.6",
                     ["comment"] = "",
@@ -38014,8 +37967,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -338358.13742858,
                     ["y"] = 705381.68028571,
-                }, -- end of [143]
-                [144] =
+                }, -- end of [140]
+                [141] =
                 {
                     ["callsignStr"] = "T4B.5",
                     ["comment"] = "",
@@ -38030,8 +37983,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -331629.31885714,
                     ["y"] = 828125.30514285,
-                }, -- end of [144]
-                [145] =
+                }, -- end of [141]
+                [142] =
                 {
                     ["callsignStr"] = "T4B.6",
                     ["comment"] = "",
@@ -38046,8 +37999,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -331215.32799999,
                     ["y"] = 827146.77314285,
-                }, -- end of [145]
-                [146] =
+                }, -- end of [142]
+                [143] =
                 {
                     ["callsignStr"] = "T1.2",
                     ["comment"] = "",
@@ -38062,7 +38015,7 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -348263.07828572,
                     ["y"] = 656505.47285714,
-                }, -- end of [146]
+                }, -- end of [143]
             }, -- end of ["nav_points"]
         }, -- end of ["blue"]
         ["red"] =
@@ -39683,7 +39636,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 484838,
+    ["currentKey"] = 490224,
     ["date"] =
     {
         ["Day"] = 1,
@@ -42925,9 +42878,9 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -345883.03028572,
-        ["centerY"] = 652523.57657143,
-        ["zoom"] = 190220,
+        ["centerX"] = -344899.80157143,
+        ["centerY"] = 636651.73800001,
+        ["zoom"] = 546299,
     }, -- end of ["map"]
     ["maxDictId"] = 2461,
     ["pictureFileNameB"] =
@@ -43143,6 +43096,54 @@ mission =
                 ["y"] = 121385.06371427,
                 ["zoneId"] = 2692,
             }, -- end of [7]
+            [8] =
+            {
+                ["color"] =
+                {
+                    [1] = 0,
+                    [2] = 1,
+                    [3] = 0,
+                    [4] = 0.14901960784314,
+                }, -- end of ["color"]
+                ["hidden"] = false,
+                ["name"] = "RANGE ENTRY WEST",
+                ["radius"] = 3000,
+                ["x"] = -379086.706,
+                ["y"] = 605275.41714285,
+                ["zoneId"] = 4190,
+            }, -- end of [8]
+            [9] =
+            {
+                ["color"] =
+                {
+                    [1] = 0,
+                    [2] = 1,
+                    [3] = 0,
+                    [4] = 0.14901960784314,
+                }, -- end of ["color"]
+                ["hidden"] = false,
+                ["name"] = "RANGE ENTRY EAST",
+                ["radius"] = 3000,
+                ["x"] = -340647.13171428,
+                ["y"] = 878897.312,
+                ["zoneId"] = 4191,
+            }, -- end of [9]
+            [10] =
+            {
+                ["color"] =
+                {
+                    [1] = 0,
+                    [2] = 1,
+                    [3] = 0,
+                    [4] = 0.14901960784314,
+                }, -- end of ["color"]
+                ["hidden"] = false,
+                ["name"] = "RANGE ENTRY CENTER",
+                ["radius"] = 3000,
+                ["x"] = -289147.18314285,
+                ["y"] = 740831.02285714,
+                ["zoneId"] = 4192,
+            }, -- end of [10]
         }, -- end of ["zones"]
     }, -- end of ["triggers"]
     ["trigrules"] =
