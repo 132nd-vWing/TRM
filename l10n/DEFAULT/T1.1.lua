@@ -127,48 +127,67 @@ function _ON_DEMAND_1_Recon_STRYKER_section ()
 Recon_STRYKER_section:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
 end
 
-function _ON_DEMAND_1_IFV_BMP2_vehicle ()
+function _ON_DEMAND_2_IFV_BMP2_vehicle ()
 IFV_BMP2_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
 end
-function _ON_DEMAND_1_IFV_BMP2_section ()
+function _ON_DEMAND_2_IFV_BMP2_section ()
 IFV_BMP2_section:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
 end
-function _ON_DEMAND_1_IFV_LAV25_vehicle ()
+function _ON_DEMAND_2_IFV_LAV25_vehicle ()
 IFV_LAV25_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
 end
-function _ON_DEMAND_1_IFV_LAV25_section ()
+function _ON_DEMAND_2_IFV_LAV25_section ()
 IFV_LAV25_section:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
 end
-function _ON_DEMAND_1_IFV_BRADLEY_vehicle ()
+function _ON_DEMAND_2_IFV_BRADLEY_vehicle ()
 IFV_BRADLEY_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
 end
-function _ON_DEMAND_1_IFV_BRADLEY_section ()
+function _ON_DEMAND_2_IFV_BRADLEY_section ()
 IFV_BRADLEY_section:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
 end
-function _ON_DEMAND_1_IFV_BMP3_vehicle ()
+function _ON_DEMAND_2_IFV_BMP3_vehicle ()
 IFV_BMP3_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
 end
-function _ON_DEMAND_1_IFV_BMP3_section ()
+function _ON_DEMAND_2_IFV_BMP3_section ()
 IFV_BMP3_section:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
 end
-function _ON_DEMAND_1_IFV_BTR_vehicle ()
+function _ON_DEMAND_2_IFV_BTR_vehicle ()
 IFV_BTR_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
 end
-function _ON_DEMAND_1_IFV_BTR_section ()
+function _ON_DEMAND_2_IFV_BTR_section ()
 IFV_BTR_section:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
 end
-function _ON_DEMAND_1_IFV_M113_vehicle ()
+function _ON_DEMAND_2_IFV_M113_vehicle ()
 IFV_BTR_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
 end
-function _ON_DEMAND_1_IFV_M113_section ()
+function _ON_DEMAND_2_IFV_M113_section ()
 IFV_BTR_section:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
 end
 
-
-
-
-
-
+function _ON_DEMAND_3_MBT_T72_vehicle ()
+MBT_T72_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
+end
+function _ON_DEMAND_3_MBT_T72_section ()
+MBT_T72_section:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
+end
+function _ON_DEMAND_3_MBT_T80_vehicle ()
+MBT_T80_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
+end
+function _ON_DEMAND_3_MBT_T80_section ()
+MBT_T80_section:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
+end
+function _ON_DEMAND_3_MBT_ABRAMS_vehicle ()
+MBT_ABRAMS_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
+end
+function _ON_DEMAND_3_MBT_ABRAMS_section ()
+MBT_ABRAMS_section:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
+end
+function _ON_DEMAND_3_MBT_LEO2_vehicle ()
+MBT_LEO2_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
+end
+function _ON_DEMAND_3_MBT_LEO2_section ()
+MBT_LEO2_section:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
+end
 
 
 
@@ -194,18 +213,27 @@ menu_ON_DEMAND_1_Recon_BRDM_section = MENU_MISSION_COMMAND:New("Spawn in Recon B
 menu_ON_DEMAND_1_Recon_STRYKER_vehicle = MENU_MISSION_COMMAND:New("Spawn in Recon STRYKER Vehicle",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_STRYKER_vehicle)
 menu_ON_DEMAND_1_Recon_STRYKER_section = MENU_MISSION_COMMAND:New("Spawn in Recon STRYKER Section",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_STRYKER_section)
 
-menu_ON_DEMAND_1_IFV_BMP2_vehicle = MENU_MISSION_COMMAND:New("Spawn in IFV BMP2 Vehicle",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_BMP2_vehicle)
-menu_ON_DEMAND_1_IFV_BMP2_section = MENU_MISSION_COMMAND:New("Spawn in IFV BMP2 Section",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_BMP2_section)
-menu_ON_DEMAND_1_IFV_LAV25_vehicle = MENU_MISSION_COMMAND:New("Spawn in IFV LAV25 Vehicle",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_LAV25_vehicle)
-menu_ON_DEMAND_1_IFV_LAV25_section = MENU_MISSION_COMMAND:New("Spawn in IFV LAV25 Section",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_LAV25_section)
-menu_ON_DEMAND_1_IFV_BRADLEY_vehicle = MENU_MISSION_COMMAND:New("Spawn in IFV BRADLEY Vehicle",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_BRADLEY_vehicle)
-menu_ON_DEMAND_1_IFV_BRADLEY_section = MENU_MISSION_COMMAND:New("Spawn in IFV BRADLEY Section",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_BRADLEY_section)
-menu_ON_DEMAND_1_IFV_BMP3_vehicle = MENU_MISSION_COMMAND:New("Spawn in IFV BMP3 Vehicle",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_BMP3_vehicle)
-menu_ON_DEMAND_1_IFV_BMP3_section = MENU_MISSION_COMMAND:New("Spawn in IFV BMP3 Section",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_BMP3_section)
-menu_ON_DEMAND_1_IFV_BTR_vehicle = MENU_MISSION_COMMAND:New("Spawn in IFV BTR Vehicle",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_BTR_vehicle)
-menu_ON_DEMAND_1_IFV_BTR_section = MENU_MISSION_COMMAND:New("Spawn in IFV BTR Section",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_BTR_section)
-menu_ON_DEMAND_1_IFV_M113_vehicle = MENU_MISSION_COMMAND:New("Spawn in IFV M113 Vehicle",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_M113_vehicle)
-menu_ON_DEMAND_1_IFV_M113_section = MENU_MISSION_COMMAND:New("Spawn in IFV M113 Section",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_M113_section)
+menu_ON_DEMAND_2_IFV_BMP2_vehicle = MENU_MISSION_COMMAND:New("Spawn in IFV BMP2 Vehicle",spawn_menu_OD_IFV,_ON_DEMAND_2_IFV_BMP2_vehicle)
+menu_ON_DEMAND_2_IFV_BMP2_section = MENU_MISSION_COMMAND:New("Spawn in IFV BMP2 Section",spawn_menu_OD_IFV,_ON_DEMAND_2_IFV_BMP2_section)
+menu_ON_DEMAND_2_IFV_LAV25_vehicle = MENU_MISSION_COMMAND:New("Spawn in IFV LAV25 Vehicle",spawn_menu_OD_IFV,_ON_DEMAND_2_IFV_LAV25_vehicle)
+menu_ON_DEMAND_2_IFV_LAV25_section = MENU_MISSION_COMMAND:New("Spawn in IFV LAV25 Section",spawn_menu_OD_IFV,_ON_DEMAND_2_IFV_LAV25_section)
+menu_ON_DEMAND_2_IFV_BRADLEY_vehicle = MENU_MISSION_COMMAND:New("Spawn in IFV BRADLEY Vehicle",spawn_menu_OD_IFV,_ON_DEMAND_2_IFV_BRADLEY_vehicle)
+menu_ON_DEMAND_2_IFV_BRADLEY_section = MENU_MISSION_COMMAND:New("Spawn in IFV BRADLEY Section",spawn_menu_OD_IFV,_ON_DEMAND_2_IFV_BRADLEY_section)
+menu_ON_DEMAND_2_IFV_BMP3_vehicle = MENU_MISSION_COMMAND:New("Spawn in IFV BMP3 Vehicle",spawn_menu_OD_IFV,_ON_DEMAND_2_IFV_BMP3_vehicle)
+menu_ON_DEMAND_2_IFV_BMP3_section = MENU_MISSION_COMMAND:New("Spawn in IFV BMP3 Section",spawn_menu_OD_IFV,_ON_DEMAND_2_IFV_BMP3_section)
+menu_ON_DEMAND_2_IFV_BTR_vehicle = MENU_MISSION_COMMAND:New("Spawn in IFV BTR Vehicle",spawn_menu_OD_IFV,_ON_DEMAND_2_IFV_BTR_vehicle)
+menu_ON_DEMAND_2_IFV_BTR_section = MENU_MISSION_COMMAND:New("Spawn in IFV BTR Section",spawn_menu_OD_IFV,_ON_DEMAND_2_IFV_BTR_section)
+menu_ON_DEMAND_2_IFV_M113_vehicle = MENU_MISSION_COMMAND:New("Spawn in IFV M113 Vehicle",spawn_menu_OD_IFV,_ON_DEMAND_2_IFV_M113_vehicle)
+menu_ON_DEMAND_2_IFV_M113_section = MENU_MISSION_COMMAND:New("Spawn in IFV M113 Section",spawn_menu_OD_IFV,_ON_DEMAND_2_IFV_M113_section)
+
+menu_ON_DEMAND_3_MBT_T72_vehicle = MENU_MISSION_COMMAND:New("Spawn in MBT T72 Vehicle",spawn_menu_OD_MBT,_ON_DEMAND_3_MBT_T72_vehicle)
+menu_ON_DEMAND_3_MBT_T72_section = MENU_MISSION_COMMAND:New("Spawn in MBT T72 Section",spawn_menu_OD_MBT,_ON_DEMAND_3_MBT_T72_section)
+menu_ON_DEMAND_3_MBT_T80_vehicle = MENU_MISSION_COMMAND:New("Spawn in MBT T80 Vehicle",spawn_menu_OD_MBT,_ON_DEMAND_3_MBT_T80_vehicle)
+menu_ON_DEMAND_3_MBT_T80_section = MENU_MISSION_COMMAND:New("Spawn in MBT T80 Section",spawn_menu_OD_MBT,_ON_DEMAND_3_MBT_T80_section)
+menu_ON_DEMAND_3_MBT_ABRAMS_vehicle = MENU_MISSION_COMMAND:New("Spawn in MBT ABRAMS Vehicle",spawn_menu_OD_MBT,_ON_DEMAND_3_MBT_ABRAMS_vehicle)
+menu_ON_DEMAND_3_MBT_ABRAMS_section = MENU_MISSION_COMMAND:New("Spawn in MBT ABRAMS Section",spawn_menu_OD_MBT,_ON_DEMAND_3_MBT_ABRAMS_section)
+menu_ON_DEMAND_3_MBT_LEO2_vehicle = MENU_MISSION_COMMAND:New("Spawn in MBT Leopard2 Vehicle",spawn_menu_OD_MBT,_ON_DEMAND_3_MBT_LEO2_vehicle)
+menu_ON_DEMAND_3_MBT_LEO2_section = MENU_MISSION_COMMAND:New("Spawn in MBT Leopard2 Section",spawn_menu_OD_MBT,_ON_DEMAND_3_MBT_LEO2_section)
 
 
-
+  
