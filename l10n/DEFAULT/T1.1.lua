@@ -43,14 +43,12 @@ T1_1_red_MBT = SPAWN:New("T1_1_red_MBT"):InitRandomizeTemplate(T1_1_table_red_MB
 T1_1_red_AAA = SPAWN:New("T1_1_red_AAA"):InitRandomizeTemplate(T1_1_table_red_AAA):InitRandomizeRoute(3,0,100):Spawn()
 T1_1_red_misc = SPAWN:New("T1_1_red_misc"):InitRandomizeTemplate(T1_1_table_red_misc):InitRandomizeRoute(3,0,100):Spawn()
 -- RED Spawners
-
 -- BLUE Spawners
 T1_1_blue_recon = SPAWN:New("T1_1_blue_recon"):InitRandomizeTemplate(T1_1_table_blue_recon):InitRandomizeRoute(3,0,100):Spawn()
 T1_1_blue_IFV = SPAWN:New("T1_1_blue_IFV"):InitRandomizeTemplate(T1_1_table_blue_IFV):InitRandomizeRoute(3,0,100):Spawn()
 T1_1_blue_MBT = SPAWN:New("T1_1_blue_MBT"):InitRandomizeTemplate(T1_1_table_blue_MBT):InitRandomizeRoute(3,0,100):Spawn()
 -- BLUE Spawners
 spawn_menu:Remove()
-
 end
 
 
@@ -80,31 +78,91 @@ Recon_BRDM_section = SPAWN:New("_ON_DEMAND_1: Recon_BRDM_section")
 Recon_STRYKER_vehicle = SPAWN:New("_ON_DEMAND_1: Recon_stryker_vehicle")
 Recon_STRYKER_section = SPAWN:New("_ON_DEMAND_1: Recon_stryker_section")
 
+IFV_BMP2_vehicle = SPAWN:New("_ON_DEMAND_2: IFV_BMP2_vehicle")
+IFV_BMP2_section = SPAWN:New("_ON_DEMAND_2: IFV_BMP2_section")
+IFV_LAV25_vehicle = SPAWN:New("_ON_DEMAND_2: IFV_LAV25_vehicle")
+IFV_LAV25_section = SPAWN:New("_ON_DEMAND_2: IFV_LAV25_section")
+IFV_BRADLEY_vehicle = SPAWN:New("_ON_DEMAND_2: IFV_Bradley_vehicle")
+IFV_BRADLEY_section = SPAWN:New("_ON_DEMAND_2: IFV_Bradley_section")
+IFV_BMP3_vehicle = SPAWN:New("_ON_DEMAND_2: IFV_BMP3_vehicle")
+IFV_BMP3_section = SPAWN:New("_ON_DEMAND_2: IFV_BMP3_section")
+IFV_BTR_vehicle = SPAWN:New("_ON_DEMAND_2: IFV_BTR_vehicle")
+IFV_BTR_section = SPAWN:New("_ON_DEMAND_2: IFV_BTR_section")
+IFV_M113_vehicle = SPAWN:New("_ON_DEMAND_2: IFV_M113_vehicle")
+IFV_M113_section = SPAWN:New("_ON_DEMAND_2: IFV_M113_section")
+
+
+MBT_T72_vehicle = SPAWN:New("_ON_DEMAND_3: MBT_T72_vehicle")
+MBT_T72_section = SPAWN:New("_ON_DEMAND_3: MBT_T72_section")
+MBT_T80_vehicle = SPAWN:New("_ON_DEMAND_3: MBT_T80_vehicle")
+MBT_T80_section = SPAWN:New("_ON_DEMAND_3: MBT_T80_section")
+MBT_ABRAMS_vehicle = SPAWN:New("_ON_DEMAND_3: MBT_Abrams_vehicle")
+MBT_ABRAMS_section = SPAWN:New("_ON_DEMAND_3: MBT_Abrams_section")
+MBT_LEO2_vehicle = SPAWN:New("_ON_DEMAND_3: MBT_Leo2_vehicle")
+MBT_LEO2_section = SPAWN:New("_ON_DEMAND_3: MBT_Leo2_section")
+
+MISC_SHILKA_vehicle = SPAWN:New("_ON_DEMAND_4: Misc_Shilka_vehicle")
+MISC_C2_vehicle = SPAWN:New("_ON_DEMAND_4: Misc_C2_vehicle")
+MISC_ARTY_vehicle = SPAWN:New("_ON_DEMAND_4: Misc_Arty_vehicle")
+MISC_MLRS_vehicle = SPAWN:New("_ON_DEMAND_4: Misc_MLRS_vehicle")
+MISC_SA13_vehicle = SPAWN:New("_ON_DEMAND_4: Misc_SA-13_vehicle")
+MISC_SA19_vehicle = SPAWN:New("_ON_DEMAND_4: Misc_SA-19_vehicle")
+
 function _ON_DEMAND_1_Recon_HMMWV_vehicle ()
 Recon_HMMWV_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
 end
-
 function _ON_DEMAND_1_Recon_HMMWV_section ()
 Recon_HMMWV_section:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
 end
-
 function _ON_DEMAND_1_Recon_BRDM_vehicle ()
 Recon_BRDM_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
 end
-
 function _ON_DEMAND_1_Recon_BRDM_section ()
 Recon_BRDM_section:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
 end
-
 function _ON_DEMAND_1_Recon_STRYKER_vehicle ()
 Recon_STRYKER_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
 end
-
 function _ON_DEMAND_1_Recon_STRYKER_section ()
 Recon_STRYKER_section:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
 end
 
-
+function _ON_DEMAND_1_IFV_BMP2_vehicle ()
+IFV_BMP2_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
+end
+function _ON_DEMAND_1_IFV_BMP2_section ()
+IFV_BMP2_section:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
+end
+function _ON_DEMAND_1_IFV_LAV25_vehicle ()
+IFV_LAV25_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
+end
+function _ON_DEMAND_1_IFV_LAV25_section ()
+IFV_LAV25_section:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
+end
+function _ON_DEMAND_1_IFV_BRADLEY_vehicle ()
+IFV_BRADLEY_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
+end
+function _ON_DEMAND_1_IFV_BRADLEY_section ()
+IFV_BRADLEY_section:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
+end
+function _ON_DEMAND_1_IFV_BMP3_vehicle ()
+IFV_BMP3_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
+end
+function _ON_DEMAND_1_IFV_BMP3_section ()
+IFV_BMP3_section:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
+end
+function _ON_DEMAND_1_IFV_BTR_vehicle ()
+IFV_BTR_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
+end
+function _ON_DEMAND_1_IFV_BTR_section ()
+IFV_BTR_section:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
+end
+function _ON_DEMAND_1_IFV_M113_vehicle ()
+IFV_BTR_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
+end
+function _ON_DEMAND_1_IFV_M113_section ()
+IFV_BTR_section:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
+end
 
 
 
@@ -130,11 +188,24 @@ t1_1_Threat_On = MENU_MISSION_COMMAND:New("Activate Threat Site",Menu_Range_T1_1
 
 
 menu_ON_DEMAND_1_Recon_HMMWV_vehicle = MENU_MISSION_COMMAND:New("Spawn in Recon HMMWV Vehicle",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_HMMWV_vehicle)
-menu_ON_DEMAND_1_Recon_HMMWV_section = MENU_MISSION_COMMAND:New("Spawn in Recon HMMWV section",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_HMMWV_section)
+menu_ON_DEMAND_1_Recon_HMMWV_section = MENU_MISSION_COMMAND:New("Spawn in Recon HMMWV Section",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_HMMWV_section)
 menu_ON_DEMAND_1_Recon_BRDM_vehicle = MENU_MISSION_COMMAND:New("Spawn in Recon BRDM Vehicle",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_BRDM_vehicle)
-menu_ON_DEMAND_1_Recon_BRDM_section = MENU_MISSION_COMMAND:New("Spawn in Recon BRDM section",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_BRDM_section)
+menu_ON_DEMAND_1_Recon_BRDM_section = MENU_MISSION_COMMAND:New("Spawn in Recon BRDM Section",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_BRDM_section)
 menu_ON_DEMAND_1_Recon_STRYKER_vehicle = MENU_MISSION_COMMAND:New("Spawn in Recon STRYKER Vehicle",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_STRYKER_vehicle)
-menu_ON_DEMAND_1_Recon_STRYKER_section = MENU_MISSION_COMMAND:New("Spawn in Recon STRYKER section",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_STRYKER_section)
+menu_ON_DEMAND_1_Recon_STRYKER_section = MENU_MISSION_COMMAND:New("Spawn in Recon STRYKER Section",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_STRYKER_section)
+
+menu_ON_DEMAND_1_IFV_BMP2_vehicle = MENU_MISSION_COMMAND:New("Spawn in IFV BMP2 Vehicle",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_BMP2_vehicle)
+menu_ON_DEMAND_1_IFV_BMP2_section = MENU_MISSION_COMMAND:New("Spawn in IFV BMP2 Section",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_BMP2_section)
+menu_ON_DEMAND_1_IFV_LAV25_vehicle = MENU_MISSION_COMMAND:New("Spawn in IFV LAV25 Vehicle",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_LAV25_vehicle)
+menu_ON_DEMAND_1_IFV_LAV25_section = MENU_MISSION_COMMAND:New("Spawn in IFV LAV25 Section",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_LAV25_section)
+menu_ON_DEMAND_1_IFV_BRADLEY_vehicle = MENU_MISSION_COMMAND:New("Spawn in IFV BRADLEY Vehicle",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_BRADLEY_vehicle)
+menu_ON_DEMAND_1_IFV_BRADLEY_section = MENU_MISSION_COMMAND:New("Spawn in IFV BRADLEY Section",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_BRADLEY_section)
+menu_ON_DEMAND_1_IFV_BMP3_vehicle = MENU_MISSION_COMMAND:New("Spawn in IFV BMP3 Vehicle",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_BMP3_vehicle)
+menu_ON_DEMAND_1_IFV_BMP3_section = MENU_MISSION_COMMAND:New("Spawn in IFV BMP3 Section",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_BMP3_section)
+menu_ON_DEMAND_1_IFV_BTR_vehicle = MENU_MISSION_COMMAND:New("Spawn in IFV BTR Vehicle",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_BTR_vehicle)
+menu_ON_DEMAND_1_IFV_BTR_section = MENU_MISSION_COMMAND:New("Spawn in IFV BTR Section",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_BTR_section)
+menu_ON_DEMAND_1_IFV_M113_vehicle = MENU_MISSION_COMMAND:New("Spawn in IFV M113 Vehicle",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_M113_vehicle)
+menu_ON_DEMAND_1_IFV_M113_section = MENU_MISSION_COMMAND:New("Spawn in IFV M113 Section",spawn_menu_OD_IFV,_ON_DEMAND_1_IFV_M113_section)
 
 
 

@@ -20782,8 +20782,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = 12195.869714286,
-                                            ["y"] = 121115.40314286,
+                                            ["x"] = 12171.501428566,
+                                            ["y"] = 121143.44742857,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                     ["routeRelativeTOT"] = true,
@@ -20811,13 +20811,13 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "M-2 Bradley",
                                         ["unitId"] = 663,
-                                        ["x"] = 12195.869714286,
-                                        ["y"] = 121115.40314286,
+                                        ["x"] = 12171.501428566,
+                                        ["y"] = 121143.44742857,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
-                                ["x"] = 12195.869714286,
-                                ["y"] = 121115.40314286,
+                                ["x"] = 12171.501428566,
+                                ["y"] = 121143.44742857,
                             }, -- end of [25]
                             [26] =
                             {
@@ -34010,8 +34010,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = 12195.869714286,
-                                            ["y"] = 119305.22457143,
+                                            ["x"] = 12158.945142851,
+                                            ["y"] = 119398.12371429,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                     ["routeRelativeTOT"] = true,
@@ -34039,13 +34039,13 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "BMP-2",
                                         ["unitId"] = 653,
-                                        ["x"] = 12195.869714286,
-                                        ["y"] = 119305.22457143,
+                                        ["x"] = 12158.945142851,
+                                        ["y"] = 119398.12371429,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
-                                ["x"] = 12195.869714286,
-                                ["y"] = 119305.22457143,
+                                ["x"] = 12158.945142851,
+                                ["y"] = 119398.12371429,
                             }, -- end of [26]
                             [27] =
                             {
@@ -34247,8 +34247,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = 12195.869714286,
-                                            ["y"] = 121839.47457143,
+                                            ["x"] = 12161.208857137,
+                                            ["y"] = 121808.17085714,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                     ["routeRelativeTOT"] = true,
@@ -34276,13 +34276,13 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "BMP-3",
                                         ["unitId"] = 666,
-                                        ["x"] = 12195.869714286,
-                                        ["y"] = 121839.47457143,
+                                        ["x"] = 12161.208857137,
+                                        ["y"] = 121808.17085714,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
-                                ["x"] = 12195.869714286,
-                                ["y"] = 121839.47457143,
+                                ["x"] = 12161.208857137,
+                                ["y"] = 121808.17085714,
                             }, -- end of [29]
                             [30] =
                             {
@@ -34591,8 +34591,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = 12326.202571429,
-                                            ["y"] = 123244.17314286,
+                                            ["x"] = 12297.064285708,
+                                            ["y"] = 123227.79085714,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                     ["routeRelativeTOT"] = true,
@@ -34620,13 +34620,13 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "M-113",
                                         ["unitId"] = 672,
-                                        ["x"] = 12326.202571429,
-                                        ["y"] = 123244.17314286,
+                                        ["x"] = 12297.064285708,
+                                        ["y"] = 123227.79085714,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
-                                ["x"] = 12326.202571429,
-                                ["y"] = 123244.17314286,
+                                ["x"] = 12297.064285708,
+                                ["y"] = 123227.79085714,
                             }, -- end of [33]
                             [34] =
                             {
@@ -34985,8 +34985,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = 12364.479714296,
-                                            ["y"] = 125517.24942855,
+                                            ["x"] = 12397.514571423,
+                                            ["y"] = 125437.69714286,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                     ["routeRelativeTOT"] = true,
@@ -35014,13 +35014,13 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "T-80UD",
                                         ["unitId"] = 683,
-                                        ["x"] = 12364.479714296,
-                                        ["y"] = 125517.24942855,
+                                        ["x"] = 12397.514571423,
+                                        ["y"] = 125437.69714286,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
-                                ["x"] = 12364.479714296,
-                                ["y"] = 125517.24942855,
+                                ["x"] = 12397.514571423,
+                                ["y"] = 125437.69714286,
                             }, -- end of [38]
                             [39] =
                             {
@@ -35310,8 +35310,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = 14476.94,
-                                            ["y"] = 125141.38085714,
+                                            ["x"] = 14594.864571423,
+                                            ["y"] = 125174.01514286,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                     ["routeRelativeTOT"] = true,
@@ -35339,13 +35339,13 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "SKP-11",
                                         ["unitId"] = 705,
-                                        ["x"] = 14476.94,
-                                        ["y"] = 125141.38085714,
+                                        ["x"] = 14594.864571423,
+                                        ["y"] = 125174.01514286,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
-                                ["x"] = 14476.94,
-                                ["y"] = 125141.38085714,
+                                ["x"] = 14594.864571423,
+                                ["y"] = 125174.01514286,
                             }, -- end of [42]
                             [43] =
                             {
@@ -35517,8 +35517,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = 14406.075714282,
-                                            ["y"] = 126597.44085715,
+                                            ["x"] = 14356.295142851,
+                                            ["y"] = 126530.094,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                     ["routeRelativeTOT"] = true,
@@ -35546,13 +35546,13 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "Strela-10M3",
                                         ["unitId"] = 708,
-                                        ["x"] = 14406.075714282,
-                                        ["y"] = 126597.44085715,
+                                        ["x"] = 14356.295142851,
+                                        ["y"] = 126530.094,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
-                                ["x"] = 14406.075714282,
-                                ["y"] = 126597.44085715,
+                                ["x"] = 14356.295142851,
+                                ["y"] = 126530.094,
                             }, -- end of [45]
                             [46] =
                             {
@@ -38071,7 +38071,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 436330,
+    ["currentKey"] = 452534,
     ["date"] =
     {
         ["Day"] = 1,
@@ -41313,11 +41313,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -347271.94428572,
-        ["centerY"] = 660992.834,
-        ["zoom"] = 2332,
+        ["centerX"] = 7277.803857137,
+        ["centerY"] = 130127.29085714,
+        ["zoom"] = 71365,
     }, -- end of ["map"]
-    ["maxDictId"] = 2448,
+    ["maxDictId"] = 2453,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
@@ -41382,7 +41382,7 @@ mission =
         {
             [1] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2182\"));",
             [2] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2181\")); mission.trig.func[2]=nil;",
-            [3] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2448\")); mission.trig.func[3]=nil;",
+            [3] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2453\")); mission.trig.func[3]=nil;",
         }, -- end of ["actions"]
         ["conditions"] =
         {
@@ -41597,7 +41597,7 @@ mission =
                         [1] = "",
                         [2] = "",
                     }, -- end of ["ai_task"]
-                    ["file"] = "ResKey_Action_2448",
+                    ["file"] = "ResKey_Action_2453",
                     ["predicate"] = "a_do_script_file",
                 }, -- end of [1]
             }, -- end of ["actions"]

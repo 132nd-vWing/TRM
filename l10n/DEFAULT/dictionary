@@ -650,7 +650,7 @@ end,{},3,5,10) \
     ["DictKey_GroupName_2114"] = "_ON_DEMAND_3: MBT_T72_vehicle",
     ["DictKey_GroupName_2118"] = "_ON_DEMAND_3: MBT_Abrams_vehicle",
     ["DictKey_GroupName_2121"] = "_ON_DEMAND_3: MBT_T80_section",
-    ["DictKey_GroupName_2125"] = "_ON_DEMAND_3: MBT_T80_vehicle #001",
+    ["DictKey_GroupName_2125"] = "_ON_DEMAND_3: MBT_T80_vehicle",
     ["DictKey_GroupName_2128"] = "_ON_DEMAND_3: MBT_Abrams_section",
     ["DictKey_GroupName_2132"] = "_ON_DEMAND_3: MBT_Leo2_vehicle",
     ["DictKey_GroupName_2135"] = "_ON_DEMAND_3: MBT_Leo2_section",
