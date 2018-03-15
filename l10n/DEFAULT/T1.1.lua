@@ -189,9 +189,24 @@ function _ON_DEMAND_3_MBT_LEO2_section ()
 MBT_LEO2_section:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerT1_1)
 end
 
-
-
-
+function _ON_DEMAND_4_MISC_SHILKA_vehicle ()
+MISC_SHILKA_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
+end
+function _ON_DEMAND_4_MISC_C2_vehicle ()
+MISC_C2_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
+end
+function _ON_DEMAND_4_MISC_ARTY_vehicle ()
+MISC_ARTY_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
+end
+function _ON_DEMAND_4_MISC_MLRS_vehicle ()
+MISC_MLRS_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
+end
+function _ON_DEMAND_4_MISC_SA13_vehicle ()
+MISC_SA13_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
+end
+function _ON_DEMAND_4_MISC_SA19_vehicle ()
+MISC_SA19_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
+end
 
 
 
@@ -201,7 +216,8 @@ spawn_menu = MENU_MISSION_COMMAND:New("Set up the Range dynamically",Menu_Range_
 spawn_menu_OD = MENU_MISSION:New("On Demand Spawning",Menu_Range_T1_1)
 spawn_menu_OD_Recon = MENU_MISSION:New("On Demand Spawning - RECON",spawn_menu_OD)
 spawn_menu_OD_IFV = MENU_MISSION:New("On Demand Spawning - IFV",spawn_menu_OD)
-spawn_menu_OD_MBT = MENU_MISSION:New("On Demand Spawning - MBT",spawn_menu_OD)  
+spawn_menu_OD_MBT = MENU_MISSION:New("On Demand Spawning - MBT",spawn_menu_OD)
+spawn_menu_OD_MISC = MENU_MISSION:New("On Demand Spawning - MISC",spawn_menu_OD)   
 
 t1_1_Threat_On = MENU_MISSION_COMMAND:New("Activate Threat Site",Menu_Range_T1_1,t1_1_threat_on)
 
@@ -234,6 +250,13 @@ menu_ON_DEMAND_3_MBT_ABRAMS_vehicle = MENU_MISSION_COMMAND:New("Spawn in MBT ABR
 menu_ON_DEMAND_3_MBT_ABRAMS_section = MENU_MISSION_COMMAND:New("Spawn in MBT ABRAMS Section",spawn_menu_OD_MBT,_ON_DEMAND_3_MBT_ABRAMS_section)
 menu_ON_DEMAND_3_MBT_LEO2_vehicle = MENU_MISSION_COMMAND:New("Spawn in MBT Leopard2 Vehicle",spawn_menu_OD_MBT,_ON_DEMAND_3_MBT_LEO2_vehicle)
 menu_ON_DEMAND_3_MBT_LEO2_section = MENU_MISSION_COMMAND:New("Spawn in MBT Leopard2 Section",spawn_menu_OD_MBT,_ON_DEMAND_3_MBT_LEO2_section)
+
+menu_ON_DEMAND_4_MISC_SHILKA_vehicle = MENU_MISSION_COMMAND:New("Spawn in SHILKA Vehicle",spawn_menu_OD_MISC,_ON_DEMAND_4_MISC_SHILKA_vehicle)
+menu_ON_DEMAND_4_MISC_C2_vehicle = MENU_MISSION_COMMAND:New("Spawn in C2 Vehicle",spawn_menu_OD_MISC,_ON_DEMAND_4_MISC_C2_vehicle)
+menu_ON_DEMAND_4_MISC_ARTY_vehicle = MENU_MISSION_COMMAND:New("Spawn in Artillery Vehicle",spawn_menu_OD_MISC,_ON_DEMAND_4_MISC_ARTY_vehicle)
+menu_ON_DEMAND_4_MISC_MLRS_vehicle = MENU_MISSION_COMMAND:New("Spawn in MLRS Vehicle",spawn_menu_OD_MISC,_ON_DEMAND_4_MISC_MLRS_vehicle)
+menu_ON_DEMAND_4_MISC_SA13_vehicle = MENU_MISSION_COMMAND:New("Spawn in SA13 Vehicle",spawn_menu_OD_MISC,_ON_DEMAND_4_MISC_SA13_vehicle)
+menu_ON_DEMAND_4_MISC_SA19_vehicle = MENU_MISSION_COMMAND:New("Spawn in SA19 Vehicle",spawn_menu_OD_MISC,_ON_DEMAND_4_MISC_SA19_vehicle)
 
 
   

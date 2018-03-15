@@ -38071,7 +38071,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 465991,
+    ["currentKey"] = 468680,
     ["date"] =
     {
         ["Day"] = 1,
@@ -41313,11 +41313,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -347498.74085715,
-        ["centerY"] = 654473.80971428,
-        ["zoom"] = 1000,
+        ["centerX"] = -348097.57200001,
+        ["centerY"] = 655134.88457142,
+        ["zoom"] = 8526,
     }, -- end of ["map"]
-    ["maxDictId"] = 2457,
+    ["maxDictId"] = 2458,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
@@ -41382,7 +41382,7 @@ mission =
         {
             [1] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2182\"));",
             [2] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2181\")); mission.trig.func[2]=nil;",
-            [3] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2457\")); mission.trig.func[3]=nil;",
+            [3] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2458\")); mission.trig.func[3]=nil;",
         }, -- end of ["actions"]
         ["conditions"] =
         {
@@ -41597,7 +41597,7 @@ mission =
                         [1] = "",
                         [2] = "",
                     }, -- end of ["ai_task"]
-                    ["file"] = "ResKey_Action_2457",
+                    ["file"] = "ResKey_Action_2458",
                     ["predicate"] = "a_do_script_file",
                 }, -- end of [1]
             }, -- end of ["actions"]
