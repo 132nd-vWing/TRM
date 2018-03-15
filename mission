@@ -4862,7 +4862,7 @@ mission =
                                         {
                                             ["ETA"] = 0,
                                             ["ETA_locked"] = true,
-                                            ["action"] = "Turning Point",
+                                            ["action"] = "From Ground Area",
                                             ["alt"] = 500,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
@@ -4897,9 +4897,9 @@ mission =
                                                     }, -- end of ["tasks"]
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
-                                            ["type"] = "Turning Point",
-                                            ["x"] = -284360.72428572,
-                                            ["y"] = 683557.78314286,
+                                            ["type"] = "TakeOffGround",
+                                            ["x"] = -285624.37514287,
+                                            ["y"] = 682911.95085714,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                 }, -- end of ["route"]
@@ -4983,12 +4983,12 @@ mission =
                                         ["speed"] = 55.555555555556,
                                         ["type"] = "Ka-50",
                                         ["unitId"] = 461,
-                                        ["x"] = -284360.72428572,
-                                        ["y"] = 683557.78314286,
+                                        ["x"] = -285624.37514287,
+                                        ["y"] = 682911.95085714,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
-                                ["x"] = -284360.72428572,
-                                ["y"] = 683557.78314286,
+                                ["x"] = -285624.37514287,
+                                ["y"] = 682911.95085714,
                             }, -- end of [1]
                             [2] =
                             {
@@ -8973,7 +8973,7 @@ mission =
                                         }, -- end of [2]
                                         [3] =
                                         {
-                                            ["ETA"] = 411.50411711095,
+                                            ["ETA"] = 410.90795806161,
                                             ["ETA_locked"] = false,
                                             ["action"] = "Turning Point",
                                             ["alt"] = 2000,
@@ -9001,12 +9001,12 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = -348474.04,
-                                            ["y"] = 651017.18057141,
+                                            ["x"] = -348491.63171429,
+                                            ["y"] = 650925.76228571,
                                         }, -- end of [3]
                                         [4] =
                                         {
-                                            ["ETA"] = 451.77715200675,
+                                            ["ETA"] = 451.8354463389,
                                             ["ETA_locked"] = false,
                                             ["action"] = "Turning Point",
                                             ["alt"] = 2000,
@@ -9034,8 +9034,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = -348317.484,
-                                            ["y"] = 656608.4662857,
+                                            ["x"] = -348225.82200001,
+                                            ["y"] = 656603.91742857,
                                         }, -- end of [4]
                                         [5] =
                                         {
@@ -9072,7 +9072,7 @@ mission =
                                         }, -- end of [5]
                                         [6] =
                                         {
-                                            ["ETA"] = 569.6915108509,
+                                            ["ETA"] = 569.56216860952,
                                             ["ETA_locked"] = false,
                                             ["action"] = "Turning Point",
                                             ["alt"] = 2000,
@@ -9100,8 +9100,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = -348563.50057143,
-                                            ["y"] = 672733.7342857,
+                                            ["x"] = -348572.22800001,
+                                            ["y"] = 672714.542,
                                         }, -- end of [6]
                                         [7] =
                                         {
@@ -18262,6 +18262,47 @@ mission =
                                 ["x"] = -348586.81542855,
                                 ["y"] = 704656.39285714,
                             }, -- end of [186]
+                            [187] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 695,
+                                ["heading"] = 4.4331363000656,
+                                ["name"] = "DictKey_GroupName_2459",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -285685.67314286,
+                                            ["y"] = 683129.52171429,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Heliports",
+                                        ["heading"] = 4.4331363000656,
+                                        ["heliport_callsign_id"] = 10,
+                                        ["name"] = "DictKey_GroupName_2459",
+                                        ["shape_name"] = "FARPS",
+                                        ["type"] = "FARP",
+                                        ["unitId"] = 788,
+                                        ["x"] = -285685.67314286,
+                                        ["y"] = 683129.52171429,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -285685.67314286,
+                                ["y"] = 683129.52171429,
+                            }, -- end of [187]
                         }, -- end of ["group"]
                     }, -- end of ["static"]
                     ["vehicle"] =
@@ -35779,3250 +35820,1563 @@ mission =
             ["name"] = "blue",
             ["nav_points"] =
             {
-                [1] = 
+                [1] =
                 {
-                    ["y"] = 851845.71428571,
-                    ["x"] = -170762.57142857,
-                    ["callsignStr"] = "X2NE",
-                    ["id"] = 1,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [1]
-                [2] = 
-                {
-                    ["y"] = 945907.14285714,
-                    ["x"] = -322405.42857142,
                     ["callsignStr"] = "LAMUS",
                     ["id"] = 4,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [2]
-                [3] = 
+                    ["x"] = -322405.42857142,
+                    ["y"] = 945907.14285714,
+                }, -- end of [1]
+                [2] =
                 {
-                    ["y"] = 689099.71428573,
-                    ["x"] = -274438.28571429,
                     ["callsignStr"] = "UG26 WHISKEY",
                     ["id"] = 5,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [3]
-                [4] = 
+                    ["x"] = -274438.28571429,
+                    ["y"] = 689099.71428573,
+                }, -- end of [2]
+                [3] =
                 {
-                    ["y"] = 669473.71428572,
-                    ["x"] = -291834.85714287,
                     ["callsignStr"] = "UGKO WEST",
                     ["id"] = 10,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [4]
-                [5] = 
+                    ["x"] = -291834.85714287,
+                    ["y"] = 669473.71428572,
+                }, -- end of [3]
+                [4] =
                 {
-                    ["y"] = 835554.28571428,
-                    ["x"] = -249010,
                     ["callsignStr"] = "DIPON",
                     ["id"] = 15,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [5]
-                [6] = 
-                {
-                    ["y"] = 268288.85714286,
-                    ["x"] = -4561.7142857159,
-                    ["callsignStr"] = "G2NE",
-                    ["id"] = 16,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [6]
-                [7] = 
+                    ["x"] = -249010,
+                    ["y"] = 835554.28571428,
+                }, -- end of [4]
+                [5] =
                 {
-                    ["y"] = 596497.71428571,
-                    ["x"] = -341168.2857143,
                     ["callsignStr"] = "AKAKI",
                     ["id"] = 20,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [7]
-                [8] = 
+                    ["x"] = -341168.2857143,
+                    ["y"] = 596497.71428571,
+                }, -- end of [5]
+                [6] =
                 {
-                    ["y"] = 487615.14285716,
-                    ["x"] = -268985.71428571,
                     ["callsignStr"] = "IDLER",
                     ["id"] = 24,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [8]
-                [9] = 
-                {
-                    ["y"] = 640218.57142857,
-                    ["x"] = -227968.57142856,
-                    ["comment"] = "Contactpoint 02",
-                    ["callsignStr"] = "C02",
-                    ["id"] = 29,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [9]
-                [10] = 
-                {
-                    ["y"] = 879051.14285714,
-                    ["x"] = -166875.14285715,
-                    ["callsignStr"] = "X3NE",
-                    ["id"] = 36,
-                    ["properties"] = 
-                    {
+                        ["vangle"] = 0,
                         ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
                     }, -- end of ["properties"]
-                }, -- end of [10]
-                [11] = 
+                    ["x"] = -268985.71428571,
+                    ["y"] = 487615.14285716,
+                }, -- end of [6]
+                [7] =
                 {
-                    ["y"] = 513092.85714286,
-                    ["x"] = -190867.14285711,
-                    ["comment"] = "Initial Point B05",
-                    ["callsignStr"] = "B05",
-                    ["id"] = 38,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [11]
-                [12] = 
-                {
-                    ["y"] = 818247.1428572,
-                    ["x"] = -217014.28571427,
                     ["callsignStr"] = "LAPTO",
                     ["id"] = 40,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [12]
-                [13] = 
+                    ["x"] = -217014.28571427,
+                    ["y"] = 818247.1428572,
+                }, -- end of [7]
+                [8] =
                 {
-                    ["y"] = 797440.85714286,
-                    ["x"] = -178199.99999999,
                     ["callsignStr"] = "R9SE",
                     ["id"] = 45,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [13]
-                [14] = 
+                    ["x"] = -178199.99999999,
+                    ["y"] = 797440.85714286,
+                }, -- end of [8]
+                [9] =
                 {
-                    ["y"] = 700634.85714288,
-                    ["x"] = -280548,
                     ["callsignStr"] = "UG26 ECHO",
                     ["id"] = 49,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [14]
-                [15] = 
-                {
-                    ["y"] = 824642.57142857,
-                    ["x"] = -174536.28571429,
-                    ["callsignStr"] = "S8SW",
-                    ["id"] = 50,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [15]
-                [16] = 
+                    ["x"] = -280548,
+                    ["y"] = 700634.85714288,
+                }, -- end of [9]
+                [10] =
                 {
-                    ["y"] = 635157.42857143,
-                    ["x"] = -274727.71428572,
                     ["callsignStr"] = "UGKS ZENI",
                     ["id"] = 51,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [16]
-                [17] = 
+                    ["x"] = -274727.71428572,
+                    ["y"] = 635157.42857143,
+                }, -- end of [10]
+                [11] =
                 {
-                    ["y"] = 577560.85714289,
-                    ["x"] = -225860.28571429,
                     ["callsignStr"] = "UGSS EAST",
                     ["id"] = 52,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [17]
-                [18] = 
+                    ["x"] = -225860.28571429,
+                    ["y"] = 577560.85714289,
+                }, -- end of [11]
+                [12] =
                 {
-                    ["y"] = 896871.42857146,
-                    ["x"] = -360828.57142856,
                     ["callsignStr"] = "TISOT",
                     ["id"] = 56,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [18]
-                [19] = 
-                {
-                    ["y"] = 876208.55514286,
-                    ["x"] = -319783.99999998,
-                    ["callsignStr"] = "UGTB7",
-                    ["id"] = 60,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [19]
-                [20] = 
+                    ["x"] = -360828.57142856,
+                    ["y"] = 896871.42857146,
+                }, -- end of [12]
+                [13] =
                 {
-                    ["y"] = 717068.85714287,
-                    ["x"] = -311813.42857143,
                     ["callsignStr"] = "BARUS",
                     ["id"] = 62,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [20]
-                [21] = 
+                    ["x"] = -311813.42857143,
+                    ["y"] = 717068.85714287,
+                }, -- end of [13]
+                [14] =
                 {
-                    ["y"] = 721544.28571431,
-                    ["x"] = -337385.71428571,
                     ["callsignStr"] = "TETRO",
                     ["id"] = 64,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [21]
-                [22] = 
+                    ["x"] = -337385.71428571,
+                    ["y"] = 721544.28571431,
+                }, -- end of [14]
+                [15] =
                 {
-                    ["y"] = 629329.71428573,
-                    ["x"] = -330561.14285715,
                     ["callsignStr"] = "UG5X SOUTH",
                     ["id"] = 68,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [22]
-                [23] = 
-                {
-                    ["y"] = 472722.85714286,
-                    ["x"] = -170055.71428568,
-                    ["comment"] = "Initial Point B09",
-                    ["callsignStr"] = "B09",
-                    ["id"] = 70,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [23]
-                [24] = 
-                {
-                    ["y"] = 772707.14285715,
-                    ["x"] = -298418.57142855,
-                    ["comment"] = "Contactpoint 05",
-                    ["callsignStr"] = "C05",
-                    ["id"] = 74,
-                    ["properties"] = 
-                    {
+                        ["vangle"] = 0,
                         ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
                     }, -- end of ["properties"]
-                }, -- end of [24]
-                [25] = 
+                    ["x"] = -330561.14285715,
+                    ["y"] = 629329.71428573,
+                }, -- end of [15]
+                [16] =
                 {
-                    ["y"] = 529398.57142857,
-                    ["x"] = -186891.42857139,
-                    ["comment"] = "Initial Point B03",
-                    ["callsignStr"] = "B03",
-                    ["id"] = 75,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [25]
-                [26] = 
-                {
-                    ["y"] = 551227.14285714,
-                    ["x"] = -207923.14285714,
                     ["callsignStr"] = "MYS SUKHUMSKIJ/NDB",
                     ["id"] = 80,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [26]
-                [27] = 
+                    ["x"] = -207923.14285714,
+                    ["y"] = 551227.14285714,
+                }, -- end of [16]
+                [17] =
                 {
-                    ["y"] = 822770.85714285,
-                    ["x"] = -286113.71428571,
                     ["callsignStr"] = "GORI/NDB",
                     ["id"] = 85,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [27]
-                [28] = 
+                    ["x"] = -286113.71428571,
+                    ["y"] = 822770.85714285,
+                }, -- end of [17]
+                [18] =
                 {
-                    ["y"] = 734668.57142863,
-                    ["x"] = -363442.85714284,
                     ["callsignStr"] = "NOLGA",
                     ["id"] = 87,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [28]
-                [29] = 
-                {
-                    ["y"] = 654958.57142854,
-                    ["x"] = -175165.71428568,
-                    ["comment"] = "Contactpoint 08",
-                    ["callsignStr"] = "C08",
-                    ["id"] = 95,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [29]
-                [30] = 
-                {
-                    ["y"] = 580300,
-                    ["x"] = -200968.57142855,
-                    ["comment"] = "Contactpoint C03",
-                    ["callsignStr"] = "C03",
-                    ["id"] = 96,
-                    ["properties"] = 
-                    {
+                        ["vangle"] = 0,
                         ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
                     }, -- end of ["properties"]
-                }, -- end of [30]
-                [31] = 
+                    ["x"] = -363442.85714284,
+                    ["y"] = 734668.57142863,
+                }, -- end of [18]
+                [19] =
                 {
-                    ["y"] = 929610.85714286,
-                    ["x"] = -115717.71428571,
                     ["callsignStr"] = "GRONZYJ/NDB",
                     ["id"] = 102,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [31]
-                [32] = 
+                    ["x"] = -115717.71428571,
+                    ["y"] = 929610.85714286,
+                }, -- end of [19]
+                [20] =
                 {
-                    ["y"] = 900782.28571427,
-                    ["x"] = -318914.28571428,
                     ["callsignStr"] = "NA/LOM",
                     ["id"] = 103,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [32]
-                [33] = 
-                {
-                    ["y"] = 824747.14285713,
-                    ["x"] = -276328.57142854,
-                    ["comment"] = "Initial Point A03",
-                    ["callsignStr"] = "A03",
-                    ["id"] = 108,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [33]
-                [34] = 
+                    ["x"] = -318914.28571428,
+                    ["y"] = 900782.28571427,
+                }, -- end of [20]
+                [21] =
                 {
-                    ["y"] = 627895.14285717,
-                    ["x"] = -362401.14285714,
                     ["callsignStr"] = "UGSB EAST",
                     ["id"] = 128,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [34]
-                [35] = 
+                    ["x"] = -362401.14285714,
+                    ["y"] = 627895.14285717,
+                }, -- end of [21]
+                [22] =
                 {
-                    ["y"] = 568282.85714289,
-                    ["x"] = -228592.57142857,
                     ["callsignStr"] = "UGSS SOUTH",
                     ["id"] = 133,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [35]
-                [36] = 
+                    ["x"] = -228592.57142857,
+                    ["y"] = 568282.85714289,
+                }, -- end of [22]
+                [23] =
                 {
-                    ["y"] = 497002.85714285,
-                    ["x"] = -192327.42857143,
                     ["callsignStr"] = "PICUNDA/NDB",
                     ["id"] = 151,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [36]
-                [37] = 
-                {
-                    ["y"] = 824642.57142857,
-                    ["x"] = -174536.28571429,
-                    ["callsignStr"] = "S7SE",
-                    ["id"] = 152,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [37]
-                [38] = 
-                {
-                    ["y"] = 884408,
-                    ["x"] = -203943.71428572,
-                    ["callsignStr"] = "X3SE",
-                    ["id"] = 157,
-                    ["properties"] = 
-                    {
+                        ["vangle"] = 0,
                         ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
                     }, -- end of ["properties"]
-                }, -- end of [38]
-                [39] = 
+                    ["x"] = -192327.42857143,
+                    ["y"] = 497002.85714285,
+                }, -- end of [23]
+                [24] =
                 {
-                    ["y"] = 497790.28571429,
-                    ["x"] = -194835.42857143,
                     ["callsignStr"] = "UG23 WEST",
                     ["id"] = 159,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [39]
-                [40] = 
+                    ["x"] = -194835.42857143,
+                    ["y"] = 497790.28571429,
+                }, -- end of [24]
+                [25] =
                 {
-                    ["y"] = 908750,
-                    ["x"] = -345786.57142855,
                     ["callsignStr"] = "UGTB6",
                     ["id"] = 165,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [40]
-                [41] = 
-                {
-                    ["y"] = 797440.85714285,
-                    ["x"] = -178200,
-                    ["callsignStr"] = "S7SW",
-                    ["id"] = 167,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [41]
-                [42] = 
+                    ["x"] = -345786.57142855,
+                    ["y"] = 908750,
+                }, -- end of [25]
+                [26] =
                 {
-                    ["y"] = 692302.2857143,
-                    ["x"] = -272193.14285715,
                     ["callsignStr"] = "UG26 NOVEMBER",
                     ["id"] = 168,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [42]
-                [43] = 
-                {
-                    ["y"] = 851571.71428571,
-                    ["x"] = -314756.85714283,
-                    ["callsignStr"] = "UGTB8",
-                    ["id"] = 178,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [43]
-                [44] = 
+                    ["x"] = -272193.14285715,
+                    ["y"] = 692302.2857143,
+                }, -- end of [26]
+                [27] =
                 {
-                    ["y"] = 806442.85714288,
-                    ["x"] = -387871.42857142,
                     ["callsignStr"] = "OGEVI",
                     ["id"] = 182,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [44]
-                [45] = 
+                    ["x"] = -387871.42857142,
+                    ["y"] = 806442.85714288,
+                }, -- end of [27]
+                [28] =
                 {
-                    ["y"] = 865814.28571429,
-                    ["x"] = -373762.85714285,
                     ["callsignStr"] = "TAVRO",
                     ["id"] = 187,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [45]
-                [46] = 
+                    ["x"] = -373762.85714285,
+                    ["y"] = 865814.28571429,
+                }, -- end of [28]
+                [29] =
                 {
-                    ["y"] = 911628.5714285,
-                    ["x"] = -336188.85714288,
                     ["callsignStr"] = "GABARDIANI",
                     ["id"] = 188,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [46]
-                [47] = 
+                    ["x"] = -336188.85714288,
+                    ["y"] = 911628.5714285,
+                }, -- end of [29]
+                [30] =
                 {
-                    ["y"] = 921078.57142857,
-                    ["x"] = -342423.99999999,
                     ["callsignStr"] = "LEGVI",
                     ["id"] = 191,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [47]
-                [48] = 
+                    ["x"] = -342423.99999999,
+                    ["y"] = 921078.57142857,
+                }, -- end of [30]
+                [31] =
                 {
-                    ["y"] = 860239.71428571,
-                    ["x"] = -292408.28571428,
                     ["callsignStr"] = "MUKHRANI/NDB",
                     ["id"] = 197,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [48]
-                [49] = 
+                    ["x"] = -292408.28571428,
+                    ["y"] = 860239.71428571,
+                }, -- end of [31]
+                [32] =
                 {
-                    ["y"] = 658296.28571431,
-                    ["x"] = -289213.14285714,
                     ["callsignStr"] = "UGKS KETILARI",
                     ["id"] = 201,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [49]
-                [50] = 
+                    ["x"] = -289213.14285714,
+                    ["y"] = 658296.28571431,
+                }, -- end of [32]
+                [33] =
                 {
-                    ["y"] = 684426.57142858,
-                    ["x"] = -274940.85714287,
                     ["callsignStr"] = "UGKO NORTH",
                     ["id"] = 203,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [50]
-                [51] = 
-                {
-                    ["y"] = 734278.57142857,
-                    ["x"] = -288111.42857141,
-                    ["comment"] = "Contactpoint 04",
-                    ["callsignStr"] = "C04",
-                    ["id"] = 205,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [51]
-                [52] = 
+                    ["x"] = -274940.85714287,
+                    ["y"] = 684426.57142858,
+                }, -- end of [33]
+                [34] =
                 {
-                    ["y"] = 681680,
-                    ["x"] = -285506.85714285,
                     ["callsignStr"] = "KUTAISI/NDB",
                     ["id"] = 206,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [52]
-                [53] = 
+                    ["x"] = -285506.85714285,
+                    ["y"] = 681680,
+                }, -- end of [34]
+                [35] =
                 {
-                    ["y"] = 621060.00000001,
-                    ["x"] = -293412.85714286,
                     ["callsignStr"] = "IBERI",
                     ["id"] = 207,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [53]
-                [54] = 
+                    ["x"] = -293412.85714286,
+                    ["y"] = 621060.00000001,
+                }, -- end of [35]
+                [36] =
                 {
-                    ["y"] = 781224,
-                    ["x"] = -282484.57142856,
                     ["callsignStr"] = "ALI/NDB",
                     ["id"] = 213,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [54]
-                [55] = 
+                    ["x"] = -282484.57142856,
+                    ["y"] = 781224,
+                }, -- end of [36]
+                [37] =
                 {
-                    ["y"] = 920027.14285714,
-                    ["x"] = -306764.28571429,
                     ["callsignStr"] = "DEDON",
                     ["id"] = 214,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [55]
-                [56] = 
+                    ["x"] = -306764.28571429,
+                    ["y"] = 920027.14285714,
+                }, -- end of [37]
+                [38] =
                 {
-                    ["y"] = 895794.85714286,
-                    ["x"] = -315388.57142857,
                     ["callsignStr"] = "LOCHINI/DVOR",
                     ["id"] = 219,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [56]
-                [57] = 
+                    ["x"] = -315388.57142857,
+                    ["y"] = 895794.85714286,
+                }, -- end of [38]
+                [39] =
                 {
-                    ["y"] = 892177.71428571,
-                    ["x"] = -312191.7142857,
                     ["callsignStr"] = "VP/LOM",
                     ["id"] = 227,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [57]
-                [58] = 
-                {
-                    ["y"] = 776518.57142855,
-                    ["x"] = -252715.71428569,
-                    ["comment"] = "Initial Point A06",
-                    ["callsignStr"] = "A06",
-                    ["id"] = 229,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [58]
-                [59] = 
+                    ["x"] = -312191.7142857,
+                    ["y"] = 892177.71428571,
+                }, -- end of [39]
+                [40] =
                 {
-                    ["y"] = 731030.00000001,
-                    ["x"] = -267959.99999999,
                     ["callsignStr"] = "TAGAR",
                     ["id"] = 230,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [59]
-                [60] = 
+                    ["x"] = -267959.99999999,
+                    ["y"] = 731030.00000001,
+                }, -- end of [40]
+                [41] =
                 {
-                    ["y"] = 894305.7142857,
-                    ["x"] = -313853.71428571,
                     ["callsignStr"] = "V/LMM",
                     ["id"] = 233,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [60]
-                [61] = 
+                    ["x"] = -313853.71428571,
+                    ["y"] = 894305.7142857,
+                }, -- end of [41]
+                [42] =
                 {
-                    ["y"] = 912494.85714287,
-                    ["x"] = -312286.57142858,
                     ["callsignStr"] = "UG27 FOXTROTT",
                     ["id"] = 235,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [61]
-                [62] = 
+                    ["x"] = -312286.57142858,
+                    ["y"] = 912494.85714287,
+                }, -- end of [42]
+                [43] =
                 {
-                    ["y"] = 857880.85714283,
-                    ["x"] = -328649.71428571,
                     ["callsignStr"] = "BAGEM",
                     ["id"] = 237,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [62]
-                [63] = 
-                {
-                    ["y"] = 824642.57142858,
-                    ["x"] = -174536.28571428,
-                    ["callsignStr"] = "X2NW",
-                    ["id"] = 238,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [63]
-                [64] = 
-                {
-                    ["y"] = 449467.14285715,
-                    ["x"] = -151935.71428568,
-                    ["comment"] = "Initial Point B13",
-                    ["callsignStr"] = "B13",
-                    ["id"] = 239,
-                    ["properties"] = 
-                    {
+                        ["vangle"] = 0,
                         ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
                     }, -- end of ["properties"]
-                }, -- end of [64]
-                [65] = 
+                    ["x"] = -328649.71428571,
+                    ["y"] = 857880.85714283,
+                }, -- end of [43]
+                [44] =
                 {
-                    ["y"] = 504765.71428572,
-                    ["x"] = -169117.14285711,
-                    ["comment"] = "Initial Point B06",
-                    ["callsignStr"] = "B06",
-                    ["id"] = 243,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [65]
-                [66] = 
-                {
-                    ["y"] = 889901.42857144,
-                    ["x"] = -324895.42857144,
                     ["callsignStr"] = "UG24 LAKE",
                     ["id"] = 254,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [66]
-                [67] = 
+                    ["x"] = -324895.42857144,
+                    ["y"] = 889901.42857144,
+                }, -- end of [44]
+                [45] =
                 {
-                    ["y"] = 901648.85714287,
-                    ["x"] = -330402.28571429,
                     ["callsignStr"] = "UG24 SOUTH",
                     ["id"] = 255,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [67]
-                [68] = 
-                {
-                    ["y"] = 486001.42857144,
-                    ["x"] = -175495.71428568,
-                    ["comment"] = "Initial Point B07",
-                    ["callsignStr"] = "B07",
-                    ["id"] = 256,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [68]
-                [69] = 
+                    ["x"] = -330402.28571429,
+                    ["y"] = 901648.85714287,
+                }, -- end of [45]
+                [46] =
                 {
-                    ["y"] = 618590.57142858,
-                    ["x"] = -356579.71428571,
                     ["callsignStr"] = "LU/NDB",
                     ["id"] = 259,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [69]
-                [70] = 
-                {
-                    ["y"] = 851845.71428571,
-                    ["x"] = -170762.57142857,
-                    ["callsignStr"] = "X3NW",
-                    ["id"] = 261,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [70]
-                [71] = 
-                {
-                    ["y"] = 802638.57142857,
-                    ["x"] = -281191.4285714,
-                    ["comment"] = "Initial Point A02",
-                    ["callsignStr"] = "A02",
-                    ["id"] = 268,
-                    ["properties"] = 
-                    {
+                        ["vangle"] = 0,
                         ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
                     }, -- end of ["properties"]
-                }, -- end of [71]
-                [72] = 
+                    ["x"] = -356579.71428571,
+                    ["y"] = 618590.57142858,
+                }, -- end of [46]
+                [47] =
                 {
-                    ["y"] = 898654.2857142,
-                    ["x"] = -317252.00000002,
                     ["callsignStr"] = "N/LMM",
                     ["id"] = 273,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [72]
-                [73] = 
+                    ["x"] = -317252.00000002,
+                    ["y"] = 898654.2857142,
+                }, -- end of [47]
+                [48] =
                 {
-                    ["y"] = 562252.00000003,
-                    ["x"] = -304958.28571428,
                     ["callsignStr"] = "SOSED",
                     ["id"] = 277,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [73]
-                [74] = 
-                {
-                    ["y"] = 789282.85714285,
-                    ["x"] = -265792.85714283,
-                    ["comment"] = "Initial Point A01",
-                    ["callsignStr"] = "A01",
-                    ["id"] = 279,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [74]
-                [75] = 
+                    ["x"] = -304958.28571428,
+                    ["y"] = 562252.00000003,
+                }, -- end of [48]
+                [49] =
                 {
-                    ["y"] = 740000.00000001,
-                    ["x"] = -194642.85714286,
                     ["callsignStr"] = "GUSLI",
                     ["id"] = 284,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [75]
-                [76] = 
-                {
-                    ["y"] = 268288.85714285,
-                    ["x"] = -4561.4285714302,
-                    ["callsignStr"] = "G3NW",
-                    ["id"] = 286,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [76]
-                [77] = 
+                    ["x"] = -194642.85714286,
+                    ["y"] = 740000.00000001,
+                }, -- end of [49]
+                [50] =
                 {
-                    ["y"] = 604581.42857146,
-                    ["x"] = -284782.85714285,
                     ["callsignStr"] = "ALIKA",
                     ["id"] = 289,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [77]
-                [78] = 
-                {
-                    ["y"] = 614314.28571429,
-                    ["x"] = -291309.99999998,
-                    ["comment"] = "Contact Point 01",
-                    ["callsignStr"] = "C01",
-                    ["id"] = 291,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [78]
-                [79] = 
+                    ["x"] = -284782.85714285,
+                    ["y"] = 604581.42857146,
+                }, -- end of [50]
+                [51] =
                 {
-                    ["y"] = 623405.71428562,
-                    ["x"] = -348870.28571431,
                     ["callsignStr"] = "MAKHINJAURI",
                     ["id"] = 293,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [79]
-                [80] = 
-                {
-                    ["y"] = 294560.57142857,
-                    ["x"] = -2989.1428571445,
-                    ["callsignStr"] = "G3NE",
-                    ["id"] = 294,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [80]
-                [81] = 
+                    ["x"] = -348870.28571431,
+                    ["y"] = 623405.71428562,
+                }, -- end of [51]
+                [52] =
                 {
-                    ["y"] = 612194.85714287,
-                    ["x"] = -312136.85714285,
                     ["callsignStr"] = "NEDEK",
                     ["id"] = 295,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [81]
-                [82] = 
-                {
-                    ["y"] = 921514.57142857,
-                    ["x"] = -334837.99999998,
-                    ["callsignStr"] = "UGTB5",
-                    ["id"] = 300,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [82]
-                [83] = 
+                    ["x"] = -312136.85714285,
+                    ["y"] = 612194.85714287,
+                }, -- end of [52]
+                [53] =
                 {
-                    ["y"] = 674162.00000002,
-                    ["x"] = -290538.28571429,
                     ["callsignStr"] = "DABLAGOMI",
                     ["id"] = 302,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [83]
-                [84] = 
-                {
-                    ["y"] = 851845.71428571,
-                    ["x"] = -170762.57142857,
-                    ["callsignStr"] = "S9SW",
-                    ["id"] = 304,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [84]
-                [85] = 
+                    ["x"] = -290538.28571429,
+                    ["y"] = 674162.00000002,
+                }, -- end of [53]
+                [54] =
                 {
-                    ["y"] = 568118.85714289,
-                    ["x"] = -213318.28571429,
                     ["callsignStr"] = "UGSS NORTH",
                     ["id"] = 305,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [85]
-                [86] = 
-                {
-                    ["y"] = 535571.42857143,
-                    ["x"] = -196348.57142853,
-                    ["comment"] = "Initial Point B01",
-                    ["callsignStr"] = "B01",
-                    ["id"] = 307,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [86]
-                [87] = 
+                    ["x"] = -213318.28571429,
+                    ["y"] = 568118.85714289,
+                }, -- end of [54]
+                [55] =
                 {
-                    ["y"] = 657135.71428572,
-                    ["x"] = -339042.85714285,
                     ["callsignStr"] = "ODILI",
                     ["id"] = 310,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [87]
-                [88] = 
+                    ["x"] = -339042.85714285,
+                    ["y"] = 657135.71428572,
+                }, -- end of [55]
+                [56] =
                 {
-                    ["y"] = 510182.85714286,
-                    ["x"] = -186777.14285715,
                     ["callsignStr"] = "UG23 NORTH",
                     ["id"] = 314,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [88]
-                [89] = 
-                {
-                    ["y"] = 521701.42857143,
-                    ["x"] = -180041.42857139,
-                    ["comment"] = "Initial Point B04",
-                    ["callsignStr"] = "B04",
-                    ["id"] = 315,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [89]
-                [90] = 
+                    ["x"] = -186777.14285715,
+                    ["y"] = 510182.85714286,
+                }, -- end of [56]
+                [57] =
                 {
-                    ["y"] = 526547.14285715,
-                    ["x"] = -197076.57142858,
                     ["callsignStr"] = "UG23 EAST",
                     ["id"] = 317,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [90]
-                [91] = 
+                    ["x"] = -197076.57142858,
+                    ["y"] = 526547.14285715,
+                }, -- end of [57]
+                [58] =
                 {
-                    ["y"] = 654740.57142857,
-                    ["x"] = -276227.14285714,
                     ["callsignStr"] = "UGKS NOSIRI",
                     ["id"] = 326,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [91]
-                [92] = 
-                {
-                    ["y"] = 827711.42857142,
-                    ["x"] = -264964.28571426,
-                    ["comment"] = "Initial Point A04",
-                    ["callsignStr"] = "A04",
-                    ["id"] = 327,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [92]
-                [93] = 
+                    ["x"] = -276227.14285714,
+                    ["y"] = 654740.57142857,
+                }, -- end of [58]
+                [59] =
                 {
-                    ["y"] = 469793.71428573,
-                    ["x"] = -214580.57142857,
                     ["callsignStr"] = "BANUT",
                     ["id"] = 337,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [93]
-                [94] = 
+                    ["x"] = -214580.57142857,
+                    ["y"] = 469793.71428573,
+                }, -- end of [59]
+                [60] =
                 {
-                    ["y"] = 889039.42857143,
-                    ["x"] = -112400.85714286,
                     ["callsignStr"] = "KALAUS/NDB",
                     ["id"] = 338,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [94]
-                [95] = 
+                    ["x"] = -112400.85714286,
+                    ["y"] = 889039.42857143,
+                }, -- end of [60]
+                [61] =
                 {
-                    ["y"] = 647862.57142859,
-                    ["x"] = -318928.57142858,
                     ["callsignStr"] = "UG5X EAST",
                     ["id"] = 341,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [95]
-                [96] = 
+                    ["x"] = -318928.57142858,
+                    ["y"] = 647862.57142859,
+                }, -- end of [61]
+                [62] =
                 {
-                    ["y"] = 625475.71428571,
-                    ["x"] = -308892.00000001,
                     ["callsignStr"] = "R3C",
                     ["id"] = 349,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [96]
-                [97] = 
+                    ["x"] = -308892.00000001,
+                    ["y"] = 625475.71428571,
+                }, -- end of [62]
+                [63] =
                 {
-                    ["y"] = 550374.28571432,
-                    ["x"] = -208534,
                     ["callsignStr"] = "UGSS SUKHUMI",
                     ["id"] = 354,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [97]
-                [98] = 
+                    ["x"] = -208534,
+                    ["y"] = 550374.28571432,
+                }, -- end of [63]
+                [64] =
                 {
-                    ["y"] = 614534.28571419,
-                    ["x"] = -364624.5714286,
                     ["callsignStr"] = "KVARIATI",
                     ["id"] = 357,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [98]
-                [99] = 
+                    ["x"] = -364624.5714286,
+                    ["y"] = 614534.28571419,
+                }, -- end of [64]
+                [65] =
                 {
-                    ["y"] = 242016.28571428,
-                    ["x"] = -6022.0000000016,
                     ["callsignStr"] = "G1NE",
                     ["id"] = 358,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [99]
-                [100] = 
+                    ["x"] = -6022.0000000016,
+                    ["y"] = 242016.28571428,
+                }, -- end of [65]
+                [66] =
                 {
-                    ["y"] = 692786.28571431,
-                    ["x"] = -291575.42857143,
                     ["callsignStr"] = "OPSHKVITI",
                     ["id"] = 363,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [100]
-                [101] = 
-                {
-                    ["y"] = 215745.42857143,
-                    ["x"] = -7375.7142857159,
-                    ["callsignStr"] = "G1NW",
-                    ["id"] = 365,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [101]
-                [102] = 
-                {
-                    ["y"] = 867362.28571428,
-                    ["x"] = -281983.42857143,
-                    ["callsignStr"] = "X8SE",
-                    ["id"] = 366,
-                    ["properties"] = 
-                    {
+                        ["vangle"] = 0,
                         ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
                     }, -- end of ["properties"]
-                }, -- end of [102]
-                [103] = 
+                    ["x"] = -291575.42857143,
+                    ["y"] = 692786.28571431,
+                }, -- end of [66]
+                [67] =
                 {
-                    ["y"] = 617840.28571429,
-                    ["x"] = -111479.42857139,
-                    ["comment"] = "Initial Point D03",
-                    ["callsignStr"] = "D03",
-                    ["id"] = 367,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [103]
-                [104] = 
-                {
-                    ["y"] = 953907.14285714,
-                    ["x"] = -320536.85714283,
-                    ["callsignStr"] = "UGTB3",
-                    ["id"] = 369,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [104]
-                [105] = 
-                {
-                    ["y"] = 802527.14285713,
-                    ["x"] = -243585.71428569,
-                    ["comment"] = "Initial Point A05",
-                    ["callsignStr"] = "A05",
-                    ["id"] = 370,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [105]
-                [106] = 
-                {
-                    ["y"] = 688834.57142858,
-                    ["x"] = -292545.14285715,
                     ["callsignStr"] = "UGKO SOUTH",
                     ["id"] = 372,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [106]
-                [107] = 
+                    ["x"] = -292545.14285715,
+                    ["y"] = 688834.57142858,
+                }, -- end of [67]
+                [68] =
                 {
-                    ["y"] = 837462.00000005,
-                    ["x"] = -334423.99999999,
                     ["callsignStr"] = "LAGAS",
                     ["id"] = 376,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [107]
-                [108] = 
-                {
-                    ["y"] = 526431.42857143,
-                    ["x"] = -196685.71428568,
-                    ["comment"] = "Initial Point B02",
-                    ["callsignStr"] = "B02",
-                    ["id"] = 377,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [108]
-                [109] = 
-                {
-                    ["y"] = 879051.14285714,
-                    ["x"] = -166875.14285715,
-                    ["callsignStr"] = "S9SE",
-                    ["id"] = 383,
-                    ["properties"] = 
-                    {
+                        ["vangle"] = 0,
                         ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
                     }, -- end of ["properties"]
-                }, -- end of [109]
-                [110] = 
+                    ["x"] = -334423.99999999,
+                    ["y"] = 837462.00000005,
+                }, -- end of [68]
+                [69] =
                 {
-                    ["y"] = 867362.28571428,
-                    ["x"] = -281983.42857143,
-                    ["callsignStr"] = "X9SW",
-                    ["id"] = 386,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [110]
-                [111] = 
-                {
-                    ["y"] = 614134.85714289,
-                    ["x"] = -363744.57142857,
                     ["callsignStr"] = "UGSB SOUTH",
                     ["id"] = 392,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [111]
-                [112] = 
+                    ["x"] = -363744.57142857,
+                    ["y"] = 614134.85714289,
+                }, -- end of [69]
+                [70] =
                 {
-                    ["y"] = 883579.14285711,
-                    ["x"] = -300062.00000001,
                     ["callsignStr"] = "GLDANI",
                     ["id"] = 393,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [112]
-                [113] = 
-                {
-                    ["y"] = 474514.28571429,
-                    ["x"] = -157864.28571425,
-                    ["comment"] = "Initial Point B10",
-                    ["callsignStr"] = "B10",
-                    ["id"] = 394,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [113]
-                [114] = 
-                {
-                    ["y"] = 947878.85714286,
-                    ["x"] = -329564.85714283,
-                    ["callsignStr"] = "UGTB4",
-                    ["id"] = 399,
-                    ["properties"] = 
-                    {
+                        ["vangle"] = 0,
                         ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
                     }, -- end of ["properties"]
-                }, -- end of [114]
-                [115] = 
+                    ["x"] = -300062.00000001,
+                    ["y"] = 883579.14285711,
+                }, -- end of [70]
+                [71] =
                 {
-                    ["y"] = 710526,
-                    ["x"] = -137479.42857139,
-                    ["comment"] = "Initial Point D02",
-                    ["callsignStr"] = "D02",
-                    ["id"] = 400,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [115]
-                [116] = 
-                {
-                    ["y"] = 615654.2857142,
-                    ["x"] = -359170.28571432,
                     ["callsignStr"] = "GONIO",
                     ["id"] = 401,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [116]
-                [117] = 
-                {
-                    ["y"] = 847539.99999998,
-                    ["x"] = -287694.28571425,
-                    ["comment"] = "Initial Point A07",
-                    ["callsignStr"] = "A07",
-                    ["id"] = 402,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [117]
-                [118] = 
+                    ["x"] = -359170.28571432,
+                    ["y"] = 615654.2857142,
+                }, -- end of [71]
+                [72] =
                 {
-                    ["y"] = 617872.57142857,
-                    ["x"] = -355250.85714285,
                     ["callsignStr"] = "BATUMI/NDB",
                     ["id"] = 406,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [118]
-                [119] = 
-                {
-                    ["y"] = 678926,
-                    ["x"] = -113822.28571425,
-                    ["comment"] = "Initial Point D01",
-                    ["callsignStr"] = "D01",
-                    ["id"] = 408,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [119]
-                [120] = 
-                {
-                    ["y"] = 469354.28571429,
-                    ["x"] = -144725.71428568,
-                    ["comment"] = "Initial Point B11",
-                    ["callsignStr"] = "B11",
-                    ["id"] = 410,
-                    ["properties"] = 
-                    {
+                        ["vangle"] = 0,
                         ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
                     }, -- end of ["properties"]
-                }, -- end of [120]
-                [121] = 
+                    ["x"] = -355250.85714285,
+                    ["y"] = 617872.57142857,
+                }, -- end of [72]
+                [73] =
                 {
-                    ["y"] = 605225.71428571,
-                    ["x"] = -269235.71428569,
-                    ["comment"] = "Contactpoint 07",
-                    ["callsignStr"] = "C07",
-                    ["id"] = 414,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [121]
-                [122] = 
-                {
-                    ["y"] = 625384.85714287,
-                    ["x"] = -309040.28571429,
                     ["callsignStr"] = "UG5X BLACK SEA",
                     ["id"] = 418,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [122]
-                [123] = 
+                    ["x"] = -309040.28571429,
+                    ["y"] = 625384.85714287,
+                }, -- end of [73]
+                [74] =
                 {
-                    ["y"] = 687527.71428574,
-                    ["x"] = -274386.85714285,
                     ["callsignStr"] = "MAGLAKI",
                     ["id"] = 420,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [123]
-                [124] = 
+                    ["x"] = -274386.85714285,
+                    ["y"] = 687527.71428574,
+                }, -- end of [74]
+                [75] =
                 {
-                    ["y"] = 637445.71428571,
-                    ["x"] = -288380.57142857,
                     ["callsignStr"] = "UGKS RIVER WEST",
                     ["id"] = 441,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [124]
-                [125] = 
-                {
-                    ["y"] = 797440.85714285,
-                    ["x"] = -178200,
-                    ["callsignStr"] = "W3NE",
-                    ["id"] = 443,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [125]
-                [126] = 
-                {
-                    ["y"] = 851845.71428571,
-                    ["x"] = -170762.57142858,
-                    ["callsignStr"] = "S8SE",
-                    ["id"] = 447,
-                    ["properties"] = 
-                    {
+                        ["vangle"] = 0,
                         ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
                     }, -- end of ["properties"]
-                }, -- end of [126]
-                [127] = 
+                    ["x"] = -288380.57142857,
+                    ["y"] = 637445.71428571,
+                }, -- end of [75]
+                [76] =
                 {
-                    ["y"] = 758135.71428573,
-                    ["x"] = -230235.71428571,
                     ["callsignStr"] = "ONISA",
                     ["id"] = 453,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [127]
-                [128] = 
-                {
-                    ["y"] = 294560.57142857,
-                    ["x"] = -2989.142857135,
-                    ["callsignStr"] = "H1NW",
-                    ["id"] = 454,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [128]
-                [129] = 
+                    ["x"] = -230235.71428571,
+                    ["y"] = 758135.71428573,
+                }, -- end of [76]
+                [77] =
                 {
-                    ["y"] = 853102.85714277,
-                    ["x"] = -302711.71428574,
                     ["callsignStr"] = "OBORA",
                     ["id"] = 459,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [129]
-                [130] = 
+                    ["x"] = -302711.71428574,
+                    ["y"] = 853102.85714277,
+                }, -- end of [77]
+                [78] =
                 {
-                    ["y"] = 912044.28571429,
-                    ["x"] = -348415.71428571,
                     ["callsignStr"] = "BARAD",
                     ["id"] = 460,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [130]
-                [131] = 
+                    ["x"] = -348415.71428571,
+                    ["y"] = 912044.28571429,
+                }, -- end of [78]
+                [79] =
                 {
-                    ["y"] = 697689.14285715,
-                    ["x"] = -280475.14285715,
                     ["callsignStr"] = "UGKO EAST",
                     ["id"] = 461,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [131]
-                [132] = 
-                {
-                    ["y"] = 797440.85714285,
-                    ["x"] = -178200,
-                    ["callsignStr"] = "X1NW",
-                    ["id"] = 462,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [132]
-                [133] = 
+                    ["x"] = -280475.14285715,
+                    ["y"] = 697689.14285715,
+                }, -- end of [79]
+                [80] =
                 {
-                    ["y"] = 735438.57142858,
-                    ["x"] = -278348.57142857,
                     ["callsignStr"] = "LOBIN",
                     ["id"] = 463,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [133]
-                [134] = 
-                {
-                    ["y"] = 476930.00000001,
-                    ["x"] = -164552.85714282,
-                    ["comment"] = "Initial Point B08",
-                    ["callsignStr"] = "B08",
-                    ["id"] = 464,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [134]
-                [135] = 
-                {
-                    ["y"] = 450560.00000001,
-                    ["x"] = -144171.42857139,
-                    ["comment"] = "Initial Point B12",
-                    ["callsignStr"] = "B12",
-                    ["id"] = 466,
-                    ["properties"] = 
-                    {
+                        ["vangle"] = 0,
                         ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
                     }, -- end of ["properties"]
-                }, -- end of [135]
-                [136] = 
+                    ["x"] = -278348.57142857,
+                    ["y"] = 735438.57142858,
+                }, -- end of [80]
+                [81] =
                 {
-                    ["y"] = 620269.71428571,
-                    ["x"] = -350280,
                     ["callsignStr"] = "Belosarajskij/NDB",
                     ["id"] = 467,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [136]
-                [137] = 
+                    ["x"] = -350280,
+                    ["y"] = 620269.71428571,
+                }, -- end of [81]
+                [82] =
                 {
-                    ["y"] = 681743.42857143,
-                    ["x"] = -285475.42857142,
                     ["callsignStr"] = "KUTAISI/VOR",
                     ["id"] = 469,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [137]
-                [138] = 
+                    ["x"] = -285486.57142856,
+                    ["y"] = 681747.42857143,
+                }, -- end of [82]
+                [83] =
                 {
-                    ["y"] = 883724.85714286,
-                    ["x"] = -313416.28571429,
                     ["callsignStr"] = "UG24 NORTH",
                     ["id"] = 478,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [138]
-                [139] = 
+                    ["x"] = -313416.28571429,
+                    ["y"] = 883724.85714286,
+                }, -- end of [83]
+                [84] =
                 {
-                    ["y"] = 617868.57142856,
-                    ["x"] = -296780.28571429,
                     ["callsignStr"] = "POTIJSKIJ/NDB",
                     ["id"] = 480,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [139]
-                [140] = 
+                    ["x"] = -296780.28571429,
+                    ["y"] = 617868.57142856,
+                }, -- end of [84]
+                [85] =
                 {
-                    ["y"] = 626430.00000003,
-                    ["x"] = -342704.57142857,
                     ["callsignStr"] = "UGSB NORTH",
                     ["id"] = 486,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [140]
-                [141] = 
+                    ["x"] = -342704.57142857,
+                    ["y"] = 626430.00000003,
+                }, -- end of [85]
+                [86] =
                 {
-                    ["y"] = 605313.42857143,
-                    ["x"] = -363742.57142858,
                     ["callsignStr"] = "SARPI",
                     ["id"] = 493,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [141]
-                [142] = 
+                    ["x"] = -363742.57142858,
+                    ["y"] = 605313.42857143,
+                }, -- end of [86]
+                [87] =
                 {
-                    ["y"] = 536557.14285715,
-                    ["x"] = -342128.57142857,
                     ["callsignStr"] = "ROLIN",
                     ["id"] = 496,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [142]
-                [143] = 
+                    ["x"] = -342128.57142857,
+                    ["y"] = 536557.14285715,
+                }, -- end of [87]
+                [88] =
                 {
-                    ["y"] = 684329.14285716,
-                    ["x"] = -288772.57142857,
                     ["callsignStr"] = "BASHLANI",
                     ["id"] = 498,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [143]
-                [144] = 
+                    ["x"] = -288772.57142857,
+                    ["y"] = 684329.14285716,
+                }, -- end of [88]
+                [89] =
                 {
-                    ["y"] = 825171.42857149,
-                    ["x"] = -230964.28571427,
                     ["callsignStr"] = "ASELI",
                     ["id"] = 515,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [144]
-                [145] = 
+                    ["x"] = -230964.28571427,
+                    ["y"] = 825171.42857149,
+                }, -- end of [89]
+                [90] =
                 {
-                    ["y"] = 625488.57142848,
-                    ["x"] = -359927.42857146,
                     ["callsignStr"] = "MAKHO",
                     ["id"] = 519,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [145]
-                [146] = 
-                {
-                    ["y"] = 683955.71428572,
-                    ["x"] = -270892.85714284,
-                    ["comment"] = "Contactpoint 06",
-                    ["callsignStr"] = "C06",
-                    ["id"] = 522,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [146]
-                [147] = 
-                {
-                    ["y"] = 850285.71428571,
-                    ["x"] = -292942.85714286,
-                    ["callsignStr"] = "UGTB1",
-                    ["id"] = 527,
-                    ["properties"] = 
-                    {
+                        ["vangle"] = 0,
                         ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
                     }, -- end of ["properties"]
-                }, -- end of [147]
-                [148] = 
+                    ["x"] = -359927.42857146,
+                    ["y"] = 625488.57142848,
+                }, -- end of [90]
+                [91] =
                 {
-                    ["y"] = 824642.57142858,
-                    ["x"] = -174536.28571429,
-                    ["callsignStr"] = "X1NE",
-                    ["id"] = 529,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [148]
-                [149] = 
-                {
-                    ["y"] = 674664.85714288,
-                    ["x"] = -278449.71428571,
                     ["callsignStr"] = "GANIRI",
                     ["id"] = 531,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [149]
-                [150] = 
+                    ["x"] = -278449.71428571,
+                    ["y"] = 674664.85714288,
+                }, -- end of [91]
+                [92] =
                 {
-                    ["y"] = 628824.28571428,
-                    ["x"] = -362094.85714286,
                     ["callsignStr"] = "R2C",
                     ["id"] = 539,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [150]
-                [151] = 
+                    ["x"] = -362094.85714286,
+                    ["y"] = 628824.28571428,
+                }, -- end of [92]
+                [93] =
                 {
-                    ["y"] = 621256.85714285,
-                    ["x"] = -244167.71428571,
                     ["callsignStr"] = "GALI/NDB",
                     ["id"] = 542,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [151]
-                [152] = 
-                {
-                    ["y"] = 840452.57142856,
-                    ["x"] = -347296.28571428,
-                    ["comment"] = "",
-                    ["callsignStr"] = "TE1",
-                    ["id"] = 2408,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [152]
-                [153] = 
-                {
-                    ["y"] = 833057.7142857,
-                    ["x"] = -321854.57142857,
-                    ["comment"] = "",
-                    ["callsignStr"] = "TE2",
-                    ["id"] = 2409,
-                    ["properties"] = 
-                    {
+                        ["vangle"] = 0,
                         ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
                     }, -- end of ["properties"]
-                }, -- end of [153]
-                [154] = 
+                    ["x"] = -244167.71428571,
+                    ["y"] = 621256.85714285,
+                }, -- end of [93]
+                [94] =
                 {
-                    ["y"] = 876209.14285714,
-                    ["x"] = -319783.42857142,
-                    ["comment"] = "",
-                    ["callsignStr"] = "TE3",
-                    ["id"] = 2410,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [154]
-                [155] = 
-                {
-                    ["y"] = 879797.99999999,
-                    ["x"] = -343100.57142857,
-                    ["comment"] = "",
-                    ["callsignStr"] = "TE4",
-                    ["id"] = 2411,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [155]
-                [156] = 
-                {
-                    ["y"] = 863936.28571428,
-                    ["x"] = -357900.28571428,
-                    ["comment"] = "",
-                    ["callsignStr"] = "TE5",
-                    ["id"] = 2412,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [156]
-                [157] = 
-                {
-                    ["y"] = 850023.14285713,
-                    ["x"] = -344759.71428571,
-                    ["comment"] = "",
-                    ["callsignStr"] = "J01",
-                    ["id"] = 2565,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [157]
-                [158] = 
-                {
-                    ["y"] = 863904.28571427,
-                    ["x"] = -354837.14285714,
-                    ["comment"] = "",
-                    ["callsignStr"] = "J02",
-                    ["id"] = 2566,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [158]
-                [159] = 
-                {
-                    ["y"] = 870307.99999999,
-                    ["x"] = -344635.99999999,
-                    ["comment"] = "",
-                    ["callsignStr"] = "J03",
-                    ["id"] = 2567,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [159]
-                [160] = 
-                {
-                    ["y"] = 872833.99999999,
-                    ["x"] = -330540.57142856,
-                    ["comment"] = "",
-                    ["callsignStr"] = "J04",
-                    ["id"] = 2568,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [160]
-                [161] = 
-                {
-                    ["y"] = 843201.42857141,
-                    ["x"] = -326599.14285714,
-                    ["comment"] = "",
-                    ["callsignStr"] = "J05",
-                    ["id"] = 2569,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [161]
-                [162] = 
-                {
-                    ["y"] = 880811.42857142,
-                    ["x"] = -271867.71428571,
-                    ["comment"] = "",
-                    ["callsignStr"] = "TR2",
-                    ["id"] = 2723,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [162]
-                [163] = 
-                {
-                    ["y"] = 878065.42857142,
-                    ["x"] = -255198.85714285,
-                    ["comment"] = "",
-                    ["callsignStr"] = "TR3",
-                    ["id"] = 2724,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [163]
-                [164] = 
-                {
-                    ["y"] = 880361.99999999,
-                    ["x"] = -244114.28571428,
-                    ["comment"] = "",
-                    ["callsignStr"] = "TR4",
-                    ["id"] = 2725,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [164]
-                [165] = 
-                {
-                    ["y"] = 917079.42857142,
-                    ["x"] = -238755.71428571,
-                    ["comment"] = "",
-                    ["callsignStr"] = "TR5",
-                    ["id"] = 2726,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [165]
-                [166] = 
-                {
-                    ["y"] = 913226.85714285,
-                    ["x"] = -300261.99999999,
-                    ["comment"] = "",
-                    ["callsignStr"] = "TR6",
-                    ["id"] = 2727,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [166]
-                [167] = 
-                {
-                    ["y"] = 883526.57142856,
-                    ["x"] = -268628.28571428,
-                    ["comment"] = "",
-                    ["callsignStr"] = "G05",
-                    ["id"] = 2880,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [167]
-                [168] = 
-                {
-                    ["y"] = 878623.7142857,
-                    ["x"] = -279167.14285713,
-                    ["comment"] = "",
-                    ["callsignStr"] = "G06",
-                    ["id"] = 2881,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [168]
-                [169] = 
-                {
-                    ["y"] = 890343.14285713,
-                    ["x"] = -282833.71428571,
-                    ["comment"] = "",
-                    ["callsignStr"] = "H01",
-                    ["id"] = 2882,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [169]
-                [170] = 
-                {
-                    ["y"] = 896802.85714285,
-                    ["x"] = -278922.57142856,
-                    ["comment"] = "",
-                    ["callsignStr"] = "H02",
-                    ["id"] = 2883,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [170]
-                [171] = 
-                {
-                    ["y"] = 901553.99999999,
-                    ["x"] = -270810.57142856,
-                    ["comment"] = "",
-                    ["callsignStr"] = "H03",
-                    ["id"] = 2884,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [171]
-                [172] = 
-                {
-                    ["y"] = 885677.14285713,
-                    ["x"] = -246344.28571428,
-                    ["comment"] = "",
-                    ["callsignStr"] = "H04",
-                    ["id"] = 2885,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [172]
-                [173] = 
-                {
-                    ["y"] = 911638.57142856,
-                    ["x"] = -351810.85714284,
-                    ["comment"] = "",
-                    ["callsignStr"] = "MR1",
-                    ["id"] = 3038,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [173]
-                [174] = 
-                {
-                    ["y"] = 898075.42857142,
-                    ["x"] = -365945.7142857,
-                    ["comment"] = "",
-                    ["callsignStr"] = "MR2",
-                    ["id"] = 3039,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [174]
-                [175] = 
-                {
-                    ["y"] = 878868.85714285,
-                    ["x"] = -359842.57142856,
-                    ["comment"] = "",
-                    ["callsignStr"] = "MR3",
-                    ["id"] = 3040,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [175]
-                [176] = 
-                {
-                    ["y"] = 890102.28571428,
-                    ["x"] = -339268.85714284,
-                    ["comment"] = "",
-                    ["callsignStr"] = "MR4",
-                    ["id"] = 3041,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [176]
-                [177] = 
-                {
-                    ["y"] = 846311.71428571,
-                    ["x"] = -285321.7142857,
-                    ["comment"] = "",
-                    ["callsignStr"] = "DR1",
-                    ["id"] = 3042,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [177]
-                [178] = 
-                {
-                    ["y"] = 849371.99999999,
-                    ["x"] = -264394.85714284,
-                    ["comment"] = "",
-                    ["callsignStr"] = "DR2",
-                    ["id"] = 3043,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [178]
-                [179] = 
-                {
-                    ["y"] = 873847.42857142,
-                    ["x"] = -265526.85714284,
-                    ["comment"] = "",
-                    ["callsignStr"] = "DR3",
-                    ["id"] = 3044,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [179]
-                [180] = 
-                {
-                    ["y"] = 863895.14285714,
-                    ["x"] = -286925.14285713,
-                    ["comment"] = "",
-                    ["callsignStr"] = "DR5",
-                    ["id"] = 3046,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [180]
-                [181] = 
-                {
-                    ["y"] = 838797.42857142,
-                    ["x"] = -263976.85714284,
-                    ["comment"] = "",
-                    ["callsignStr"] = "DR6",
-                    ["id"] = 3199,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [181]
-                [182] = 
-                {
-                    ["y"] = 864460.57142858,
-                    ["x"] = -254041.14285713,
-                    ["comment"] = "",
-                    ["callsignStr"] = "DR7",
-                    ["id"] = 3200,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [182]
-                [183] = 
-                {
-                    ["y"] = 878065.71428573,
-                    ["x"] = -255199.14285713,
-                    ["comment"] = "",
-                    ["callsignStr"] = "DR8",
-                    ["id"] = 3201,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [183]
-                [184] = 
-                {
-                    ["y"] = 880811.42857144,
-                    ["x"] = -271867.7142857,
-                    ["comment"] = "",
-                    ["callsignStr"] = "DR9",
-                    ["id"] = 3202,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [184]
-                [185] = 
-                {
-                    ["y"] = 852465.71428573,
-                    ["x"] = -279603.99999999,
-                    ["comment"] = "",
-                    ["callsignStr"] = "G01",
-                    ["id"] = 3203,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [185]
-                [186] = 
-                {
-                    ["y"] = 850736.2857143,
-                    ["x"] = -270716.57142856,
-                    ["comment"] = "",
-                    ["callsignStr"] = "G02",
-                    ["id"] = 3204,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [186]
-                [187] = 
-                {
-                    ["y"] = 859349.14285715,
-                    ["x"] = -269264.85714285,
-                    ["comment"] = "",
-                    ["callsignStr"] = "G03",
-                    ["id"] = 3205,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [187]
-                [188] = 
-                {
-                    ["y"] = 865113.42857144,
-                    ["x"] = -259573.42857142,
-                    ["comment"] = "",
-                    ["callsignStr"] = "G04",
-                    ["id"] = 3206,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [188]
-                [189] = 
-                {
-                    ["y"] = 644781.42857143,
-                    ["x"] = -281572.85714285,
-                    ["comment"] = "",
                     ["callsignStr"] = "B/LMM",
+                    ["comment"] = "",
                     ["id"] = 3531,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [189]
-                [190] = 
+                    ["x"] = -281572.85714285,
+                    ["y"] = 644781.42857143,
+                }, -- end of [94]
+                [95] =
                 {
-                    ["y"] = 642090,
-                    ["x"] = -281354.28571428,
-                    ["comment"] = "",
                     ["callsignStr"] = "BI/LOM",
+                    ["comment"] = "",
                     ["id"] = 3533,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [190]
-                [191] = 
+                    ["x"] = -281354.28571428,
+                    ["y"] = 642090,
+                }, -- end of [95]
+                [96] =
                 {
-                    ["y"] = 633300.28571429,
-                    ["x"] = -318812.28571428,
-                    ["comment"] = "",
                     ["callsignStr"] = "T/LMM",
+                    ["comment"] = "",
                     ["id"] = 3534,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [191]
-                [192] = 
+                    ["x"] = -318812.28571428,
+                    ["y"] = 633300.28571429,
+                }, -- end of [96]
+                [97] =
                 {
-                    ["y"] = 630763.14285714,
-                    ["x"] = -319735.71428571,
-                    ["comment"] = "",
                     ["callsignStr"] = "KT/LOM",
+                    ["comment"] = "",
                     ["id"] = 3535,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [192]
-                [193] = 
+                    ["x"] = -319735.71428571,
+                    ["y"] = 630763.14285714,
+                }, -- end of [97]
+                [98] =
                 {
-                    ["y"] = 567145.42857143,
-                    ["x"] = -221964.85714285,
-                    ["comment"] = "",
                     ["callsignStr"] = "A/LMM",
+                    ["comment"] = "",
                     ["id"] = 3536,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [193]
-                [194] = 
+                    ["x"] = -221964.85714285,
+                    ["y"] = 567145.42857143,
+                }, -- end of [98]
+                [99] =
                 {
-                    ["y"] = 569562.28571429,
-                    ["x"] = -223168.85714285,
-                    ["comment"] = "",
                     ["callsignStr"] = "AV/LOM",
+                    ["comment"] = "",
                     ["id"] = 3537,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [194]
-                [195] = 
+                    ["x"] = -223168.85714285,
+                    ["y"] = 569562.28571429,
+                }, -- end of [99]
+                [100] =
                 {
-                    ["y"] = 517352.28571429,
-                    ["x"] = -198335.42857142,
-                    ["comment"] = "",
                     ["callsignStr"] = "XC/LOM",
+                    ["comment"] = "",
                     ["id"] = 3690,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [195]
-                [196] = 
-                {
-                    ["y"] = 902479.14285717,
-                    ["x"] = -346995.99999999,
-                    ["comment"] = "",
-                    ["callsignStr"] = "FARP MARNEULI",
-                    ["id"] = 3843,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [196]
-                [197] = 
+                    ["x"] = -198335.42857142,
+                    ["y"] = 517352.28571429,
+                }, -- end of [100]
+                [101] =
                 {
-                    ["y"] = 862214.28571431,
-                    ["x"] = -280027.42857141,
-                    ["comment"] = "",
                     ["callsignStr"] = "FARP DUSHETI",
+                    ["comment"] = "",
                     ["id"] = 3844,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [197]
-                [198] = 
-                {
-                    ["y"] = 882043.71428574,
-                    ["x"] = -265274.57142856,
-                    ["comment"] = "",
-                    ["callsignStr"] = "FARP TIANETI",
-                    ["id"] = 3845,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [198]
-                [199] = 
-                {
-                    ["y"] = 916051.71428574,
-                    ["x"] = -387730.57142856,
-                    ["comment"] = "",
-                    ["callsignStr"] = "STRELA1",
-                    ["id"] = 3846,
-                    ["properties"] = 
-                    {
+                        ["vangle"] = 0,
                         ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
                     }, -- end of ["properties"]
-                }, -- end of [199]
-                [200] = 
+                    ["x"] = -280027.42857141,
+                    ["y"] = 862214.28571431,
+                }, -- end of [101]
+                [102] =
                 {
-                    ["y"] = 924807.42857146,
-                    ["x"] = -389233.7142857,
-                    ["comment"] = "",
-                    ["callsignStr"] = "STRELA2",
-                    ["id"] = 3847,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [200]
-                [201] = 
-                {
-                    ["y"] = 897721.14285717,
-                    ["x"] = -382992.85714284,
-                    ["comment"] = "",
-                    ["callsignStr"] = "SA18.1",
-                    ["id"] = 3848,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [201]
-                [202] = 
-                {
-                    ["y"] = 901531.71428575,
-                    ["x"] = -391569.14285712,
-                    ["comment"] = "",
-                    ["callsignStr"] = "SA18.2",
-                    ["id"] = 3849,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [202]
-                [203] = 
-                {
-                    ["y"] = 906074.00000004,
-                    ["x"] = -399789.99999998,
-                    ["comment"] = "",
-                    ["callsignStr"] = "SA18.3",
-                    ["id"] = 3850,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [203]
-                [204] = 
-                {
-                    ["y"] = 910987.14285718,
-                    ["x"] = -407769.99999998,
-                    ["comment"] = "",
-                    ["callsignStr"] = "SA18.4",
-                    ["id"] = 3851,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [204]
-                [205] = 
-                {
-                    ["y"] = 915080.00000004,
-                    ["x"] = -415619.99999998,
-                    ["comment"] = "",
-                    ["callsignStr"] = "SA18.5",
-                    ["id"] = 3852,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [205]
-                [206] = 
-                {
-                    ["y"] = 882971.42857146,
-                    ["x"] = -415664.28571427,
-                    ["comment"] = "",
-                    ["callsignStr"] = "SA19",
-                    ["id"] = 3853,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [206]
-                [207] = 
-                {
-                    ["y"] = 841536.5714286,
-                    ["x"] = -409190.85714284,
-                    ["comment"] = "",
                     ["callsignStr"] = "SA15",
+                    ["comment"] = "",
                     ["id"] = 3854,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
+                        ["scale"] = 0,
                         ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [207]
-                [208] = 
+                    ["x"] = -409190.85714284,
+                    ["y"] = 841536.5714286,
+                }, -- end of [102]
+                [103] =
                 {
-                    ["y"] = 823079.14285717,
-                    ["x"] = -392666.57142855,
-                    ["comment"] = "",
                     ["callsignStr"] = "SA8",
+                    ["comment"] = "",
                     ["id"] = 3856,
-                    ["properties"] = 
+                    ["properties"] =
                     {
-                        ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
                         ["angle"] = 0,
-                        ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [208]
-                [209] = 
-                {
-                    ["y"] = 798856.5714286,
-                    ["x"] = -377065.14285713,
-                    ["comment"] = "",
-                    ["callsignStr"] = "SA3",
-                    ["id"] = 3857,
-                    ["properties"] = 
-                    {
-                        ["vnav"] = 1,
                         ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
                         ["steer"] = 2,
-                    }, -- end of ["properties"]
-                }, -- end of [209]
-                [210] = 
-                {
-                    ["y"] = 758867.71428574,
-                    ["x"] = -373775.42857141,
-                    ["comment"] = "",
-                    ["callsignStr"] = "SA6",
-                    ["id"] = 3858,
-                    ["properties"] = 
-                    {
+                        ["vangle"] = 0,
                         ["vnav"] = 1,
-                        ["scale"] = 0,
-                        ["vangle"] = 0,
-                        ["angle"] = 0,
-                        ["steer"] = 2,
                     }, -- end of ["properties"]
-                }, -- end of [210]
-				[211] =
+                    ["x"] = -392666.57142855,
+                    ["y"] = 823079.14285717,
+                }, -- end of [103]
+                [104] =
                 {
-				    ["x"] = -318357.48314287,
-                    ["y"] = 719566.54371429,
                     ["callsignStr"] = "T2A.1",
                     ["comment"] = "Argo City",
                     ["id"] = 166,
@@ -39034,8 +37388,10 @@ mission =
                         ["vangle"] = 0,
                         ["vnav"] = 1,
                     }, -- end of ["properties"]
-                }, -- end of [211]
-                [212] =
+                    ["x"] = -318357.48314287,
+                    ["y"] = 719566.54371429,
+                }, -- end of [104]
+                [105] =
                 {
                     ["callsignStr"] = "T1.1",
                     ["comment"] = "",
@@ -39048,10 +37404,10 @@ mission =
                         ["vangle"] = 0,
                         ["vnav"] = 1,
                     }, -- end of ["properties"]
-                    ["x"] = -348484.74885714,
+                    ["x"] = -348484.13514285,
                     ["y"] = 651047.50428571,
-                }, -- end of [212]
-                [213] =
+                }, -- end of [105]
+                [106] =
                 {
                     ["callsignStr"] = "T1.2",
                     ["comment"] = "",
@@ -39066,8 +37422,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -348245.296,
                     ["y"] = 656705.35057143,
-                }, -- end of [213]
-                [214] =
+                }, -- end of [106]
+                [107] =
                 {
                     ["callsignStr"] = "T1.3",
                     ["comment"] = "Smallville",
@@ -39082,8 +37438,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -348499.98114286,
                     ["y"] = 672948.66057143,
-                }, -- end of [214]
-                [215] =
+                }, -- end of [107]
+                [108] =
                 {
                     ["callsignStr"] = "T2A.2",
                     ["comment"] = "",
@@ -39098,8 +37454,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -322362.72800001,
                     ["y"] = 718827.48599999,
-                }, -- end of [215]
-                [216] =
+                }, -- end of [108]
+                [109] =
                 {
                     ["callsignStr"] = "T2A.3",
                     ["comment"] = "",
@@ -39114,8 +37470,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -325134.17257143,
                     ["y"] = 718798.00285713,
-                }, -- end of [216]
-                [217] =
+                }, -- end of [109]
+                [110] =
                 {
                     ["callsignStr"] = "T2A.4",
                     ["comment"] = "",
@@ -39130,8 +37486,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -326780.98228572,
                     ["y"] = 718657.59742856,
-                }, -- end of [217]
-                [218] =
+                }, -- end of [110]
+                [111] =
                 {
                     ["callsignStr"] = "T2A.5",
                     ["comment"] = "",
@@ -39146,8 +37502,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -327664.07742858,
                     ["y"] = 718199.26885712,
-                }, -- end of [218]
-                [219] =
+                }, -- end of [111]
+                [112] =
                 {
                     ["callsignStr"] = "T2A.6",
                     ["comment"] = "",
@@ -39162,8 +37518,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -328266.41714286,
                     ["y"] = 717236.12571427,
-                }, -- end of [219]
-                [220] =
+                }, -- end of [112]
+                [113] =
                 {
                     ["callsignStr"] = "T2A.7",
                     ["comment"] = "",
@@ -39178,8 +37534,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -329487.80428572,
                     ["y"] = 718504.0385714,
-                }, -- end of [220]
-                [221] =
+                }, -- end of [113]
+                [114] =
                 {
                     ["callsignStr"] = "T2B.1",
                     ["comment"] = "",
@@ -39194,8 +37550,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -338495.89428572,
                     ["y"] = 704276.66828569,
-                }, -- end of [221]
-                [222] =
+                }, -- end of [114]
+                [115] =
                 {
                     ["callsignStr"] = "T2B.2",
                     ["comment"] = "",
@@ -39210,8 +37566,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -338444.13942858,
                     ["y"] = 719057.53485714,
-                }, -- end of [222]
-                [223] =
+                }, -- end of [115]
+                [116] =
                 {
                     ["callsignStr"] = "T2B.3",
                     ["comment"] = "",
@@ -39226,8 +37582,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -366648.13342859,
                     ["y"] = 702950.51085714,
-                }, -- end of [223]
-                [224] =
+                }, -- end of [116]
+                [117] =
                 {
                     ["callsignStr"] = "T2B.4",
                     ["comment"] = "",
@@ -39242,8 +37598,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -368069.36000001,
                     ["y"] = 701219.06199999,
-                }, -- end of [224]
-                [225] =
+                }, -- end of [117]
+                [118] =
                 {
                     ["callsignStr"] = "T3B.1",
                     ["comment"] = "",
@@ -39258,8 +37614,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -336416.87200001,
                     ["y"] = 729187.53285715,
-                }, -- end of [225]
-                [226] =
+                }, -- end of [118]
+                [119] =
                 {
                     ["callsignStr"] = "T3B.2",
                     ["comment"] = "",
@@ -39274,8 +37630,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -334207.83457144,
                     ["y"] = 731959.77571429,
-                }, -- end of [226]
-                [227] =
+                }, -- end of [119]
+                [120] =
                 {
                     ["callsignStr"] = "T3B.3",
                     ["comment"] = "",
@@ -39290,8 +37646,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -339357.81828571,
                     ["y"] = 732069.292,
-                }, -- end of [227]
-                [228] =
+                }, -- end of [120]
+                [121] =
                 {
                     ["callsignStr"] = "T3B.4",
                     ["comment"] = "Central city",
@@ -39306,8 +37662,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -340602.73142857,
                     ["y"] = 738328.24314286,
-                }, -- end of [228]
-                [229] =
+                }, -- end of [121]
+                [122] =
                 {
                     ["callsignStr"] = "T3B.5",
                     ["comment"] = "Kandor",
@@ -39322,8 +37678,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -342038.41257143,
                     ["y"] = 741482.07200001,
-                }, -- end of [229]
-                [230] =
+                }, -- end of [122]
+                [123] =
                 {
                     ["callsignStr"] = "T3B.6",
                     ["comment"] = "Astro City",
@@ -39338,8 +37694,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -345951.05942857,
                     ["y"] = 739599.90342858,
-                }, -- end of [230]
-                [231] =
+                }, -- end of [123]
+                [124] =
                 {
                     ["callsignStr"] = "T3B.7",
                     ["comment"] = "",
@@ -39354,8 +37710,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -330926.92171428,
                     ["y"] = 745722.54600001,
-                }, -- end of [231]
-                [232] =
+                }, -- end of [124]
+                [125] =
                 {
                     ["callsignStr"] = "T3B.8",
                     ["comment"] = "",
@@ -39370,8 +37726,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -339663.63285714,
                     ["y"] = 754541.84800001,
-                }, -- end of [232]
-                [233] =
+                }, -- end of [125]
+                [126] =
                 {
                     ["callsignStr"] = "T3B.9",
                     ["comment"] = "",
@@ -39386,8 +37742,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -349988.31971428,
                     ["y"] = 779062.53800003,
-                }, -- end of [233]
-                [234] =
+                }, -- end of [126]
+                [127] =
                 {
                     ["callsignStr"] = "T3B.10",
                     ["comment"] = "",
@@ -39402,8 +37758,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -358023.23942857,
                     ["y"] = 773135.25171432,
-                }, -- end of [234]
-                [235] =
+                }, -- end of [127]
+                [128] =
                 {
                     ["callsignStr"] = "T3A.1_stop",
                     ["comment"] = "Moving tgt along road ",
@@ -39418,8 +37774,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -323253.41114286,
                     ["y"] = 752294.35571429,
-                }, -- end of [235]
-                [236] =
+                }, -- end of [128]
+                [129] =
                 {
                     ["callsignStr"] = "T3A.1_Start",
                     ["comment"] = "Moving tgt along road ",
@@ -39434,8 +37790,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -316433.61628572,
                     ["y"] = 760497.69371429,
-                }, -- end of [236]
-                [237] =
+                }, -- end of [129]
+                [130] =
                 {
                     ["callsignStr"] = "T3A.5",
                     ["comment"] = "",
@@ -39450,8 +37806,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -317414.466,
                     ["y"] = 768672.56428571,
-                }, -- end of [237]
-                [238] =
+                }, -- end of [130]
+                [131] =
                 {
                     ["callsignStr"] = "T3A.2",
                     ["comment"] = "",
@@ -39466,8 +37822,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -313339.80685713,
                     ["y"] = 762945.17199999,
-                }, -- end of [238]
-                [239] =
+                }, -- end of [131]
+                [132] =
                 {
                     ["callsignStr"] = "T3A.4",
                     ["comment"] = "",
@@ -39482,8 +37838,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -315934.3242857,
                     ["y"] = 765237.176,
-                }, -- end of [239]
-                [240] =
+                }, -- end of [132]
+                [133] =
                 {
                     ["callsignStr"] = "T3A.3",
                     ["comment"] = "",
@@ -39498,8 +37854,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -314900.64142855,
                     ["y"] = 764646.02285714,
-                }, -- end of [240]
-                [241] =
+                }, -- end of [133]
+                [134] =
                 {
                     ["callsignStr"] = "T3A.6",
                     ["comment"] = "",
@@ -39514,8 +37870,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -318687.79857141,
                     ["y"] = 771311.79342857,
-                }, -- end of [241]
-                [242] =
+                }, -- end of [134]
+                [135] =
                 {
                     ["callsignStr"] = "T3B.11",
                     ["comment"] = "",
@@ -39530,8 +37886,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -352642.69057141,
                     ["y"] = 753831.182,
-                }, -- end of [242]
-                [243] =
+                }, -- end of [135]
+                [136] =
                 {
                     ["callsignStr"] = "T3B.12",
                     ["comment"] = "",
@@ -39546,8 +37902,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -364368.58914284,
                     ["y"] = 753733.73885714,
-                }, -- end of [243]
-                [244] =
+                }, -- end of [136]
+                [137] =
                 {
                     ["callsignStr"] = "T4A.1",
                     ["comment"] = "Keystone city",
@@ -39562,8 +37918,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -300715.95114285,
                     ["y"] = 815559.2897143,
-                }, -- end of [244]
-                [245] =
+                }, -- end of [137]
+                [138] =
                 {
                     ["callsignStr"] = "T4B.1",
                     ["comment"] = "GOTHAM City",
@@ -39578,8 +37934,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -330748.2082857,
                     ["y"] = 828310.15942858,
-                }, -- end of [245]
-                [246] =
+                }, -- end of [138]
+                [139] =
                 {
                     ["callsignStr"] = "T4B.2",
                     ["comment"] = "",
@@ -39594,8 +37950,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -331248.3822857,
                     ["y"] = 827821.13914287,
-                }, -- end of [246]
-                [247] =
+                }, -- end of [139]
+                [140] =
                 {
                     ["callsignStr"] = "T4B.3",
                     ["comment"] = "",
@@ -39610,8 +37966,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -333020.76285713,
                     ["y"] = 824269.5937143,
-                }, -- end of [247]
-                [248] =
+                }, -- end of [140]
+                [141] =
                 {
                     ["callsignStr"] = "T3A.7",
                     ["comment"] = "",
@@ -39626,8 +37982,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -323653.71942859,
                     ["y"] = 752327.38914285,
-                }, -- end of [248]
-                [249] =
+                }, -- end of [141]
+                [142] =
                 {
                     ["callsignStr"] = "T2B.5",
                     ["comment"] = "",
@@ -39642,8 +37998,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -339372.68514287,
                     ["y"] = 703430.02114285,
-                }, -- end of [249]
-                [250] =
+                }, -- end of [142]
+                [143] =
                 {
                     ["callsignStr"] = "T2B.6",
                     ["comment"] = "",
@@ -39658,8 +38014,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -338358.13742858,
                     ["y"] = 705381.68028571,
-                }, -- end of [250]
-                [251] =
+                }, -- end of [143]
+                [144] =
                 {
                     ["callsignStr"] = "T4B.5",
                     ["comment"] = "",
@@ -39674,8 +38030,8 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -331629.31885714,
                     ["y"] = 828125.30514285,
-                }, -- end of [251]
-                [252] =
+                }, -- end of [144]
+                [145] =
                 {
                     ["callsignStr"] = "T4B.6",
                     ["comment"] = "",
@@ -39690,7 +38046,23 @@ mission =
                     }, -- end of ["properties"]
                     ["x"] = -331215.32799999,
                     ["y"] = 827146.77314285,
-                }, -- end of [252]
+                }, -- end of [145]
+                [146] =
+                {
+                    ["callsignStr"] = "T1.2",
+                    ["comment"] = "",
+                    ["id"] = 4024,
+                    ["properties"] =
+                    {
+                        ["angle"] = 0,
+                        ["scale"] = 0,
+                        ["steer"] = 2,
+                        ["vangle"] = 0,
+                        ["vnav"] = 1,
+                    }, -- end of ["properties"]
+                    ["x"] = -348263.07828572,
+                    ["y"] = 656505.47285714,
+                }, -- end of [146]
             }, -- end of ["nav_points"]
         }, -- end of ["blue"]
         ["red"] =
@@ -41311,7 +39683,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 468680,
+    ["currentKey"] = 484838,
     ["date"] =
     {
         ["Day"] = 1,
@@ -44553,11 +42925,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -348097.57200001,
-        ["centerY"] = 655134.88457142,
-        ["zoom"] = 8526,
+        ["centerX"] = -345883.03028572,
+        ["centerY"] = 652523.57657143,
+        ["zoom"] = 190220,
     }, -- end of ["map"]
-    ["maxDictId"] = 2458,
+    ["maxDictId"] = 2461,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
