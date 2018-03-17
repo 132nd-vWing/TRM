@@ -4,4 +4,5 @@ mapResource =
     ["ResKey_Action_2552"] = "Range1.lua",
     ["ResKey_Action_2567"] = "Moose_.lua",
     ["ResKey_Action_2610"] = "Range10.lua",
+    ["ResKey_Action_2619"] = "Range3.lua",
 } -- end of mapResource
