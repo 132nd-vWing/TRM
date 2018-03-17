@@ -8,14 +8,14 @@ t1_1_threat:SetAIOff()
 function t1_1_threat_on()
 t1_1_threat:SetAIOn()
 t1_1_Threat_On:Remove()
-t1_1_Threat_Off = MENU_MISSION_COMMAND:New("Deactivate Threat Site Range 1.1",Menu_Threat_Options_Ranges,t1_1_threat_off)
+t1_1_Threat_Off = MENU_MISSION_COMMAND:New("Deactivate Threat Site Range 1",Menu_Threat_Options_Ranges,t1_1_threat_off)
 end
 
 
 function t1_1_threat_off()
 t1_1_threat:SetAIOff()
 t1_1_Threat_Off:Remove()
-t1_1_Threat_On = MENU_MISSION_COMMAND:New("Activate Threat Site Range 1.1",Menu_Threat_Options_Ranges,t1_1_threat_on)
+t1_1_Threat_On = MENU_MISSION_COMMAND:New("Activate Threat Site Range 1",Menu_Threat_Options_Ranges,t1_1_threat_on)
 end
 
 -- Sam Sites--
@@ -35,7 +35,7 @@ T1_1_table_blue_IFV = { "Template 2.1: IFV vehicle", "Template 2.2: IFV section"
 T1_1_table_blue_MBT = { "Template 3.1: MBT vehicle", "Template 3.2: MBT section", "Template 3.3: MBT platoon" } -- table for the blue MBT 
 -- BLUE Table
 
-function SpawnTargets ()
+function SpawnTargets_T1_1 ()
 -- RED Spawners
 T1_1_red_recon = SPAWN:New("T1_1_red_recon"):InitRandomizeTemplate(T1_1_table_red_recon):InitRandomizeRoute(3,0,100):Spawn()  
 T1_1_red_IFV = SPAWN:New("T1_1_red_IFV"):InitRandomizeTemplate(T1_1_table_red_IFV):InitRandomizeRoute(3,0,100):Spawn()
@@ -48,7 +48,23 @@ T1_1_blue_recon = SPAWN:New("T1_1_blue_recon"):InitRandomizeTemplate(T1_1_table_
 T1_1_blue_IFV = SPAWN:New("T1_1_blue_IFV"):InitRandomizeTemplate(T1_1_table_blue_IFV):InitRandomizeRoute(3,0,100):Spawn()
 T1_1_blue_MBT = SPAWN:New("T1_1_blue_MBT"):InitRandomizeTemplate(T1_1_table_blue_MBT):InitRandomizeRoute(3,0,100):Spawn()
 -- BLUE Spawners
-spawn_menu:Remove()
+spawn_menu_T1_1:Remove()
+end
+
+function SpawnTargets_T1_2 ()
+-- RED Spawners
+T1_2_red_recon = SPAWN:New("T1_2_red_recon"):InitRandomizeTemplate(T1_1_table_red_recon):InitRandomizeRoute(3,0,100):Spawn()  
+T1_2_red_IFV = SPAWN:New("T1_2_red_IFV"):InitRandomizeTemplate(T1_1_table_red_IFV):InitRandomizeRoute(3,0,100):Spawn()
+T1_2_red_MBT = SPAWN:New("T1_2_red_MBT"):InitRandomizeTemplate(T1_1_table_red_MBT):InitRandomizeRoute(3,0,100):Spawn()
+T1_2_red_AAA = SPAWN:New("T1_2_red_AAA"):InitRandomizeTemplate(T1_1_table_red_AAA):InitRandomizeRoute(3,0,100):Spawn()
+T1_2_red_misc = SPAWN:New("T1_2_red_misc"):InitRandomizeTemplate(T1_1_table_red_misc):InitRandomizeRoute(3,0,100):Spawn()
+-- RED Spawners
+-- BLUE Spawners
+T1_2_blue_recon = SPAWN:New("T1_2_blue_recon"):InitRandomizeTemplate(T1_1_table_blue_recon):InitRandomizeRoute(3,0,100):Spawn()
+T1_2_blue_IFV = SPAWN:New("T1_2_blue_IFV"):InitRandomizeTemplate(T1_1_table_blue_IFV):InitRandomizeRoute(3,0,100):Spawn()
+T1_2_blue_MBT = SPAWN:New("T1_2_blue_MBT"):InitRandomizeTemplate(T1_1_table_blue_MBT):InitRandomizeRoute(3,0,100):Spawn()
+-- BLUE Spawners
+spawn_menu_T1_2:Remove()
 end
 
 
@@ -207,21 +223,23 @@ end
 function _ON_DEMAND_4_MISC_SA19_vehicle ()
 MISC_SA19_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
 end
+-- ON DEMAND SPAWNING -- 
 
 
 Menu_Threat_Options = MENU_MISSION:New("Threat Sites")
 Menu_Threat_Options_Ranges = MENU_MISSION:New("Ranges", Menu_Threat_Options)
 Menu_Threat_Options_MOAs = MENU_MISSION:New("MOAs", Menu_Threat_Options)
 Menu_Range_Options = MENU_MISSION:New("Range Options")
-Menu_Range_T1_1 = MENU_MISSION:New("Range T1.1", Menu_Range_Options)
-spawn_menu = MENU_MISSION_COMMAND:New("Set up the Range dynamically",Menu_Range_T1_1,SpawnTargets)
-spawn_menu_OD = MENU_MISSION:New("On Demand Spawning",Menu_Range_T1_1)
+Menu_Range_T1 = MENU_MISSION:New("Range T1", Menu_Range_Options)
+spawn_menu_T1_1 = MENU_MISSION_COMMAND:New("Set up the Range 1.1 dynamically",Menu_Range_T1,SpawnTargets_T1_1)
+spawn_menu_T1_2 = MENU_MISSION_COMMAND:New("Set up the Range 1.2 dynamically",Menu_Range_T1,SpawnTargets_T1_2)
+spawn_menu_OD = MENU_MISSION:New("On Demand Spawning",Menu_Range_T1)
 spawn_menu_OD_Recon = MENU_MISSION:New("On Demand Spawning - RECON",spawn_menu_OD)
 spawn_menu_OD_IFV = MENU_MISSION:New("On Demand Spawning - IFV",spawn_menu_OD)
 spawn_menu_OD_MBT = MENU_MISSION:New("On Demand Spawning - MBT",spawn_menu_OD)
 spawn_menu_OD_MISC = MENU_MISSION:New("On Demand Spawning - MISC",spawn_menu_OD)   
 
-t1_1_Threat_On = MENU_MISSION_COMMAND:New("Activate Threat Site on Range 1.1",Menu_Threat_Options_Ranges,t1_1_threat_on)
+t1_1_Threat_On = MENU_MISSION_COMMAND:New("Activate Threat Site on Range 1",Menu_Threat_Options_Ranges,t1_1_threat_on)
 
 
 menu_ON_DEMAND_1_Recon_HMMWV_vehicle = MENU_MISSION_COMMAND:New("Spawn in Recon HMMWV Vehicle",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_HMMWV_vehicle)
