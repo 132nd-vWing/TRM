@@ -966,9 +966,19 @@ warehouses =
             ["coalition"] = "blue",
             ["diesel"] =
             {
+<<<<<<< HEAD
                 ["InitFuel"] = 100,
             }, -- end of ["diesel"]
             ["gasoline"] =
+=======
+            }, -- end of ["weapons"]
+            ["OperatingLevel_Fuel"] = 10,
+            ["unlimitedAircrafts"] = true,
+        }, -- end of [711]
+        [696] = 
+        {
+            ["gasoline"] = 
+>>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
             {
                 ["InitFuel"] = 100,
             }, -- end of ["gasoline"]
@@ -992,8 +1002,15 @@ warehouses =
             ["weapons"] =
             {
             }, -- end of ["weapons"]
+<<<<<<< HEAD
         }, -- end of [294]
         [301] =
+=======
+            ["OperatingLevel_Fuel"] = 10,
+            ["unlimitedAircrafts"] = true,
+        }, -- end of [696]
+        [697] = 
+>>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
         {
             ["OperatingLevel_Air"] = 10,
             ["OperatingLevel_Eqp"] = 10,
@@ -1346,9 +1363,19 @@ warehouses =
             ["coalition"] = "blue",
             ["diesel"] =
             {
+<<<<<<< HEAD
                 ["InitFuel"] = 100,
             }, -- end of ["diesel"]
             ["gasoline"] =
+=======
+            }, -- end of ["weapons"]
+            ["OperatingLevel_Fuel"] = 10,
+            ["unlimitedAircrafts"] = true,
+        }, -- end of [694]
+        [788] = 
+        {
+            ["gasoline"] = 
+>>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
             {
                 ["InitFuel"] = 100,
             }, -- end of ["gasoline"]
@@ -1384,9 +1411,19 @@ warehouses =
             ["coalition"] = "blue",
             ["diesel"] =
             {
+<<<<<<< HEAD
                 ["InitFuel"] = 100,
             }, -- end of ["diesel"]
             ["gasoline"] =
+=======
+            }, -- end of ["weapons"]
+            ["OperatingLevel_Fuel"] = 10,
+            ["unlimitedAircrafts"] = true,
+        }, -- end of [788]
+        [350] = 
+        {
+            ["gasoline"] = 
+>>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
             {
                 ["InitFuel"] = 100,
             }, -- end of ["gasoline"]
@@ -1422,9 +1459,19 @@ warehouses =
             ["coalition"] = "blue",
             ["diesel"] =
             {
+<<<<<<< HEAD
                 ["InitFuel"] = 100,
             }, -- end of ["diesel"]
             ["gasoline"] =
+=======
+            }, -- end of ["weapons"]
+            ["OperatingLevel_Fuel"] = 10,
+            ["unlimitedAircrafts"] = true,
+        }, -- end of [350]
+        [775] = 
+        {
+            ["gasoline"] = 
+>>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
             {
                 ["InitFuel"] = 100,
             }, -- end of ["gasoline"]
@@ -1460,9 +1507,19 @@ warehouses =
             ["coalition"] = "blue",
             ["diesel"] =
             {
+<<<<<<< HEAD
                 ["InitFuel"] = 100,
             }, -- end of ["diesel"]
             ["gasoline"] =
+=======
+            }, -- end of ["weapons"]
+            ["OperatingLevel_Fuel"] = 10,
+            ["unlimitedAircrafts"] = true,
+        }, -- end of [775]
+        [715] = 
+        {
+            ["gasoline"] = 
+>>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
             {
                 ["InitFuel"] = 100,
             }, -- end of ["gasoline"]
@@ -1498,9 +1555,19 @@ warehouses =
             ["coalition"] = "blue",
             ["diesel"] =
             {
+<<<<<<< HEAD
                 ["InitFuel"] = 100,
             }, -- end of ["diesel"]
             ["gasoline"] =
+=======
+            }, -- end of ["weapons"]
+            ["OperatingLevel_Fuel"] = 10,
+            ["unlimitedAircrafts"] = true,
+        }, -- end of [715]
+        [294] = 
+        {
+            ["gasoline"] = 
+>>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
             {
                 ["InitFuel"] = 100,
             }, -- end of ["gasoline"]
@@ -1536,9 +1603,19 @@ warehouses =
             ["coalition"] = "blue",
             ["diesel"] =
             {
+<<<<<<< HEAD
                 ["InitFuel"] = 100,
             }, -- end of ["diesel"]
             ["gasoline"] =
+=======
+            }, -- end of ["weapons"]
+            ["OperatingLevel_Fuel"] = 10,
+            ["unlimitedAircrafts"] = true,
+        }, -- end of [294]
+        [744] = 
+        {
+            ["gasoline"] = 
+>>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
             {
                 ["InitFuel"] = 100,
             }, -- end of ["gasoline"]
