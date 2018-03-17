@@ -8831,13 +8831,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "TakeOffGround",
-<<<<<<< HEAD
-                                            ["x"] = -285624.37514287,
-                                            ["y"] = 682911.95085714,
-=======
                                             ["x"] = -285647.95171429,
                                             ["y"] = 682831.48114286,
->>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                 }, -- end of ["route"]
@@ -8847,8 +8842,6 @@ mission =
                                 {
                                 }, -- end of ["tasks"]
                                 ["uncontrolled"] = false,
-<<<<<<< HEAD
-=======
                                 ["units"] =
                                 {
                                     [1] =
@@ -10992,7 +10985,6 @@ mission =
                                 {
                                 }, -- end of ["tasks"]
                                 ["uncontrolled"] = false,
->>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
                                 ["units"] =
                                 {
                                     [1] =
@@ -22546,8 +22538,6 @@ mission =
                                 ["y"] = 721997.744,
                             }, -- end of [149]
                             [150] =
-<<<<<<< HEAD
-=======
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 642,
@@ -22708,7 +22698,6 @@ mission =
                                 ["y"] = 715073.66885713,
                             }, -- end of [153]
                             [154] =
->>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 682,
@@ -22946,17 +22935,10 @@ mission =
                                         ["y"] = 704556.10714285,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
-<<<<<<< HEAD
-                                ["x"] = -320195.20542857,
-                                ["y"] = 720071.734,
-                            }, -- end of [150]
-                            [151] =
-=======
                                 ["x"] = -348659.10114283,
                                 ["y"] = 704556.10714285,
                             }, -- end of [159]
                             [160] =
->>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 692,
@@ -22993,17 +22975,10 @@ mission =
                                         ["y"] = 704650.10714285,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
-<<<<<<< HEAD
-                                ["x"] = -336956.09314285,
-                                ["y"] = 736267.38999996,
-                            }, -- end of [151]
-                            [152] =
-=======
                                 ["x"] = -348673.6725714,
                                 ["y"] = 704650.10714285,
                             }, -- end of [160]
                             [161] =
->>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 693,
@@ -23040,17 +23015,10 @@ mission =
                                         ["y"] = 704656.39285714,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
-<<<<<<< HEAD
-                                ["x"] = -336907.54914285,
-                                ["y"] = 736365.78999996,
-                            }, -- end of [152]
-                            [153] =
-=======
                                 ["x"] = -348586.81542855,
                                 ["y"] = 704656.39285714,
                             }, -- end of [161]
                             [162] =
->>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 695,
@@ -23088,17 +23056,10 @@ mission =
                                         ["y"] = 683129.52171429,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
-<<<<<<< HEAD
-                                ["x"] = -299352.4622857,
-                                ["y"] = 715073.66885713,
-                            }, -- end of [153]
-                            [154] =
-=======
                                 ["x"] = -285685.67314286,
                                 ["y"] = 683129.52171429,
                             }, -- end of [162]
                             [163] =
->>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 739,
@@ -23135,17 +23096,10 @@ mission =
                                         ["y"] = 682684.22371429,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
-<<<<<<< HEAD
-                                ["x"] = -348652.52971426,
-                                ["y"] = 704625.25,
-                            }, -- end of [154]
-                            [155] =
-=======
                                 ["x"] = -285181.66257143,
                                 ["y"] = 682684.22371429,
                             }, -- end of [163]
                             [164] =
->>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 740,
@@ -23182,12 +23136,6 @@ mission =
                                         ["y"] = 685003.97028572,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
-<<<<<<< HEAD
-                                ["x"] = -348582.52971426,
-                                ["y"] = 704582.39285714,
-                            }, -- end of [155]
-                            [156] =
-=======
                                 ["x"] = -284517.25457143,
                                 ["y"] = 685003.97028572,
                             }, -- end of [164]
@@ -23198,498 +23146,6 @@ mission =
                         ["group"] =
                         {
                             [1] =
->>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
-                            {
-                                ["groupId"] = 53,
-                                ["hidden"] = false,
-                                ["name"] = "DictKey_GroupName_187",
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["ETA"] = 0,
-                                            ["ETA_locked"] = true,
-                                            ["action"] = "Off Road",
-                                            ["alt"] = 1193,
-                                            ["alt_type"] = "BARO",
-                                            ["formation_template"] = "",
-                                            ["name"] = "DictKey_WptName_189",
-                                            ["speed"] = 5.5555555555556,
-                                            ["speed_locked"] = true,
-                                            ["task"] =
-                                            {
-                                                ["id"] = "ComboTask",
-                                                ["params"] =
-                                                {
-                                                    ["tasks"] =
-                                                    {
-                                                    }, -- end of ["tasks"]
-                                                }, -- end of ["params"]
-                                            }, -- end of ["task"]
-                                            ["type"] = "Turning Point",
-                                            ["x"] = -342931.04771429,
-                                            ["y"] = 740696.71285714,
-                                        }, -- end of [1]
-                                    }, -- end of ["points"]
-                                    ["spans"] =
-                                    {
-                                        [1] =
-                                        {
-                                            [1] =
-                                            {
-                                                ["x"] = -342943.02942856,
-                                                ["y"] = 740722.38599999,
-                                            }, -- end of [1]
-                                            [2] =
-                                            {
-                                                ["x"] = -342972.05057142,
-                                                ["y"] = 740846.10771427,
-                                            }, -- end of [2]
-                                        }, -- end of [1]
-                                    }, -- end of ["spans"]
-                                }, -- end of ["route"]
-                                ["start_time"] = 0,
-                                ["task"] = "Ground Nothing",
-                                ["taskSelected"] = true,
-                                ["tasks"] =
-                                {
-                                }, -- end of ["tasks"]
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["heading"] = 1.8011987628534,
-                                        ["name"] = "DictKey_UnitName_188",
-                                        ["playerCanDrive"] = true,
-                                        ["skill"] = "Average",
-                                        ["transportable"] =
-                                        {
-                                            ["randomTransportable"] = false,
-                                        }, -- end of ["transportable"]
-                                        ["type"] = "Soldier stinger",
-                                        ["unitId"] = 53,
-                                        ["x"] = -342931.04771429,
-                                        ["y"] = 740696.71285714,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-<<<<<<< HEAD
-                                ["x"] = -348652.52971426,
-                                ["y"] = 704603.82142857,
-                            }, -- end of [156]
-                            [157] =
-=======
-                                ["visible"] = false,
-                                ["x"] = -342931.04771429,
-                                ["y"] = 740696.71285714,
-                            }, -- end of [1]
-                            [2] =
->>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
-                            {
-                                ["groupId"] = 54,
-                                ["hidden"] = false,
-                                ["name"] = "DictKey_GroupName_191",
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["ETA"] = 0,
-                                            ["ETA_locked"] = true,
-                                            ["action"] = "Off Road",
-                                            ["alt"] = 399,
-                                            ["alt_type"] = "BARO",
-                                            ["formation_template"] = "",
-                                            ["name"] = "DictKey_WptName_193",
-                                            ["speed"] = 5.5555555555556,
-                                            ["speed_locked"] = true,
-                                            ["task"] =
-                                            {
-                                                ["id"] = "ComboTask",
-                                                ["params"] =
-                                                {
-                                                    ["tasks"] =
-                                                    {
-                                                    }, -- end of ["tasks"]
-                                                }, -- end of ["params"]
-                                            }, -- end of ["task"]
-                                            ["type"] = "Turning Point",
-                                            ["x"] = -349215.52714285,
-                                            ["y"] = 651113.33114286,
-                                        }, -- end of [1]
-                                    }, -- end of ["points"]
-                                    ["spans"] =
-                                    {
-                                        [1] =
-                                        {
-                                            [1] =
-                                            {
-                                                ["x"] = -349215.52714285,
-                                                ["y"] = 651113.33114286,
-                                            }, -- end of [1]
-                                            [2] =
-                                            {
-                                                ["x"] = -348963.83314285,
-                                                ["y"] = 655805.93114286,
-                                            }, -- end of [2]
-                                        }, -- end of [1]
-                                    }, -- end of ["spans"]
-                                }, -- end of ["route"]
-                                ["start_time"] = 0,
-                                ["task"] = "Ground Nothing",
-                                ["taskSelected"] = true,
-                                ["tasks"] =
-                                {
-                                }, -- end of ["tasks"]
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["heading"] = 1.517211309319,
-                                        ["name"] = "DictKey_UnitName_192",
-                                        ["playerCanDrive"] = true,
-                                        ["skill"] = "Average",
-                                        ["transportable"] =
-                                        {
-                                            ["randomTransportable"] = false,
-                                        }, -- end of ["transportable"]
-                                        ["type"] = "Soldier stinger",
-                                        ["unitId"] = 54,
-                                        ["x"] = -349215.52714285,
-                                        ["y"] = 651113.33114286,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-<<<<<<< HEAD
-                                ["x"] = -348652.52971426,
-                                ["y"] = 704614.67857143,
-                            }, -- end of [157]
-                            [158] =
-=======
-                                ["visible"] = false,
-                                ["x"] = -349215.52714285,
-                                ["y"] = 651113.33114286,
-                            }, -- end of [2]
-                            [3] =
->>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
-                            {
-                                ["groupId"] = 55,
-                                ["hidden"] = false,
-                                ["name"] = "DictKey_GroupName_195",
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["ETA"] = 0,
-                                            ["ETA_locked"] = true,
-                                            ["action"] = "Off Road",
-                                            ["alt"] = 561,
-                                            ["alt_type"] = "BARO",
-                                            ["formation_template"] = "",
-                                            ["name"] = "DictKey_WptName_197",
-                                            ["speed"] = 5.5555555555556,
-                                            ["speed_locked"] = true,
-                                            ["task"] =
-                                            {
-                                                ["id"] = "ComboTask",
-                                                ["params"] =
-                                                {
-                                                    ["tasks"] =
-                                                    {
-                                                    }, -- end of ["tasks"]
-                                                }, -- end of ["params"]
-                                            }, -- end of ["task"]
-                                            ["type"] = "Turning Point",
-                                            ["x"] = -348904.10914285,
-                                            ["y"] = 655767.53714286,
-                                        }, -- end of [1]
-                                    }, -- end of ["points"]
-                                    ["spans"] =
-                                    {
-                                    }, -- end of ["spans"]
-                                }, -- end of ["route"]
-                                ["start_time"] = 0,
-                                ["task"] = "Ground Nothing",
-                                ["taskSelected"] = true,
-                                ["tasks"] =
-                                {
-                                }, -- end of ["tasks"]
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["heading"] = 3.6128315516283,
-                                        ["name"] = "DictKey_UnitName_196",
-                                        ["playerCanDrive"] = true,
-                                        ["skill"] = "Average",
-                                        ["transportable"] =
-                                        {
-                                            ["randomTransportable"] = false,
-                                        }, -- end of ["transportable"]
-                                        ["type"] = "Soldier stinger",
-                                        ["unitId"] = 55,
-                                        ["x"] = -348904.10914285,
-                                        ["y"] = 655767.53714286,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-<<<<<<< HEAD
-                                ["x"] = -348604.52971426,
-                                ["y"] = 704553.82142857,
-                            }, -- end of [158]
-                            [159] =
-=======
-                                ["visible"] = false,
-                                ["x"] = -348904.10914285,
-                                ["y"] = 655767.53714286,
-                            }, -- end of [3]
-                            [4] =
->>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
-                            {
-                                ["groupId"] = 225,
-                                ["hidden"] = false,
-                                ["lateActivation"] = true,
-                                ["name"] = "DictKey_GroupName_725",
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["ETA"] = 0,
-                                            ["ETA_locked"] = true,
-                                            ["action"] = "Off Road",
-                                            ["alt"] = 1716,
-                                            ["alt_type"] = "BARO",
-                                            ["formation_template"] = "",
-                                            ["name"] = "DictKey_WptName_727",
-                                            ["speed"] = 5.5555555555556,
-                                            ["speed_locked"] = true,
-                                            ["task"] =
-                                            {
-                                                ["id"] = "ComboTask",
-                                                ["params"] =
-                                                {
-                                                    ["tasks"] =
-                                                    {
-                                                    }, -- end of ["tasks"]
-                                                }, -- end of ["params"]
-                                            }, -- end of ["task"]
-                                            ["type"] = "Turning Point",
-                                            ["x"] = -358052.53742856,
-                                            ["y"] = 774365.95628577,
-                                        }, -- end of [1]
-                                        [2] =
-                                        {
-                                            ["ETA"] = 463.74212503381,
-                                            ["ETA_locked"] = false,
-                                            ["action"] = "Off Road",
-                                            ["alt"] = 1745,
-                                            ["alt_type"] = "BARO",
-                                            ["formation_template"] = "",
-                                            ["name"] = "DictKey_WptName_728",
-                                            ["speed"] = 5.5555555555556,
-                                            ["speed_locked"] = true,
-                                            ["task"] =
-                                            {
-                                                ["id"] = "ComboTask",
-                                                ["params"] =
-                                                {
-                                                    ["tasks"] =
-                                                    {
-                                                    }, -- end of ["tasks"]
-                                                }, -- end of ["params"]
-                                            }, -- end of ["task"]
-                                            ["type"] = "Turning Point",
-                                            ["x"] = -358050.28057141,
-                                            ["y"] = 771790.41342862,
-                                        }, -- end of [2]
-                                    }, -- end of ["points"]
-                                    ["routeRelativeTOT"] = true,
-                                    ["spans"] =
-                                    {
-                                        [1] =
-                                        {
-                                            [1] =
-                                            {
-                                                ["x"] = -358052.53742856,
-                                                ["y"] = 774365.95628577,
-                                            }, -- end of [1]
-                                            [2] =
-                                            {
-                                                ["x"] = -358050.28057141,
-                                                ["y"] = 771790.41342862,
-                                            }, -- end of [2]
-                                        }, -- end of [1]
-                                        [2] =
-                                        {
-                                            [1] =
-                                            {
-                                                ["x"] = -357968.90428571,
-                                                ["y"] = 774033.0757143,
-                                            }, -- end of [1]
-                                            [2] =
-                                            {
-                                                ["x"] = -357968.90428571,
-                                                ["y"] = 774033.0757143,
-                                            }, -- end of [2]
-                                        }, -- end of [2]
-                                    }, -- end of ["spans"]
-                                }, -- end of ["route"]
-                                ["start_time"] = 0,
-                                ["task"] = "Ground Nothing",
-                                ["taskSelected"] = true,
-                                ["tasks"] =
-                                {
-                                }, -- end of ["tasks"]
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-<<<<<<< HEAD
-                                        ["category"] = "Fortifications",
-                                        ["heading"] = 0,
-                                        ["name"] = "DictKey_GroupName_2427",
-                                        ["rate"] = 1,
-                                        ["type"] = "hesco_db_35m",
-                                        ["unitId"] = 784,
-                                        ["x"] = -348659.10114283,
-                                        ["y"] = 704556.10714285,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-                                ["x"] = -348659.10114283,
-                                ["y"] = 704556.10714285,
-                            }, -- end of [159]
-                            [160] =
-                            {
-                                ["dead"] = false,
-                                ["groupId"] = 692,
-                                ["heading"] = 0,
-                                ["name"] = "DictKey_GroupName_2430",
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["action"] = "",
-                                            ["alt"] = 0,
-                                            ["formation_template"] = "",
-                                            ["name"] = "",
-                                            ["speed"] = 0,
-                                            ["type"] = "",
-                                            ["x"] = -348673.6725714,
-                                            ["y"] = 704650.10714285,
-                                        }, -- end of [1]
-                                    }, -- end of ["points"]
-                                }, -- end of ["route"]
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["category"] = "Fortifications",
-                                        ["heading"] = 0,
-                                        ["name"] = "DictKey_GroupName_2430",
-                                        ["rate"] = 1,
-                                        ["type"] = "hesco_db_52m",
-                                        ["unitId"] = 785,
-                                        ["x"] = -348673.6725714,
-                                        ["y"] = 704650.10714285,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-                                ["x"] = -348673.6725714,
-                                ["y"] = 704650.10714285,
-                            }, -- end of [160]
-                            [161] =
-                            {
-                                ["dead"] = false,
-                                ["groupId"] = 693,
-                                ["heading"] = 0,
-                                ["name"] = "DictKey_GroupName_2433",
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["action"] = "",
-                                            ["alt"] = 0,
-                                            ["formation_template"] = "",
-                                            ["name"] = "",
-                                            ["speed"] = 0,
-                                            ["type"] = "",
-                                            ["x"] = -348586.81542855,
-                                            ["y"] = 704656.39285714,
-                                        }, -- end of [1]
-                                    }, -- end of ["points"]
-                                }, -- end of ["route"]
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["category"] = "Fortifications",
-                                        ["heading"] = 0,
-                                        ["name"] = "DictKey_GroupName_2433",
-                                        ["rate"] = 1,
-                                        ["type"] = "hesco_db_52m",
-                                        ["unitId"] = 786,
-                                        ["x"] = -348586.81542855,
-                                        ["y"] = 704656.39285714,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-                                ["x"] = -348586.81542855,
-                                ["y"] = 704656.39285714,
-                            }, -- end of [161]
-                            [162] =
-                            {
-                                ["dead"] = false,
-                                ["groupId"] = 695,
-                                ["heading"] = 4.4331363000656,
-                                ["name"] = "DictKey_GroupName_2459",
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["action"] = "",
-                                            ["alt"] = 0,
-                                            ["formation_template"] = "",
-                                            ["name"] = "",
-                                            ["speed"] = 0,
-                                            ["type"] = "",
-                                            ["x"] = -285685.67314286,
-                                            ["y"] = 683129.52171429,
-                                        }, -- end of [1]
-                                    }, -- end of ["points"]
-                                }, -- end of ["route"]
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["category"] = "Heliports",
-                                        ["heading"] = 4.4331363000656,
-                                        ["heliport_callsign_id"] = 10,
-                                        ["name"] = "DictKey_GroupName_2459",
-                                        ["shape_name"] = "FARPS",
-                                        ["type"] = "FARP",
-                                        ["unitId"] = 788,
-                                        ["x"] = -285685.67314286,
-                                        ["y"] = 683129.52171429,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-                                ["x"] = -285685.67314286,
-                                ["y"] = 683129.52171429,
-                            }, -- end of [162]
-                        }, -- end of ["group"]
-                    }, -- end of ["static"]
-                    ["vehicle"] =
-                    {
-                        ["group"] =
-                        {
-                            [1] =
                             {
                                 ["groupId"] = 53,
                                 ["hidden"] = false,
@@ -24018,8 +23474,6 @@ mission =
                                 {
                                     [1] =
                                     {
-=======
->>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
                                         ["heading"] = -1.5699200623732,
                                         ["name"] = "DictKey_UnitName_726",
                                         ["playerCanDrive"] = true,
@@ -44314,7 +43768,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["heading"] = 0,
+                                        ["heading"] = 5.3058009260628,
                                         ["name"] = "DictKey_UnitName_1170",
                                         ["playerCanDrive"] = true,
                                         ["skill"] = "Average",
@@ -44327,6 +43781,21 @@ mission =
                                         ["x"] = -321629.78314286,
                                         ["y"] = 775198.78885712,
                                     }, -- end of [1]
+                                    [2] =
+                                    {
+                                        ["heading"] = 0,
+                                        ["name"] = "DictKey_UnitName_2685",
+                                        ["playerCanDrive"] = true,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "Ural-375",
+                                        ["unitId"] = 836,
+                                        ["x"] = -321668.47800001,
+                                        ["y"] = 775186.24142858,
+                                    }, -- end of [2]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
                                 ["x"] = -321629.78314286,
@@ -44975,7 +44444,7 @@ mission =
                                             ["ETA"] = 0,
                                             ["ETA_locked"] = true,
                                             ["action"] = "Off Road",
-                                            ["alt"] = 1923,
+                                            ["alt"] = 1646,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_2262",
@@ -44992,8 +44461,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = -468949.576,
-                                            ["y"] = 724608.43657143,
+                                            ["x"] = -431709.61257144,
+                                            ["y"] = 778356.24657144,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                     ["spans"] =
@@ -45010,7 +44479,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["heading"] = 4.7123889803847,
+                                        ["heading"] = 4.4680428851055,
                                         ["name"] = "DictKey_UnitName_2261",
                                         ["playerCanDrive"] = false,
                                         ["skill"] = "Average",
@@ -45018,14 +44487,14 @@ mission =
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["type"] = "2S6 Tunguska",
+                                        ["type"] = "p-19 s-125 sr",
                                         ["unitId"] = 729,
-                                        ["x"] = -468949.576,
-                                        ["y"] = 724608.43657143,
+                                        ["x"] = -431709.61257144,
+                                        ["y"] = 778356.24657144,
                                     }, -- end of [1]
                                     [2] =
                                     {
-                                        ["heading"] = 3.2812189937493,
+                                        ["heading"] = 1.5707963267949,
                                         ["name"] = "DictKey_UnitName_2263",
                                         ["playerCanDrive"] = false,
                                         ["skill"] = "Average",
@@ -45035,13 +44504,73 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "Ural-4320T",
                                         ["unitId"] = 730,
-                                        ["x"] = -468984.50971429,
-                                        ["y"] = 724672.29857143,
+                                        ["x"] = -431661.50800001,
+                                        ["y"] = 778367.90828572,
                                     }, -- end of [2]
+                                    [3] =
+                                    {
+                                        ["heading"] = 5.3058009260628,
+                                        ["name"] = "DictKey_UnitName_2689",
+                                        ["playerCanDrive"] = false,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "snr s-125 tr",
+                                        ["unitId"] = 840,
+                                        ["x"] = -431630.89600001,
+                                        ["y"] = 778354.06000001,
+                                    }, -- end of [3]
+                                    [4] =
+                                    {
+                                        ["heading"] = 5.7770398241012,
+                                        ["name"] = "DictKey_UnitName_2690",
+                                        ["playerCanDrive"] = false,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "5p73 s-125 ln",
+                                        ["unitId"] = 841,
+                                        ["x"] = -431490.95542858,
+                                        ["y"] = 778320.53257144,
+                                    }, -- end of [4]
+                                    [5] =
+                                    {
+                                        ["heading"] = 4.8520153205442,
+                                        ["name"] = "DictKey_UnitName_2691",
+                                        ["playerCanDrive"] = false,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "5p73 s-125 ln",
+                                        ["unitId"] = 842,
+                                        ["x"] = -431627.25171429,
+                                        ["y"] = 778170.38800001,
+                                    }, -- end of [5]
+                                    [6] =
+                                    {
+                                        ["heading"] = 4.2236967898263,
+                                        ["name"] = "DictKey_UnitName_2692",
+                                        ["playerCanDrive"] = false,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "5p73 s-125 ln",
+                                        ["unitId"] = 843,
+                                        ["x"] = -431816.02571429,
+                                        ["y"] = 778311.05742858,
+                                    }, -- end of [6]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
-                                ["x"] = -468949.576,
-                                ["y"] = 724608.43657143,
+                                ["x"] = -431709.61257144,
+                                ["y"] = 778356.24657144,
                             }, -- end of [7]
                             [8] =
                             {
@@ -45057,7 +44586,7 @@ mission =
                                             ["ETA"] = 0,
                                             ["ETA_locked"] = true,
                                             ["action"] = "Off Road",
-                                            ["alt"] = 1802,
+                                            ["alt"] = 1807,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_2274",
@@ -45074,8 +44603,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = -323867.10085713,
-                                            ["y"] = 817241.04857143,
+                                            ["x"] = -325071.06257143,
+                                            ["y"] = 816493.4437143,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                     ["spans"] =
@@ -45115,8 +44644,8 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "S-300PS 40B6M tr",
                                         ["unitId"] = 731,
-                                        ["x"] = -323867.10085713,
-                                        ["y"] = 817241.04857143,
+                                        ["x"] = -325071.06257143,
+                                        ["y"] = 816493.4437143,
                                     }, -- end of [1]
                                     [2] =
                                     {
@@ -45130,8 +44659,8 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "S-300PS 64H6E sr",
                                         ["unitId"] = 732,
-                                        ["x"] = -323771.46085713,
-                                        ["y"] = 817147.68571429,
+                                        ["x"] = -324975.42257143,
+                                        ["y"] = 816400.08085716,
                                     }, -- end of [2]
                                     [3] =
                                     {
@@ -45145,8 +44674,8 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "S-300PS 40B6MD sr",
                                         ["unitId"] = 733,
-                                        ["x"] = -323837.49799999,
-                                        ["y"] = 817308.22428571,
+                                        ["x"] = -325041.45971429,
+                                        ["y"] = 816560.61942858,
                                     }, -- end of [3]
                                     [4] =
                                     {
@@ -45160,8 +44689,8 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "S-300PS 5P85D ln",
                                         ["unitId"] = 734,
-                                        ["x"] = -323813.58799999,
-                                        ["y"] = 817060.01571429,
+                                        ["x"] = -325017.54971429,
+                                        ["y"] = 816312.41085716,
                                     }, -- end of [4]
                                     [5] =
                                     {
@@ -45175,8 +44704,8 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "S-300PS 5P85D ln",
                                         ["unitId"] = 735,
-                                        ["x"] = -323939.96942856,
-                                        ["y"] = 816860.76571429,
+                                        ["x"] = -325143.93114286,
+                                        ["y"] = 816113.16085716,
                                     }, -- end of [5]
                                     [6] =
                                     {
@@ -45190,8 +44719,8 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "S-300PS 5P85C ln",
                                         ["unitId"] = 736,
-                                        ["x"] = -324198.42514284,
-                                        ["y"] = 817045.21428571,
+                                        ["x"] = -325402.38685714,
+                                        ["y"] = 816297.60942858,
                                     }, -- end of [6]
                                     [7] =
                                     {
@@ -45205,8 +44734,8 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "S-300PS 5P85C ln",
                                         ["unitId"] = 737,
-                                        ["x"] = -323976.40371427,
-                                        ["y"] = 817151.10142857,
+                                        ["x"] = -325180.36542857,
+                                        ["y"] = 816403.49657144,
                                     }, -- end of [7]
                                     [8] =
                                     {
@@ -45220,8 +44749,8 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "Ural-375",
                                         ["unitId"] = 738,
-                                        ["x"] = -323836.35942856,
-                                        ["y"] = 817185.25857143,
+                                        ["x"] = -325040.32114286,
+                                        ["y"] = 816437.6537143,
                                     }, -- end of [8]
                                     [9] =
                                     {
@@ -45235,13 +44764,13 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "S-300PS 54K6 cp",
                                         ["unitId"] = 739,
-                                        ["x"] = -323786.2622857,
-                                        ["y"] = 817253.57285714,
+                                        ["x"] = -324990.224,
+                                        ["y"] = 816505.96800001,
                                     }, -- end of [9]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
-                                ["x"] = -323867.10085713,
-                                ["y"] = 817241.04857143,
+                                ["x"] = -325071.06257143,
+                                ["y"] = 816493.4437143,
                             }, -- end of [8]
                             [9] =
                             {
@@ -45257,7 +44786,7 @@ mission =
                                             ["ETA"] = 0,
                                             ["ETA_locked"] = true,
                                             ["action"] = "Off Road",
-                                            ["alt"] = 1100,
+                                            ["alt"] = 1572,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_2289",
@@ -45274,8 +44803,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = -326332.92914285,
-                                            ["y"] = 830357.14771429,
+                                            ["x"] = -326378.55857144,
+                                            ["y"] = 830315.80428572,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                     ["spans"] =
@@ -45302,8 +44831,8 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "Osa 9A33 ln",
                                         ["unitId"] = 740,
-                                        ["x"] = -326332.92914285,
-                                        ["y"] = 830357.14771429,
+                                        ["x"] = -326378.55857144,
+                                        ["y"] = 830315.80428572,
                                     }, -- end of [1]
                                     [2] =
                                     {
@@ -45317,13 +44846,13 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "Ural-375",
                                         ["unitId"] = 741,
-                                        ["x"] = -326335.69714285,
-                                        ["y"] = 830409.73971429,
+                                        ["x"] = -326381.32657144,
+                                        ["y"] = 830368.39628572,
                                     }, -- end of [2]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
-                                ["x"] = -326332.92914285,
-                                ["y"] = 830357.14771429,
+                                ["x"] = -326378.55857144,
+                                ["y"] = 830315.80428572,
                             }, -- end of [9]
                             [10] =
                             {
@@ -45339,7 +44868,7 @@ mission =
                                             ["ETA"] = 0,
                                             ["ETA_locked"] = true,
                                             ["action"] = "Off Road",
-                                            ["alt"] = 1100,
+                                            ["alt"] = 1939,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_2293",
@@ -45356,8 +44885,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = -432381.93771427,
-                                            ["y"] = 792980.82457143,
+                                            ["x"] = -467702.15771429,
+                                            ["y"] = 723910.81742858,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                     ["spans"] =
@@ -45384,8 +44913,8 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "Osa 9A33 ln",
                                         ["unitId"] = 742,
-                                        ["x"] = -432381.93771427,
-                                        ["y"] = 792980.82457143,
+                                        ["x"] = -467702.15771429,
+                                        ["y"] = 723910.81742858,
                                     }, -- end of [1]
                                     [2] =
                                     {
@@ -45399,14 +44928,95 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "Ural-375",
                                         ["unitId"] = 743,
-                                        ["x"] = -432384.70571427,
-                                        ["y"] = 793033.41657143,
+                                        ["x"] = -467704.92571429,
+                                        ["y"] = 723963.40942858,
                                     }, -- end of [2]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
-                                ["x"] = -432381.93771427,
-                                ["y"] = 792980.82457143,
+                                ["x"] = -467702.15771429,
+                                ["y"] = 723910.81742858,
                             }, -- end of [10]
+                            [11] =
+                            {
+                                ["groupId"] = 741,
+                                ["hidden"] = false,
+                                ["name"] = "DictKey_GroupName_2681",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["action"] = "Off Road",
+                                            ["alt"] = 1021,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["name"] = "DictKey_WptName_2683",
+                                            ["speed"] = 5.5555555555556,
+                                            ["speed_locked"] = true,
+                                            ["task"] =
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] =
+                                                {
+                                                    ["tasks"] =
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["x"] = -341903.02942857,
+                                            ["y"] = 744285.39714288,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                    ["spans"] =
+                                    {
+                                    }, -- end of ["spans"]
+                                }, -- end of ["route"]
+                                ["start_time"] = 0,
+                                ["task"] = "Ground Nothing",
+                                ["tasks"] =
+                                {
+                                }, -- end of ["tasks"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["heading"] = 0,
+                                        ["name"] = "DictKey_UnitName_2682",
+                                        ["playerCanDrive"] = false,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "Strela-1 9P31",
+                                        ["unitId"] = 834,
+                                        ["x"] = -341903.02942857,
+                                        ["y"] = 744285.39714288,
+                                    }, -- end of [1]
+                                    [2] =
+                                    {
+                                        ["heading"] = 0,
+                                        ["name"] = "DictKey_UnitName_2684",
+                                        ["playerCanDrive"] = false,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "Ural-375",
+                                        ["unitId"] = 835,
+                                        ["x"] = -341943.02942857,
+                                        ["y"] = 744285.39714288,
+                                    }, -- end of [2]
+                                }, -- end of ["units"]
+                                ["visible"] = false,
+                                ["x"] = -341903.02942857,
+                                ["y"] = 744285.39714288,
+                            }, -- end of [11]
                         }, -- end of ["group"]
                     }, -- end of ["vehicle"]
                 }, -- end of [13]
@@ -45686,11 +45296,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-<<<<<<< HEAD
-    ["currentKey"] = 634092,
-=======
-    ["currentKey"] = 639652,
->>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
+    ["currentKey"] = 642563,
     ["date"] =
     {
         ["Day"] = 1,
@@ -48932,19 +48538,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-<<<<<<< HEAD
-        ["centerX"] = -314400.78314284,
-        ["centerY"] = 762895.03171428,
-        ["zoom"] = 5884,
+        ["centerX"] = -400152.35057144,
+        ["centerY"] = 725275.35200001,
+        ["zoom"] = 1135080,
     }, -- end of ["map"]
-    ["maxDictId"] = 2619,
-=======
-        ["centerX"] = -335540.88357142,
-        ["centerY"] = 809833.28314286,
-        ["zoom"] = 292239,
-    }, -- end of ["map"]
-    ["maxDictId"] = 2680,
->>>>>>> chg: added AC for ALPHA test, added windsocks at KUTAISI
+    ["maxDictId"] = 2692,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
