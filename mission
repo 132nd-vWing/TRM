@@ -24101,7 +24101,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["heading"] = -2.5992108740112,
+                                        ["heading"] = 0.71558499331767,
                                         ["name"] = "DictKey_UnitName_1359",
                                         ["playerCanDrive"] = true,
                                         ["skill"] = "Average",
@@ -24126,8 +24126,8 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "M-113",
                                         ["unitId"] = 423,
-                                        ["x"] = -314745.08020128,
-                                        ["y"] = 761645.99657683,
+                                        ["x"] = -314745.02836665,
+                                        ["y"] = 761646.03835825,
                                     }, -- end of [2]
                                     [3] =
                                     {
@@ -24141,8 +24141,8 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "M-113",
                                         ["unitId"] = 424,
-                                        ["x"] = -314768.43100626,
-                                        ["y"] = 761627.17458239,
+                                        ["x"] = -314768.42486879,
+                                        ["y"] = 761627.17952952,
                                     }, -- end of [3]
                                     [4] =
                                     {
@@ -37474,7 +37474,7 @@ mission =
                                             ["ETA"] = 0,
                                             ["ETA_locked"] = true,
                                             ["action"] = "Off Road",
-                                            ["alt"] = 840,
+                                            ["alt"] = 843,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_1367",
@@ -37491,8 +37491,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = -313182.92199999,
-                                            ["y"] = 762783.12171429,
+                                            ["x"] = -313173.03771429,
+                                            ["y"] = 762779.50542857,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                     ["spans"] =
@@ -37530,15 +37530,15 @@ mission =
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["type"] = "T-72B",
+                                        ["type"] = "BTR-80",
                                         ["unitId"] = 426,
-                                        ["x"] = -313182.92199999,
-                                        ["y"] = 762783.12171429,
+                                        ["x"] = -313173.03771429,
+                                        ["y"] = 762779.50542857,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
-                                ["x"] = -313182.92199999,
-                                ["y"] = 762783.12171429,
+                                ["x"] = -313173.03771429,
+                                ["y"] = 762779.50542857,
                             }, -- end of [1]
                             [2] =
                             {
@@ -37610,7 +37610,7 @@ mission =
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["type"] = "T-72B",
+                                        ["type"] = "BTR-80",
                                         ["unitId"] = 427,
                                         ["x"] = -313170.67485713,
                                         ["y"] = 762984.59742858,
@@ -37690,7 +37690,7 @@ mission =
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["type"] = "T-72B",
+                                        ["type"] = "BRDM-2",
                                         ["unitId"] = 428,
                                         ["x"] = -313378.28628571,
                                         ["y"] = 763052.29028572,
@@ -44977,6 +44977,7 @@ mission =
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
+                                ["taskSelected"] = true,
                                 ["tasks"] =
                                 {
                                 }, -- end of ["tasks"]
@@ -45296,7 +45297,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 642563,
+    ["currentKey"] = 645410,
     ["date"] =
     {
         ["Day"] = 1,
@@ -48538,9 +48539,9 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -400152.35057144,
-        ["centerY"] = 725275.35200001,
-        ["zoom"] = 1135080,
+        ["centerX"] = -364783.67485714,
+        ["centerY"] = 695408.22885714,
+        ["zoom"] = 345082,
     }, -- end of ["map"]
     ["maxDictId"] = 2692,
     ["pictureFileNameB"] =
