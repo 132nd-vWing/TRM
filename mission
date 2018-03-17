@@ -34746,7 +34746,7 @@ mission =
                                     {
                                         ["heading"] = 0,
                                         ["name"] = "DictKey_UnitName_2214",
-                                        ["playerCanDrive"] = false,
+                                        ["playerCanDrive"] = true,
                                         ["skill"] = "Average",
                                         ["transportable"] =
                                         {
@@ -34815,7 +34815,7 @@ mission =
                                     {
                                         ["heading"] = 0,
                                         ["name"] = "DictKey_UnitName_2217",
-                                        ["playerCanDrive"] = false,
+                                        ["playerCanDrive"] = true,
                                         ["skill"] = "Average",
                                         ["transportable"] =
                                         {
@@ -34884,7 +34884,7 @@ mission =
                                     {
                                         ["heading"] = 0,
                                         ["name"] = "DictKey_UnitName_2220",
-                                        ["playerCanDrive"] = false,
+                                        ["playerCanDrive"] = true,
                                         ["skill"] = "Average",
                                         ["transportable"] =
                                         {
@@ -34953,7 +34953,7 @@ mission =
                                     {
                                         ["heading"] = 0,
                                         ["name"] = "DictKey_UnitName_2223",
-                                        ["playerCanDrive"] = false,
+                                        ["playerCanDrive"] = true,
                                         ["skill"] = "Average",
                                         ["transportable"] =
                                         {
@@ -38872,7 +38872,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 511341,
+    ["currentKey"] = 516611,
     ["date"] =
     {
         ["Day"] = 1,
@@ -42114,11 +42114,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -296606.37214285,
-        ["centerY"] = 641252.93742858,
-        ["zoom"] = 9829,
+        ["centerX"] = -353502.34757142,
+        ["centerY"] = 690015.34228571,
+        ["zoom"] = 160357,
     }, -- end of ["map"]
-    ["maxDictId"] = 2490,
+    ["maxDictId"] = 2491,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
@@ -42183,7 +42183,7 @@ mission =
         {
             [1] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2182\"));",
             [2] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2181\")); mission.trig.func[2]=nil;",
-            [3] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2458\")); mission.trig.func[3]=nil;",
+            [3] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2491\")); mission.trig.func[3]=nil;",
         }, -- end of ["actions"]
         ["conditions"] =
         {
@@ -42446,7 +42446,7 @@ mission =
                         [1] = "",
                         [2] = "",
                     }, -- end of ["ai_task"]
-                    ["file"] = "ResKey_Action_2458",
+                    ["file"] = "ResKey_Action_2491",
                     ["predicate"] = "a_do_script_file",
                 }, -- end of [1]
             }, -- end of ["actions"]

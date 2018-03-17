@@ -8,14 +8,14 @@ t1_1_threat:SetAIOff()
 function t1_1_threat_on()
 t1_1_threat:SetAIOn()
 t1_1_Threat_On:Remove()
-t1_1_Threat_Off = MENU_MISSION_COMMAND:New("Deactivate Threat Site",Menu_Range_T1_1,t1_1_threat_off)
+t1_1_Threat_Off = MENU_MISSION_COMMAND:New("Deactivate Threat Site Range 1.1",Menu_Threat_Options_Ranges,t1_1_threat_off)
 end
 
 
 function t1_1_threat_off()
 t1_1_threat:SetAIOff()
 t1_1_Threat_Off:Remove()
-t1_1_Threat_On = MENU_MISSION_COMMAND:New("Activate Threat Site",Menu_Range_T1_1,t1_1_threat_on)
+t1_1_Threat_On = MENU_MISSION_COMMAND:New("Activate Threat Site Range 1.1",Menu_Threat_Options_Ranges,t1_1_threat_on)
 end
 
 -- Sam Sites--
@@ -209,7 +209,9 @@ MISC_SA19_vehicle:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerT1_1)
 end
 
 
-
+Menu_Threat_Options = MENU_MISSION:New("Threat Sites")
+Menu_Threat_Options_Ranges = MENU_MISSION:New("Ranges", Menu_Threat_Options)
+Menu_Threat_Options_MOAs = MENU_MISSION:New("MOAs", Menu_Threat_Options)
 Menu_Range_Options = MENU_MISSION:New("Range Options")
 Menu_Range_T1_1 = MENU_MISSION:New("Range T1.1", Menu_Range_Options)
 spawn_menu = MENU_MISSION_COMMAND:New("Set up the Range dynamically",Menu_Range_T1_1,SpawnTargets)
@@ -219,7 +221,7 @@ spawn_menu_OD_IFV = MENU_MISSION:New("On Demand Spawning - IFV",spawn_menu_OD)
 spawn_menu_OD_MBT = MENU_MISSION:New("On Demand Spawning - MBT",spawn_menu_OD)
 spawn_menu_OD_MISC = MENU_MISSION:New("On Demand Spawning - MISC",spawn_menu_OD)   
 
-t1_1_Threat_On = MENU_MISSION_COMMAND:New("Activate Threat Site",Menu_Range_T1_1,t1_1_threat_on)
+t1_1_Threat_On = MENU_MISSION_COMMAND:New("Activate Threat Site on Range 1.1",Menu_Threat_Options_Ranges,t1_1_threat_on)
 
 
 menu_ON_DEMAND_1_Recon_HMMWV_vehicle = MENU_MISSION_COMMAND:New("Spawn in Recon HMMWV Vehicle",spawn_menu_OD_Recon,_ON_DEMAND_1_Recon_HMMWV_vehicle)
