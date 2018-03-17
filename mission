@@ -3598,7 +3598,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["heading"] = 3.1929884255251,
+                                        ["heading"] = -3.0901968816544,
                                         ["name"] = "DictKey_UnitName_1743",
                                         ["playerCanDrive"] = true,
                                         ["skill"] = "Average",
@@ -4340,7 +4340,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["heading"] = 3.3298052976827,
+                                        ["heading"] = -2.9533800094969,
                                         ["name"] = "DictKey_UnitName_2493",
                                         ["playerCanDrive"] = true,
                                         ["skill"] = "Average",
@@ -5517,7 +5517,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["heading"] = 3.1840888622236,
+                                        ["heading"] = -3.099096444956,
                                         ["name"] = "DictKey_UnitName_2511",
                                         ["playerCanDrive"] = true,
                                         ["skill"] = "Average",
@@ -16231,166 +16231,6 @@ mission =
                             [43] =
                             {
                                 ["dead"] = false,
-                                ["groupId"] = 73,
-                                ["heading"] = 0,
-                                ["name"] = "DictKey_GroupName_253",
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["action"] = "",
-                                            ["alt"] = 0,
-                                            ["formation_template"] = "",
-                                            ["name"] = "",
-                                            ["speed"] = 0,
-                                            ["type"] = "",
-                                            ["x"] = -295494.03171428,
-                                            ["y"] = 644294.49200001,
-                                        }, -- end of [1]
-                                    }, -- end of ["points"]
-                                }, -- end of ["route"]
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["category"] = "Fortifications",
-                                        ["heading"] = 0,
-                                        ["name"] = "DictKey_GroupName_253",
-                                        ["rate"] = 1,
-                                        ["type"] = "Conventional_Circle_B",
-                                        ["unitId"] = 73,
-                                        ["x"] = -295494.03171428,
-                                        ["y"] = 644294.49200001,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-                                ["x"] = -295494.03171428,
-                                ["y"] = 644294.49200001,
-                            }, -- end of [43]
-                            [44] =
-                            {
-                                ["dead"] = false,
-                                ["groupId"] = 75,
-                                ["heading"] = 4.1887902047864,
-                                ["name"] = "DictKey_GroupName_259",
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["action"] = "",
-                                            ["alt"] = 0,
-                                            ["formation_template"] = "",
-                                            ["name"] = "",
-                                            ["speed"] = 0,
-                                            ["type"] = "",
-                                            ["x"] = -294823.656,
-                                            ["y"] = 640880.21457143,
-                                        }, -- end of [1]
-                                    }, -- end of ["points"]
-                                }, -- end of ["route"]
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["category"] = "Fortifications",
-                                        ["heading"] = 4.1887902047864,
-                                        ["name"] = "DictKey_GroupName_259",
-                                        ["rate"] = 1,
-                                        ["type"] = "Strafe_Pit",
-                                        ["unitId"] = 75,
-                                        ["x"] = -294823.656,
-                                        ["y"] = 640880.21457143,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-                                ["x"] = -294823.656,
-                                ["y"] = 640880.21457143,
-                            }, -- end of [44]
-                            [45] =
-                            {
-                                ["dead"] = false,
-                                ["groupId"] = 76,
-                                ["heading"] = 4.1887902047864,
-                                ["name"] = "DictKey_GroupName_262",
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["action"] = "",
-                                            ["alt"] = 0,
-                                            ["formation_template"] = "",
-                                            ["name"] = "",
-                                            ["speed"] = 0,
-                                            ["type"] = "",
-                                            ["x"] = -293925.34142857,
-                                            ["y"] = 642511.55342858,
-                                        }, -- end of [1]
-                                    }, -- end of ["points"]
-                                }, -- end of ["route"]
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["category"] = "Fortifications",
-                                        ["heading"] = 4.1887902047864,
-                                        ["name"] = "DictKey_GroupName_262",
-                                        ["rate"] = 1,
-                                        ["type"] = "Foul_Line",
-                                        ["unitId"] = 76,
-                                        ["x"] = -293925.34142857,
-                                        ["y"] = 642511.55342858,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-                                ["x"] = -293925.34142857,
-                                ["y"] = 642511.55342858,
-                            }, -- end of [45]
-                            [46] =
-                            {
-                                ["dead"] = false,
-                                ["groupId"] = 77,
-                                ["heading"] = 0,
-                                ["name"] = "DictKey_GroupName_265",
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["action"] = "",
-                                            ["alt"] = 0,
-                                            ["formation_template"] = "",
-                                            ["name"] = "",
-                                            ["speed"] = 0,
-                                            ["type"] = "",
-                                            ["x"] = -293549.58485713,
-                                            ["y"] = 641908.47857143,
-                                        }, -- end of [1]
-                                    }, -- end of ["points"]
-                                }, -- end of ["route"]
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["category"] = "Fortifications",
-                                        ["heading"] = 0,
-                                        ["name"] = "DictKey_GroupName_265",
-                                        ["rate"] = 1,
-                                        ["type"] = "Conventional_Circle_A",
-                                        ["unitId"] = 77,
-                                        ["x"] = -293549.58485713,
-                                        ["y"] = 641908.47857143,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-                                ["x"] = -293549.58485713,
-                                ["y"] = 641908.47857143,
-                            }, -- end of [46]
-                            [47] =
-                            {
-                                ["dead"] = false,
                                 ["groupId"] = 150,
                                 ["heading"] = 3.1415926535898,
                                 ["name"] = "DictKey_GroupName_498",
@@ -16429,8 +16269,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -357990.25142857,
                                 ["y"] = 772125.97285714,
-                            }, -- end of [47]
-                            [48] =
+                            }, -- end of [43]
+                            [44] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 151,
@@ -16471,8 +16311,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -357951.72457142,
                                 ["y"] = 772081.52142857,
-                            }, -- end of [48]
-                            [49] =
+                            }, -- end of [44]
+                            [45] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 262,
@@ -16510,8 +16350,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -222703.46114286,
                                 ["y"] = 678150.05200001,
-                            }, -- end of [49]
-                            [50] =
+                            }, -- end of [45]
+                            [46] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 263,
@@ -16550,8 +16390,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -222573.56685714,
                                 ["y"] = 678344.29542857,
-                            }, -- end of [50]
-                            [51] =
+                            }, -- end of [46]
+                            [47] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 264,
@@ -16590,8 +16430,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -222595.56685714,
                                 ["y"] = 678312.86685714,
-                            }, -- end of [51]
-                            [52] =
+                            }, -- end of [47]
+                            [48] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 265,
@@ -16630,8 +16470,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -222521.17542857,
                                 ["y"] = 678371.19485715,
-                            }, -- end of [52]
-                            [53] =
+                            }, -- end of [48]
+                            [49] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 266,
@@ -16670,8 +16510,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -222662.03257143,
                                 ["y"] = 678264.90914287,
-                            }, -- end of [53]
-                            [54] =
+                            }, -- end of [49]
+                            [50] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 267,
@@ -16710,8 +16550,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -222480.03257143,
                                 ["y"] = 678423.48057144,
-                            }, -- end of [54]
-                            [55] =
+                            }, -- end of [50]
+                            [51] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 268,
@@ -16750,8 +16590,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -222537.46114286,
                                 ["y"] = 678567.76628573,
-                            }, -- end of [55]
-                            [56] =
+                            }, -- end of [51]
+                            [52] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 269,
@@ -16790,8 +16630,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -222545.29685714,
                                 ["y"] = 678673.07914286,
-                            }, -- end of [56]
-                            [57] =
+                            }, -- end of [52]
+                            [53] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 271,
@@ -16830,8 +16670,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -222539.17542857,
                                 ["y"] = 678413.19485715,
-                            }, -- end of [57]
-                            [58] =
+                            }, -- end of [53]
+                            [54] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 288,
@@ -16870,8 +16710,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -320198.04628571,
                                 ["y"] = 720013.21228571,
-                            }, -- end of [58]
-                            [59] =
+                            }, -- end of [54]
+                            [55] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 290,
@@ -16910,8 +16750,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -318426.86800001,
                                 ["y"] = 719552.56428572,
-                            }, -- end of [59]
-                            [60] =
+                            }, -- end of [55]
+                            [56] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 293,
@@ -16950,8 +16790,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -343628.17085714,
                                 ["y"] = 738261.10885712,
-                            }, -- end of [60]
-                            [61] =
+                            }, -- end of [56]
+                            [57] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 294,
@@ -16990,8 +16830,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -343653.50685714,
                                 ["y"] = 738290.96914283,
-                            }, -- end of [61]
-                            [62] =
+                            }, -- end of [57]
+                            [58] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 301,
@@ -17030,8 +16870,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -347410.11028571,
                                 ["y"] = 654475.27600003,
-                            }, -- end of [62]
-                            [63] =
+                            }, -- end of [58]
+                            [59] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 302,
@@ -17069,8 +16909,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -347346.41057142,
                                 ["y"] = 654473.11628571,
-                            }, -- end of [63]
-                            [64] =
+                            }, -- end of [59]
+                            [60] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 308,
@@ -17109,8 +16949,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348399.0048571,
                                 ["y"] = 672601.28228577,
-                            }, -- end of [64]
-                            [65] =
+                            }, -- end of [60]
+                            [61] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 312,
@@ -17149,8 +16989,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348436.68771425,
                                 ["y"] = 672489.66685718,
-                            }, -- end of [65]
-                            [66] =
+                            }, -- end of [61]
+                            [62] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 314,
@@ -17189,8 +17029,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348457.87628567,
                                 ["y"] = 672611.24514291,
-                            }, -- end of [66]
-                            [67] =
+                            }, -- end of [62]
+                            [63] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 315,
@@ -17229,8 +17069,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348406.97342853,
                                 ["y"] = 672523.09542861,
-                            }, -- end of [67]
-                            [68] =
+                            }, -- end of [63]
+                            [64] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 316,
@@ -17269,8 +17109,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348476.40199996,
                                 ["y"] = 672503.3811429,
-                            }, -- end of [68]
-                            [69] =
+                            }, -- end of [64]
+                            [65] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 317,
@@ -17309,8 +17149,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348473.83057139,
                                 ["y"] = 672588.80971432,
-                            }, -- end of [69]
-                            [70] =
+                            }, -- end of [65]
+                            [66] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 319,
@@ -17349,8 +17189,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348489.54485712,
                                 ["y"] = 672991.66685715,
-                            }, -- end of [70]
-                            [71] =
+                            }, -- end of [66]
+                            [67] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 350,
@@ -17392,8 +17232,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -333880.75857145,
                                 ["y"] = 722335.43799998,
-                            }, -- end of [71]
-                            [72] =
+                            }, -- end of [67]
+                            [68] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 360,
@@ -17432,8 +17272,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -333831.00514287,
                                 ["y"] = 721978.13942857,
-                            }, -- end of [72]
-                            [73] =
+                            }, -- end of [68]
+                            [69] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 361,
@@ -17472,8 +17312,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -317435.436,
                                 ["y"] = 768684.45857142,
-                            }, -- end of [73]
-                            [74] =
+                            }, -- end of [69]
+                            [70] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 375,
@@ -17512,8 +17352,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -340919.10142857,
                                 ["y"] = 737764.94571431,
-                            }, -- end of [74]
-                            [75] =
+                            }, -- end of [70]
+                            [71] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 376,
@@ -17552,8 +17392,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -340976.55914286,
                                 ["y"] = 737686.59428574,
-                            }, -- end of [75]
-                            [76] =
+                            }, -- end of [71]
+                            [72] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 377,
@@ -17592,8 +17432,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -341031.40514286,
                                 ["y"] = 737613.46628574,
-                            }, -- end of [76]
-                            [77] =
+                            }, -- end of [72]
+                            [73] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 378,
@@ -17632,8 +17472,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -341088.86285714,
                                 ["y"] = 737535.11485717,
-                            }, -- end of [77]
-                            [78] =
+                            }, -- end of [73]
+                            [74] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 379,
@@ -17672,8 +17512,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -341114.98,
                                 ["y"] = 737665.70057146,
-                            }, -- end of [78]
-                            [79] =
+                            }, -- end of [74]
+                            [75] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 380,
@@ -17712,8 +17552,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -341060.134,
                                 ["y"] = 737741.44028574,
-                            }, -- end of [79]
-                            [80] =
+                            }, -- end of [75]
+                            [76] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 381,
@@ -17752,8 +17592,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -340960.88885714,
                                 ["y"] = 737895.5314286,
-                            }, -- end of [80]
-                            [81] =
+                            }, -- end of [76]
+                            [77] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 382,
@@ -17792,8 +17632,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -341013.12314286,
                                 ["y"] = 737817.18000003,
-                            }, -- end of [81]
-                            [82] =
+                            }, -- end of [77]
+                            [78] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 383,
@@ -17832,8 +17672,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -340798.262,
                                 ["y"] = 738923.77800003,
-                            }, -- end of [82]
-                            [83] =
+                            }, -- end of [78]
+                            [79] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 384,
@@ -17872,8 +17712,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -340825.69571429,
                                 ["y"] = 738868.20714288,
-                            }, -- end of [83]
-                            [84] =
+                            }, -- end of [79]
+                            [80] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 385,
@@ -17912,8 +17752,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -340766.60771429,
                                 ["y"] = 738987.08657146,
-                            }, -- end of [84]
-                            [85] =
+                            }, -- end of [80]
+                            [81] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 391,
@@ -17954,8 +17794,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -334008.70199995,
                                 ["y"] = 721991.96314282,
-                            }, -- end of [85]
-                            [86] =
+                            }, -- end of [81]
+                            [82] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 392,
@@ -17996,8 +17836,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -334009.63799995,
                                 ["y"] = 721942.70257139,
-                            }, -- end of [86]
-                            [87] =
+                            }, -- end of [82]
+                            [83] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 393,
@@ -18038,8 +17878,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -334024.13057138,
                                 ["y"] = 721943.39171424,
-                            }, -- end of [87]
-                            [88] =
+                            }, -- end of [83]
+                            [84] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 394,
@@ -18080,8 +17920,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -334009.55914281,
                                 ["y"] = 721966.2488571,
-                            }, -- end of [88]
-                            [89] =
+                            }, -- end of [84]
+                            [85] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 395,
@@ -18122,8 +17962,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -334024.98771424,
                                 ["y"] = 721966.2488571,
-                            }, -- end of [89]
-                            [90] =
+                            }, -- end of [85]
+                            [86] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 396,
@@ -18164,8 +18004,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -334036.98771424,
                                 ["y"] = 721964.53457139,
-                            }, -- end of [90]
-                            [91] =
+                            }, -- end of [86]
+                            [87] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 397,
@@ -18206,8 +18046,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -334024.13057138,
                                 ["y"] = 721991.39171424,
-                            }, -- end of [91]
-                            [92] =
+                            }, -- end of [87]
+                            [88] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 398,
@@ -18248,8 +18088,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -334036.70199995,
                                 ["y"] = 721941.96314282,
-                            }, -- end of [92]
-                            [93] =
+                            }, -- end of [88]
+                            [89] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 399,
@@ -18290,8 +18130,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -334038.41628567,
                                 ["y"] = 721991.39171424,
-                            }, -- end of [93]
-                            [94] =
+                            }, -- end of [89]
+                            [90] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 404,
@@ -18333,8 +18173,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -350780.62285714,
                                 ["y"] = 621828.89657142,
-                            }, -- end of [94]
-                            [95] =
+                            }, -- end of [90]
+                            [91] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 405,
@@ -18376,8 +18216,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -350786.90857142,
                                 ["y"] = 621818.03942856,
-                            }, -- end of [95]
-                            [96] =
+                            }, -- end of [91]
+                            [92] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 406,
@@ -18419,8 +18259,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -350783.76571428,
                                 ["y"] = 621823.75371428,
-                            }, -- end of [96]
-                            [97] =
+                            }, -- end of [92]
+                            [93] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 407,
@@ -18462,8 +18302,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -350777.47999999,
                                 ["y"] = 621818.89657142,
-                            }, -- end of [97]
-                            [98] =
+                            }, -- end of [93]
+                            [94] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 408,
@@ -18505,8 +18345,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -350780.79514279,
                                 ["y"] = 621812.75942853,
-                            }, -- end of [98]
-                            [99] =
+                            }, -- end of [94]
+                            [95] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 409,
@@ -18548,8 +18388,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -350774.05142856,
                                 ["y"] = 621824.03942856,
-                            }, -- end of [99]
-                            [100] =
+                            }, -- end of [95]
+                            [96] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 410,
@@ -18587,8 +18427,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -333026.34199999,
                                 ["y"] = 824247.82114286,
-                            }, -- end of [100]
-                            [101] =
+                            }, -- end of [96]
+                            [97] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 411,
@@ -18627,8 +18467,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -314685.09885714,
                                 ["y"] = 761594.49542857,
-                            }, -- end of [101]
-                            [102] =
+                            }, -- end of [97]
+                            [98] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 412,
@@ -18667,8 +18507,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -314655.16542857,
                                 ["y"] = 761619.82142857,
-                            }, -- end of [102]
-                            [103] =
+                            }, -- end of [98]
+                            [99] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 437,
@@ -18708,8 +18548,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -314905.43485712,
                                 ["y"] = 764719.874,
-                            }, -- end of [103]
-                            [104] =
+                            }, -- end of [99]
+                            [100] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 440,
@@ -18748,8 +18588,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -314896.29199998,
                                 ["y"] = 764692.15971429,
-                            }, -- end of [104]
-                            [105] =
+                            }, -- end of [100]
+                            [101] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 441,
@@ -18789,8 +18629,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -314917.43485712,
                                 ["y"] = 764606.44542858,
-                            }, -- end of [105]
-                            [106] =
+                            }, -- end of [101]
+                            [102] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 442,
@@ -18829,8 +18669,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -314915.14914283,
                                 ["y"] = 764661.01685715,
-                            }, -- end of [106]
-                            [107] =
+                            }, -- end of [102]
+                            [103] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 443,
@@ -18870,8 +18710,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -314896.57771426,
                                 ["y"] = 764606.73114286,
-                            }, -- end of [107]
-                            [108] =
+                            }, -- end of [103]
+                            [104] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 444,
@@ -18911,8 +18751,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -314885.14914283,
                                 ["y"] = 764621.01685715,
-                            }, -- end of [108]
-                            [109] =
+                            }, -- end of [104]
+                            [105] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 514,
@@ -18951,8 +18791,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348508.40199997,
                                 ["y"] = 672822.80971431,
-                            }, -- end of [109]
-                            [110] =
+                            }, -- end of [105]
+                            [106] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 515,
@@ -18991,8 +18831,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348418.82599996,
                                 ["y"] = 672901.70885719,
-                            }, -- end of [110]
-                            [111] =
+                            }, -- end of [106]
+                            [107] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 516,
@@ -19031,8 +18871,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348523.8305714,
                                 ["y"] = 672887.38114288,
-                            }, -- end of [111]
-                            [112] =
+                            }, -- end of [107]
+                            [108] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 517,
@@ -19071,8 +18911,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348503.8305714,
                                 ["y"] = 672857.0954286,
-                            }, -- end of [112]
-                            [113] =
+                            }, -- end of [108]
+                            [109] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 518,
@@ -19111,8 +18951,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348498.63342853,
                                 ["y"] = 672900.16800006,
-                            }, -- end of [113]
-                            [114] =
+                            }, -- end of [109]
+                            [110] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 519,
@@ -19151,8 +18991,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348601.8305714,
                                 ["y"] = 672688.80971431,
-                            }, -- end of [114]
-                            [115] =
+                            }, -- end of [110]
+                            [111] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 520,
@@ -19191,8 +19031,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348533.8305714,
                                 ["y"] = 672841.95257145,
-                            }, -- end of [115]
-                            [116] =
+                            }, -- end of [111]
+                            [112] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 521,
@@ -19231,8 +19071,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348533.8305714,
                                 ["y"] = 672807.09542859,
-                            }, -- end of [116]
-                            [117] =
+                            }, -- end of [112]
+                            [113] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 522,
@@ -19271,8 +19111,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348548.68771426,
                                 ["y"] = 672722.52400002,
-                            }, -- end of [117]
-                            [118] =
+                            }, -- end of [113]
+                            [114] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 523,
@@ -19311,8 +19151,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348538.9328571,
                                 ["y"] = 673167.35628577,
-                            }, -- end of [118]
-                            [119] =
+                            }, -- end of [114]
+                            [115] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 524,
@@ -19351,8 +19191,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348560.68771426,
                                 ["y"] = 672869.95257145,
-                            }, -- end of [119]
-                            [120] =
+                            }, -- end of [115]
+                            [116] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 525,
@@ -19391,8 +19231,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348394.11628568,
                                 ["y"] = 672435.66685718,
-                            }, -- end of [120]
-                            [121] =
+                            }, -- end of [116]
+                            [117] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 526,
@@ -19431,8 +19271,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348571.99628567,
                                 ["y"] = 672832.23942863,
-                            }, -- end of [121]
-                            [122] =
+                            }, -- end of [117]
+                            [118] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 527,
@@ -19471,8 +19311,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348460.82599996,
                                 ["y"] = 672841.70885719,
-                            }, -- end of [122]
-                            [123] =
+                            }, -- end of [118]
+                            [119] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 528,
@@ -19511,8 +19351,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348543.11171425,
                                 ["y"] = 672983.13742862,
-                            }, -- end of [123]
-                            [124] =
+                            }, -- end of [119]
+                            [120] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 529,
@@ -19551,8 +19391,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348564.97342855,
                                 ["y"] = 673071.66685715,
-                            }, -- end of [124]
-                            [125] =
+                            }, -- end of [120]
+                            [121] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 530,
@@ -19591,8 +19431,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348491.39742854,
                                 ["y"] = 673099.99457148,
-                            }, -- end of [125]
-                            [126] =
+                            }, -- end of [121]
+                            [122] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 531,
@@ -19631,8 +19471,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348572.68771426,
                                 ["y"] = 672784.23828574,
-                            }, -- end of [126]
-                            [127] =
+                            }, -- end of [122]
+                            [123] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 532,
@@ -19671,8 +19511,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348554.97342854,
                                 ["y"] = 672909.38114288,
-                            }, -- end of [127]
-                            [128] =
+                            }, -- end of [123]
+                            [124] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 533,
@@ -19711,8 +19551,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348494.1048571,
                                 ["y"] = 672552.37371434,
-                            }, -- end of [128]
-                            [129] =
+                            }, -- end of [124]
+                            [125] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 534,
@@ -19751,8 +19591,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348529.74457141,
                                 ["y"] = 672773.45771429,
-                            }, -- end of [129]
-                            [130] =
+                            }, -- end of [125]
+                            [126] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 535,
@@ -19791,8 +19631,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348474.74971424,
                                 ["y"] = 673028.32400006,
-                            }, -- end of [130]
-                            [131] =
+                            }, -- end of [126]
+                            [127] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 536,
@@ -19831,8 +19671,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348475.25914283,
                                 ["y"] = 673071.38114286,
-                            }, -- end of [131]
-                            [132] =
+                            }, -- end of [127]
+                            [128] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 537,
@@ -19871,8 +19711,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348354.82599996,
                                 ["y"] = 672867.70885719,
-                            }, -- end of [132]
-                            [133] =
+                            }, -- end of [128]
+                            [129] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 538,
@@ -19911,8 +19751,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348440.42628567,
                                 ["y"] = 673106.66914291,
-                            }, -- end of [133]
-                            [134] =
+                            }, -- end of [129]
+                            [130] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 539,
@@ -19951,8 +19791,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348438.71199996,
                                 ["y"] = 673076.9548572,
-                            }, -- end of [134]
-                            [135] =
+                            }, -- end of [130]
+                            [131] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 540,
@@ -19991,8 +19831,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348440.14057138,
                                 ["y"] = 673048.09771434,
-                            }, -- end of [135]
-                            [136] =
+                            }, -- end of [131]
+                            [132] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 541,
@@ -20031,8 +19871,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348608.68771426,
                                 ["y"] = 673011.09542858,
-                            }, -- end of [136]
-                            [137] =
+                            }, -- end of [132]
+                            [133] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 542,
@@ -20071,8 +19911,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348618.40199998,
                                 ["y"] = 673106.524,
-                            }, -- end of [137]
-                            [138] =
+                            }, -- end of [133]
+                            [134] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 543,
@@ -20111,8 +19951,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348351.39742853,
                                 ["y"] = 672941.13742862,
-                            }, -- end of [138]
-                            [139] =
+                            }, -- end of [134]
+                            [135] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 544,
@@ -20151,8 +19991,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348448.97342853,
                                 ["y"] = 672547.09542861,
-                            }, -- end of [139]
-                            [140] =
+                            }, -- end of [135]
+                            [136] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 562,
@@ -20191,8 +20031,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -318311.15371429,
                                 ["y"] = 719585.70714286,
-                            }, -- end of [140]
-                            [141] =
+                            }, -- end of [136]
+                            [137] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 563,
@@ -20231,8 +20071,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -318411.43942858,
                                 ["y"] = 719608.27857143,
-                            }, -- end of [141]
-                            [142] =
+                            }, -- end of [137]
+                            [138] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 564,
@@ -20271,8 +20111,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -318354.01085715,
                                 ["y"] = 719639.99285715,
-                            }, -- end of [142]
-                            [143] =
+                            }, -- end of [138]
+                            [139] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 565,
@@ -20311,8 +20151,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -318352.52342858,
                                 ["y"] = 719413.93628571,
-                            }, -- end of [143]
-                            [144] =
+                            }, -- end of [139]
+                            [140] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 566,
@@ -20351,8 +20191,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -318232.86800001,
                                 ["y"] = 719626.85000001,
-                            }, -- end of [144]
-                            [145] =
+                            }, -- end of [140]
+                            [141] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 567,
@@ -20391,8 +20231,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -318473.15371429,
                                 ["y"] = 719507.42142858,
-                            }, -- end of [145]
-                            [146] =
+                            }, -- end of [141]
+                            [142] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 568,
@@ -20431,8 +20271,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -318419.43942858,
                                 ["y"] = 719413.42142858,
-                            }, -- end of [146]
-                            [147] =
+                            }, -- end of [142]
+                            [143] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 569,
@@ -20471,8 +20311,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -318333.72514287,
                                 ["y"] = 719534.27857143,
-                            }, -- end of [147]
-                            [148] =
+                            }, -- end of [143]
+                            [144] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 570,
@@ -20511,8 +20351,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -318380.29657143,
                                 ["y"] = 719499.99285715,
-                            }, -- end of [148]
-                            [149] =
+                            }, -- end of [144]
+                            [145] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 571,
@@ -20551,8 +20391,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -318193.15371429,
                                 ["y"] = 719700.56428572,
-                            }, -- end of [149]
-                            [150] =
+                            }, -- end of [145]
+                            [146] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 572,
@@ -20591,8 +20431,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -318284.56914286,
                                 ["y"] = 719480.758,
-                            }, -- end of [150]
-                            [151] =
+                            }, -- end of [146]
+                            [147] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 639,
@@ -20631,8 +20471,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -366077.23028571,
                                 ["y"] = 700906.15,
-                            }, -- end of [151]
-                            [152] =
+                            }, -- end of [147]
+                            [148] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 640,
@@ -20670,8 +20510,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -366093.11542857,
                                 ["y"] = 700885.14057143,
-                            }, -- end of [152]
-                            [153] =
+                            }, -- end of [148]
+                            [149] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 641,
@@ -20709,8 +20549,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -333754.08342857,
                                 ["y"] = 721997.744,
-                            }, -- end of [153]
-                            [154] =
+                            }, -- end of [149]
+                            [150] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 642,
@@ -20748,8 +20588,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -320195.20542857,
                                 ["y"] = 720071.734,
-                            }, -- end of [154]
-                            [155] =
+                            }, -- end of [150]
+                            [151] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 643,
@@ -20788,8 +20628,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -336956.09314285,
                                 ["y"] = 736267.38999996,
-                            }, -- end of [155]
-                            [156] =
+                            }, -- end of [151]
+                            [152] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 644,
@@ -20828,8 +20668,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -336907.54914285,
                                 ["y"] = 736365.78999996,
-                            }, -- end of [156]
-                            [157] =
+                            }, -- end of [152]
+                            [153] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 679,
@@ -20869,8 +20709,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -299352.4622857,
                                 ["y"] = 715073.66885713,
-                            }, -- end of [157]
-                            [158] =
+                            }, -- end of [153]
+                            [154] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 682,
@@ -20909,8 +20749,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348652.52971426,
                                 ["y"] = 704625.25,
-                            }, -- end of [158]
-                            [159] =
+                            }, -- end of [154]
+                            [155] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 683,
@@ -20950,8 +20790,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348582.52971426,
                                 ["y"] = 704582.39285714,
-                            }, -- end of [159]
-                            [160] =
+                            }, -- end of [155]
+                            [156] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 686,
@@ -20990,8 +20830,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348652.52971426,
                                 ["y"] = 704603.82142857,
-                            }, -- end of [160]
-                            [161] =
+                            }, -- end of [156]
+                            [157] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 687,
@@ -21030,8 +20870,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348652.52971426,
                                 ["y"] = 704614.67857143,
-                            }, -- end of [161]
-                            [162] =
+                            }, -- end of [157]
+                            [158] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 690,
@@ -21070,8 +20910,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348604.52971426,
                                 ["y"] = 704553.82142857,
-                            }, -- end of [162]
-                            [163] =
+                            }, -- end of [158]
+                            [159] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 691,
@@ -21110,8 +20950,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348659.10114283,
                                 ["y"] = 704556.10714285,
-                            }, -- end of [163]
-                            [164] =
+                            }, -- end of [159]
+                            [160] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 692,
@@ -21150,8 +20990,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348673.6725714,
                                 ["y"] = 704650.10714285,
-                            }, -- end of [164]
-                            [165] =
+                            }, -- end of [160]
+                            [161] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 693,
@@ -21190,8 +21030,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -348586.81542855,
                                 ["y"] = 704656.39285714,
-                            }, -- end of [165]
-                            [166] =
+                            }, -- end of [161]
+                            [162] =
                             {
                                 ["dead"] = false,
                                 ["groupId"] = 695,
@@ -21231,247 +21071,7 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -285685.67314286,
                                 ["y"] = 683129.52171429,
-                            }, -- end of [166]
-                            [167] =
-                            {
-                                ["dead"] = false,
-                                ["groupId"] = 696,
-                                ["heading"] = 4.1887902047864,
-                                ["name"] = "DictKey_GroupName_2462",
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["action"] = "",
-                                            ["alt"] = 0,
-                                            ["formation_template"] = "",
-                                            ["name"] = "",
-                                            ["speed"] = 0,
-                                            ["type"] = "",
-                                            ["x"] = -295410.31485714,
-                                            ["y"] = 641171.64057143,
-                                        }, -- end of [1]
-                                    }, -- end of ["points"]
-                                }, -- end of ["route"]
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["category"] = "Fortifications",
-                                        ["heading"] = 4.1887902047864,
-                                        ["name"] = "DictKey_GroupName_2462",
-                                        ["rate"] = 1,
-                                        ["type"] = "Strafe_Pit",
-                                        ["unitId"] = 789,
-                                        ["x"] = -295410.31485714,
-                                        ["y"] = 641171.64057143,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-                                ["x"] = -295410.31485714,
-                                ["y"] = 641171.64057143,
-                            }, -- end of [167]
-                            [168] =
-                            {
-                                ["dead"] = false,
-                                ["groupId"] = 697,
-                                ["heading"] = 4.1887902047864,
-                                ["name"] = "DictKey_GroupName_2465",
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["action"] = "",
-                                            ["alt"] = 0,
-                                            ["formation_template"] = "",
-                                            ["name"] = "",
-                                            ["speed"] = 0,
-                                            ["type"] = "",
-                                            ["x"] = -294504.95457142,
-                                            ["y"] = 642797.93057143,
-                                        }, -- end of [1]
-                                    }, -- end of ["points"]
-                                }, -- end of ["route"]
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["category"] = "Fortifications",
-                                        ["heading"] = 4.1887902047864,
-                                        ["name"] = "DictKey_GroupName_2465",
-                                        ["rate"] = 1,
-                                        ["type"] = "Foul_Line",
-                                        ["unitId"] = 790,
-                                        ["x"] = -294504.95457142,
-                                        ["y"] = 642797.93057143,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-                                ["x"] = -294504.95457142,
-                                ["y"] = 642797.93057143,
-                            }, -- end of [168]
-                            [169] =
-                            {
-                                ["dead"] = false,
-                                ["groupId"] = 698,
-                                ["heading"] = 4.1887902047864,
-                                ["name"] = "DictKey_GroupName_2468",
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["action"] = "",
-                                            ["alt"] = 0,
-                                            ["formation_template"] = "",
-                                            ["name"] = "",
-                                            ["speed"] = 0,
-                                            ["type"] = "",
-                                            ["x"] = -294877.656,
-                                            ["y"] = 640906.786,
-                                        }, -- end of [1]
-                                    }, -- end of ["points"]
-                                }, -- end of ["route"]
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["category"] = "Fortifications",
-                                        ["heading"] = 4.1887902047864,
-                                        ["name"] = "DictKey_GroupName_2468",
-                                        ["rate"] = 1,
-                                        ["type"] = "Strafe_Pit",
-                                        ["unitId"] = 791,
-                                        ["x"] = -294877.656,
-                                        ["y"] = 640906.786,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-                                ["x"] = -294877.656,
-                                ["y"] = 640906.786,
-                            }, -- end of [169]
-                            [170] =
-                            {
-                                ["dead"] = false,
-                                ["groupId"] = 699,
-                                ["heading"] = 4.1887902047864,
-                                ["name"] = "DictKey_GroupName_2471",
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["action"] = "",
-                                            ["alt"] = 0,
-                                            ["formation_template"] = "",
-                                            ["name"] = "",
-                                            ["speed"] = 0,
-                                            ["type"] = "",
-                                            ["x"] = -295464.88628571,
-                                            ["y"] = 641198.49771428,
-                                        }, -- end of [1]
-                                    }, -- end of ["points"]
-                                }, -- end of ["route"]
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["category"] = "Fortifications",
-                                        ["heading"] = 4.1887902047864,
-                                        ["name"] = "DictKey_GroupName_2471",
-                                        ["rate"] = 1,
-                                        ["type"] = "Strafe_Pit",
-                                        ["unitId"] = 792,
-                                        ["x"] = -295464.88628571,
-                                        ["y"] = 641198.49771428,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-                                ["x"] = -295464.88628571,
-                                ["y"] = 641198.49771428,
-                            }, -- end of [170]
-                            [171] =
-                            {
-                                ["dead"] = false,
-                                ["groupId"] = 701,
-                                ["heading"] = 0,
-                                ["name"] = "DictKey_GroupName_2477",
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["action"] = "",
-                                            ["alt"] = 0,
-                                            ["formation_template"] = "",
-                                            ["name"] = "",
-                                            ["speed"] = 0,
-                                            ["type"] = "",
-                                            ["x"] = -295720.33628571,
-                                            ["y"] = 642770.59828572,
-                                        }, -- end of [1]
-                                    }, -- end of ["points"]
-                                }, -- end of ["route"]
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["category"] = "Fortifications",
-                                        ["heading"] = 0,
-                                        ["name"] = "DictKey_GroupName_2477",
-                                        ["rate"] = 1,
-                                        ["type"] = "Conventional_Circle_A",
-                                        ["unitId"] = 794,
-                                        ["x"] = -295720.33628571,
-                                        ["y"] = 642770.59828572,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-                                ["x"] = -295720.33628571,
-                                ["y"] = 642770.59828572,
-                            }, -- end of [171]
-                            [172] =
-                            {
-                                ["dead"] = false,
-                                ["groupId"] = 702,
-                                ["heading"] = 0,
-                                ["name"] = "DictKey_GroupName_2480",
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["action"] = "",
-                                            ["alt"] = 0,
-                                            ["formation_template"] = "",
-                                            ["name"] = "",
-                                            ["speed"] = 0,
-                                            ["type"] = "",
-                                            ["x"] = -297027.14514286,
-                                            ["y"] = 641541.1417143,
-                                        }, -- end of [1]
-                                    }, -- end of ["points"]
-                                }, -- end of ["route"]
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["category"] = "Fortifications",
-                                        ["heading"] = 0,
-                                        ["name"] = "DictKey_GroupName_2480",
-                                        ["rate"] = 1,
-                                        ["type"] = "Conventional_Circle_B",
-                                        ["unitId"] = 795,
-                                        ["x"] = -297027.14514286,
-                                        ["y"] = 641541.1417143,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-                                ["x"] = -297027.14514286,
-                                ["y"] = 641541.1417143,
-                            }, -- end of [172]
+                            }, -- end of [162]
                         }, -- end of ["group"]
                     }, -- end of ["static"]
                     ["vehicle"] =
@@ -24298,6 +23898,674 @@ mission =
                                 ["x"] = -347483.14714286,
                                 ["y"] = 654515.69771428,
                             }, -- end of [28]
+                            [29] =
+                            {
+                                ["groupId"] = 716,
+                                ["hidden"] = false,
+                                ["name"] = "DictKey_GroupName_2580",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["action"] = "Off Road",
+                                            ["alt"] = 6,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["name"] = "DictKey_WptName_2582",
+                                            ["speed"] = 5.5555555555556,
+                                            ["speed_locked"] = true,
+                                            ["task"] =
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] =
+                                                {
+                                                    ["tasks"] =
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["x"] = -294838.51628569,
+                                            ["y"] = 640864.90857145,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                    ["spans"] =
+                                    {
+                                    }, -- end of ["spans"]
+                                }, -- end of ["route"]
+                                ["start_time"] = 0,
+                                ["task"] = "Ground Nothing",
+                                ["taskSelected"] = true,
+                                ["tasks"] =
+                                {
+                                }, -- end of ["tasks"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["heading"] = 0.95993108859688,
+                                        ["name"] = "DictKey_UnitName_2581",
+                                        ["playerCanDrive"] = false,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "Strafe_Pit",
+                                        ["unitId"] = 809,
+                                        ["x"] = -294838.51628569,
+                                        ["y"] = 640864.90857145,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["visible"] = false,
+                                ["x"] = -294838.51628569,
+                                ["y"] = 640864.90857145,
+                            }, -- end of [29]
+                            [30] =
+                            {
+                                ["groupId"] = 717,
+                                ["hidden"] = false,
+                                ["name"] = "DictKey_GroupName_2583",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["action"] = "Off Road",
+                                            ["alt"] = 6,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["name"] = "DictKey_WptName_2585",
+                                            ["speed"] = 5.5555555555556,
+                                            ["speed_locked"] = true,
+                                            ["task"] =
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] =
+                                                {
+                                                    ["tasks"] =
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["x"] = -294901.38142855,
+                                            ["y"] = 640900.82228573,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                    ["spans"] =
+                                    {
+                                    }, -- end of ["spans"]
+                                }, -- end of ["route"]
+                                ["start_time"] = 0,
+                                ["task"] = "Ground Nothing",
+                                ["taskSelected"] = true,
+                                ["tasks"] =
+                                {
+                                }, -- end of ["tasks"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["heading"] = 0.95993108859688,
+                                        ["name"] = "DictKey_UnitName_2584",
+                                        ["playerCanDrive"] = false,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "Strafe_Pit",
+                                        ["unitId"] = 810,
+                                        ["x"] = -294901.38142855,
+                                        ["y"] = 640900.82228573,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["visible"] = false,
+                                ["x"] = -294901.38142855,
+                                ["y"] = 640900.82228573,
+                            }, -- end of [30]
+                            [31] =
+                            {
+                                ["groupId"] = 718,
+                                ["hidden"] = false,
+                                ["name"] = "DictKey_GroupName_2586",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["action"] = "Off Road",
+                                            ["alt"] = 5,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["name"] = "DictKey_WptName_2588",
+                                            ["speed"] = 5.5555555555556,
+                                            ["speed_locked"] = true,
+                                            ["task"] =
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] =
+                                                {
+                                                    ["tasks"] =
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["x"] = -295251.36857141,
+                                            ["y"] = 640335.59742858,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                    ["spans"] =
+                                    {
+                                        [1] =
+                                        {
+                                            [1] =
+                                            {
+                                                ["x"] = -295171.33171426,
+                                                ["y"] = 640286.38028573,
+                                            }, -- end of [1]
+                                            [2] =
+                                            {
+                                                ["x"] = -295180.8205714,
+                                                ["y"] = 640310.98885716,
+                                            }, -- end of [2]
+                                        }, -- end of [1]
+                                    }, -- end of ["spans"]
+                                }, -- end of ["route"]
+                                ["start_time"] = 0,
+                                ["task"] = "Ground Nothing",
+                                ["taskSelected"] = true,
+                                ["tasks"] =
+                                {
+                                }, -- end of ["tasks"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["heading"] = 4.1015237421867,
+                                        ["name"] = "DictKey_UnitName_2587",
+                                        ["playerCanDrive"] = false,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "Foul_Line",
+                                        ["unitId"] = 811,
+                                        ["x"] = -295251.36857141,
+                                        ["y"] = 640335.59742858,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["visible"] = false,
+                                ["x"] = -295251.36857141,
+                                ["y"] = 640335.59742858,
+                            }, -- end of [31]
+                            [32] =
+                            {
+                                ["groupId"] = 719,
+                                ["hidden"] = false,
+                                ["name"] = "DictKey_GroupName_2590",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["action"] = "Off Road",
+                                            ["alt"] = 5,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["name"] = "DictKey_WptName_2592",
+                                            ["speed"] = 5.5555555555556,
+                                            ["speed_locked"] = true,
+                                            ["task"] =
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] =
+                                                {
+                                                    ["tasks"] =
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["x"] = -295881.98171427,
+                                            ["y"] = 640682.27514287,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                    ["spans"] =
+                                    {
+                                        [1] =
+                                        {
+                                            [1] =
+                                            {
+                                                ["x"] = -295171.33171426,
+                                                ["y"] = 640286.38028573,
+                                            }, -- end of [1]
+                                            [2] =
+                                            {
+                                                ["x"] = -295180.8205714,
+                                                ["y"] = 640310.98885716,
+                                            }, -- end of [2]
+                                        }, -- end of [1]
+                                    }, -- end of ["spans"]
+                                }, -- end of ["route"]
+                                ["start_time"] = 0,
+                                ["task"] = "Ground Nothing",
+                                ["taskSelected"] = true,
+                                ["tasks"] =
+                                {
+                                }, -- end of ["tasks"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["heading"] = 4.1015237421867,
+                                        ["name"] = "DictKey_UnitName_2591",
+                                        ["playerCanDrive"] = false,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "Foul_Line",
+                                        ["unitId"] = 812,
+                                        ["x"] = -295881.98171427,
+                                        ["y"] = 640682.27514287,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["visible"] = false,
+                                ["x"] = -295881.98171427,
+                                ["y"] = 640682.27514287,
+                            }, -- end of [32]
+                            [33] =
+                            {
+                                ["groupId"] = 720,
+                                ["hidden"] = false,
+                                ["name"] = "DictKey_GroupName_2593",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["action"] = "Off Road",
+                                            ["alt"] = 6,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["name"] = "DictKey_WptName_2595",
+                                            ["speed"] = 5.5555555555556,
+                                            ["speed_locked"] = true,
+                                            ["task"] =
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] =
+                                                {
+                                                    ["tasks"] =
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["x"] = -295518.3405714,
+                                            ["y"] = 641223.93200002,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                    ["spans"] =
+                                    {
+                                    }, -- end of ["spans"]
+                                }, -- end of ["route"]
+                                ["start_time"] = 0,
+                                ["task"] = "Ground Nothing",
+                                ["taskSelected"] = true,
+                                ["tasks"] =
+                                {
+                                }, -- end of ["tasks"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["heading"] = 0.95993108859688,
+                                        ["name"] = "DictKey_UnitName_2594",
+                                        ["playerCanDrive"] = false,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "Strafe_Pit",
+                                        ["unitId"] = 813,
+                                        ["x"] = -295518.3405714,
+                                        ["y"] = 641223.93200002,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["visible"] = false,
+                                ["x"] = -295518.3405714,
+                                ["y"] = 641223.93200002,
+                            }, -- end of [33]
+                            [34] =
+                            {
+                                ["groupId"] = 721,
+                                ["hidden"] = false,
+                                ["name"] = "DictKey_GroupName_2596",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["action"] = "Off Road",
+                                            ["alt"] = 6,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["name"] = "DictKey_WptName_2598",
+                                            ["speed"] = 5.5555555555556,
+                                            ["speed_locked"] = true,
+                                            ["task"] =
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] =
+                                                {
+                                                    ["tasks"] =
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["x"] = -295466.95199998,
+                                            ["y"] = 641191.43628573,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                    ["spans"] =
+                                    {
+                                    }, -- end of ["spans"]
+                                }, -- end of ["route"]
+                                ["start_time"] = 0,
+                                ["task"] = "Ground Nothing",
+                                ["taskSelected"] = true,
+                                ["tasks"] =
+                                {
+                                }, -- end of ["tasks"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["heading"] = 0.95993108859688,
+                                        ["name"] = "DictKey_UnitName_2597",
+                                        ["playerCanDrive"] = false,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "Strafe_Pit",
+                                        ["unitId"] = 814,
+                                        ["x"] = -295466.95199998,
+                                        ["y"] = 641191.43628573,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["visible"] = false,
+                                ["x"] = -295466.95199998,
+                                ["y"] = 641191.43628573,
+                            }, -- end of [34]
+                            [35] =
+                            {
+                                ["groupId"] = 722,
+                                ["hidden"] = false,
+                                ["name"] = "DictKey_GroupName_2599",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["action"] = "Off Road",
+                                            ["alt"] = 9,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["name"] = "DictKey_WptName_2601",
+                                            ["speed"] = 5.5555555555556,
+                                            ["speed_locked"] = true,
+                                            ["task"] =
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] =
+                                                {
+                                                    ["tasks"] =
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["x"] = -293701.02742855,
+                                            ["y"] = 641753.45628573,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                    ["spans"] =
+                                    {
+                                        [1] =
+                                        {
+                                            [1] =
+                                            {
+                                                ["x"] = -293701.02742855,
+                                                ["y"] = 641753.45628573,
+                                            }, -- end of [1]
+                                            [2] =
+                                            {
+                                                ["x"] = -294274.03314283,
+                                                ["y"] = 643001.04600001,
+                                            }, -- end of [2]
+                                        }, -- end of [1]
+                                    }, -- end of ["spans"]
+                                }, -- end of ["route"]
+                                ["start_time"] = 0,
+                                ["task"] = "Ground Nothing",
+                                ["taskSelected"] = true,
+                                ["tasks"] =
+                                {
+                                }, -- end of ["tasks"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["heading"] = 2.0013490627548,
+                                        ["name"] = "DictKey_UnitName_2600",
+                                        ["playerCanDrive"] = false,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "Conventional_Circle_A",
+                                        ["unitId"] = 815,
+                                        ["x"] = -293701.02742855,
+                                        ["y"] = 641753.45628573,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["visible"] = false,
+                                ["x"] = -293701.02742855,
+                                ["y"] = 641753.45628573,
+                            }, -- end of [35]
+                            [36] =
+                            {
+                                ["groupId"] = 723,
+                                ["hidden"] = false,
+                                ["name"] = "DictKey_GroupName_2603",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["action"] = "Off Road",
+                                            ["alt"] = 9,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["name"] = "DictKey_WptName_2605",
+                                            ["speed"] = 5.5555555555556,
+                                            ["speed_locked"] = true,
+                                            ["task"] =
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] =
+                                                {
+                                                    ["tasks"] =
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["x"] = -295589.34171426,
+                                            ["y"] = 643120.85628573,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                    ["spans"] =
+                                    {
+                                        [1] =
+                                        {
+                                            [1] =
+                                            {
+                                                ["x"] = -293701.02742855,
+                                                ["y"] = 641753.45628573,
+                                            }, -- end of [1]
+                                            [2] =
+                                            {
+                                                ["x"] = -294274.03314283,
+                                                ["y"] = 643001.04600001,
+                                            }, -- end of [2]
+                                        }, -- end of [1]
+                                    }, -- end of ["spans"]
+                                }, -- end of ["route"]
+                                ["start_time"] = 0,
+                                ["task"] = "Ground Nothing",
+                                ["taskSelected"] = true,
+                                ["tasks"] =
+                                {
+                                }, -- end of ["tasks"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["heading"] = 2.0013490627548,
+                                        ["name"] = "DictKey_UnitName_2604",
+                                        ["playerCanDrive"] = false,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "Conventional_Circle_A",
+                                        ["unitId"] = 816,
+                                        ["x"] = -295589.34171426,
+                                        ["y"] = 643120.85628573,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["visible"] = false,
+                                ["x"] = -295589.34171426,
+                                ["y"] = 643120.85628573,
+                            }, -- end of [36]
+                            [37] =
+                            {
+                                ["groupId"] = 724,
+                                ["hidden"] = false,
+                                ["name"] = "DictKey_GroupName_2606",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["action"] = "Off Road",
+                                            ["alt"] = 9,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["name"] = "DictKey_WptName_2608",
+                                            ["speed"] = 5.5555555555556,
+                                            ["speed_locked"] = true,
+                                            ["task"] =
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] =
+                                                {
+                                                    ["tasks"] =
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["x"] = -294130.78171426,
+                                            ["y"] = 643899.62314287,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                    ["spans"] =
+                                    {
+                                        [1] =
+                                        {
+                                            [1] =
+                                            {
+                                                ["x"] = -293701.02742855,
+                                                ["y"] = 641753.45628573,
+                                            }, -- end of [1]
+                                            [2] =
+                                            {
+                                                ["x"] = -294274.03314283,
+                                                ["y"] = 643001.04600001,
+                                            }, -- end of [2]
+                                        }, -- end of [1]
+                                    }, -- end of ["spans"]
+                                }, -- end of ["route"]
+                                ["start_time"] = 0,
+                                ["task"] = "Ground Nothing",
+                                ["taskSelected"] = true,
+                                ["tasks"] =
+                                {
+                                }, -- end of ["tasks"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["heading"] = 2.0013490627548,
+                                        ["name"] = "DictKey_UnitName_2607",
+                                        ["playerCanDrive"] = false,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "Conventional_Circle_A",
+                                        ["unitId"] = 817,
+                                        ["x"] = -294130.78171426,
+                                        ["y"] = 643899.62314287,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["visible"] = false,
+                                ["x"] = -294130.78171426,
+                                ["y"] = 643899.62314287,
+                            }, -- end of [37]
                         }, -- end of ["group"]
                     }, -- end of ["vehicle"]
                 }, -- end of [50]
@@ -42805,7 +43073,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 538888,
+    ["currentKey"] = 606914,
     ["date"] =
     {
         ["Day"] = 1,
@@ -46047,11 +46315,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -347558.92757141,
-        ["centerY"] = 654613.32657145,
-        ["zoom"] = 3617,
+        ["centerX"] = -295940.27242855,
+        ["centerY"] = 640985.92142858,
+        ["zoom"] = 15219,
     }, -- end of ["map"]
-    ["maxDictId"] = 2552,
+    ["maxDictId"] = 2610,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
@@ -46114,15 +46382,17 @@ mission =
     {
         ["actions"] =
         {
-            [1] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2182\"));",
+            [1] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2567\"));",
             [2] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2181\")); mission.trig.func[2]=nil;",
             [3] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2552\")); mission.trig.func[3]=nil;",
+            [4] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2610\")); mission.trig.func[4]=nil;",
         }, -- end of ["actions"]
         ["conditions"] =
         {
             [1] = "return(true)",
             [2] = "return(c_coalition_has_airdrome(2, 29) )",
             [3] = "return(true)",
+            [4] = "return(true)",
         }, -- end of ["conditions"]
         ["custom"] =
         {
@@ -46138,11 +46408,13 @@ mission =
             [1] = true,
             [2] = true,
             [3] = true,
+            [4] = true,
         }, -- end of ["flag"]
         ["func"] =
         {
             [2] = "if mission.trig.conditions[2]() then mission.trig.actions[2]() end",
             [3] = "if mission.trig.conditions[3]() then mission.trig.actions[3]() end",
+            [4] = "if mission.trig.conditions[4]() then mission.trig.actions[4]() end",
         }, -- end of ["func"]
         ["funcStartup"] =
         {
@@ -46328,7 +46600,7 @@ mission =
                         [1] = "",
                         [2] = "",
                     }, -- end of ["ai_task"]
-                    ["file"] = "ResKey_Action_2182",
+                    ["file"] = "ResKey_Action_2567",
                     ["predicate"] = "a_do_script_file",
                 }, -- end of [1]
             }, -- end of ["actions"]
@@ -46390,6 +46662,28 @@ mission =
             {
             }, -- end of ["rules"]
         }, -- end of [3]
+        [4] =
+        {
+            ["actions"] =
+            {
+                [1] =
+                {
+                    ["ai_task"] =
+                    {
+                        [1] = "",
+                        [2] = "",
+                    }, -- end of ["ai_task"]
+                    ["file"] = "ResKey_Action_2610",
+                    ["predicate"] = "a_do_script_file",
+                }, -- end of [1]
+            }, -- end of ["actions"]
+            ["comment"] = "Range10",
+            ["eventlist"] = "",
+            ["predicate"] = "triggerOnce",
+            ["rules"] =
+            {
+            }, -- end of ["rules"]
+        }, -- end of [4]
     }, -- end of ["trigrules"]
     ["version"] = 14,
     ["weather"] =

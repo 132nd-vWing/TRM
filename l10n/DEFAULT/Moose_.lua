@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2018-03-13T11:19:07.0000000Z-6bdbe7efb66a2e150d94bae5071b679fd0a3b7f6 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2018-03-16T17:26:48.0000000Z-1dfe8df4826c629b4f67b7aeed0784f34149fe66 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 env.setErrorMessageBoxEnabled(false)
 routines={}
@@ -18792,9 +18792,9 @@ end
 end
 do
 function DETECTION_BASE:CleanDetectionItem(DetectedItem,DetectedItemID)
-self:F2()
 local DetectedSet=DetectedItem.Set
 if DetectedSet:Count()==0 then
+self:F3({DetectedItemID=DetectedItemID})
 self:RemoveDetectedItem(DetectedItemID)
 end
 return self
@@ -19268,6 +19268,26 @@ function DETECTION_BASE:GetDetectionSetGroup()
 local DetectionSetGroup=self.DetectionSetGroup
 return DetectionSetGroup
 end
+function DETECTION_BASE:NearestRecce(DetectedItem)
+local NearestRecce=nil
+local DistanceRecce=1000000000
+for RecceGroupName,RecceGroup in pairs(self.DetectionSetGroup:GetSet())do
+if RecceGroup and RecceGroup:IsAlive()then
+for RecceUnit,RecceUnit in pairs(RecceGroup:GetUnits())do
+if RecceUnit:IsActive()then
+local RecceUnitCoord=RecceUnit:GetCoordinate()
+local Distance=RecceUnitCoord:Get2DDistance(self:GetDetectedItemCoordinate(DetectedItem.Index))
+if Distance<DistanceRecce then
+DistanceRecce=Distance
+NearestRecce=RecceUnit
+end
+end
+end
+end
+end
+DetectedItem.NearestFAC=NearestRecce
+DetectedItem.DistanceRecce=DistanceRecce
+end
 function DETECTION_BASE:Schedule(DelayTime,RepeatInterval)
 self:F2()
 self.ScheduleDelayTime=DelayTime
@@ -19376,6 +19396,7 @@ local DetectedFirstUnit=DetectedSet:GetFirst()
 local DetectedFirstUnitCoord=DetectedFirstUnit:GetCoordinate()
 self:SetDetectedItemCoordinate(DetectedItem,DetectedFirstUnitCoord,DetectedFirstUnit)
 self:ReportFriendliesNearBy({DetectedItem=DetectedItem,ReportSetGroup=self.DetectionSetGroup})
+self:NearestRecce(DetectedItem)
 end
 end
 function DETECTION_UNITS:DetectedItemMenu(Index,AttackGroup)
@@ -19533,6 +19554,7 @@ local DetectedFirstUnit=DetectedSet:GetFirst()
 local DetectedUnitCoord=DetectedFirstUnit:GetCoordinate()
 self:SetDetectedItemCoordinate(DetectedItem,DetectedUnitCoord,DetectedFirstUnit)
 self:ReportFriendliesNearBy({DetectedItem=DetectedItem,ReportSetGroup=self.DetectionSetGroup})
+self:NearestRecce(DetectedItem)
 end
 end
 function DETECTION_TYPES:DetectedItemMenu(DetectedTypeName,AttackGroup)
@@ -19662,26 +19684,6 @@ DetectedItem.InterceptCoord=InterceptCoord
 else
 DetectedItem.InterceptCoord=DetectedCoord
 end
-end
-function DETECTION_AREAS:NearestFAC(DetectedItem)
-local NearestRecce=nil
-local DistanceRecce=1000000000
-for RecceGroupName,RecceGroup in pairs(self.DetectionSetGroup:GetSet())do
-if RecceGroup and RecceGroup:IsAlive()then
-for RecceUnit,RecceUnit in pairs(RecceGroup:GetUnits())do
-if RecceUnit:IsActive()then
-local RecceUnitCoord=RecceUnit:GetCoordinate()
-local Distance=RecceUnitCoord:Get2DDistance(self:GetDetectedItemCoordinate(DetectedItem.Index))
-if Distance<DistanceRecce then
-DistanceRecce=Distance
-NearestRecce=RecceUnit
-end
-end
-end
-end
-end
-DetectedItem.NearestFAC=NearestRecce
-DetectedItem.DistanceRecce=DistanceRecce
 end
 function DETECTION_AREAS:SmokeDetectedUnits()
 self:F2()
@@ -19849,7 +19851,7 @@ if OldFriendliesNearbyGround~=NewFriendliesNearbyGround then
 DetectedItem.Changed=true
 end
 self:SetDetectedItemThreatLevel(DetectedItem)
-self:NearestFAC(DetectedItem)
+self:NearestRecce(DetectedItem)
 if DETECTION_AREAS._SmokeDetectedUnits or self._SmokeDetectedUnits then
 DetectedZone.ZoneUNIT:SmokeRed()
 end
@@ -19909,7 +19911,7 @@ self:SetLaserCodes({1688,1130,4785,6547,1465,4578})
 self:SetAutoLase(false,false)
 self:SetThreatLevelPrioritization(false)
 self:SetMaximumDesignations(5)
-self:SetMaximumDistanceDesignations(12000)
+self:SetMaximumDistanceDesignations(8000)
 self:SetMaximumMarkings(2)
 self:SetDesignateMenu()
 self.LaserCodesUsed={}
@@ -23199,6 +23201,986 @@ text=text..string.format("Total # of groups to add = %d",sum(N,done))
 self:T2(text)
 end
 return N
+end
+RANGE={
+ClassName="RANGE",
+Debug=false,
+rangename=nil,
+location=nil,
+rangeradius=10000,
+strafeTargets={},
+bombingTargets={},
+nbombtargets=0,
+nstrafetargets=0,
+MenuAddedTo={},
+planes={},
+strafeStatus={},
+strafePlayerResults={},
+bombPlayerResults={},
+PlayerSettings={},
+dtBombtrack=0.005,
+Tmsg=30,
+strafemaxalt=914,
+ndisplayresult=10,
+BombSmokeColor=SMOKECOLOR.Red,
+StrafeSmokeColor=SMOKECOLOR.Green,
+StrafePitSmokeColor=SMOKECOLOR.White,
+illuminationminalt=500,
+illuminationmaxalt=1000,
+scorebombdistance=1000,
+TdelaySmoke=3.0,
+eventmoose=true,
+}
+RANGE.id="RANGE | "
+RANGE.version="1.0.0"
+function RANGE:New(rangename)
+BASE:F({rangename=rangename})
+local self=BASE:Inherit(self,BASE:New())
+self.rangename=rangename or"Practice Range"
+local text=string.format("RANGE script version %s. Creating new RANGE object. Range name: %s.",RANGE.version,self.rangename)
+self:E(RANGE.id..text)
+MESSAGE:New(text,10):ToAllIf(self.Debug)
+return self
+end
+function RANGE:Start()
+self:F()
+local _location=nil
+local _count=0
+for _,_target in pairs(self.bombingTargets)do
+_count=_count+1
+if _location==nil then
+_location=_target.point
+end
+end
+self.nbombtargets=_count
+_count=0
+for _,_target in pairs(self.strafeTargets)do
+_count=_count+1
+for _,_unit in pairs(_target.targets)do
+if _location==nil then
+_location=_unit:GetCoordinate()
+end
+end
+end
+self.nstrafetargets=_count
+self.location=_location
+if self.location==nil then
+local text=string.format("ERROR! No range location found. Number of strafe targets = %d. Number of bomb targets = %d.",self.rangename,self.nstrafetargets,self.nbombtargets)
+self:E(RANGE.id..text)
+return nil
+end
+local text=string.format("Starting RANGE %s. Number of strafe targets = %d. Number of bomb targets = %d.",self.rangename,self.nstrafetargets,self.nbombtargets)
+self:E(RANGE.id..text)
+MESSAGE:New(text,10):ToAllIf(self.Debug)
+if self.eventmoose then
+self:T(RANGE.id.."Events are handled by MOOSE.")
+self:HandleEvent(EVENTS.Birth,self._OnBirth)
+self:HandleEvent(EVENTS.Hit,self._OnHit)
+self:HandleEvent(EVENTS.Shot,self._OnShot)
+else
+self:T(RANGE.id.."Events are handled directly by DCS.")
+world.addEventHandler(self)
+end
+end
+function RANGE:SetMaxStrafeAlt(maxalt)
+self.strafemaxalt=maxalt or 914
+end
+function RANGE:SetBombtrackTimestep(dt)
+self.dtBombtrack=dt or 0.005
+end
+function RANGE:SetMessageTimeDuration(time)
+self.Tmsg=time or 30
+end
+function RANGE:SetDisplayedMaxPlayerResults(nmax)
+self.ndisplayresult=nmax or 10
+end
+function RANGE:SetRangeRadius(radius)
+self.rangeradius=radius*1000 or 10000
+end
+function RANGE:SetBombTargetSmokeColor(colorid)
+self.BombSmokeColor=colorid or SMOKECOLOR.Red
+end
+function RANGE:SetStrafeTargetSmokeColor(colorid)
+self.StrafeSmokeColor=colorid or SMOKECOLOR.Green
+end
+function RANGE:SetStrafePitSmokeColor(colorid)
+self.StrafePitSmokeColor=colorid or SMOKECOLOR.White
+end
+function RANGE:SetSmokeTimeDelay(delay)
+self.TdelaySmoke=delay or 3.0
+end
+function RANGE:DebugON()
+self.Debug=true
+end
+function RANGE:DebugOFF()
+self.Debug=false
+end
+function RANGE:AddStrafePit(unitnames,boxlength,boxwidth,heading,inverseheading,goodpass,foulline)
+self:F({unitnames=unitnames,boxlength=boxlength,boxwidth=boxwidth,heading=heading,inverseheading=inverseheading,goodpass=goodpass,foulline=foulline})
+if type(unitnames)~="table"then
+unitnames={unitnames}
+end
+local _targets={}
+local center=nil
+local ntargets=0
+for _i,_name in ipairs(unitnames)do
+self:T(RANGE.id..string.format("Adding strafe target #%d %s",_i,_name))
+local unit=UNIT:FindByName(_name)
+if unit then
+table.insert(_targets,unit)
+if center==nil then
+center=unit
+end
+ntargets=ntargets+1
+else
+local text=string.format("ERROR! Could not find strafe target with name %s.",_name)
+self:E(RANGE.id..text)
+MESSAGE:New(text,10):ToAllIf(self.Debug)
+end
+end
+local l=boxlength or 3000
+local w=(boxwidth or 300)/2
+local heading=heading or center:GetHeading()
+if inverseheading~=nil then
+if inverseheading then
+heading=heading-180
+end
+end
+if heading<0 then
+heading=heading+360
+end
+if heading>360 then
+heading=heading-360
+end
+local goodpass=goodpass or 20
+local foulline=foulline or 610
+local Ccenter=center:GetCoordinate()
+local _name=center:GetName()
+local p={}
+p[#p+1]=Ccenter:Translate(w,heading+90)
+p[#p+1]=p[#p]:Translate(l,heading)
+p[#p+1]=p[#p]:Translate(2*w,heading-90)
+p[#p+1]=p[#p]:Translate(-l,heading)
+local pv2={}
+for i,p in ipairs(p)do
+pv2[i]={x=p.x,y=p.z}
+end
+local _polygon=ZONE_POLYGON_BASE:New(_name,pv2)
+table.insert(self.strafeTargets,{name=_name,polygon=_polygon,goodPass=goodpass,targets=_targets,foulline=foulline,smokepoints=p,heading=heading})
+local text=string.format("Adding new strafe target %s with %d targets: heading = %03d, box_L = %.1f, box_W = %.1f, goodpass = %d, foul line = %.1f",_name,ntargets,heading,boxlength,boxwidth,goodpass,foulline)
+self:T(RANGE.id..text)
+MESSAGE:New(text,5):ToAllIf(self.Debug)
+end
+function RANGE:AddBombingTargets(unitnames,goodhitrange,static)
+self:F({unitnames=unitnames,goodhitrange=goodhitrange,static=static})
+if type(unitnames)~="table"then
+unitnames={unitnames}
+end
+if static==nil or static==false then
+static=false
+else
+static=true
+end
+goodhitrange=goodhitrange or 25
+for _,name in pairs(unitnames)do
+local _unit
+local _static
+if static then
+local _DCSstatic=StaticObject.getByName(name)
+if _DCSstatic and _DCSstatic:isExist()then
+self:T(RANGE.id..string.format("Adding DCS static to database. Name = %s.",name))
+_DATABASE:AddStatic(name)
+else
+self:E(RANGE.id..string.format("ERROR! DCS static DOES NOT exist! Name = %s.",name))
+end
+_static=STATIC:FindByName(name)
+if _static then
+self:AddBombingTargetUnit(_static,goodhitrange)
+self:T(RANGE.id..string.format("Adding static bombing target %s with hit range %d.",name,goodhitrange))
+else
+self:E(RANGE.id..string.format("ERROR! Cound not find static bombing target %s.",name))
+end
+else
+_unit=UNIT:FindByName(name)
+if _unit then
+self:AddBombingTargetUnit(_unit,goodhitrange)
+self:T(RANGE.id..string.format("Adding bombing target %s with hit range %d.",name,goodhitrange))
+else
+self:E(RANGE.id..string.fromat("ERROR! Could not find bombing target %s.",name))
+end
+end
+end
+end
+function RANGE:AddBombingTargetUnit(unit,goodhitrange)
+self:F({unit=unit,goodhitrange=goodhitrange})
+local coord=unit:GetCoordinate()
+local name=unit:GetName()
+goodhitrange=goodhitrange or 25
+local Vec2=coord:GetVec2()
+local Rzone=ZONE_RADIUS:New(name,Vec2,goodhitrange)
+table.insert(self.bombingTargets,{name=name,point=coord,zone=Rzone,target=unit,goodhitrange=goodhitrange})
+end
+function RANGE:onEvent(Event)
+self:F3(Event)
+if Event==nil or Event.initiator==nil or Unit.getByName(Event.initiator:getName())==nil then
+return true
+end
+local DCSiniunit=Event.initiator
+local DCStgtunit=Event.target
+local DCSweapon=Event.weapon
+local EventData={}
+local _playerunit=nil
+local _playername=nil
+if Event.initiator then
+EventData.IniUnitName=Event.initiator:getName()
+EventData.IniDCSGroup=Event.initiator:getGroup()
+EventData.IniGroupName=Event.initiator:getGroup():getName()
+_playerunit,_playername=self:_GetPlayerUnitAndName(EventData.IniUnitName)
+end
+if Event.target then
+EventData.TgtUnitName=Event.target:getName()
+EventData.TgtDCSGroup=Event.target:getGroup()
+EventData.TgtGroupName=Event.target:getGroup():getName()
+EventData.TgtGroup=GROUP:FindByName(EventData.TgtGroupName)
+EventData.TgtUnit=UNIT:FindByName(EventData.TgtUnitName)
+end
+if Event.weapon then
+EventData.Weapon=Event.weapon
+EventData.weapon=Event.weapon
+EventData.WeaponTypeName=Event.weapon:getTypeName()
+end
+self:T3(RANGE.id..string.format("EVENT: Event in onEvent with ID = %s",tostring(Event.id)))
+self:T3(RANGE.id..string.format("EVENT: Ini unit   = %s",tostring(EventData.IniUnitName)))
+self:T3(RANGE.id..string.format("EVENT: Ini group  = %s",tostring(EventData.IniGroupName)))
+self:T3(RANGE.id..string.format("EVENT: Ini player = %s",tostring(_playername)))
+self:T3(RANGE.id..string.format("EVENT: Tgt unit   = %s",tostring(EventData.TgtUnitName)))
+self:T3(RANGE.id..string.format("EVENT: Tgt group  = %s",tostring(EventData.IniGroupName)))
+self:T3(RANGE.id..string.format("EVENT: Wpn type   = %s",tostring(EventData.WeapoinTypeName)))
+if Event.id==world.event.S_EVENT_BIRTH and _playername then
+self:_OnBirth(EventData)
+end
+if Event.id==world.event.S_EVENT_SHOT and _playername and Event.weapon then
+self:_OnShot(EventData)
+end
+if Event.id==world.event.S_EVENT_HIT and _playername and DCStgtunit then
+self:_OnHit(EventData)
+end
+end
+function RANGE:_OnBirth(EventData)
+self:F({eventbirth=EventData})
+local _unitName=EventData.IniUnitName
+local _unit,_playername=self:_GetPlayerUnitAndName(_unitName)
+self:T3(RANGE.id.."BIRTH: unit   = "..tostring(EventData.IniUnitName))
+self:T3(RANGE.id.."BIRTH: group  = "..tostring(EventData.IniGroupName))
+self:T3(RANGE.id.."BIRTH: player = "..tostring(_playername))
+if _unit and _playername then
+local _uid=_unit:GetID()
+local _group=_unit:GetGroup()
+local _gid=_group:GetID()
+local _callsign=_unit:GetCallsign()
+local text=string.format("Player %s, callsign %s entered unit %s (UID %d) of group %s (GID %d)",_playername,_callsign,_unitName,_uid,_group:GetName(),_gid)
+self:T(RANGE.id..text)
+MESSAGE:New(text,5):ToAllIf(self.Debug)
+self.strafeStatus[_uid]=nil
+self:_AddF10Commands(_unitName)
+self.PlayerSettings[_playername]={}
+self.PlayerSettings[_playername].smokebombimpact=true
+self.PlayerSettings[_playername].flaredirecthits=false
+self.PlayerSettings[_playername].smokecolor=SMOKECOLOR.Blue
+self.PlayerSettings[_playername].flarecolor=FLARECOLOR.Red
+self.PlayerSettings[_playername].delaysmoke=true
+if self.planes[_uid]~=true then
+SCHEDULER:New(nil,self._CheckInZone,{self,EventData.IniUnitName},1,1)
+self.planes[_uid]=true
+end
+end
+end
+function RANGE:_OnHit(EventData)
+self:F({eventhit=EventData})
+local _unitName=EventData.IniUnitName
+local _unit,_playername=self:_GetPlayerUnitAndName(_unitName)
+local _unitID=_unit:GetID()
+local target=EventData.TgtUnit
+local targetname=EventData.TgtUnitName
+self:T3(RANGE.id.."HIT: Ini unit   = "..tostring(EventData.IniUnitName))
+self:T3(RANGE.id.."HIT: Ini group  = "..tostring(EventData.IniGroupName))
+self:T3(RANGE.id.."HIT: Tgt target = "..tostring(EventData.TgtUnitName))
+self:T3(RANGE.id.."HIT: Tgt group  = "..tostring(EventData.TgtGroupName))
+local _currentTarget=self.strafeStatus[_unitID]
+if _currentTarget then
+local playerPos=_unit:GetCoordinate()
+local targetPos=target:GetCoordinate()
+for _,_target in pairs(_currentTarget.zone.targets)do
+if _target:GetName()==targetname then
+local dist=playerPos:Get2DDistance(targetPos)
+if dist>_currentTarget.zone.foulline then
+_currentTarget.hits=_currentTarget.hits+1
+if _unit and _playername and self.PlayerSettings[_playername].flaredirecthits then
+targetPos:Flare(self.PlayerSettings[_playername].flarecolor)
+end
+else
+if _currentTarget.pastfoulline==false and _unit and _playername then
+local _d=_currentTarget.zone.foulline
+local text=string.format("%s, Invalid hit!\nYou already passed foul line distance of %d m for target %s.",self:_myname(_unitName),_d,targetname)
+self:_DisplayMessageToGroup(_unit,text,10)
+self:T2(RANGE.id..text)
+_currentTarget.pastfoulline=true
+end
+end
+end
+end
+end
+for _,_target in pairs(self.bombingTargets)do
+if _target.name==targetname then
+if _unit and _playername then
+local playerPos=_unit:GetCoordinate()
+local targetPos=target:GetCoordinate()
+if self.PlayerSettings[_playername].flaredirecthits then
+targetPos:Flare(self.PlayerSettings[_playername].flarecolor)
+end
+end
+end
+end
+end
+function RANGE:_OnShot(EventData)
+self:F({eventshot=EventData})
+local _weapon=EventData.Weapon:getTypeName()
+local _weaponStrArray=self:_split(_weapon,"%.")
+local _weaponName=_weaponStrArray[#_weaponStrArray]
+self:T3(RANGE.id.."EVENT SHOT: Ini unit    = "..EventData.IniUnitName)
+self:T3(RANGE.id.."EVENT SHOT: Ini group   = "..EventData.IniGroupName)
+self:T3(RANGE.id.."EVENT SHOT: Weapon type = ".._weapon)
+self:T3(RANGE.id.."EVENT SHOT: Weapon name = ".._weaponName)
+if(string.match(_weapon,"weapons.bombs")or string.match(_weapon,"weapons.nurs"))then
+local _ordnance=EventData.weapon
+self:T(RANGE.id..string.format("Tracking %s - %s.",_weapon,_ordnance:getName()))
+local _lastBombPos={x=0,y=0,z=0}
+local _unitName=EventData.IniUnitName
+local function trackBomb(_previousPos)
+local _unit,_playername=self:_GetPlayerUnitAndName(_unitName)
+local _callsign=self:_myname(_unitName)
+if _unit and _playername then
+local _status,_bombPos=pcall(
+function()
+return _ordnance:getPoint()
+end)
+if _status then
+_lastBombPos={x=_bombPos.x,y=_bombPos.y,z=_bombPos.z}
+return timer.getTime()+self.dtBombtrack
+else
+local _closetTarget=nil
+local _distance=nil
+local _hitquality="POOR"
+local impactcoord=COORDINATE:NewFromVec3(_lastBombPos)
+local impactdist=impactcoord:Get2DDistance(self.location)
+if self.PlayerSettings[_playername].smokebombimpact and impactdist<self.rangeradius then
+if self.PlayerSettings[_playername].delaysmoke then
+timer.scheduleFunction(self._DelayedSmoke,{coord=impactcoord,color=self.PlayerSettings[_playername].smokecolor},timer.getTime()+self.TdelaySmoke)
+else
+impactcoord:Smoke(self.PlayerSettings[_playername].smokecolor)
+end
+end
+for _,_bombtarget in pairs(self.bombingTargets)do
+local _temp=impactcoord:Get2DDistance(_bombtarget.point)
+if _distance==nil or _temp<_distance then
+_distance=_temp
+_closetTarget=_bombtarget
+if _distance<=0.5*_bombtarget.goodhitrange then
+_hitquality="EXCELLENT"
+elseif _distance<=_bombtarget.goodhitrange then
+_hitquality="GOOD"
+elseif _distance<=2*_bombtarget.goodhitrange then
+_hitquality="INEFFECTIVE"
+else
+_hitquality="POOR"
+end
+end
+end
+if _distance<=self.scorebombdistance then
+if not self.bombPlayerResults[_playername]then
+self.bombPlayerResults[_playername]={}
+end
+local _results=self.bombPlayerResults[_playername]
+table.insert(_results,{name=_closetTarget.name,distance=_distance,weapon=_weaponName,quality=_hitquality})
+local _message=string.format("%s, impact %d m from bullseye of target %s. %s hit.",_callsign,_distance,_closetTarget.name,_hitquality)
+self:_DisplayMessageToGroup(_unit,_message,nil,true)
+else
+local _message=string.format("%s, weapon fell more than %.1f km away from nearest range target. No score!",_callsign,self.scorebombdistance/1000)
+self:_DisplayMessageToGroup(_unit,_message,nil,true)
+end
+end
+end
+return nil
+end
+timer.scheduleFunction(trackBomb,nil,timer.getTime()+1)
+end
+end
+function RANGE._DelayedSmoke(_args)
+trigger.action.smoke(_args.coord:GetVec3(),_args.color)
+end
+function RANGE:_DisplayMyStrafePitResults(_unitName)
+self:F(_unitName)
+local _unit,_playername=self:_GetPlayerUnitAndName(_unitName)
+if _unit and _playername then
+local _message=string.format("My Top %d Strafe Pit Results:\n",self.ndisplayresult)
+local _results=self.strafePlayerResults[_playername]
+if _results==nil then
+_message=string.format("%s: No Score yet.",_playername)
+else
+local _sort=function(a,b)return a.hits>b.hits end
+table.sort(_results,_sort)
+local _bestMsg=""
+local _count=1
+for _,_result in pairs(_results)do
+_message=_message..string.format("\n[%d] Hits %d - %s - %s",_count,_result.hits,_result.zone.name,_result.text)
+if _bestMsg==""then
+_bestMsg=string.format("Hits %d - %s - %s",_result.hits,_result.zone.name,_result.text)
+end
+if _count==self.ndisplayresult then
+break
+end
+_count=_count+1
+end
+_message=_message.."\n\nBEST: ".._bestMsg
+end
+self:_DisplayMessageToGroup(_unit,_message,nil,true)
+end
+end
+function RANGE:_DisplayStrafePitResults(_unitName)
+self:F(_unitName)
+local _unit,_playername=self:_GetPlayerUnitAndName(_unitName)
+if _unit and _playername then
+local _playerResults={}
+local _message=string.format("Strafe Pit Results - Top %d Players:\n",self.ndisplayresult)
+for _playerName,_results in pairs(self.strafePlayerResults)do
+local _best=nil
+for _,_result in pairs(_results)do
+if _best==nil or _result.hits>_best.hits then
+_best=_result
+end
+end
+if _best~=nil then
+local text=string.format("%s: Hits %i - %s - %s",_playerName,_best.hits,_best.zone.name,_best.text)
+table.insert(_playerResults,{msg=text,hits=_best.hits})
+end
+end
+local _sort=function(a,b)return a.hits>b.hits end
+table.sort(_playerResults,_sort)
+for _i=1,math.min(#_playerResults,self.ndisplayresult)do
+_message=_message..string.format("\n[%d] %s",_i,_playerResults[_i].msg)
+end
+if#_playerResults<1 then
+_message=_message.."No player scored yet."
+end
+self:_DisplayMessageToGroup(_unit,_message,nil,true)
+end
+end
+function RANGE:_DisplayMyBombingResults(_unitName)
+self:F(_unitName)
+local _unit,_playername=self:_GetPlayerUnitAndName(_unitName)
+if _unit and _playername then
+local _message=string.format("My Top %d Bombing Results:\n",self.ndisplayresult)
+local _results=self.bombPlayerResults[_playername]
+if _results==nil then
+_message=_playername..": No Score yet."
+else
+local _sort=function(a,b)return a.distance<b.distance end
+table.sort(_results,_sort)
+local _bestMsg=""
+local _count=1
+for _,_result in pairs(_results)do
+_message=_message.."\n"..string.format("[%d] %d m - %s - %s - %s hit",_count,_result.distance,_result.name,_result.weapon,_result.quality)
+if _bestMsg==""then
+_bestMsg=string.format("%d m - %s - %s - %s hit",_result.distance,_result.name,_result.weapon,_result.quality)
+end
+if _count==self.ndisplayresult then
+break
+end
+_count=_count+1
+end
+_message=_message.."\n\nBEST: ".._bestMsg
+end
+self:_DisplayMessageToGroup(_unit,_message,nil,true)
+end
+end
+function RANGE:_DisplayBombingResults(_unitName)
+self:F(_unitName)
+local _playerResults={}
+local _unit,_player=self:_GetPlayerUnitAndName(_unitName)
+if _unit and _player then
+local _message=string.format("Bombing Results - Top %d Players:\n",self.ndisplayresult)
+for _playerName,_results in pairs(self.bombPlayerResults)do
+local _best=nil
+for _,_result in pairs(_results)do
+if _best==nil or _result.distance<_best.distance then
+_best=_result
+end
+end
+if _best~=nil then
+local bestres=string.format("%s: %d m - %s - %s - %s hit",_playerName,_best.distance,_best.name,_best.weapon,_best.quality)
+table.insert(_playerResults,{msg=bestres,distance=_best.distance})
+end
+end
+local _sort=function(a,b)return a.distance<b.distance end
+table.sort(_playerResults,_sort)
+for _i=1,math.min(#_playerResults,self.ndisplayresult)do
+_message=_message..string.format("\n[%d] %s",_i,_playerResults[_i].msg)
+end
+if#_playerResults<1 then
+_message=_message.."No player scored yet."
+end
+self:_DisplayMessageToGroup(_unit,_message,nil,true)
+end
+end
+function RANGE:_DisplayRangeInfo(_unitname)
+self:F(_unitname)
+local unit,playername=self:_GetPlayerUnitAndName(_unitname)
+if unit and playername then
+local text=""
+local coord=unit:GetCoordinate()
+if self.location then
+local position=self.location
+local rangealt=position:GetLandHeight()
+local vec3=coord:GetDirectionVec3(position)
+local angle=coord:GetAngleDegrees(vec3)
+local range=coord:Get2DDistance(position)
+local Bs=string.format('%03d°',angle)
+local texthit
+if self.PlayerSettings[playername].flaredirecthits then
+texthit=string.format("Flare direct hits: ON (flare color %s)\n",self:_flarecolor2text(self.PlayerSettings[playername].flarecolor))
+else
+texthit=string.format("Flare direct hits: OFF\n")
+end
+local textbomb
+if self.PlayerSettings[playername].smokebombimpact then
+textbomb=string.format("Smoke bomb impact points: ON (smoke color %s)\n",self:_smokecolor2text(self.PlayerSettings[playername].smokecolor))
+else
+textbomb=string.format("Smoke bomb impact points: OFF\n")
+end
+local textdelay
+if self.PlayerSettings[playername].delaysmoke then
+textdelay=string.format("Smoke bomb delay: ON (delay %.1f seconds)",self.TdelaySmoke)
+else
+textdelay=string.format("Smoke bomb delay: OFF")
+end
+local settings=_DATABASE:GetPlayerSettings(playername)or _SETTINGS
+local trange=string.format("%.1f km",range/1000)
+local trangealt=string.format("%d m",rangealt)
+local tstrafemaxalt=string.format("%d m",self.strafemaxalt)
+if settings:IsImperial()then
+trange=string.format("%.1f NM",UTILS.MetersToNM(range))
+trangealt=string.format("%d feet",UTILS.MetersToFeet(rangealt))
+tstrafemaxalt=string.format("%d feet",UTILS.MetersToFeet(self.strafemaxalt))
+end
+text=text..string.format("Information on %s:\n",self.rangename)
+text=text..string.format("-------------------------------------------------------\n")
+text=text..string.format("Bearing %s, Range %s\n",Bs,trange)
+text=text..string.format("Altitude ASL: %s\n",trangealt)
+text=text..string.format("Max strafing alt AGL: %s\n",tstrafemaxalt)
+text=text..string.format("# of strafe targets: %d\n",self.nstrafetargets)
+text=text..string.format("# of bomb targets: %d\n",self.nbombtargets)
+text=text..texthit
+text=text..textbomb
+text=text..textdelay
+self:_DisplayMessageToGroup(unit,text,nil,true)
+self:T2(RANGE.id..text)
+end
+end
+end
+function RANGE:_DisplayRangeWeather(_unitname)
+self:F(_unitname)
+local unit,playername=self:_GetPlayerUnitAndName(_unitname)
+if unit and playername then
+local text=""
+local coord=unit:GetCoordinate()
+if self.location then
+local position=self.location
+local T=position:GetTemperature()
+local P=position:GetPressure()
+local Wd,Ws=position:GetWind()
+local Bn,Bd=UTILS.BeaufortScale(Ws)
+local WD=string.format('%03d°',Wd)
+local Ts=string.format("%d°C",T)
+local hPa2inHg=0.0295299830714
+local hPa2mmHg=0.7500615613030
+local settings=_DATABASE:GetPlayerSettings(playername)or _SETTINGS
+local tT=string.format("%d°C",T)
+local tW=string.format("%.1f m/s",Ws)
+local tP=string.format("%.1f mmHg",P*hPa2mmHg)
+if settings:IsImperial()then
+tT=string.format("%d°F",UTILS.CelciusToFarenheit(T))
+tW=string.format("%.1f knots",UTILS.MpsToKnots(Ws))
+tP=string.format("%.2f inHg",P*hPa2inHg)
+end
+text=text..string.format("Weather Report at %s:\n",self.rangename)
+text=text..string.format("--------------------------------------------------\n")
+text=text..string.format("Temperature %s\n",tT)
+text=text..string.format("Wind from %s at %s (%s)\n",WD,tW,Bd)
+text=text..string.format("QFE %.1f hPa = %s",P,tP)
+else
+text=string.format("No range location defined for range %s.",self.rangename)
+end
+self:_DisplayMessageToGroup(unit,text,nil,true)
+self:T2(RANGE.id..text)
+else
+self:T(RANGE.id..string.format("ERROR! Could not find player unit in RangeInfo! Name = %s",_unitname))
+end
+end
+function RANGE:_CheckInZone(_unitName)
+self:F(_unitName)
+local _unit,_playername=self:_GetPlayerUnitAndName(_unitName)
+if _unit and _playername then
+local _unitID=_unit:GetID()
+local _currentStrafeRun=self.strafeStatus[_unitID]
+if _currentStrafeRun then
+local zone=_currentStrafeRun.zone.polygon
+local unitheading=_unit:GetHeading()
+local pitheading=_currentStrafeRun.zone.heading-180
+local deltaheading=unitheading-pitheading
+local towardspit=math.abs(deltaheading)<=90 or math.abs(deltaheading-360)<=90
+local unitalt=_unit:GetHeight()-_unit:GetCoordinate():GetLandHeight()
+local unitinzone=_unit:IsInZone(zone)and unitalt<=self.strafemaxalt and towardspit
+local text=string.format("Checking stil in zone. Unit = %s, player = %s in zone = %s. alt = %d, delta heading = %d",_unitName,_playername,tostring(unitinzone),unitalt,deltaheading)
+self:T(RANGE.id..text)
+if unitinzone then
+_currentStrafeRun.time=_currentStrafeRun.time+1
+else
+_currentStrafeRun.time=_currentStrafeRun.time+1
+if _currentStrafeRun.time<=3 then
+self.strafeStatus[_unitID]=nil
+local _msg=string.format("%s left strafing zone %s too quickly. No Score.",_playername,_currentStrafeRun.zone.name)
+self:_DisplayMessageToGroup(_unit,_msg,nil,true)
+else
+local _result=self.strafeStatus[_unitID]
+if _result.hits>=_result.zone.goodPass*2 then
+_result.text="EXCELLENT PASS"
+elseif _result.hits>=_result.zone.goodPass then
+_result.text="GOOD PASS"
+elseif _result.hits>=_result.zone.goodPass/2 then
+_result.text="INEFFECTIVE PASS"
+else
+_result.text="POOR PASS"
+end
+local _text=string.format("%s, %s with %d hits on target %s.",self:_myname(_unitName),_result.text,_result.hits,_result.zone.name)
+self:_DisplayMessageToGroup(_unit,_text)
+self.strafeStatus[_unitID]=nil
+local _stats=self.strafePlayerResults[_playername]or{}
+table.insert(_stats,_result)
+self.strafePlayerResults[_playername]=_stats
+end
+end
+else
+for _,_targetZone in pairs(self.strafeTargets)do
+local zonenname=_targetZone.name
+local zone=_targetZone.polygon
+local unitheading=_unit:GetHeading()
+local pitheading=_targetZone.heading-180
+local deltaheading=unitheading-pitheading
+local towardspit=math.abs(deltaheading)<=90 or math.abs(deltaheading-360)<=90
+local unitalt=_unit:GetHeight()-_unit:GetCoordinate():GetLandHeight()
+local unitinzone=_unit:IsInZone(zone)and unitalt<=self.strafemaxalt and towardspit
+local text=string.format("Checking zone %s. Unit = %s, player = %s in zone = %s. alt = %d, delta heading = %d",_targetZone.name,_unitName,_playername,tostring(unitinzone),unitalt,deltaheading)
+self:T(RANGE.id..text)
+if unitinzone then
+self.strafeStatus[_unitID]={hits=0,zone=_targetZone,time=1,pastfoulline=false}
+local _msg=string.format("%s, rolling in on strafe pit %s.",self:_myname(_unitName),_targetZone.name)
+self:_DisplayMessageToGroup(_unit,_msg,10,true)
+break
+end
+end
+end
+end
+end
+function RANGE:_AddF10Commands(_unitName)
+self:F(_unitName)
+local _unit,playername=self:_GetPlayerUnitAndName(_unitName)
+if _unit and playername then
+local group=_unit:GetGroup()
+local _gid=group:GetID()
+if group and _gid then
+if not self.MenuAddedTo[_gid]then
+self.MenuAddedTo[_gid]=true
+local _rootPath=missionCommands.addSubMenuForGroup(_gid,"On the Range")
+local _rangePath=missionCommands.addSubMenuForGroup(_gid,self.rangename,_rootPath)
+local _statsPath=missionCommands.addSubMenuForGroup(_gid,"Statistics",_rangePath)
+local _markPath=missionCommands.addSubMenuForGroup(_gid,"Mark Targets",_rangePath)
+local _settingsPath=missionCommands.addSubMenuForGroup(_gid,"My Settings",_rangePath)
+local _mysmokePath=missionCommands.addSubMenuForGroup(_gid,"Smoke Color",_settingsPath)
+local _myflarePath=missionCommands.addSubMenuForGroup(_gid,"Flare Color",_settingsPath)
+missionCommands.addCommandForGroup(_gid,"Mark On Map",_markPath,self._MarkTargetsOnMap,self,_unitName)
+missionCommands.addCommandForGroup(_gid,"Illuminate Range",_markPath,self._IlluminateBombTargets,self,_unitName)
+missionCommands.addCommandForGroup(_gid,"Smoke Strafe Pits",_markPath,self._SmokeStrafeTargetBoxes,self,_unitName)
+missionCommands.addCommandForGroup(_gid,"Smoke Strafe Tgts",_markPath,self._SmokeStrafeTargets,self,_unitName)
+missionCommands.addCommandForGroup(_gid,"Smoke Bomb Tgts",_markPath,self._SmokeBombTargets,self,_unitName)
+missionCommands.addCommandForGroup(_gid,"All Strafe Results",_statsPath,self._DisplayStrafePitResults,self,_unitName)
+missionCommands.addCommandForGroup(_gid,"All Bombing Results",_statsPath,self._DisplayBombingResults,self,_unitName)
+missionCommands.addCommandForGroup(_gid,"My Strafe Results",_statsPath,self._DisplayMyStrafePitResults,self,_unitName)
+missionCommands.addCommandForGroup(_gid,"My Bomb Results",_statsPath,self._DisplayMyBombingResults,self,_unitName)
+missionCommands.addCommandForGroup(_gid,"Reset All Stats",_statsPath,self._ResetRangeStats,self,_unitName)
+missionCommands.addCommandForGroup(_gid,"Blue Smoke",_mysmokePath,self._playersmokecolor,self,_unitName,SMOKECOLOR.Blue)
+missionCommands.addCommandForGroup(_gid,"Green Smoke",_mysmokePath,self._playersmokecolor,self,_unitName,SMOKECOLOR.Green)
+missionCommands.addCommandForGroup(_gid,"Orange Smoke",_mysmokePath,self._playersmokecolor,self,_unitName,SMOKECOLOR.Orange)
+missionCommands.addCommandForGroup(_gid,"Red Smoke",_mysmokePath,self._playersmokecolor,self,_unitName,SMOKECOLOR.Red)
+missionCommands.addCommandForGroup(_gid,"White Smoke",_mysmokePath,self._playersmokecolor,self,_unitName,SMOKECOLOR.White)
+missionCommands.addCommandForGroup(_gid,"Green Flares",_myflarePath,self._playerflarecolor,self,_unitName,FLARECOLOR.Green)
+missionCommands.addCommandForGroup(_gid,"Red Flares",_myflarePath,self._playerflarecolor,self,_unitName,FLARECOLOR.Red)
+missionCommands.addCommandForGroup(_gid,"White Flares",_myflarePath,self._playerflarecolor,self,_unitName,FLARECOLOR.White)
+missionCommands.addCommandForGroup(_gid,"Yellow Flares",_myflarePath,self._playerflarecolor,self,_unitName,FLARECOLOR.Yellow)
+missionCommands.addCommandForGroup(_gid,"Smoke Delay On/Off",_settingsPath,self._SmokeBombDelayOnOff,self,_unitName)
+missionCommands.addCommandForGroup(_gid,"Smoke Impact On/Off",_settingsPath,self._SmokeBombImpactOnOff,self,_unitName)
+missionCommands.addCommandForGroup(_gid,"Flare Hits On/Off",_settingsPath,self._FlareDirectHitsOnOff,self,_unitName)
+missionCommands.addCommandForGroup(_gid,"Range Information",_rangePath,self._DisplayRangeInfo,self,_unitName)
+missionCommands.addCommandForGroup(_gid,"Weather Report",_rangePath,self._DisplayRangeWeather,self,_unitName)
+end
+else
+self:T(RANGE.id.."Could not find group or group ID in AddF10Menu() function. Unit name: ".._unitName)
+end
+else
+self:T(RANGE.id.."Player unit does not exist in AddF10Menu() function. Unit name: ".._unitName)
+end
+end
+function RANGE:_MarkTargetsOnMap(_unitName)
+self:F(_unitName)
+local group=UNIT:FindByName(_unitName):GetGroup()
+if group then
+for _,_target in pairs(self.bombingTargets)do
+local coord=_target.point
+coord:MarkToGroup("Bomb target ".._target.name,group)
+end
+for _,_strafepit in pairs(self.strafeTargets)do
+for _,_target in pairs(_strafepit.targets)do
+local coord=_target:GetCoordinate()
+coord:MarkToGroup("Strafe target ".._target:GetName(),group)
+end
+end
+if _unitName then
+local _unit,_playername=self:_GetPlayerUnitAndName(_unitName)
+local text=string.format("%s, %s, range targets are now marked on F10 map.",self.rangename,_playername)
+self:_DisplayMessageToGroup(_unit,text,5)
+end
+end
+end
+function RANGE:_IlluminateBombTargets(_unitName)
+self:F(_unitName)
+local bomb={}
+for _,_target in pairs(self.bombingTargets)do
+local coord=_target.point
+table.insert(bomb,coord)
+end
+if#bomb>0 then
+local coord=bomb[math.random(#bomb)]
+local c=COORDINATE:New(coord.x,coord.y+math.random(self.illuminationminalt,self.illuminationmaxalt),coord.z)
+c:IlluminationBomb()
+end
+local strafe={}
+for _,_strafepit in pairs(self.strafeTargets)do
+for _,_target in pairs(_strafepit.targets)do
+local coord=_target:GetCoordinate()
+table.insert(strafe,coord)
+end
+end
+if#strafe>0 then
+local coord=strafe[math.random(#strafe)]
+local c=COORDINATE:New(coord.x,coord.y+math.random(self.illuminationminalt,self.illuminationmaxalt),coord.z)
+c:IlluminationBomb()
+end
+if _unitName then
+local _unit,_playername=self:_GetPlayerUnitAndName(_unitName)
+local text=string.format("%s, %s, range targets are illuminated.",self.rangename,_playername)
+self:_DisplayMessageToGroup(_unit,text,5)
+end
+end
+function RANGE:_ResetRangeStats(_unitName)
+self:F(_unitName)
+local _unit,_playername=self:_GetPlayerUnitAndName(_unitName)
+if _unit and _playername then
+self.strafePlayerResults[_playername]=nil
+self.bombPlayerResults[_playername]=nil
+local text=string.format("%s, %s, your range stats were cleared.",self.rangename,_playername)
+self:DisplayMessageToGroup(_unit,text,5)
+end
+end
+function RANGE:_DisplayMessageToGroup(_unit,_text,_time,_clear)
+self:F({unit=_unit,text=_text,time=_time,clear=_clear})
+_time=_time or self.Tmsg
+if _clear==nil then
+_clear=false
+end
+local _gid=_unit:GetGroup():GetID()
+if _gid then
+if _clear==true then
+trigger.action.outTextForGroup(_gid,_text,_time,_clear)
+else
+trigger.action.outTextForGroup(_gid,_text,_time)
+end
+end
+end
+function RANGE:_SmokeBombImpactOnOff(unitname)
+self:F(unitname)
+local unit,playername=self:_GetPlayerUnitAndName(unitname)
+if unit and playername then
+local text
+if self.PlayerSettings[playername].smokebombimpact==true then
+self.PlayerSettings[playername].smokebombimpact=false
+text=string.format("%s, %s, smoking impact points of bombs is now OFF.",self.rangename,playername)
+else
+self.PlayerSettigs[playername].smokebombimpact=true
+text=string.format("%s, %s, smoking impact points of bombs is now ON.",self.rangename,playername)
+end
+self:_DisplayMessageToGroup(unit,text,5)
+end
+end
+function RANGE:_SmokeBombDelayOnOff(unitname)
+self:F(unitname)
+local unit,playername=self:_GetPlayerUnitAndName(unitname)
+if unit and playername then
+local text
+if self.PlayerSettings[playername].delaysmoke==true then
+self.PlayerSettings[playername].delaysmoke=false
+text=string.format("%s, %s, delayed smoke of bombs is now OFF.",self.rangename,playername)
+else
+self.PlayerSettigs[playername].delaysmoke=true
+text=string.format("%s, %s, delayed smoke of bombs is now ON.",self.rangename,playername)
+end
+self:_DisplayMessageToGroup(unit,text,5)
+end
+end
+function RANGE:_FlareDirectHitsOnOff(unitname)
+self:F(unitname)
+local unit,playername=self:_GetPlayerUnitAndName(unitname)
+if unit and playername then
+local text
+if self.PlayerSettings[playername].flaredirecthits==true then
+self.PlayerSettings[playername].flaredirecthits=false
+text=string.format("%s, %s, flaring direct hits is now OFF.",self.rangename,playername)
+else
+self.PlayerSettings[playername].flaredirecthits=true
+text=string.format("%s, %s, flaring direct hits is now ON.",self.rangename,playername)
+end
+self:_DisplayMessageToGroup(unit,text,5)
+end
+end
+function RANGE:_SmokeBombTargets(unitname)
+self:F(unitname)
+for _,_target in pairs(self.bombingTargets)do
+local coord=_target.point
+coord:Smoke(self.BombSmokeColor)
+end
+if unitname then
+local unit,playername=self:_GetPlayerUnitAndName(unitname)
+local text=string.format("%s, %s, bombing targets are now marked with %s smoke.",self.rangename,playername,self:_smokecolor2text(self.BombSmokeColor))
+self:_DisplayMessageToGroup(unit,text,5)
+end
+end
+function RANGE:_SmokeStrafeTargets(unitname)
+self:F(unitname)
+for _,_target in pairs(self.strafeTargets)do
+for _,_unit in pairs(_target.targets)do
+local coord=_unit:GetCoordinate()
+coord:Smoke(self.StrafeSmokeColor)
+end
+end
+if unitname then
+local unit,playername=self:_GetPlayerUnitAndName(unitname)
+local text=string.format("%s, %s, strafing tragets are now marked with %s smoke.",self.rangename,playername,self:_smokecolor2text(self.StrafeSmokeColor))
+self:_DisplayMessageToGroup(unit,text,5)
+end
+end
+function RANGE:_SmokeStrafeTargetBoxes(unitname)
+self:F(unitname)
+for _,_target in pairs(self.strafeTargets)do
+local zone=_target.polygon
+zone:SmokeZone(self.StrafePitSmokeColor)
+for _,_point in pairs(_target.smokepoints)do
+_point:SmokeOrange()
+end
+end
+if unitname then
+local unit,playername=self:_GetPlayerUnitAndName(unitname)
+local text=string.format("%s, %s, strafing pit approach boxes are now marked with %s smoke.",self.rangename,playername,self:_smokecolor2text(self.StrafePitSmokeColor))
+self:_DisplayMessageToGroup(unit,text,5)
+end
+end
+function RANGE:_playersmokecolor(_unitName,color)
+self:F({unitname=_unitName,color=color})
+local _unit,_playername=self:_GetPlayerUnitAndName(_unitName)
+if _unit and _playername then
+self.PlayerSettings[_playername].smokecolor=color
+local text=string.format("%s, %s, your bomb impacts are now smoked in %s.",self.rangename,_playername,self:_smokecolor2text(color))
+self:_DisplayMessageToGroup(_unit,text,5)
+end
+end
+function RANGE:_playerflarecolor(_unitName,color)
+self:F({unitname=_unitName,color=color})
+local _unit,_playername=self:_GetPlayerUnitAndName(_unitName)
+if _unit and _playername then
+self.PlayerSettings[_playername].flarecolor=color
+local text=string.format("%s, %s, your direct hits are now flared in %s.",self.rangename,_playername,self:_flarecolor2text(color))
+self:_DisplayMessageToGroup(_unit,text,5)
+end
+end
+function RANGE:_smokecolor2text(color)
+self:F(color)
+local txt=""
+if color==SMOKECOLOR.Blue then
+txt="blue"
+elseif color==SMOKECOLOR.Green then
+txt="green"
+elseif color==SMOKECOLOR.Orange then
+txt="orange"
+elseif color==SMOKECOLOR.Red then
+txt="red"
+elseif color==SMOKECOLOR.White then
+txt="white"
+else
+txt=string.format("unkown color (%s)",tostring(color))
+end
+return txt
+end
+function RANGE:_flarecolor2text(color)
+self:F(color)
+local txt=""
+if color==FLARECOLOR.Green then
+txt="green"
+elseif color==FLARECOLOR.Red then
+txt="red"
+elseif color==FLARECOLOR.White then
+txt="white"
+elseif color==FLARECOLOR.Yellow then
+txt="yellow"
+else
+txt=string.format("unkown color (%s)",tostring(color))
+end
+return txt
+end
+function RANGE:_GetPlayerUnitAndName(_unitName)
+self:F(_unitName)
+if _unitName~=nil then
+local DCSunit=Unit.getByName(_unitName)
+local playername=DCSunit:getPlayerName()
+local unit=UNIT:Find(DCSunit)
+self:T({DCSunit=DCSunit,unit=unit,playername=playername})
+if DCSunit and unit and playername then
+return unit,playername
+end
+end
+return nil,nil
+end
+function RANGE:_myname(unitname)
+self:F(unitname)
+local unit=UNIT:FindByName(unitname)
+local pname=unit:GetPlayerName()
+local csign=unit:GetCallsign()
+return string.format("%s (%s)",csign,pname)
+end
+function RANGE:_split(str,sep)
+self:F({str=str,sep=sep})
+local result={}
+local regex=("([^%s]+)"):format(sep)
+for each in str:gmatch(regex)do
+table.insert(result,each)
+end
+return result
 end
 do
 ZONE_GOAL={
@@ -27017,7 +27999,7 @@ self.MissionMenu=MENU_GROUP:New(TaskGroup,self:GetName(),CommandCenterMenu)
 GroupMenu.BriefingMenu=MENU_GROUP_COMMAND:New(TaskGroup,"Mission Briefing",self.MissionMenu,self.MenuReportBriefing,self,TaskGroup)
 GroupMenu.MarkTasks=MENU_GROUP_COMMAND:New(TaskGroup,"Mark Task Locations on Map",self.MissionMenu,self.MarkTargetLocations,self,TaskGroup)
 GroupMenu.TaskReportsMenu=MENU_GROUP:New(TaskGroup,"Task Reports",self.MissionMenu)
-GroupMenu.ReportTasksMenu=MENU_GROUP_COMMAND:New(TaskGroup,"Report Tasks",GroupMenu.TaskReportsMenu,self.MenuReportTasksSummary,self,TaskGroup)
+GroupMenu.ReportTasksMenu=MENU_GROUP_COMMAND:New(TaskGroup,"Report Tasks Summary",GroupMenu.TaskReportsMenu,self.MenuReportTasksSummary,self,TaskGroup)
 GroupMenu.ReportPlannedTasksMenu=MENU_GROUP_COMMAND:New(TaskGroup,"Report Planned Tasks",GroupMenu.TaskReportsMenu,self.MenuReportTasksPerStatus,self,TaskGroup,"Planned")
 GroupMenu.ReportAssignedTasksMenu=MENU_GROUP_COMMAND:New(TaskGroup,"Report Assigned Tasks",GroupMenu.TaskReportsMenu,self.MenuReportTasksPerStatus,self,TaskGroup,"Assigned")
 GroupMenu.ReportSuccessTasksMenu=MENU_GROUP_COMMAND:New(TaskGroup,"Report Successful Tasks",GroupMenu.TaskReportsMenu,self.MenuReportTasksPerStatus,self,TaskGroup,"Success")
@@ -27588,11 +28570,11 @@ self.MenuPlanned=self.MenuPlanned or{}
 self.MenuPlanned[TaskGroup]=MENU_GROUP_DELAYED:New(TaskGroup,"Join Planned Task",MissionMenu,Mission.MenuReportTasksPerStatus,Mission,TaskGroup,"Planned"):SetTime(MenuTime):SetTag("Tasking")
 local TaskTypeMenu=MENU_GROUP_DELAYED:New(TaskGroup,TaskType,self.MenuPlanned[TaskGroup]):SetTime(MenuTime):SetTag("Tasking")
 local TaskTypeMenu=MENU_GROUP_DELAYED:New(TaskGroup,TaskText,TaskTypeMenu):SetTime(MenuTime):SetTag("Tasking")
-local ReportTaskMenu=MENU_GROUP_COMMAND_DELAYED:New(TaskGroup,string.format("Report Task Status"),TaskTypeMenu,self.MenuTaskStatus,self,TaskGroup):SetTime(MenuTime):SetTag("Tasking")
 if not Mission:IsGroupAssigned(TaskGroup)then
 local JoinTaskMenu=MENU_GROUP_COMMAND_DELAYED:New(TaskGroup,string.format("Join Task"),TaskTypeMenu,self.MenuAssignToGroup,self,TaskGroup):SetTime(MenuTime):SetTag("Tasking")
 local MarkTaskMenu=MENU_GROUP_COMMAND_DELAYED:New(TaskGroup,string.format("Mark Task Location on Map"),TaskTypeMenu,self.MenuMarkToGroup,self,TaskGroup):SetTime(MenuTime):SetTag("Tasking")
 end
+local ReportTaskMenu=MENU_GROUP_COMMAND_DELAYED:New(TaskGroup,string.format("Report Task Details"),TaskTypeMenu,self.MenuTaskStatus,self,TaskGroup):SetTime(MenuTime):SetTag("Tasking")
 return self
 end
 function TASK:SetAssignedMenuForGroup(TaskGroup,MenuTime)
@@ -27609,9 +28591,9 @@ local TaskName=string.format("%s",self:GetName())
 local MissionMenu=Mission:GetMenu(TaskGroup)
 self.MenuAssigned=self.MenuAssigned or{}
 self.MenuAssigned[TaskGroup]=MENU_GROUP_DELAYED:New(TaskGroup,string.format("Assigned Task %s",TaskName),MissionMenu):SetTime(MenuTime):SetTag("Tasking")
-local TaskTypeMenu=MENU_GROUP_COMMAND_DELAYED:New(TaskGroup,string.format("Report Task Status"),self.MenuAssigned[TaskGroup],self.MenuTaskStatus,self,TaskGroup):SetTime(MenuTime):SetTag("Tasking")
 local TaskMenu=MENU_GROUP_COMMAND_DELAYED:New(TaskGroup,string.format("Abort Task"),self.MenuAssigned[TaskGroup],self.MenuTaskAbort,self,TaskGroup):SetTime(MenuTime):SetTag("Tasking")
 local MarkMenu=MENU_GROUP_COMMAND_DELAYED:New(TaskGroup,string.format("Mark Task Location on Map"),self.MenuAssigned[TaskGroup],self.MenuMarkToGroup,self,TaskGroup):SetTime(MenuTime):SetTag("Tasking")
+local TaskTypeMenu=MENU_GROUP_COMMAND_DELAYED:New(TaskGroup,string.format("Report Task Details"),self.MenuAssigned[TaskGroup],self.MenuTaskStatus,self,TaskGroup):SetTime(MenuTime):SetTag("Tasking")
 return self
 end
 function TASK:RemoveMenu(MenuTime)
