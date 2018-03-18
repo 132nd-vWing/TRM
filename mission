@@ -10661,127 +10661,6 @@ mission =
                             {
                                 ["communication"] = true,
                                 ["frequency"] = 251,
-                                ["groupId"] = 471,
-                                ["hidden"] = false,
-                                ["modulation"] = 0,
-                                ["name"] = "DictKey_GroupName_1563",
-                                ["radioSet"] = false,
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["ETA"] = 0,
-                                            ["ETA_locked"] = true,
-                                            ["action"] = "Turning Point",
-                                            ["alt"] = 2795,
-                                            ["alt_type"] = "BARO",
-                                            ["formation_template"] = "",
-                                            ["name"] = "DictKey_WptName_1565",
-                                            ["speed"] = 138.88888888889,
-                                            ["speed_locked"] = true,
-                                            ["task"] =
-                                            {
-                                                ["id"] = "ComboTask",
-                                                ["params"] =
-                                                {
-                                                    ["tasks"] =
-                                                    {
-                                                        [1] =
-                                                        {
-                                                            ["auto"] = true,
-                                                            ["enabled"] = true,
-                                                            ["id"] = "Tanker",
-                                                            ["number"] = 1,
-                                                            ["params"] =
-                                                            {
-                                                            }, -- end of ["params"]
-                                                        }, -- end of [1]
-                                                    }, -- end of ["tasks"]
-                                                }, -- end of ["params"]
-                                            }, -- end of ["task"]
-                                            ["type"] = "Turning Point",
-                                            ["x"] = -473434.54142858,
-                                            ["y"] = 600817.41257142,
-                                        }, -- end of [1]
-                                        [2] =
-                                        {
-                                            ["ETA"] = 471.56025224021,
-                                            ["ETA_locked"] = false,
-                                            ["action"] = "Turning Point",
-                                            ["alt"] = 3121,
-                                            ["alt_type"] = "BARO",
-                                            ["formation_template"] = "",
-                                            ["name"] = "DictKey_WptName_1566",
-                                            ["speed"] = 138.88888888889,
-                                            ["speed_locked"] = true,
-                                            ["task"] =
-                                            {
-                                                ["id"] = "ComboTask",
-                                                ["params"] =
-                                                {
-                                                    ["tasks"] =
-                                                    {
-                                                    }, -- end of ["tasks"]
-                                                }, -- end of ["params"]
-                                            }, -- end of ["task"]
-                                            ["type"] = "Turning Point",
-                                            ["x"] = -408648.84085715,
-                                            ["y"] = 610426.77485714,
-                                        }, -- end of [2]
-                                    }, -- end of ["points"]
-                                }, -- end of ["route"]
-                                ["start_time"] = 0,
-                                ["task"] = "Refueling",
-                                ["taskSelected"] = true,
-                                ["tasks"] =
-                                {
-                                }, -- end of ["tasks"]
-                                ["uncontrolled"] = false,
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["alt"] = 2795,
-                                        ["alt_type"] = "BARO",
-                                        ["callsign"] =
-                                        {
-                                            [1] = 1,
-                                            [2] = 1,
-                                            [3] = 1,
-                                            ["name"] = "Texaco11",
-                                        }, -- end of ["callsign"]
-                                        ["heading"] = 0.14725175576823,
-                                        ["livery_id"] = "132nd Tanker service",
-                                        ["name"] = "DictKey_UnitName_1564",
-                                        ["onboard_num"] = "027",
-                                        ["payload"] =
-                                        {
-                                            ["chaff"] = 96,
-                                            ["flare"] = 96,
-                                            ["fuel"] = "90000",
-                                            ["gun"] = 100,
-                                            ["pylons"] =
-                                            {
-                                            }, -- end of ["pylons"]
-                                        }, -- end of ["payload"]
-                                        ["psi"] = -0.14725175576823,
-                                        ["skill"] = "High",
-                                        ["speed"] = 138.88888888889,
-                                        ["type"] = "IL-78M",
-                                        ["unitId"] = 497,
-                                        ["x"] = -473434.54142858,
-                                        ["y"] = 600817.41257142,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-                                ["x"] = -473434.54142858,
-                                ["y"] = 600817.41257142,
-                            }, -- end of [1]
-                            [2] =
-                            {
-                                ["communication"] = true,
-                                ["frequency"] = 251,
                                 ["groupId"] = 725,
                                 ["hidden"] = false,
                                 ["modulation"] = 0,
@@ -10911,8 +10790,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -284717.0625,
                                 ["y"] = 682696.75,
-                            }, -- end of [2]
-                            [3] =
+                            }, -- end of [1]
+                            [2] =
                             {
                                 ["communication"] = true,
                                 ["frequency"] = 233,
@@ -11081,8 +10960,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -284384.625,
                                 ["y"] = 683907,
-                            }, -- end of [3]
-                            [4] =
+                            }, -- end of [2]
+                            [3] =
                             {
                                 ["communication"] = true,
                                 ["frequency"] = 251,
@@ -11215,8 +11094,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -284890.53125,
                                 ["y"] = 682746.0625,
-                            }, -- end of [4]
-                            [5] =
+                            }, -- end of [3]
+                            [4] =
                             {
                                 ["communication"] = true,
                                 ["frequency"] = 251,
@@ -11349,8 +11228,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -284684,
                                 ["y"] = 682812.125,
-                            }, -- end of [5]
-                            [6] =
+                            }, -- end of [4]
+                            [5] =
                             {
                                 ["communication"] = true,
                                 ["frequency"] = 251,
@@ -11483,8 +11362,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -284857.4375,
                                 ["y"] = 682861.375,
-                            }, -- end of [6]
-                            [7] =
+                            }, -- end of [5]
+                            [6] =
                             {
                                 ["communication"] = true,
                                 ["frequency"] = 251,
@@ -11617,8 +11496,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -284526.21875,
                                 ["y"] = 683121.1875,
-                            }, -- end of [7]
-                            [8] =
+                            }, -- end of [6]
+                            [7] =
                             {
                                 ["communication"] = true,
                                 ["frequency"] = 251,
@@ -11751,8 +11630,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -284661.5625,
                                 ["y"] = 683240.25,
-                            }, -- end of [8]
-                            [9] =
+                            }, -- end of [7]
+                            [8] =
                             {
                                 ["communication"] = true,
                                 ["frequency"] = 251,
@@ -11885,8 +11764,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -284446.71875,
                                 ["y"] = 683211.0625,
-                            }, -- end of [9]
-                            [10] =
+                            }, -- end of [8]
+                            [9] =
                             {
                                 ["communication"] = true,
                                 ["frequency"] = 251,
@@ -12019,8 +11898,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -284582.0625,
                                 ["y"] = 683330.125,
-                            }, -- end of [10]
-                            [11] =
+                            }, -- end of [9]
+                            [10] =
                             {
                                 ["communication"] = true,
                                 ["frequency"] = 251,
@@ -12153,8 +12032,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -284525.6875,
                                 ["y"] = 683413.8125,
-                            }, -- end of [11]
-                            [12] =
+                            }, -- end of [10]
+                            [11] =
                             {
                                 ["communication"] = true,
                                 ["frequency"] = 251,
@@ -12287,8 +12166,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -284492.59375,
                                 ["y"] = 683529.125,
-                            }, -- end of [12]
-                            [13] =
+                            }, -- end of [11]
+                            [12] =
                             {
                                 ["communication"] = true,
                                 ["frequency"] = 251,
@@ -12421,8 +12300,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -284459.53125,
                                 ["y"] = 683644.5,
-                            }, -- end of [13]
-                            [14] =
+                            }, -- end of [12]
+                            [13] =
                             {
                                 ["communication"] = true,
                                 ["frequency"] = 251,
@@ -12555,8 +12434,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -284244.25,
                                 ["y"] = 683742.375,
-                            }, -- end of [14]
-                            [15] =
+                            }, -- end of [13]
+                            [14] =
                             {
                                 ["communication"] = true,
                                 ["frequency"] = 233,
@@ -12725,8 +12604,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -284178.09375,
                                 ["y"] = 683973.0625,
-                            }, -- end of [15]
-                            [16] =
+                            }, -- end of [14]
+                            [15] =
                             {
                                 ["communication"] = true,
                                 ["frequency"] = 233,
@@ -12895,8 +12774,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -284351.5625,
                                 ["y"] = 684022.375,
-                            }, -- end of [16]
-                            [17] =
+                            }, -- end of [15]
+                            [16] =
                             {
                                 ["communication"] = true,
                                 ["frequency"] = 233,
@@ -13065,8 +12944,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -284171.1875,
                                 ["y"] = 684152.0625,
-                            }, -- end of [17]
-                            [18] =
+                            }, -- end of [16]
+                            [17] =
                             {
                                 ["communication"] = true,
                                 ["frequency"] = 233,
@@ -13235,8 +13114,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -284348.90625,
                                 ["y"] = 684121.8125,
-                            }, -- end of [18]
-                            [19] =
+                            }, -- end of [17]
+                            [18] =
                             {
                                 ["communication"] = true,
                                 ["frequency"] = 233,
@@ -13405,8 +13284,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -284191,
                                 ["y"] = 684270.4375,
-                            }, -- end of [19]
-                            [20] =
+                            }, -- end of [18]
+                            [19] =
                             {
                                 ["communication"] = true,
                                 ["frequency"] = 233,
@@ -13575,8 +13454,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -284368.71875,
                                 ["y"] = 684240.1875,
-                            }, -- end of [20]
-                            [21] =
+                            }, -- end of [19]
+                            [20] =
                             {
                                 ["communication"] = true,
                                 ["frequency"] = 233,
@@ -13745,7 +13624,7 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -284211.1875,
                                 ["y"] = 683857.75,
-                            }, -- end of [21]
+                            }, -- end of [20]
                         }, -- end of ["group"]
                     }, -- end of ["plane"]
                 }, -- end of [30]
@@ -17100,7 +16979,7 @@ mission =
                                         ["heading"] = 0.16162135518296,
                                         ["livery_id"] = "nato",
                                         ["name"] = "DictKey_UnitName_1553",
-                                        ["onboard_num"] = "025",
+                                        ["onboard_num"] = "303",
                                         ["payload"] =
                                         {
                                             ["chaff"] = 120,
@@ -17374,12 +17253,12 @@ mission =
                             [14] =
                             {
                                 ["communication"] = true,
-                                ["frequency"] = 251,
+                                ["frequency"] = 152,
                                 ["groupId"] = 472,
                                 ["hidden"] = false,
                                 ["modulation"] = 0,
                                 ["name"] = "DictKey_GroupName_1567",
-                                ["radioSet"] = false,
+                                ["radioSet"] = true,
                                 ["route"] =
                                 {
                                     ["points"] =
@@ -17389,7 +17268,7 @@ mission =
                                             ["ETA"] = 0,
                                             ["ETA_locked"] = true,
                                             ["action"] = "Turning Point",
-                                            ["alt"] = 2795,
+                                            ["alt"] = 3657.6,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_1569",
@@ -17425,17 +17304,32 @@ mission =
                                                                     ["id"] = "ActivateBeacon",
                                                                     ["params"] =
                                                                     {
+                                                                        ["AA"] = true,
                                                                         ["bearing"] = true,
                                                                         ["callsign"] = "TKR",
-                                                                        ["channel"] = 1,
-                                                                        ["frequency"] = 1088000000,
-                                                                        ["modeChannel"] = "X",
+                                                                        ["channel"] = 6,
+                                                                        ["frequency"] = 1093000000,
+                                                                        ["modeChannel"] = "Y",
                                                                         ["system"] = 4,
                                                                         ["type"] = 4,
                                                                     }, -- end of ["params"]
                                                                 }, -- end of ["action"]
                                                             }, -- end of ["params"]
                                                         }, -- end of [2]
+                                                        [3] =
+                                                        {
+                                                            ["auto"] = false,
+                                                            ["enabled"] = true,
+                                                            ["id"] = "Orbit",
+                                                            ["number"] = 3,
+                                                            ["params"] =
+                                                            {
+                                                                ["altitude"] = 3657.6,
+                                                                ["pattern"] = "Race-Track",
+                                                                ["speed"] = 138.75,
+                                                                ["speedEdited"] = true,
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [3]
                                                     }, -- end of ["tasks"]
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
@@ -17445,10 +17339,10 @@ mission =
                                         }, -- end of [1]
                                         [2] =
                                         {
-                                            ["ETA"] = 753.47320015666,
+                                            ["ETA"] = 546.80826678079,
                                             ["ETA_locked"] = false,
                                             ["action"] = "Turning Point",
-                                            ["alt"] = 2795,
+                                            ["alt"] = 3657.6,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_1570",
@@ -17481,19 +17375,19 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["alt"] = 2795,
+                                        ["alt"] = 3657.6,
                                         ["alt_type"] = "BARO",
                                         ["callsign"] =
                                         {
-                                            [1] = 1,
+                                            [1] = 3,
                                             [2] = 1,
                                             [3] = 1,
-                                            ["name"] = "Texaco11",
+                                            ["name"] = "Shell11",
                                         }, -- end of ["callsign"]
                                         ["heading"] = -1.5667147168079,
                                         ["livery_id"] = "Standard USAF",
                                         ["name"] = "DictKey_UnitName_1568",
-                                        ["onboard_num"] = "027",
+                                        ["onboard_num"] = "301",
                                         ["payload"] =
                                         {
                                             ["chaff"] = 0,
@@ -17505,7 +17399,7 @@ mission =
                                             }, -- end of ["pylons"]
                                         }, -- end of ["payload"]
                                         ["psi"] = 1.5667147168079,
-                                        ["skill"] = "High",
+                                        ["skill"] = "Excellent",
                                         ["speed"] = 138.88888888889,
                                         ["type"] = "KC-135",
                                         ["unitId"] = 498,
@@ -17517,151 +17411,6 @@ mission =
                                 ["y"] = 580513.75999999,
                             }, -- end of [14]
                             [15] =
-                            {
-                                ["communication"] = true,
-                                ["frequency"] = 251,
-                                ["groupId"] = 473,
-                                ["hidden"] = false,
-                                ["modulation"] = 0,
-                                ["name"] = "DictKey_GroupName_1572",
-                                ["radioSet"] = false,
-                                ["route"] =
-                                {
-                                    ["points"] =
-                                    {
-                                        [1] =
-                                        {
-                                            ["ETA"] = 0,
-                                            ["ETA_locked"] = true,
-                                            ["action"] = "Turning Point",
-                                            ["alt"] = 2795,
-                                            ["alt_type"] = "BARO",
-                                            ["formation_template"] = "",
-                                            ["name"] = "DictKey_WptName_1574",
-                                            ["speed"] = 138.88888888889,
-                                            ["speed_locked"] = true,
-                                            ["task"] =
-                                            {
-                                                ["id"] = "ComboTask",
-                                                ["params"] =
-                                                {
-                                                    ["tasks"] =
-                                                    {
-                                                        [1] =
-                                                        {
-                                                            ["auto"] = true,
-                                                            ["enabled"] = true,
-                                                            ["id"] = "Tanker",
-                                                            ["number"] = 1,
-                                                            ["params"] =
-                                                            {
-                                                            }, -- end of ["params"]
-                                                        }, -- end of [1]
-                                                        [2] =
-                                                        {
-                                                            ["auto"] = true,
-                                                            ["enabled"] = true,
-                                                            ["id"] = "WrappedAction",
-                                                            ["number"] = 2,
-                                                            ["params"] =
-                                                            {
-                                                                ["action"] =
-                                                                {
-                                                                    ["id"] = "ActivateBeacon",
-                                                                    ["params"] =
-                                                                    {
-                                                                        ["bearing"] = true,
-                                                                        ["callsign"] = "TKR",
-                                                                        ["channel"] = 1,
-                                                                        ["frequency"] = 1088000000,
-                                                                        ["modeChannel"] = "X",
-                                                                        ["system"] = 4,
-                                                                        ["type"] = 4,
-                                                                    }, -- end of ["params"]
-                                                                }, -- end of ["action"]
-                                                            }, -- end of ["params"]
-                                                        }, -- end of [2]
-                                                    }, -- end of ["tasks"]
-                                                }, -- end of ["params"]
-                                            }, -- end of ["task"]
-                                            ["type"] = "Turning Point",
-                                            ["x"] = -468319.88085715,
-                                            ["y"] = 578653.88342856,
-                                        }, -- end of [1]
-                                        [2] =
-                                        {
-                                            ["ETA"] = 766.82554894968,
-                                            ["ETA_locked"] = false,
-                                            ["action"] = "Turning Point",
-                                            ["alt"] = 2795,
-                                            ["alt_type"] = "BARO",
-                                            ["formation_template"] = "",
-                                            ["name"] = "DictKey_WptName_1575",
-                                            ["speed"] = 138.88888888889,
-                                            ["speed_locked"] = true,
-                                            ["task"] =
-                                            {
-                                                ["id"] = "ComboTask",
-                                                ["params"] =
-                                                {
-                                                    ["tasks"] =
-                                                    {
-                                                    }, -- end of ["tasks"]
-                                                }, -- end of ["params"]
-                                            }, -- end of ["task"]
-                                            ["type"] = "Turning Point",
-                                            ["x"] = -468319.88085715,
-                                            ["y"] = 498524.20114285,
-                                        }, -- end of [2]
-                                    }, -- end of ["points"]
-                                }, -- end of ["route"]
-                                ["start_time"] = 0,
-                                ["task"] = "Refueling",
-                                ["taskSelected"] = true,
-                                ["tasks"] =
-                                {
-                                }, -- end of ["tasks"]
-                                ["uncontrolled"] = false,
-                                ["units"] =
-                                {
-                                    [1] =
-                                    {
-                                        ["alt"] = 2795,
-                                        ["alt_type"] = "BARO",
-                                        ["callsign"] =
-                                        {
-                                            [1] = 1,
-                                            [2] = 1,
-                                            [3] = 1,
-                                            ["name"] = "Texaco11",
-                                        }, -- end of ["callsign"]
-                                        ["heading"] = -1.5707963267949,
-                                        ["livery_id"] = "default",
-                                        ["name"] = "DictKey_UnitName_1573",
-                                        ["onboard_num"] = "027",
-                                        ["payload"] =
-                                        {
-                                            ["chaff"] = 120,
-                                            ["flare"] = 60,
-                                            ["fuel"] = 20830,
-                                            ["gun"] = 100,
-                                            ["pylons"] =
-                                            {
-                                            }, -- end of ["pylons"]
-                                        }, -- end of ["payload"]
-                                        ["psi"] = 1.5707963267949,
-                                        ["skill"] = "High",
-                                        ["speed"] = 138.88888888889,
-                                        ["type"] = "KC130",
-                                        ["unitId"] = 499,
-                                        ["x"] = -468319.88085715,
-                                        ["y"] = 578653.88342856,
-                                    }, -- end of [1]
-                                }, -- end of ["units"]
-                                ["x"] = -468319.88085715,
-                                ["y"] = 578653.88342856,
-                            }, -- end of [15]
-                            [16] =
                             {
                                 ["communication"] = true,
                                 ["frequency"] = 251,
@@ -17772,7 +17521,7 @@ mission =
                                         ["heading"] = 1.7866017742911,
                                         ["livery_id"] = "nato",
                                         ["name"] = "DictKey_UnitName_1582",
-                                        ["onboard_num"] = "028",
+                                        ["onboard_num"] = "302",
                                         ["payload"] =
                                         {
                                             ["chaff"] = 120,
@@ -17794,16 +17543,16 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -252331.25828571,
                                 ["y"] = 698193.92600001,
-                            }, -- end of [16]
-                            [17] =
+                            }, -- end of [15]
+                            [16] =
                             {
                                 ["communication"] = true,
-                                ["frequency"] = 251,
+                                ["frequency"] = 151,
                                 ["groupId"] = 476,
                                 ["hidden"] = false,
                                 ["modulation"] = 0,
                                 ["name"] = "DictKey_GroupName_1585",
-                                ["radioSet"] = false,
+                                ["radioSet"] = true,
                                 ["route"] =
                                 {
                                     ["points"] =
@@ -17813,7 +17562,7 @@ mission =
                                             ["ETA"] = 0,
                                             ["ETA_locked"] = true,
                                             ["action"] = "Turning Point",
-                                            ["alt"] = 2000,
+                                            ["alt"] = 184.0992,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_1587",
@@ -17849,17 +17598,33 @@ mission =
                                                                     ["id"] = "ActivateBeacon",
                                                                     ["params"] =
                                                                     {
+                                                                        ["AA"] = true,
                                                                         ["bearing"] = true,
                                                                         ["callsign"] = "TKR",
-                                                                        ["channel"] = 1,
-                                                                        ["frequency"] = 1088000000,
-                                                                        ["modeChannel"] = "X",
+                                                                        ["channel"] = 5,
+                                                                        ["frequency"] = 1092000000,
+                                                                        ["modeChannel"] = "Y",
                                                                         ["system"] = 4,
                                                                         ["type"] = 4,
                                                                     }, -- end of ["params"]
                                                                 }, -- end of ["action"]
                                                             }, -- end of ["params"]
                                                         }, -- end of [2]
+                                                        [3] =
+                                                        {
+                                                            ["auto"] = false,
+                                                            ["enabled"] = true,
+                                                            ["id"] = "Orbit",
+                                                            ["number"] = 3,
+                                                            ["params"] =
+                                                            {
+                                                                ["altitude"] = 3505.2,
+                                                                ["altitudeEdited"] = true,
+                                                                ["pattern"] = "Race-Track",
+                                                                ["speed"] = 138.75,
+                                                                ["speedEdited"] = true,
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [3]
                                                     }, -- end of ["tasks"]
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
@@ -17869,10 +17634,10 @@ mission =
                                         }, -- end of [1]
                                         [2] =
                                         {
-                                            ["ETA"] = 606.58862018595,
+                                            ["ETA"] = 606.58862018598,
                                             ["ETA_locked"] = false,
                                             ["action"] = "Turning Point",
-                                            ["alt"] = 2000,
+                                            ["alt"] = 3505.2,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_1588",
@@ -17905,19 +17670,19 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["alt"] = 2000,
+                                        ["alt"] = 184.0992,
                                         ["alt_type"] = "BARO",
                                         ["callsign"] =
                                         {
-                                            [1] = 2,
+                                            [1] = 1,
                                             [2] = 1,
                                             [3] = 1,
-                                            ["name"] = "Arco11",
+                                            ["name"] = "Texaco11",
                                         }, -- end of ["callsign"]
                                         ["heading"] = -2.0009158676264,
                                         ["livery_id"] = "Standard USAF",
                                         ["name"] = "DictKey_UnitName_1586",
-                                        ["onboard_num"] = "029",
+                                        ["onboard_num"] = "300",
                                         ["payload"] =
                                         {
                                             ["chaff"] = 0,
@@ -17929,7 +17694,7 @@ mission =
                                             }, -- end of ["pylons"]
                                         }, -- end of ["payload"]
                                         ["psi"] = 2.0009158676264,
-                                        ["skill"] = "High",
+                                        ["skill"] = "Excellent",
                                         ["speed"] = 138.88888888889,
                                         ["type"] = "KC-135",
                                         ["unitId"] = 502,
@@ -17939,8 +17704,8 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -301281.73714286,
                                 ["y"] = 674534.36800001,
-                            }, -- end of [17]
-                            [18] =
+                            }, -- end of [16]
+                            [17] =
                             {
                                 ["communication"] = true,
                                 ["frequency"] = 124,
@@ -18345,7 +18110,7 @@ mission =
                                 }, -- end of ["units"]
                                 ["x"] = -347454.81257143,
                                 ["y"] = 653027.40257143,
-                            }, -- end of [18]
+                            }, -- end of [17]
                         }, -- end of ["group"]
                     }, -- end of ["plane"]
                     ["static"] =
@@ -28338,6 +28103,331 @@ mission =
                 {
                     ["id"] = 7,
                     ["name"] = "USAF Aggressors",
+                    ["plane"] =
+                    {
+                        ["group"] =
+                        {
+                            [1] =
+                            {
+                                ["communication"] = true,
+                                ["frequency"] = 251,
+                                ["groupId"] = 473,
+                                ["hidden"] = false,
+                                ["modulation"] = 0,
+                                ["name"] = "DictKey_GroupName_1572",
+                                ["radioSet"] = false,
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["action"] = "Turning Point",
+                                            ["alt"] = 5486.4,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["name"] = "DictKey_WptName_1574",
+                                            ["speed"] = 172.66666666667,
+                                            ["speed_locked"] = true,
+                                            ["task"] =
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] =
+                                                {
+                                                    ["tasks"] =
+                                                    {
+                                                        [1] =
+                                                        {
+                                                            ["auto"] = true,
+                                                            ["enabled"] = true,
+                                                            ["id"] = "Tanker",
+                                                            ["number"] = 1,
+                                                            ["params"] =
+                                                            {
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [1]
+                                                        [2] =
+                                                        {
+                                                            ["auto"] = true,
+                                                            ["enabled"] = true,
+                                                            ["id"] = "WrappedAction",
+                                                            ["number"] = 2,
+                                                            ["params"] =
+                                                            {
+                                                                ["action"] =
+                                                                {
+                                                                    ["id"] = "ActivateBeacon",
+                                                                    ["params"] =
+                                                                    {
+                                                                        ["AA"] = true,
+                                                                        ["bearing"] = true,
+                                                                        ["callsign"] = "TKR",
+                                                                        ["channel"] = 8,
+                                                                        ["frequency"] = 1095000000,
+                                                                        ["modeChannel"] = "Y",
+                                                                        ["system"] = 5,
+                                                                        ["type"] = 4,
+                                                                    }, -- end of ["params"]
+                                                                }, -- end of ["action"]
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [2]
+                                                        [3] =
+                                                        {
+                                                            ["auto"] = false,
+                                                            ["enabled"] = true,
+                                                            ["id"] = "Orbit",
+                                                            ["number"] = 3,
+                                                            ["params"] =
+                                                            {
+                                                                ["altitude"] = 5486.4,
+                                                                ["pattern"] = "Race-Track",
+                                                                ["speed"] = 172.66666666667,
+                                                                ["speedEdited"] = true,
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [3]
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["x"] = -468319.88085715,
+                                            ["y"] = 578653.88342856,
+                                        }, -- end of [1]
+                                        [2] =
+                                        {
+                                            ["ETA"] = 464.07151902921,
+                                            ["ETA_locked"] = false,
+                                            ["action"] = "Turning Point",
+                                            ["alt"] = 5486.4,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["name"] = "DictKey_WptName_1575",
+                                            ["speed"] = 172.66666666667,
+                                            ["speed_locked"] = true,
+                                            ["task"] =
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] =
+                                                {
+                                                    ["tasks"] =
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["x"] = -468319.88085715,
+                                            ["y"] = 498524.20114285,
+                                        }, -- end of [2]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["start_time"] = 0,
+                                ["task"] = "Refueling",
+                                ["taskSelected"] = true,
+                                ["tasks"] =
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrolled"] = false,
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["alt"] = 5486.4,
+                                        ["alt_type"] = "BARO",
+                                        ["callsign"] =
+                                        {
+                                            [1] = 2,
+                                            [2] = 1,
+                                            [3] = 1,
+                                            ["name"] = "Arco11",
+                                        }, -- end of ["callsign"]
+                                        ["heading"] = -1.5707963267949,
+                                        ["name"] = "DictKey_UnitName_1573",
+                                        ["onboard_num"] = "305",
+                                        ["payload"] =
+                                        {
+                                            ["chaff"] = 120,
+                                            ["flare"] = 60,
+                                            ["fuel"] = 20830,
+                                            ["gun"] = 100,
+                                            ["pylons"] =
+                                            {
+                                            }, -- end of ["pylons"]
+                                        }, -- end of ["payload"]
+                                        ["psi"] = 1.5707963267949,
+                                        ["skill"] = "High",
+                                        ["speed"] = 172.66666666667,
+                                        ["type"] = "KC130",
+                                        ["unitId"] = 499,
+                                        ["x"] = -468319.88085715,
+                                        ["y"] = 578653.88342856,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -468319.88085715,
+                                ["y"] = 578653.88342856,
+                            }, -- end of [1]
+                            [2] =
+                            {
+                                ["communication"] = true,
+                                ["frequency"] = 230.75,
+                                ["groupId"] = 471,
+                                ["hidden"] = false,
+                                ["modulation"] = 0,
+                                ["name"] = "DictKey_GroupName_1563",
+                                ["radioSet"] = true,
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["action"] = "Turning Point",
+                                            ["alt"] = 7315.2,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["name"] = "DictKey_WptName_1565",
+                                            ["speed"] = 195.27777777778,
+                                            ["speed_locked"] = true,
+                                            ["task"] =
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] =
+                                                {
+                                                    ["tasks"] =
+                                                    {
+                                                        [1] =
+                                                        {
+                                                            ["auto"] = true,
+                                                            ["enabled"] = true,
+                                                            ["id"] = "Tanker",
+                                                            ["number"] = 1,
+                                                            ["params"] =
+                                                            {
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [1]
+                                                        [2] =
+                                                        {
+                                                            ["auto"] = true,
+                                                            ["enabled"] = true,
+                                                            ["id"] = "WrappedAction",
+                                                            ["number"] = 2,
+                                                            ["params"] =
+                                                            {
+                                                                ["action"] =
+                                                                {
+                                                                    ["id"] = "ActivateBeacon",
+                                                                    ["params"] =
+                                                                    {
+                                                                        ["AA"] = true,
+                                                                        ["bearing"] = true,
+                                                                        ["callsign"] = "TKR",
+                                                                        ["channel"] = 7,
+                                                                        ["frequency"] = 1094000000,
+                                                                        ["modeChannel"] = "Y",
+                                                                        ["system"] = 4,
+                                                                        ["type"] = 4,
+                                                                    }, -- end of ["params"]
+                                                                }, -- end of ["action"]
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [2]
+                                                        [3] =
+                                                        {
+                                                            ["auto"] = false,
+                                                            ["enabled"] = true,
+                                                            ["id"] = "Orbit",
+                                                            ["number"] = 3,
+                                                            ["params"] =
+                                                            {
+                                                                ["altitude"] = 7315.2,
+                                                                ["pattern"] = "Race-Track",
+                                                                ["speed"] = 195.27777777778,
+                                                                ["speedEdited"] = true,
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [3]
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["x"] = -473434.54142858,
+                                            ["y"] = 600817.41257142,
+                                        }, -- end of [1]
+                                        [2] =
+                                        {
+                                            ["ETA"] = 335.39136005706,
+                                            ["ETA_locked"] = false,
+                                            ["action"] = "Turning Point",
+                                            ["alt"] = 7315.2,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["name"] = "DictKey_WptName_1566",
+                                            ["speed"] = 195.27777777778,
+                                            ["speed_locked"] = true,
+                                            ["task"] =
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] =
+                                                {
+                                                    ["tasks"] =
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["x"] = -408648.84085715,
+                                            ["y"] = 610426.77485714,
+                                        }, -- end of [2]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["start_time"] = 0,
+                                ["task"] = "Refueling",
+                                ["taskSelected"] = true,
+                                ["tasks"] =
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrolled"] = false,
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["alt"] = 7315.2,
+                                        ["alt_type"] = "BARO",
+                                        ["callsign"] =
+                                        {
+                                            [1] = 3,
+                                            [2] = 1,
+                                            [3] = 1,
+                                            ["name"] = "Shell11",
+                                        }, -- end of ["callsign"]
+                                        ["heading"] = 0.14725175576823,
+                                        ["livery_id"] = "Standard USAF",
+                                        ["name"] = "DictKey_UnitName_1564",
+                                        ["onboard_num"] = "306",
+                                        ["payload"] =
+                                        {
+                                            ["chaff"] = 0,
+                                            ["flare"] = 0,
+                                            ["fuel"] = 90700,
+                                            ["gun"] = 100,
+                                            ["pylons"] =
+                                            {
+                                            }, -- end of ["pylons"]
+                                        }, -- end of ["payload"]
+                                        ["psi"] = -0.14725175576823,
+                                        ["skill"] = "High",
+                                        ["speed"] = 195.27777777778,
+                                        ["type"] = "KC-135",
+                                        ["unitId"] = 497,
+                                        ["x"] = -473434.54142858,
+                                        ["y"] = 600817.41257142,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -473434.54142858,
+                                ["y"] = 600817.41257142,
+                            }, -- end of [2]
+                        }, -- end of ["group"]
+                    }, -- end of ["plane"]
                     ["static"] =
                     {
                         ["group"] =
@@ -45300,12 +45390,12 @@ mission =
                             [1] =
                             {
                                 ["communication"] = true,
-                                ["frequency"] = 251,
+                                ["frequency"] = 299,
                                 ["groupId"] = 468,
                                 ["hidden"] = false,
                                 ["modulation"] = 0,
                                 ["name"] = "DictKey_GroupName_1547",
-                                ["radioSet"] = false,
+                                ["radioSet"] = true,
                                 ["route"] =
                                 {
                                     ["points"] =
@@ -45356,8 +45446,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = -450820.084,
-                                            ["y"] = 934831.69514286,
+                                            ["x"] = -450797.43228571,
+                                            ["y"] = 934871.00828571,
                                         }, -- end of [1]
                                         [2] =
                                         {
@@ -45399,10 +45489,10 @@ mission =
                                         ["alt"] = 11999.976,
                                         ["alt_type"] = "BARO",
                                         ["callsign"] = 100,
-                                        ["heading"] = -0.32194741979442,
+                                        ["heading"] = -0.32238315235153,
                                         ["livery_id"] = "RF Air Force",
                                         ["name"] = "DictKey_UnitName_1548",
-                                        ["onboard_num"] = "024",
+                                        ["onboard_num"] = "800",
                                         ["payload"] =
                                         {
                                             ["chaff"] = 192,
@@ -45413,17 +45503,17 @@ mission =
                                             {
                                             }, -- end of ["pylons"]
                                         }, -- end of ["payload"]
-                                        ["psi"] = 0.32194741979442,
+                                        ["psi"] = 0.32238315235153,
                                         ["skill"] = "High",
                                         ["speed"] = 179.86111111111,
                                         ["type"] = "A-50",
                                         ["unitId"] = 494,
-                                        ["x"] = -450820.084,
-                                        ["y"] = 934831.69514286,
+                                        ["x"] = -450797.43228571,
+                                        ["y"] = 934871.00828571,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
-                                ["x"] = -450820.084,
-                                ["y"] = 934831.69514286,
+                                ["x"] = -450797.43228571,
+                                ["y"] = 934871.00828571,
                             }, -- end of [1]
                         }, -- end of ["group"]
                     }, -- end of ["plane"]
@@ -46779,12 +46869,12 @@ mission =
                             [1] =
                             {
                                 ["communication"] = true,
-                                ["frequency"] = 251,
+                                ["frequency"] = 300,
                                 ["groupId"] = 474,
                                 ["hidden"] = false,
                                 ["modulation"] = 0,
                                 ["name"] = "DictKey_GroupName_1576",
-                                ["radioSet"] = false,
+                                ["radioSet"] = true,
                                 ["route"] =
                                 {
                                     ["points"] =
@@ -46845,8 +46935,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = -436299.58514286,
-                                            ["y"] = 937606.708,
+                                            ["x"] = -435983.79257143,
+                                            ["y"] = 937711.98028571,
                                         }, -- end of [1]
                                         [2] =
                                         {
@@ -46888,9 +46978,9 @@ mission =
                                         ["alt"] = 2000,
                                         ["alt_type"] = "BARO",
                                         ["callsign"] = 101,
-                                        ["heading"] = -0.33205946754293,
+                                        ["heading"] = -0.33449528053025,
                                         ["name"] = "DictKey_UnitName_1577",
-                                        ["onboard_num"] = "010",
+                                        ["onboard_num"] = "801",
                                         ["payload"] =
                                         {
                                             ["chaff"] = 120,
@@ -46901,17 +46991,17 @@ mission =
                                             {
                                             }, -- end of ["pylons"]
                                         }, -- end of ["payload"]
-                                        ["psi"] = 0.33205946754293,
+                                        ["psi"] = 0.33449528053025,
                                         ["skill"] = "High",
                                         ["speed"] = 138.88888888889,
                                         ["type"] = "KC130",
                                         ["unitId"] = 500,
-                                        ["x"] = -436299.58514286,
-                                        ["y"] = 937606.708,
+                                        ["x"] = -435983.79257143,
+                                        ["y"] = 937711.98028571,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
-                                ["x"] = -436299.58514286,
-                                ["y"] = 937606.708,
+                                ["x"] = -435983.79257143,
+                                ["y"] = 937711.98028571,
                             }, -- end of [1]
                         }, -- end of ["group"]
                     }, -- end of ["plane"]
@@ -47009,7 +47099,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 759239,
+    ["currentKey"] = 762067,
     ["date"] =
     {
         ["Day"] = 1,
@@ -50266,9 +50356,9 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -403058.49985714,
-        ["centerY"] = 765726.40428571,
-        ["zoom"] = 1363591,
+        ["centerX"] = -397758.33028572,
+        ["centerY"] = 657818.79885714,
+        ["zoom"] = 685568,
     }, -- end of ["map"]
     ["maxDictId"] = 2819,
     ["pictureFileNameB"] =
