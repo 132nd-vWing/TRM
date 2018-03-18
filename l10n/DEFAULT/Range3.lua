@@ -1,3 +1,28 @@
+--- Range 3 --- 
+
+-- RED TABLE
+
+R3A_table_red_IFV = { "Template 9.3: IFV platoon", "Template 9.2: IFV section", "Template 9.1: IFV vehicle" } -- table for the red IFV
+R3A_table_red_MBT = { "Template 10.3: MBT platoon", "Template 10.2: MBT section", "Template 10.1: MBT vehicle" } -- table for the red MBT
+R3A_table_red_misc = { "Template 13.1: logistics vehicle", "Template 13.2: logistics section" } -- table for the red misc
+R3A_table_red_hummer = { "Template 16.1: Hummer vehicle", "Template 16.1: Hummer section" } -- table for the red misc
+-- RED TABLE
+
+-- RED Spawners
+R3A_red_IFV = SPAWN:New("R3A_red_IFV"):InitRandomizeTemplate(R3A_table_red_IFV):Spawn()  
+R3A_red_MBT = SPAWN:New("R3A_red_MBT"):InitRandomizeTemplate(R3A_table_red_MBT):Spawn()
+R3A_red_misc = SPAWN:New("R3A_red_misc"):InitRandomizeTemplate(R3A_table_red_misc):Spawn()
+R3A_red_hummer = SPAWN:New("R3A_red_hummer"):InitRandomizeTemplate(R3A_table_red_hummer):Spawn()
+-- RED Spawners
+R3A_red_IFV:PatrolRoute()
+R3A_red_MBT:PatrolRoute()
+R3A_red_misc:PatrolRoute()
+R3A_red_hummer:PatrolRoute()
+
+
+
+--JTAC Moving Column Fire--
+
 R3A_JTAC_CONVOY = GROUP:FindByName("R3A_JTAC CONVOY")
 
 T3A2_1 = GROUP:FindByName("T3A.2_1")
@@ -130,4 +155,7 @@ end
 
 Menu_Range_T3 = MENU_MISSION:New("Range T3", Menu_Range_Options)
 Menu_Range_T3_startfire = MENU_MISSION_COMMAND:New("Hostiles: Start Firing",Menu_Range_T3,T3_startfire)
+
+
+--JTAC Moving Column Fire--
         
