@@ -9303,7 +9303,7 @@ mission =
                                         ["heading"] = 0,
                                         ["livery_id"] = "132 617th Standard skin",
                                         ["name"] = "DictKey_UnitName_2621",
-                                        ["onboard_num"] = "023",
+                                        ["onboard_num"] = "21",
                                         ["parking"] = 35,
                                         ["parking_id"] = "23",
                                         ["payload"] =
@@ -20736,6 +20736,46 @@ mission =
                                 ["x"] = -333903.44085714,
                                 ["y"] = 722091.602,
                             }, -- end of [165]
+                            [166] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 744,
+                                ["heading"] = 0,
+                                ["name"] = "DictKey_GroupName_2730",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -284322.18457141,
+                                            ["y"] = 683725.812,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 0,
+                                        ["name"] = "DictKey_GroupName_2730",
+                                        ["shape_name"] = "H-Windsock_RW",
+                                        ["type"] = "Windsock",
+                                        ["unitId"] = 846,
+                                        ["x"] = -284322.18457141,
+                                        ["y"] = 683725.812,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -284322.18457141,
+                                ["y"] = 683725.812,
+                            }, -- end of [166]
                         }, -- end of ["group"]
                     }, -- end of ["static"]
                     ["vehicle"] =
@@ -42680,7 +42720,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 739821,
+    ["currentKey"] = 745229,
     ["date"] =
     {
         ["Day"] = 1,
@@ -45937,11 +45977,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -285500.39399999,
-        ["centerY"] = 681418.31628571,
-        ["zoom"] = 31940,
+        ["centerX"] = -285655.06514284,
+        ["centerY"] = 684724.96228572,
+        ["zoom"] = 17220,
     }, -- end of ["map"]
-    ["maxDictId"] = 2729,
+    ["maxDictId"] = 2732,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
