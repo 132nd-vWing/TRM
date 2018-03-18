@@ -92,16 +92,16 @@ Menu_ThreatSite_5_Off:Remove()
 Menu_ThreatSite_5_On = MENU_MISSION_COMMAND:New("Activate Threat Site Range 5",Menu_Threat_Options_Ranges,ThreatSite_5_threat_on)
 end
 
-function ThreatSite_5_threat_on()
-ThreatSite_5:SetAIOn()
-Menu_ThreatSite_5_On:Remove()
-Menu_ThreatSite_5_Off = MENU_MISSION_COMMAND:New("Deactivate Threat Site Range 5",Menu_Threat_Options_Ranges,ThreatSite_5_threat_off)
+function ThreatSite_6_threat_on()
+ThreatSite_6:SetAIOn()
+Menu_ThreatSite_6_On:Remove()
+Menu_ThreatSite_6_Off = MENU_MISSION_COMMAND:New("Deactivate Threat Site Range 6",Menu_Threat_Options_Ranges,ThreatSite_6_threat_off)
 end
 
-function ThreatSite_5_threat_off()
-ThreatSite_5:SetAIOff()
-Menu_ThreatSite_5_Off:Remove()
-Menu_ThreatSite_5_On = MENU_MISSION_COMMAND:New("Activate Threat Site Range 5",Menu_Threat_Options_Ranges,ThreatSite_5_threat_on)
+function ThreatSite_6_threat_off()
+ThreatSite_6:SetAIOff()
+Menu_ThreatSite_6_Off:Remove()
+Menu_ThreatSite_6_On = MENU_MISSION_COMMAND:New("Activate Threat Site Range 6",Menu_Threat_Options_Ranges,ThreatSite_6_threat_on)
 end
 
 function ThreatSite_7_threat_on()
