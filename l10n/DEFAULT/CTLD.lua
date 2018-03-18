@@ -166,6 +166,8 @@ ctld.pickupZones = {
           { "R1_Storage", "none", -1, "yes", 0 },
           { "T3B_Storage_CENTER", "none", -1, "yes", 0 },
           { "R3A_Storage", "none", -1, "yes", 0 },
+           { "R2A_Storage", "none", -1, "yes", 0 },
+           { "T3B_Storage_NORTH", "none", -1, "yes", 0 },
        
 }
 
@@ -227,6 +229,10 @@ ctld.logisticUnits = {
     "T3B_Storage_CENTER",
     "R3A_Storage",
     "logistic10",
+    "R2A_Storage,",
+    "R2B_Storage_SOUTH",
+    "T3B_Storage_NORTH",
+    
 }
 
 -- ************** UNITS ABLE TO TRANSPORT VEHICLES ******************

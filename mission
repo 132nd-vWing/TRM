@@ -25039,6 +25039,46 @@ mission =
                                 ["x"] = -280958.44400001,
                                 ["y"] = 647157.19685714,
                             }, -- end of [171]
+                            [172] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 787,
+                                ["heading"] = 0,
+                                ["name"] = "DictKey_GroupName_2900",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -285552.95999999,
+                                            ["y"] = 683201.40599996,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 0,
+                                        ["name"] = "DictKey_GroupName_2900",
+                                        ["shape_name"] = "H-Windsock_RW",
+                                        ["type"] = "Windsock",
+                                        ["unitId"] = 890,
+                                        ["x"] = -285552.95999999,
+                                        ["y"] = 683201.40599996,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -285552.95999999,
+                                ["y"] = 683201.40599996,
+                            }, -- end of [172]
                         }, -- end of ["group"]
                     }, -- end of ["static"]
                     ["vehicle"] =
@@ -58816,7 +58856,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 822470,
+    ["currentKey"] = 834166,
     ["date"] =
     {
         ["Day"] = 1,
@@ -62073,11 +62113,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -340345.1047143,
-        ["centerY"] = 739344.81657141,
-        ["zoom"] = 154663,
+        ["centerX"] = -334278.88742859,
+        ["centerY"] = 722573.72457141,
+        ["zoom"] = 6778,
     }, -- end of ["map"]
-    ["maxDictId"] = 2899,
+    ["maxDictId"] = 2903,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
@@ -62144,7 +62184,7 @@ mission =
             [2] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2892\")); mission.trig.func[2]=nil;",
             [3] = "a_out_sound_c(21, getValueResourceByKey(\"ResKey_Action_2897\"));a_out_sound_c(21, getValueResourceByKey(\"ResKey_Action_2899\")); mission.trig.func[3]=nil;",
             [4] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2894\")); mission.trig.func[4]=nil;",
-            [5] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2896\")); mission.trig.func[5]=nil;",
+            [5] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2903\")); mission.trig.func[5]=nil;",
             [6] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2820\")); mission.trig.func[6]=nil;",
             [7] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2722\")); mission.trig.func[7]=nil;",
             [8] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2858\")); mission.trig.func[8]=nil;",
@@ -62475,6 +62515,54 @@ mission =
                 ["y"] = 738414.86828569,
                 ["zoneId"] = 4364,
             }, -- end of [17]
+            [18] =
+            {
+                ["color"] =
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["hidden"] = false,
+                ["name"] = "R2A_Storage",
+                ["radius"] = 762,
+                ["x"] = -320325.60457142,
+                ["y"] = 720057.02485714,
+                ["zoneId"] = 4530,
+            }, -- end of [18]
+            [19] =
+            {
+                ["color"] =
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["hidden"] = false,
+                ["name"] = "R2B_Storage_SOUTH",
+                ["radius"] = 762,
+                ["x"] = -366132.53828571,
+                ["y"] = 700921.95228571,
+                ["zoneId"] = 4696,
+            }, -- end of [19]
+            [20] =
+            {
+                ["color"] =
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["hidden"] = false,
+                ["name"] = "T3B_Storage_NORTH",
+                ["radius"] = 762,
+                ["x"] = -336943.89342856,
+                ["y"] = 736343.42428567,
+                ["zoneId"] = 4697,
+            }, -- end of [20]
         }, -- end of ["zones"]
     }, -- end of ["triggers"]
     ["trigrules"] =
@@ -62597,7 +62685,7 @@ mission =
                         [1] = "",
                         [2] = "",
                     }, -- end of ["ai_task"]
-                    ["file"] = "ResKey_Action_2896",
+                    ["file"] = "ResKey_Action_2903",
                     ["predicate"] = "a_do_script_file",
                 }, -- end of [1]
             }, -- end of ["actions"]
