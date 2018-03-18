@@ -12618,7 +12618,7 @@ mission =
                                         }, -- end of [3]
                                         [4] =
                                         {
-                                            ["ETA"] = 1175.4300630078,
+                                            ["ETA"] = 1175.5681450733,
                                             ["ETA_locked"] = false,
                                             ["action"] = "Turning Point",
                                             ["alt"] = 2448,
@@ -45083,7 +45083,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 676075,
+    ["currentKey"] = 731639,
     ["date"] =
     {
         ["Day"] = 1,
@@ -48340,11 +48340,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -316019.67185712,
-        ["centerY"] = 760239.57371427,
-        ["zoom"] = 20853,
+        ["centerX"] = -365440.24442857,
+        ["centerY"] = 734101.77885714,
+        ["zoom"] = 248363,
     }, -- end of ["map"]
-    ["maxDictId"] = 2705,
+    ["maxDictId"] = 2726,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
@@ -48408,10 +48408,11 @@ mission =
         ["actions"] =
         {
             [1] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2567\"));",
-            [2] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2181\")); mission.trig.func[2]=nil;",
-            [3] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2552\")); mission.trig.func[3]=nil;",
-            [4] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2701\")); mission.trig.func[4]=nil;",
+            [2] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2718\")); mission.trig.func[2]=nil;",
+            [3] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2726\")); mission.trig.func[3]=nil;",
+            [4] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2722\")); mission.trig.func[4]=nil;",
             [5] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2619\")); mission.trig.func[5]=nil;",
+            [6] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2701\")); mission.trig.func[6]=nil;",
         }, -- end of ["actions"]
         ["conditions"] =
         {
@@ -48420,6 +48421,7 @@ mission =
             [3] = "return(true)",
             [4] = "return(true)",
             [5] = "return(true)",
+            [6] = "return(true)",
         }, -- end of ["conditions"]
         ["custom"] =
         {
@@ -48437,6 +48439,7 @@ mission =
             [3] = true,
             [4] = true,
             [5] = true,
+            [6] = true,
         }, -- end of ["flag"]
         ["func"] =
         {
@@ -48444,6 +48447,7 @@ mission =
             [3] = "if mission.trig.conditions[3]() then mission.trig.actions[3]() end",
             [4] = "if mission.trig.conditions[4]() then mission.trig.actions[4]() end",
             [5] = "if mission.trig.conditions[5]() then mission.trig.actions[5]() end",
+            [6] = "if mission.trig.conditions[6]() then mission.trig.actions[6]() end",
         }, -- end of ["func"]
         ["funcStartup"] =
         {
@@ -48651,7 +48655,7 @@ mission =
                         [1] = "",
                         [2] = "",
                     }, -- end of ["ai_task"]
-                    ["file"] = "ResKey_Action_2181",
+                    ["file"] = "ResKey_Action_2718",
                     ["predicate"] = "a_do_script_file",
                 }, -- end of [1]
             }, -- end of ["actions"]
@@ -48680,11 +48684,11 @@ mission =
                         [1] = "",
                         [2] = "",
                     }, -- end of ["ai_task"]
-                    ["file"] = "ResKey_Action_2552",
+                    ["file"] = "ResKey_Action_2726",
                     ["predicate"] = "a_do_script_file",
                 }, -- end of [1]
             }, -- end of ["actions"]
-            ["comment"] = "Range 1",
+            ["comment"] = "Threat Sites",
             ["eventlist"] = "",
             ["predicate"] = "triggerOnce",
             ["rules"] =
@@ -48702,11 +48706,11 @@ mission =
                         [1] = "",
                         [2] = "",
                     }, -- end of ["ai_task"]
-                    ["file"] = "ResKey_Action_2701",
+                    ["file"] = "ResKey_Action_2722",
                     ["predicate"] = "a_do_script_file",
                 }, -- end of [1]
             }, -- end of ["actions"]
-            ["comment"] = "Range10",
+            ["comment"] = "Range 1",
             ["eventlist"] = "",
             ["predicate"] = "triggerOnce",
             ["rules"] =
@@ -48735,6 +48739,28 @@ mission =
             {
             }, -- end of ["rules"]
         }, -- end of [5]
+        [6] =
+        {
+            ["actions"] =
+            {
+                [1] =
+                {
+                    ["ai_task"] =
+                    {
+                        [1] = "",
+                        [2] = "",
+                    }, -- end of ["ai_task"]
+                    ["file"] = "ResKey_Action_2701",
+                    ["predicate"] = "a_do_script_file",
+                }, -- end of [1]
+            }, -- end of ["actions"]
+            ["comment"] = "Range10",
+            ["eventlist"] = "",
+            ["predicate"] = "triggerOnce",
+            ["rules"] =
+            {
+            }, -- end of ["rules"]
+        }, -- end of [6]
     }, -- end of ["trigrules"]
     ["version"] = 14,
     ["weather"] =
