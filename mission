@@ -28364,7 +28364,7 @@ mission =
                                             ["ETA"] = 0,
                                             ["ETA_locked"] = true,
                                             ["action"] = "Off Road",
-                                            ["alt"] = 7,
+                                            ["alt"] = 5,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_2588",
@@ -28381,8 +28381,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = -294392.8482857,
-                                            ["y"] = 643328.8157143,
+                                            ["x"] = -294930.14514285,
+                                            ["y"] = 642288.27314286,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                     ["spans"] =
@@ -28422,13 +28422,13 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "Foul_Line",
                                         ["unitId"] = 811,
-                                        ["x"] = -294392.8482857,
-                                        ["y"] = 643328.8157143,
+                                        ["x"] = -294930.14514285,
+                                        ["y"] = 642288.27314286,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
-                                ["x"] = -294392.8482857,
-                                ["y"] = 643328.8157143,
+                                ["x"] = -294930.14514285,
+                                ["y"] = 642288.27314286,
                             }, -- end of [30]
                             [31] =
                             {
@@ -59492,7 +59492,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 886994,
+    ["currentKey"] = 889937,
     ["date"] =
     {
         ["Day"] = 1,
@@ -62749,11 +62749,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -341351.07557142,
-        ["centerY"] = 737518.39085714,
-        ["zoom"] = 2343,
+        ["centerX"] = -295282.19628571,
+        ["centerY"] = 643243.36457143,
+        ["zoom"] = 7774,
     }, -- end of ["map"]
-    ["maxDictId"] = 2948,
+    ["maxDictId"] = 2949,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
@@ -62816,7 +62816,7 @@ mission =
     {
         ["actions"] =
         {
-            [1] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2567\"));",
+            [1] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2949\"));",
             [2] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2892\")); mission.trig.func[2]=nil;",
             [3] = "a_out_sound_c(21, getValueResourceByKey(\"ResKey_Action_2897\"));a_out_sound_c(21, getValueResourceByKey(\"ResKey_Action_2899\")); mission.trig.func[3]=nil;",
             [4] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2894\")); mission.trig.func[4]=nil;",
@@ -63214,7 +63214,7 @@ mission =
                         [1] = "",
                         [2] = "",
                     }, -- end of ["ai_task"]
-                    ["file"] = "ResKey_Action_2567",
+                    ["file"] = "ResKey_Action_2949",
                     ["predicate"] = "a_do_script_file",
                 }, -- end of [1]
             }, -- end of ["actions"]
