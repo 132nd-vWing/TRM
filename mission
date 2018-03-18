@@ -25294,6 +25294,89 @@ mission =
                                 ["x"] = -333908.98885717,
                                 ["y"] = 721949.93571427,
                             }, -- end of [177]
+                            [178] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 794,
+                                ["heading"] = 2.3911010752322,
+                                ["name"] = "DictKey_GroupName_2929",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -342711.10942856,
+                                            ["y"] = 737575.89114285,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Heliports",
+                                        ["heading"] = 2.3911010752322,
+                                        ["heliport_callsign_id"] = 2,
+                                        ["heliport_frequency"] = "128.58",
+                                        ["heliport_modulation"] = 0,
+                                        ["name"] = "DictKey_GroupName_2929",
+                                        ["shape_name"] = "FARPS",
+                                        ["type"] = "FARP",
+                                        ["unitId"] = 899,
+                                        ["x"] = -342711.10942856,
+                                        ["y"] = 737575.89114285,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -342711.10942856,
+                                ["y"] = 737575.89114285,
+                            }, -- end of [178]
+                            [179] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 797,
+                                ["heading"] = 0,
+                                ["name"] = "DictKey_GroupName_2940",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -342645.09714285,
+                                            ["y"] = 737573.48142856,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 0,
+                                        ["name"] = "DictKey_GroupName_2940",
+                                        ["shape_name"] = "H-Windsock_RW",
+                                        ["type"] = "Windsock",
+                                        ["unitId"] = 904,
+                                        ["x"] = -342645.09714285,
+                                        ["y"] = 737573.48142856,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -342645.09714285,
+                                ["y"] = 737573.48142856,
+                            }, -- end of [179]
                         }, -- end of ["group"]
                     }, -- end of ["static"]
                     ["vehicle"] =
@@ -55206,6 +55289,135 @@ mission =
                                 ["x"] = -333928.23771428,
                                 ["y"] = 722380.84114287,
                             }, -- end of [55]
+                            [56] =
+                            {
+                                ["groupId"] = 796,
+                                ["hidden"] = false,
+                                ["name"] = "DictKey_GroupName_2935",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["action"] = "Off Road",
+                                            ["alt"] = 1049,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["name"] = "DictKey_WptName_2939",
+                                            ["speed"] = 5.5555555555556,
+                                            ["speed_locked"] = true,
+                                            ["task"] =
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] =
+                                                {
+                                                    ["tasks"] =
+                                                    {
+                                                        [1] =
+                                                        {
+                                                            ["auto"] = true,
+                                                            ["enabled"] = true,
+                                                            ["id"] = "WrappedAction",
+                                                            ["number"] = 1,
+                                                            ["params"] =
+                                                            {
+                                                                ["action"] =
+                                                                {
+                                                                    ["id"] = "EPLRS",
+                                                                    ["params"] =
+                                                                    {
+                                                                        ["groupId"] = 10,
+                                                                        ["value"] = true,
+                                                                    }, -- end of ["params"]
+                                                                }, -- end of ["action"]
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [1]
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["x"] = -342684.23999999,
+                                            ["y"] = 737640.33857142,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                    ["spans"] =
+                                    {
+                                        [1] =
+                                        {
+                                            [1] =
+                                            {
+                                                ["x"] = -333765.89771431,
+                                                ["y"] = 722225.15799999,
+                                            }, -- end of [1]
+                                            [2] =
+                                            {
+                                                ["x"] = -333785.75800002,
+                                                ["y"] = 722425.57885713,
+                                            }, -- end of [2]
+                                        }, -- end of [1]
+                                    }, -- end of ["spans"]
+                                }, -- end of ["route"]
+                                ["start_time"] = 0,
+                                ["task"] = "Ground Nothing",
+                                ["taskSelected"] = true,
+                                ["tasks"] =
+                                {
+                                }, -- end of ["tasks"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["heading"] = 4.1015237421867,
+                                        ["name"] = "DictKey_UnitName_2936",
+                                        ["playerCanDrive"] = true,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "Hummer",
+                                        ["unitId"] = 901,
+                                        ["x"] = -342684.23999999,
+                                        ["y"] = 737640.33857142,
+                                    }, -- end of [1]
+                                    [2] =
+                                    {
+                                        ["heading"] = 6.0039326268605,
+                                        ["name"] = "DictKey_UnitName_2937",
+                                        ["playerCanDrive"] = false,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "M978 HEMTT Tanker",
+                                        ["unitId"] = 902,
+                                        ["x"] = -342667.38285714,
+                                        ["y"] = 737605.48142856,
+                                    }, -- end of [2]
+                                    [3] =
+                                    {
+                                        ["heading"] = 2.0769418098733,
+                                        ["name"] = "DictKey_UnitName_2938",
+                                        ["playerCanDrive"] = false,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "M 818",
+                                        ["unitId"] = 903,
+                                        ["x"] = -342676.23999999,
+                                        ["y"] = 737622.6242857,
+                                    }, -- end of [3]
+                                }, -- end of ["units"]
+                                ["visible"] = false,
+                                ["x"] = -342684.23999999,
+                                ["y"] = 737640.33857142,
+                            }, -- end of [56]
                         }, -- end of ["group"]
                     }, -- end of ["vehicle"]
                 }, -- end of [51]
@@ -59200,7 +59412,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 854725,
+    ["currentKey"] = 884023,
     ["date"] =
     {
         ["Day"] = 1,
@@ -62457,11 +62669,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -327981.36028571,
-        ["centerY"] = 758788.8437143,
-        ["zoom"] = 800514,
+        ["centerX"] = -342712.38285714,
+        ["centerY"] = 737627.19571428,
+        ["zoom"] = 1000,
     }, -- end of ["map"]
-    ["maxDictId"] = 2928,
+    ["maxDictId"] = 2942,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
