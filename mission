@@ -27673,8 +27673,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = -297147.76085714,
-                                            ["y"] = 640590.66057143,
+                                            ["x"] = -295165.00057142,
+                                            ["y"] = 641661.20828572,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                     ["spans"] =
@@ -27691,7 +27691,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["heading"] = 3.8397243543875,
+                                        ["heading"] = 4.2760566673861,
                                         ["name"] = "DictKey_UnitName_2581",
                                         ["playerCanDrive"] = false,
                                         ["skill"] = "Average",
@@ -27701,13 +27701,13 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "Strafe_Pit",
                                         ["unitId"] = 809,
-                                        ["x"] = -297147.76085714,
-                                        ["y"] = 640590.66057143,
+                                        ["x"] = -295165.00057142,
+                                        ["y"] = 641661.20828572,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
-                                ["x"] = -297147.76085714,
-                                ["y"] = 640590.66057143,
+                                ["x"] = -295165.00057142,
+                                ["y"] = 641661.20828572,
                             }, -- end of [29]
                             [30] =
                             {
@@ -27723,7 +27723,7 @@ mission =
                                             ["ETA"] = 0,
                                             ["ETA_locked"] = true,
                                             ["action"] = "Off Road",
-                                            ["alt"] = 5,
+                                            ["alt"] = 7,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_2588",
@@ -27740,8 +27740,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = -296764.86742857,
-                                            ["y"] = 641038.48914285,
+                                            ["x"] = -294392.8482857,
+                                            ["y"] = 643328.8157143,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                     ["spans"] =
@@ -27771,7 +27771,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["heading"] = 3.8397243543875,
+                                        ["heading"] = 4.2760566673861,
                                         ["name"] = "DictKey_UnitName_2587",
                                         ["playerCanDrive"] = false,
                                         ["skill"] = "Average",
@@ -27781,13 +27781,13 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "Foul_Line",
                                         ["unitId"] = 811,
-                                        ["x"] = -296764.86742857,
-                                        ["y"] = 641038.48914285,
+                                        ["x"] = -294392.8482857,
+                                        ["y"] = 643328.8157143,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
-                                ["x"] = -296764.86742857,
-                                ["y"] = 641038.48914285,
+                                ["x"] = -294392.8482857,
+                                ["y"] = 643328.8157143,
                             }, -- end of [30]
                             [31] =
                             {
@@ -27803,7 +27803,7 @@ mission =
                                             ["ETA"] = 0,
                                             ["ETA_locked"] = true,
                                             ["action"] = "Off Road",
-                                            ["alt"] = 9,
+                                            ["alt"] = 7,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_2601",
@@ -27820,8 +27820,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = -293701.02742855,
-                                            ["y"] = 641753.45628573,
+                                            ["x"] = -294564.29971427,
+                                            ["y"] = 640499.70628572,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                     ["spans"] =
@@ -27861,13 +27861,13 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "Conventional_Circle_A",
                                         ["unitId"] = 815,
-                                        ["x"] = -293701.02742855,
-                                        ["y"] = 641753.45628573,
+                                        ["x"] = -294564.29971427,
+                                        ["y"] = 640499.70628572,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
-                                ["x"] = -293701.02742855,
-                                ["y"] = 641753.45628573,
+                                ["x"] = -294564.29971427,
+                                ["y"] = 640499.70628572,
                             }, -- end of [31]
                             [32] =
                             {
@@ -27883,7 +27883,7 @@ mission =
                                             ["ETA"] = 0,
                                             ["ETA_locked"] = true,
                                             ["action"] = "Off Road",
-                                            ["alt"] = 9,
+                                            ["alt"] = 5,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_2605",
@@ -27900,8 +27900,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = -295589.34171426,
-                                            ["y"] = 643120.85628573,
+                                            ["x"] = -296707.96057141,
+                                            ["y"] = 639748.20200001,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                     ["spans"] =
@@ -27941,13 +27941,13 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "Conventional_Circle_A",
                                         ["unitId"] = 816,
-                                        ["x"] = -295589.34171426,
-                                        ["y"] = 643120.85628573,
+                                        ["x"] = -296707.96057141,
+                                        ["y"] = 639748.20200001,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
-                                ["x"] = -295589.34171426,
-                                ["y"] = 643120.85628573,
+                                ["x"] = -296707.96057141,
+                                ["y"] = 639748.20200001,
                             }, -- end of [32]
                             [33] =
                             {
@@ -27963,7 +27963,7 @@ mission =
                                             ["ETA"] = 0,
                                             ["ETA_locked"] = true,
                                             ["action"] = "Off Road",
-                                            ["alt"] = 9,
+                                            ["alt"] = 5,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_2608",
@@ -27980,8 +27980,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = -294130.78171426,
-                                            ["y"] = 643899.62314287,
+                                            ["x"] = -297014.33142856,
+                                            ["y"] = 641592.00171429,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                     ["spans"] =
@@ -28021,13 +28021,13 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "Conventional_Circle_A",
                                         ["unitId"] = 817,
-                                        ["x"] = -294130.78171426,
-                                        ["y"] = 643899.62314287,
+                                        ["x"] = -297014.33142856,
+                                        ["y"] = 641592.00171429,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
-                                ["x"] = -294130.78171426,
-                                ["y"] = 643899.62314287,
+                                ["x"] = -297014.33142856,
+                                ["y"] = 641592.00171429,
                             }, -- end of [33]
                             [34] =
                             {
@@ -28060,8 +28060,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = -297284.34857143,
-                                            ["y"] = 640736.20485714,
+                                            ["x"] = -295259.71171428,
+                                            ["y"] = 641708.43,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                     ["spans"] =
@@ -28078,7 +28078,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["heading"] = 3.8397243543875,
+                                        ["heading"] = 4.2760566673861,
                                         ["name"] = "DictKey_UnitName_2694",
                                         ["playerCanDrive"] = false,
                                         ["skill"] = "Average",
@@ -28088,13 +28088,13 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "Strafe_Pit",
                                         ["unitId"] = 844,
-                                        ["x"] = -297284.34857143,
-                                        ["y"] = 640736.20485714,
+                                        ["x"] = -295259.71171428,
+                                        ["y"] = 641708.43,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
-                                ["x"] = -297284.34857143,
-                                ["y"] = 640736.20485714,
+                                ["x"] = -295259.71171428,
+                                ["y"] = 641708.43,
                             }, -- end of [34]
                         }, -- end of ["group"]
                     }, -- end of ["vehicle"]
@@ -45489,7 +45489,7 @@ mission =
                                         ["alt"] = 11999.976,
                                         ["alt_type"] = "BARO",
                                         ["callsign"] = 100,
-                                        ["heading"] = -0.32238315235153,
+                                        ["heading"] = -0.32238315235157,
                                         ["livery_id"] = "RF Air Force",
                                         ["name"] = "DictKey_UnitName_1548",
                                         ["onboard_num"] = "800",
@@ -45503,7 +45503,7 @@ mission =
                                             {
                                             }, -- end of ["pylons"]
                                         }, -- end of ["payload"]
-                                        ["psi"] = 0.32238315235153,
+                                        ["psi"] = 0.32238315235157,
                                         ["skill"] = "High",
                                         ["speed"] = 179.86111111111,
                                         ["type"] = "A-50",
@@ -46978,7 +46978,7 @@ mission =
                                         ["alt"] = 2000,
                                         ["alt_type"] = "BARO",
                                         ["callsign"] = 101,
-                                        ["heading"] = -0.33449528053025,
+                                        ["heading"] = -0.33449528053028,
                                         ["name"] = "DictKey_UnitName_1577",
                                         ["onboard_num"] = "801",
                                         ["payload"] =
@@ -46991,7 +46991,7 @@ mission =
                                             {
                                             }, -- end of ["pylons"]
                                         }, -- end of ["payload"]
-                                        ["psi"] = 0.33449528053025,
+                                        ["psi"] = 0.33449528053028,
                                         ["skill"] = "High",
                                         ["speed"] = 138.88888888889,
                                         ["type"] = "KC130",
@@ -47099,7 +47099,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 762067,
+    ["currentKey"] = 773355,
     ["date"] =
     {
         ["Day"] = 1,
@@ -50326,14 +50326,14 @@ mission =
         {
             ["artillery_commander"] =
             {
-                ["blue"] = 1,
+                ["blue"] = 4,
                 ["name"] = "ARTILLERY CMD",
                 ["neutrals"] = 0,
                 ["red"] = 1,
             }, -- end of ["artillery_commander"]
             ["forward_observer"] =
             {
-                ["blue"] = 1,
+                ["blue"] = 2,
                 ["name"] = "JTAC",
                 ["neutrals"] = 0,
                 ["red"] = 1,
@@ -50347,7 +50347,7 @@ mission =
             }, -- end of ["instructor"]
             ["observer"] =
             {
-                ["blue"] = 1,
+                ["blue"] = 2,
                 ["name"] = "OBSERVER",
                 ["neutrals"] = 0,
                 ["red"] = 1,
@@ -50356,9 +50356,9 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -397758.33028572,
-        ["centerY"] = 657818.79885714,
-        ["zoom"] = 685568,
+        ["centerX"] = -298042.14471427,
+        ["centerY"] = 639688.48685715,
+        ["zoom"] = 117087,
     }, -- end of ["map"]
     ["maxDictId"] = 2819,
     ["pictureFileNameB"] =
