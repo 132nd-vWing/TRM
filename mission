@@ -25377,6 +25377,86 @@ mission =
                                 ["x"] = -342645.09714285,
                                 ["y"] = 737573.48142856,
                             }, -- end of [179]
+                            [180] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 798,
+                                ["heading"] = 0.59341194567807,
+                                ["name"] = "DictKey_GroupName_2943",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -341342.03828571,
+                                            ["y"] = 737210.45371428,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 0.59341194567807,
+                                        ["name"] = "DictKey_GroupName_2943",
+                                        ["rate"] = 1,
+                                        ["type"] = "NTTR Target 62-61 DMPI 102",
+                                        ["unitId"] = 905,
+                                        ["x"] = -341342.03828571,
+                                        ["y"] = 737210.45371428,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -341342.03828571,
+                                ["y"] = 737210.45371428,
+                            }, -- end of [180]
+                            [181] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 799,
+                                ["heading"] = 5.3232542185827,
+                                ["name"] = "DictKey_GroupName_2946",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -341313.25285714,
+                                            ["y"] = 737394.54657142,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["heading"] = 5.3232542185827,
+                                        ["name"] = "DictKey_GroupName_2946",
+                                        ["rate"] = 1,
+                                        ["type"] = "NTTR Target 62-54 DMPI 419",
+                                        ["unitId"] = 906,
+                                        ["x"] = -341313.25285714,
+                                        ["y"] = 737394.54657142,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -341313.25285714,
+                                ["y"] = 737394.54657142,
+                            }, -- end of [181]
                         }, -- end of ["group"]
                     }, -- end of ["static"]
                     ["vehicle"] =
@@ -59412,7 +59492,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 884023,
+    ["currentKey"] = 886994,
     ["date"] =
     {
         ["Day"] = 1,
@@ -62669,11 +62749,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -342712.38285714,
-        ["centerY"] = 737627.19571428,
-        ["zoom"] = 1000,
+        ["centerX"] = -341351.07557142,
+        ["centerY"] = 737518.39085714,
+        ["zoom"] = 2343,
     }, -- end of ["map"]
-    ["maxDictId"] = 2942,
+    ["maxDictId"] = 2948,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
