@@ -20822,7 +20822,7 @@ mission =
                                         ["category"] = "Heliports",
                                         ["heading"] = 3.8571776469075,
                                         ["heliport_callsign_id"] = 1,
-                                        ["heliport_frequency"] = 127.5,
+                                        ["heliport_frequency"] = "127.8",
                                         ["heliport_modulation"] = 0,
                                         ["name"] = "DictKey_GroupName_1130",
                                         ["shape_name"] = "FARPS",
@@ -24772,8 +24772,8 @@ mission =
                                             ["name"] = "",
                                             ["speed"] = 0,
                                             ["type"] = "",
-                                            ["x"] = -333903.44085714,
-                                            ["y"] = 722091.602,
+                                            ["x"] = -333923.66628571,
+                                            ["y"] = 722391.98400001,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                 }, -- end of ["route"]
@@ -24787,12 +24787,12 @@ mission =
                                         ["shape_name"] = "H-Windsock_RW",
                                         ["type"] = "Windsock",
                                         ["unitId"] = 845,
-                                        ["x"] = -333903.44085714,
-                                        ["y"] = 722091.602,
+                                        ["x"] = -333923.66628571,
+                                        ["y"] = 722391.98400001,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
-                                ["x"] = -333903.44085714,
-                                ["y"] = 722091.602,
+                                ["x"] = -333923.66628571,
+                                ["y"] = 722391.98400001,
                             }, -- end of [165]
                             [166] =
                             {
@@ -25079,6 +25079,221 @@ mission =
                                 ["x"] = -285552.95999999,
                                 ["y"] = 683201.40599996,
                             }, -- end of [172]
+                            [173] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 789,
+                                ["heading"] = 0,
+                                ["name"] = "DictKey_GroupName_2911",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -333950.5234286,
+                                            ["y"] = 721963.19142855,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["canCargo"] = true,
+                                        ["category"] = "Cargos",
+                                        ["heading"] = 0,
+                                        ["mass"] = 2400,
+                                        ["name"] = "DictKey_GroupName_2911",
+                                        ["rate"] = 100,
+                                        ["shape_name"] = "fueltank_cargo",
+                                        ["type"] = "fueltank_cargo",
+                                        ["unitId"] = 894,
+                                        ["x"] = -333950.5234286,
+                                        ["y"] = 721963.19142855,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -333950.5234286,
+                                ["y"] = 721963.19142855,
+                            }, -- end of [173]
+                            [174] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 790,
+                                ["heading"] = 0,
+                                ["name"] = "DictKey_GroupName_2914",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -333930.19800003,
+                                            ["y"] = 721951.70314284,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["canCargo"] = true,
+                                        ["category"] = "Cargos",
+                                        ["heading"] = 0,
+                                        ["mass"] = 1200,
+                                        ["name"] = "DictKey_GroupName_2914",
+                                        ["rate"] = 100,
+                                        ["shape_name"] = "bw_container_cargo",
+                                        ["type"] = "container_cargo",
+                                        ["unitId"] = 895,
+                                        ["x"] = -333930.19800003,
+                                        ["y"] = 721951.70314284,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -333930.19800003,
+                                ["y"] = 721951.70314284,
+                            }, -- end of [174]
+                            [175] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 791,
+                                ["heading"] = 0,
+                                ["name"] = "DictKey_GroupName_2917",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -333950.5234286,
+                                            ["y"] = 721980.86571427,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["canCargo"] = true,
+                                        ["category"] = "Cargos",
+                                        ["heading"] = 0,
+                                        ["mass"] = 2400,
+                                        ["name"] = "DictKey_GroupName_2917",
+                                        ["rate"] = 100,
+                                        ["shape_name"] = "fueltank_cargo",
+                                        ["type"] = "fueltank_cargo",
+                                        ["unitId"] = 896,
+                                        ["x"] = -333950.5234286,
+                                        ["y"] = 721980.86571427,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -333950.5234286,
+                                ["y"] = 721980.86571427,
+                            }, -- end of [175]
+                            [176] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 792,
+                                ["heading"] = 0,
+                                ["name"] = "DictKey_GroupName_2920",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -333949.63971431,
+                                            ["y"] = 721998.53999998,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["canCargo"] = true,
+                                        ["category"] = "Cargos",
+                                        ["heading"] = 0,
+                                        ["mass"] = 2400,
+                                        ["name"] = "DictKey_GroupName_2920",
+                                        ["rate"] = 100,
+                                        ["shape_name"] = "fueltank_cargo",
+                                        ["type"] = "fueltank_cargo",
+                                        ["unitId"] = 897,
+                                        ["x"] = -333949.63971431,
+                                        ["y"] = 721998.53999998,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -333949.63971431,
+                                ["y"] = 721998.53999998,
+                            }, -- end of [176]
+                            [177] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 793,
+                                ["heading"] = 0,
+                                ["name"] = "DictKey_GroupName_2923",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -333908.98885717,
+                                            ["y"] = 721949.93571427,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["canCargo"] = true,
+                                        ["category"] = "Cargos",
+                                        ["heading"] = 0,
+                                        ["mass"] = 1200,
+                                        ["name"] = "DictKey_GroupName_2923",
+                                        ["rate"] = 100,
+                                        ["shape_name"] = "bw_container_cargo",
+                                        ["type"] = "container_cargo",
+                                        ["unitId"] = 898,
+                                        ["x"] = -333908.98885717,
+                                        ["y"] = 721949.93571427,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -333908.98885717,
+                                ["y"] = 721949.93571427,
+                            }, -- end of [177]
                         }, -- end of ["group"]
                     }, -- end of ["static"]
                     ["vehicle"] =
@@ -39581,7 +39796,7 @@ mission =
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["type"] = "T-72B",
+                                        ["type"] = "BTR-80",
                                         ["unitId"] = 426,
                                         ["x"] = -313173.03771429,
                                         ["y"] = 762779.50542857,
@@ -39661,7 +39876,7 @@ mission =
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["type"] = "T-72B",
+                                        ["type"] = "MTLB",
                                         ["unitId"] = 427,
                                         ["x"] = -313170.67485713,
                                         ["y"] = 762984.59742858,
@@ -52053,8 +52268,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["x"] = -316123.03980482,
-                                            ["y"] = 760479.76275374,
+                                            ["x"] = -316117.36764563,
+                                            ["y"] = 760476.10035413,
                                         }, -- end of [1]
                                         [2] =
                                         {
@@ -52139,103 +52354,103 @@ mission =
                                         {
                                             [1] =
                                             {
-                                                ["x"] = -316123.97923053,
-                                                ["y"] = 760478.64117118,
+                                                ["x"] = -316118.10743103,
+                                                ["y"] = 760474.90356731,
                                             }, -- end of [1]
                                             [2] =
                                             {
-                                                ["x"] = -316166.65254231,
-                                                ["y"] = 760504.68528627,
+                                                ["x"] = -316164.94709549,
+                                                ["y"] = 760503.7190498,
                                             }, -- end of [2]
                                             [3] =
                                             {
-                                                ["x"] = -316188.69870306,
-                                                ["y"] = 760516.46862233,
+                                                ["x"] = -316186.94907612,
+                                                ["y"] = 760515.58492069,
                                             }, -- end of [3]
                                             [4] =
                                             {
-                                                ["x"] = -316206.77657581,
-                                                ["y"] = 760525.01909783,
+                                                ["x"] = -316204.9860321,
+                                                ["y"] = 760524.2215533,
                                             }, -- end of [4]
                                             [5] =
                                             {
-                                                ["x"] = -316225.29078147,
-                                                ["y"] = 760532.57599791,
+                                                ["x"] = -316223.45630013,
+                                                ["y"] = 760531.88548937,
                                             }, -- end of [5]
                                             [6] =
                                             {
-                                                ["x"] = -316239.47339776,
-                                                ["y"] = 760537.45469136,
+                                                ["x"] = -316237.60565243,
+                                                ["y"] = 760536.85991192,
                                             }, -- end of [6]
                                             [7] =
                                             {
-                                                ["x"] = -316253.90433838,
-                                                ["y"] = 760541.53889679,
+                                                ["x"] = -316252.00507241,
+                                                ["y"] = 760541.05428329,
                                             }, -- end of [7]
                                             [8] =
                                             {
-                                                ["x"] = -316268.56138249,
-                                                ["y"] = 760544.71559062,
+                                                ["x"] = -316266.63455101,
+                                                ["y"] = 760544.35608923,
                                             }, -- end of [8]
                                             [9] =
                                             {
-                                                ["x"] = -316278.43848359,
-                                                ["y"] = 760546.27289162,
+                                                ["x"] = -316281.45471062,
+                                                ["y"] = 760546.65134953,
                                             }, -- end of [9]
                                             [10] =
                                             {
-                                                ["x"] = -316288.37981745,
-                                                ["y"] = 760547.34402223,
+                                                ["x"] = -316291.41129279,
+                                                ["y"] = 760547.56874506,
                                             }, -- end of [10]
                                             [11] =
                                             {
-                                                ["x"] = -316298.36300862,
-                                                ["y"] = 760547.90195063,
+                                                ["x"] = -316301.40209975,
+                                                ["y"] = 760547.96892584,
                                             }, -- end of [11]
                                             [12] =
                                             {
-                                                ["x"] = -316308.36187455,
-                                                ["y"] = 760547.94494019,
+                                                ["x"] = -316311.40048239,
+                                                ["y"] = 760547.85785715,
                                             }, -- end of [12]
                                             [13] =
                                             {
-                                                ["x"] = -316318.35026572,
-                                                ["y"] = 760547.48554257,
+                                                ["x"] = -316321.38082465,
+                                                ["y"] = 760547.24820665,
                                             }, -- end of [13]
                                             [14] =
                                             {
-                                                ["x"] = -316328.30412564,
-                                                ["y"] = 760546.53602146,
+                                                ["x"] = -316331.31962106,
+                                                ["y"] = 760546.15201183,
                                             }, -- end of [14]
                                             [15] =
                                             {
-                                                ["x"] = -316338.20064204,
-                                                ["y"] = 760545.10788043,
+                                                ["x"] = -316341.19439082,
+                                                ["y"] = 760544.58051431,
                                             }, -- end of [15]
                                             [16] =
                                             {
-                                                ["x"] = -316348.01829039,
-                                                ["y"] = 760543.21165445,
+                                                ["x"] = -316355.84014755,
+                                                ["y"] = 760541.35414027,
                                             }, -- end of [16]
                                             [17] =
                                             {
-                                                ["x"] = -316362.55124747,
-                                                ["y"] = 760539.51014436,
+                                                ["x"] = -316370.2243652,
+                                                ["y"] = 760537.11111098,
                                             }, -- end of [17]
                                             [18] =
                                             {
-                                                ["x"] = -316376.79070373,
-                                                ["y"] = 760534.80406192,
+                                                ["x"] = -316384.27794939,
+                                                ["y"] = 760531.87609108,
                                             }, -- end of [18]
                                             [19] =
                                             {
-                                                ["x"] = -316390.66769437,
-                                                ["y"] = 760529.11798365,
+                                                ["x"] = -316397.95390217,
+                                                ["y"] = 760525.7204233,
                                             }, -- end of [19]
                                             [20] =
                                             {
-                                                ["x"] = -316404.186699,
-                                                ["y"] = 760522.62233336,
+                                                ["x"] = -316406.86181145,
+                                                ["y"] = 760521.17959438,
                                             }, -- end of [20]
                                             [21] =
                                             {
@@ -54844,7 +55059,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["heading"] = 2.9960075041553,
+                                        ["heading"] = 2.9865082184395,
                                         ["name"] = "DictKey_UnitName_2854",
                                         ["playerCanDrive"] = false,
                                         ["skill"] = "Average",
@@ -54854,14 +55069,143 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["type"] = "BTR-80",
                                         ["unitId"] = 884,
-                                        ["x"] = -316123.03980482,
-                                        ["y"] = 760479.76275374,
+                                        ["x"] = -316117.36764563,
+                                        ["y"] = 760476.10035413,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
                                 ["visible"] = false,
-                                ["x"] = -316123.03980482,
-                                ["y"] = 760479.76275374,
+                                ["x"] = -316117.36764563,
+                                ["y"] = 760476.10035413,
                             }, -- end of [54]
+                            [55] =
+                            {
+                                ["groupId"] = 788,
+                                ["hidden"] = false,
+                                ["name"] = "DictKey_GroupName_2904",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["action"] = "Off Road",
+                                            ["alt"] = 1256,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["name"] = "DictKey_WptName_2906",
+                                            ["speed"] = 5.5555555555556,
+                                            ["speed_locked"] = true,
+                                            ["task"] =
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] =
+                                                {
+                                                    ["tasks"] =
+                                                    {
+                                                        [1] =
+                                                        {
+                                                            ["auto"] = true,
+                                                            ["enabled"] = true,
+                                                            ["id"] = "WrappedAction",
+                                                            ["number"] = 1,
+                                                            ["params"] =
+                                                            {
+                                                                ["action"] =
+                                                                {
+                                                                    ["id"] = "EPLRS",
+                                                                    ["params"] =
+                                                                    {
+                                                                        ["groupId"] = 10,
+                                                                        ["value"] = true,
+                                                                    }, -- end of ["params"]
+                                                                }, -- end of ["action"]
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [1]
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["x"] = -333928.23771428,
+                                            ["y"] = 722380.84114287,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                    ["spans"] =
+                                    {
+                                        [1] =
+                                        {
+                                            [1] =
+                                            {
+                                                ["x"] = -333765.89771431,
+                                                ["y"] = 722225.15799999,
+                                            }, -- end of [1]
+                                            [2] =
+                                            {
+                                                ["x"] = -333785.75800002,
+                                                ["y"] = 722425.57885713,
+                                            }, -- end of [2]
+                                        }, -- end of [1]
+                                    }, -- end of ["spans"]
+                                }, -- end of ["route"]
+                                ["start_time"] = 0,
+                                ["task"] = "Ground Nothing",
+                                ["taskSelected"] = true,
+                                ["tasks"] =
+                                {
+                                }, -- end of ["tasks"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["heading"] = 5.4977871437821,
+                                        ["name"] = "DictKey_UnitName_2905",
+                                        ["playerCanDrive"] = true,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "Hummer",
+                                        ["unitId"] = 891,
+                                        ["x"] = -333928.23771428,
+                                        ["y"] = 722380.84114287,
+                                    }, -- end of [1]
+                                    [2] =
+                                    {
+                                        ["heading"] = 0.4014257279587,
+                                        ["name"] = "DictKey_UnitName_2907",
+                                        ["playerCanDrive"] = false,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "M978 HEMTT Tanker",
+                                        ["unitId"] = 892,
+                                        ["x"] = -333901.952,
+                                        ["y"] = 722388.55542858,
+                                    }, -- end of [2]
+                                    [3] =
+                                    {
+                                        ["heading"] = 2.0769418098733,
+                                        ["name"] = "DictKey_UnitName_2908",
+                                        ["playerCanDrive"] = false,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "M 818",
+                                        ["unitId"] = 893,
+                                        ["x"] = -333929.09485714,
+                                        ["y"] = 722343.41257144,
+                                    }, -- end of [3]
+                                }, -- end of ["units"]
+                                ["visible"] = false,
+                                ["x"] = -333928.23771428,
+                                ["y"] = 722380.84114287,
+                            }, -- end of [55]
                         }, -- end of ["group"]
                     }, -- end of ["vehicle"]
                 }, -- end of [51]
@@ -58856,7 +59200,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 834166,
+    ["currentKey"] = 854725,
     ["date"] =
     {
         ["Day"] = 1,
@@ -62113,11 +62457,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -334278.88742859,
-        ["centerY"] = 722573.72457141,
-        ["zoom"] = 6778,
+        ["centerX"] = -327981.36028571,
+        ["centerY"] = 758788.8437143,
+        ["zoom"] = 800514,
     }, -- end of ["map"]
-    ["maxDictId"] = 2903,
+    ["maxDictId"] = 2928,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
@@ -62174,7 +62518,7 @@ mission =
         ["total"] = 0,
     }, -- end of ["result"]
     ["sortie"] = "DictKey_sortie_5",
-    ["start_time"] = 61200,
+    ["start_time"] = 64800,
     ["theatre"] = "Caucasus",
     ["trig"] =
     {
@@ -62798,10 +63142,10 @@ mission =
         ["atmosphere_type"] = 0,
         ["clouds"] =
         {
-            ["base"] = 300,
-            ["density"] = 0,
+            ["base"] = 5000,
+            ["density"] = 3,
             ["iprecptns"] = 0,
-            ["thickness"] = 200,
+            ["thickness"] = 1270,
         }, -- end of ["clouds"]
         ["cyclones"] =
         {
@@ -62813,9 +63157,9 @@ mission =
             ["thickness"] = 0,
             ["visibility"] = 25,
         }, -- end of ["fog"]
-        ["groundTurbulence"] = 0.6096,
+        ["groundTurbulence"] = 0.9144,
         ["name"] = "Winter, clean sky",
-        ["qnh"] = 760,
+        ["qnh"] = 760.476,
         ["season"] =
         {
             ["temperature"] = 18,
@@ -62829,18 +63173,18 @@ mission =
         {
             ["at2000"] =
             {
-                ["dir"] = 344,
+                ["dir"] = 291,
                 ["speed"] = 2.0616,
             }, -- end of ["at2000"]
             ["at8000"] =
             {
-                ["dir"] = 345,
-                ["speed"] = 3.0924,
+                ["dir"] = 240,
+                ["speed"] = 5.154,
             }, -- end of ["at8000"]
             ["atGround"] =
             {
-                ["dir"] = 347,
-                ["speed"] = 1.5462,
+                ["dir"] = 277,
+                ["speed"] = 2.0616,
             }, -- end of ["atGround"]
         }, -- end of ["wind"]
     }, -- end of ["weather"]
