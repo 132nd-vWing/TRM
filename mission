@@ -17007,11 +17007,11 @@ mission =
                                             ["ETA"] = 0,
                                             ["ETA_locked"] = true,
                                             ["action"] = "Turning Point",
-                                            ["alt"] = 2685,
+                                            ["alt"] = 12192,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_1554",
-                                            ["speed"] = 138.88888888889,
+                                            ["speed"] = 179.86111111111,
                                             ["speed_locked"] = true,
                                             ["task"] =
                                             {
@@ -17030,6 +17030,20 @@ mission =
                                                             {
                                                             }, -- end of ["params"]
                                                         }, -- end of [1]
+                                                        [2] =
+                                                        {
+                                                            ["auto"] = false,
+                                                            ["enabled"] = true,
+                                                            ["id"] = "Orbit",
+                                                            ["number"] = 2,
+                                                            ["params"] =
+                                                            {
+                                                                ["altitude"] = 12192,
+                                                                ["pattern"] = "Race-Track",
+                                                                ["speed"] = 179.86111111111,
+                                                                ["speedEdited"] = true,
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [2]
                                                     }, -- end of ["tasks"]
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
@@ -17039,14 +17053,14 @@ mission =
                                         }, -- end of [1]
                                         [2] =
                                         {
-                                            ["ETA"] = 496.22585411889,
+                                            ["ETA"] = 383.18598773657,
                                             ["ETA_locked"] = false,
                                             ["action"] = "Turning Point",
-                                            ["alt"] = 2454,
+                                            ["alt"] = 12192,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_1555",
-                                            ["speed"] = 138.88888888889,
+                                            ["speed"] = 179.86111111111,
                                             ["speed_locked"] = true,
                                             ["task"] =
                                             {
@@ -17074,7 +17088,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["alt"] = 2685,
+                                        ["alt"] = 12192,
                                         ["alt_type"] = "BARO",
                                         ["callsign"] =
                                         {
@@ -17099,7 +17113,7 @@ mission =
                                         }, -- end of ["payload"]
                                         ["psi"] = -0.16162135518296,
                                         ["skill"] = "High",
-                                        ["speed"] = 138.88888888889,
+                                        ["speed"] = 179.86111111111,
                                         ["type"] = "E-3A",
                                         ["unitId"] = 495,
                                         ["x"] = -473197.996,
@@ -17665,11 +17679,11 @@ mission =
                                             ["ETA"] = 0,
                                             ["ETA_locked"] = true,
                                             ["action"] = "Turning Point",
-                                            ["alt"] = 2000,
+                                            ["alt"] = 12192,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_1583",
-                                            ["speed"] = 138.88888888889,
+                                            ["speed"] = 179.86111111111,
                                             ["speed_locked"] = true,
                                             ["task"] =
                                             {
@@ -17688,6 +17702,20 @@ mission =
                                                             {
                                                             }, -- end of ["params"]
                                                         }, -- end of [1]
+                                                        [2] =
+                                                        {
+                                                            ["auto"] = false,
+                                                            ["enabled"] = true,
+                                                            ["id"] = "Orbit",
+                                                            ["number"] = 2,
+                                                            ["params"] =
+                                                            {
+                                                                ["altitude"] = 12192,
+                                                                ["pattern"] = "Race-Track",
+                                                                ["speed"] = 179.86111111111,
+                                                                ["speedEdited"] = true,
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [2]
                                                     }, -- end of ["tasks"]
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
@@ -17697,14 +17725,14 @@ mission =
                                         }, -- end of [1]
                                         [2] =
                                         {
-                                            ["ETA"] = 171.55220003187,
+                                            ["ETA"] = 362.26280203862,
                                             ["ETA_locked"] = false,
                                             ["action"] = "Turning Point",
-                                            ["alt"] = 2000,
+                                            ["alt"] = 12192,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_1584",
-                                            ["speed"] = 138.88888888889,
+                                            ["speed"] = 179.86111111111,
                                             ["speed_locked"] = true,
                                             ["task"] =
                                             {
@@ -17732,7 +17760,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["alt"] = 2000,
+                                        ["alt"] = 12192,
                                         ["alt_type"] = "BARO",
                                         ["callsign"] =
                                         {
@@ -17757,7 +17785,7 @@ mission =
                                         }, -- end of ["payload"]
                                         ["psi"] = -1.7866017742911,
                                         ["skill"] = "High",
-                                        ["speed"] = 138.88888888889,
+                                        ["speed"] = 179.86111111111,
                                         ["type"] = "E-3A",
                                         ["unitId"] = 501,
                                         ["x"] = -252331.25828571,
@@ -45287,11 +45315,11 @@ mission =
                                             ["ETA"] = 0,
                                             ["ETA_locked"] = true,
                                             ["action"] = "Turning Point",
-                                            ["alt"] = 2000,
+                                            ["alt"] = 11999.976,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_1549",
-                                            ["speed"] = 138.88888888889,
+                                            ["speed"] = 179.86111111111,
                                             ["speed_locked"] = true,
                                             ["task"] =
                                             {
@@ -45310,6 +45338,20 @@ mission =
                                                             {
                                                             }, -- end of ["params"]
                                                         }, -- end of [1]
+                                                        [2] =
+                                                        {
+                                                            ["auto"] = false,
+                                                            ["enabled"] = true,
+                                                            ["id"] = "Orbit",
+                                                            ["number"] = 2,
+                                                            ["params"] =
+                                                            {
+                                                                ["altitude"] = 11999.976,
+                                                                ["pattern"] = "Race-Track",
+                                                                ["speed"] = 179.86111111111,
+                                                                ["speedEdited"] = true,
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [2]
                                                     }, -- end of ["tasks"]
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
@@ -45319,7 +45361,7 @@ mission =
                                         }, -- end of [1]
                                         [2] =
                                         {
-                                            ["ETA"] = 581.61611385555,
+                                            ["ETA"] = 567.35720173631,
                                             ["ETA_locked"] = false,
                                             ["action"] = "Turning Point",
                                             ["alt"] = 12000,
@@ -45354,7 +45396,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["alt"] = 2000,
+                                        ["alt"] = 11999.976,
                                         ["alt_type"] = "BARO",
                                         ["callsign"] = 100,
                                         ["heading"] = -0.32194741979442,
@@ -45373,7 +45415,7 @@ mission =
                                         }, -- end of ["payload"]
                                         ["psi"] = 0.32194741979442,
                                         ["skill"] = "High",
-                                        ["speed"] = 138.88888888889,
+                                        ["speed"] = 179.86111111111,
                                         ["type"] = "A-50",
                                         ["unitId"] = 494,
                                         ["x"] = -450820.084,
@@ -46967,7 +47009,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 753595,
+    ["currentKey"] = 759239,
     ["date"] =
     {
         ["Day"] = 1,
@@ -50224,9 +50266,9 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -288629.11699998,
-        ["centerY"] = 683257.8217143,
-        ["zoom"] = 50941,
+        ["centerX"] = -403058.49985714,
+        ["centerY"] = 765726.40428571,
+        ["zoom"] = 1363591,
     }, -- end of ["map"]
     ["maxDictId"] = 2819,
     ["pictureFileNameB"] =
