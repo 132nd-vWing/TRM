@@ -8800,6 +8800,12 @@ mission =
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_1477",
+                                            ["properties"] =
+                                            {
+                                                ["addopt"] =
+                                                {
+                                                }, -- end of ["addopt"]
+                                            }, -- end of ["properties"]
                                             ["speed"] = 55.555555555556,
                                             ["speed_locked"] = true,
                                             ["task"] =
@@ -10242,6 +10248,12 @@ mission =
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_2759",
+                                            ["properties"] =
+                                            {
+                                                ["addopt"] =
+                                                {
+                                                }, -- end of ["addopt"]
+                                            }, -- end of ["properties"]
                                             ["speed"] = 55.555555555556,
                                             ["speed_locked"] = true,
                                             ["task"] =
@@ -10385,6 +10397,12 @@ mission =
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_2762",
+                                            ["properties"] =
+                                            {
+                                                ["addopt"] =
+                                                {
+                                                }, -- end of ["addopt"]
+                                            }, -- end of ["properties"]
                                             ["speed"] = 55.555555555556,
                                             ["speed_locked"] = true,
                                             ["task"] =
@@ -20792,8 +20810,8 @@ mission =
                                             ["name"] = "",
                                             ["speed"] = 0,
                                             ["type"] = "",
-                                            ["x"] = -333880.75857145,
-                                            ["y"] = 722335.43799998,
+                                            ["x"] = -333880.08914288,
+                                            ["y"] = 722327.29171427,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                 }, -- end of ["route"]
@@ -20810,12 +20828,12 @@ mission =
                                         ["shape_name"] = "FARPS",
                                         ["type"] = "FARP",
                                         ["unitId"] = 350,
-                                        ["x"] = -333880.75857145,
-                                        ["y"] = 722335.43799998,
+                                        ["x"] = -333880.08914288,
+                                        ["y"] = 722327.29171427,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
-                                ["x"] = -333880.75857145,
-                                ["y"] = 722335.43799998,
+                                ["x"] = -333880.08914288,
+                                ["y"] = 722327.29171427,
                             }, -- end of [67]
                             [68] =
                             {
@@ -24816,6 +24834,211 @@ mission =
                                 ["x"] = -284322.18457141,
                                 ["y"] = 683725.812,
                             }, -- end of [166]
+                            [167] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 782,
+                                ["heading"] = 2.3561944901923,
+                                ["name"] = "DictKey_GroupName_2875",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -314633.50742857,
+                                            ["y"] = 896289.15771429,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Warehouses",
+                                        ["heading"] = 2.3561944901923,
+                                        ["name"] = "DictKey_GroupName_2875",
+                                        ["rate"] = 100,
+                                        ["shape_name"] = "sklad",
+                                        ["type"] = "Warehouse",
+                                        ["unitId"] = 885,
+                                        ["x"] = -314633.50742857,
+                                        ["y"] = 896289.15771429,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -314633.50742857,
+                                ["y"] = 896289.15771429,
+                            }, -- end of [167]
+                            [168] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 783,
+                                ["heading"] = 5.7944931166212,
+                                ["name"] = "DictKey_GroupName_2878",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -318329.06600001,
+                                            ["y"] = 635462.49057143,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Warehouses",
+                                        ["heading"] = 5.7944931166212,
+                                        ["name"] = "DictKey_GroupName_2878",
+                                        ["rate"] = 100,
+                                        ["shape_name"] = "sklad",
+                                        ["type"] = "Warehouse",
+                                        ["unitId"] = 886,
+                                        ["x"] = -318329.06600001,
+                                        ["y"] = 635462.49057143,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -318329.06600001,
+                                ["y"] = 635462.49057143,
+                            }, -- end of [168]
+                            [169] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 784,
+                                ["heading"] = 3.682644721708,
+                                ["name"] = "DictKey_GroupName_2881",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -355641.36628572,
+                                            ["y"] = 617685.26685714,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Warehouses",
+                                        ["heading"] = 3.682644721708,
+                                        ["name"] = "DictKey_GroupName_2881",
+                                        ["rate"] = 100,
+                                        ["shape_name"] = "sklad",
+                                        ["type"] = "Warehouse",
+                                        ["unitId"] = 887,
+                                        ["x"] = -355641.36628572,
+                                        ["y"] = 617685.26685714,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -355641.36628572,
+                                ["y"] = 617685.26685714,
+                            }, -- end of [169]
+                            [170] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 785,
+                                ["heading"] = 3.682644721708,
+                                ["name"] = "DictKey_GroupName_2884",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -284702.85542858,
+                                            ["y"] = 682558.47028572,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Warehouses",
+                                        ["heading"] = 3.682644721708,
+                                        ["name"] = "DictKey_GroupName_2884",
+                                        ["rate"] = 100,
+                                        ["shape_name"] = "sklad",
+                                        ["type"] = "Warehouse",
+                                        ["unitId"] = 888,
+                                        ["x"] = -284702.85542858,
+                                        ["y"] = 682558.47028572,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -284702.85542858,
+                                ["y"] = 682558.47028572,
+                            }, -- end of [170]
+                            [171] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 786,
+                                ["heading"] = 3.682644721708,
+                                ["name"] = "DictKey_GroupName_2887",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = -280958.44400001,
+                                            ["y"] = 647157.19685714,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Warehouses",
+                                        ["heading"] = 3.682644721708,
+                                        ["name"] = "DictKey_GroupName_2887",
+                                        ["rate"] = 100,
+                                        ["shape_name"] = "sklad",
+                                        ["type"] = "Warehouse",
+                                        ["unitId"] = 889,
+                                        ["x"] = -280958.44400001,
+                                        ["y"] = 647157.19685714,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = -280958.44400001,
+                                ["y"] = 647157.19685714,
+                            }, -- end of [171]
                         }, -- end of ["group"]
                     }, -- end of ["static"]
                     ["vehicle"] =
@@ -46153,7 +46376,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["heading"] = 3.0211406540315,
+                                        ["heading"] = -3.0612019571935,
                                         ["name"] = "DictKey_UnitName_2834",
                                         ["playerCanDrive"] = false,
                                         ["skill"] = "Average",
@@ -48939,7 +49162,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["heading"] = 3.5208999647647,
+                                        ["heading"] = -2.7095288644093,
                                         ["name"] = "DictKey_UnitName_2839",
                                         ["playerCanDrive"] = false,
                                         ["skill"] = "Average",
@@ -51740,7 +51963,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["heading"] = 3.1391180734112,
+                                        ["heading"] = -2.8610614168825,
                                         ["name"] = "DictKey_UnitName_2849",
                                         ["playerCanDrive"] = false,
                                         ["skill"] = "Average",
@@ -54581,7 +54804,7 @@ mission =
                                 {
                                     [1] =
                                     {
-                                        ["heading"] = 2.6224298032835,
+                                        ["heading"] = 2.9960075041553,
                                         ["name"] = "DictKey_UnitName_2854",
                                         ["playerCanDrive"] = false,
                                         ["skill"] = "Average",
@@ -58593,7 +58816,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 790625,
+    ["currentKey"] = 819579,
     ["date"] =
     {
         ["Day"] = 1,
@@ -61850,11 +62073,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -316066.70228572,
-        ["centerY"] = 761467.908,
-        ["zoom"] = 6042,
+        ["centerX"] = -340345.1047143,
+        ["centerY"] = 739344.81657141,
+        ["zoom"] = 154663,
     }, -- end of ["map"]
-    ["maxDictId"] = 2862,
+    ["maxDictId"] = 2896,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
@@ -61918,20 +62141,24 @@ mission =
         ["actions"] =
         {
             [1] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2567\"));",
-            [2] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2718\")); mission.trig.func[2]=nil;",
-            [3] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2820\")); mission.trig.func[3]=nil;",
-            [4] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2722\")); mission.trig.func[4]=nil;",
-            [5] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2858\")); mission.trig.func[5]=nil;",
-            [6] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2701\")); mission.trig.func[6]=nil;",
+            [2] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2892\")); mission.trig.func[2]=nil;",
+            [3] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2894\")); mission.trig.func[3]=nil;",
+            [4] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2896\")); mission.trig.func[4]=nil;",
+            [5] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2820\")); mission.trig.func[5]=nil;",
+            [6] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2722\")); mission.trig.func[6]=nil;",
+            [7] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2858\")); mission.trig.func[7]=nil;",
+            [8] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2701\")); mission.trig.func[8]=nil;",
         }, -- end of ["actions"]
         ["conditions"] =
         {
             [1] = "return(true)",
-            [2] = "return(c_coalition_has_airdrome(2, 29) )",
-            [3] = "return(true)",
-            [4] = "return(true)",
+            [2] = "return(true)",
+            [3] = "return(c_time_after(1) )",
+            [4] = "return(c_time_after(5) )",
             [5] = "return(true)",
             [6] = "return(true)",
+            [7] = "return(true)",
+            [8] = "return(true)",
         }, -- end of ["conditions"]
         ["custom"] =
         {
@@ -61950,6 +62177,8 @@ mission =
             [4] = true,
             [5] = true,
             [6] = true,
+            [7] = true,
+            [8] = true,
         }, -- end of ["flag"]
         ["func"] =
         {
@@ -61958,6 +62187,8 @@ mission =
             [4] = "if mission.trig.conditions[4]() then mission.trig.actions[4]() end",
             [5] = "if mission.trig.conditions[5]() then mission.trig.actions[5]() end",
             [6] = "if mission.trig.conditions[6]() then mission.trig.actions[6]() end",
+            [7] = "if mission.trig.conditions[7]() then mission.trig.actions[7]() end",
+            [8] = "if mission.trig.conditions[8]() then mission.trig.actions[8]() end",
         }, -- end of ["func"]
         ["funcStartup"] =
         {
@@ -62027,9 +62258,9 @@ mission =
                 }, -- end of ["color"]
                 ["hidden"] = false,
                 ["name"] = "Blue aggressors",
-                ["radius"] = 3000,
-                ["x"] = -315596.18914286,
-                ["y"] = 896876.84828572,
+                ["radius"] = 3657.6,
+                ["x"] = -316023.06457143,
+                ["y"] = 896470.49571429,
                 ["zoneId"] = 2359,
             }, -- end of [4]
             [5] =
@@ -62128,6 +62359,118 @@ mission =
                 ["y"] = 740831.02285714,
                 ["zoneId"] = 4192,
             }, -- end of [10]
+            [11] =
+            {
+                ["color"] =
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["hidden"] = false,
+                ["name"] = "Kobuleti",
+                ["radius"] = 1524,
+                ["x"] = -318155.54085715,
+                ["y"] = 635690.45171428,
+                ["zoneId"] = 4358,
+            }, -- end of [11]
+            [12] =
+            {
+                ["color"] =
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["hidden"] = false,
+                ["name"] = "Kutaisi",
+                ["radius"] = 2438.4,
+                ["x"] = -285147.25685715,
+                ["y"] = 683697.77942856,
+                ["zoneId"] = 4359,
+            }, -- end of [12]
+            [13] =
+            {
+                ["color"] =
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["hidden"] = false,
+                ["name"] = "Senaki",
+                ["radius"] = 1524,
+                ["x"] = -281713.63857144,
+                ["y"] = 647270.4142857,
+                ["zoneId"] = 4360,
+            }, -- end of [13]
+            [14] =
+            {
+                ["color"] =
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["hidden"] = false,
+                ["name"] = "Batumi",
+                ["radius"] = 1524,
+                ["x"] = -355788.19685715,
+                ["y"] = 617454.9542857,
+                ["zoneId"] = 4361,
+            }, -- end of [14]
+            [15] =
+            {
+                ["color"] =
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["hidden"] = false,
+                ["name"] = "Farp London",
+                ["radius"] = 1524,
+                ["x"] = -333987.43342859,
+                ["y"] = 722196.09314284,
+                ["zoneId"] = 4362,
+            }, -- end of [15]
+            [16] =
+            {
+                ["color"] =
+                {
+                    [1] = 0,
+                    [2] = 0,
+                    [3] = 0,
+                    [4] = 0.14901960784314,
+                }, -- end of ["color"]
+                ["hidden"] = false,
+                ["name"] = "R1_Storage",
+                ["radius"] = 304.8,
+                ["x"] = -347452.58514288,
+                ["y"] = 654479.4482857,
+                ["zoneId"] = 4363,
+            }, -- end of [16]
+            [17] =
+            {
+                ["color"] =
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["hidden"] = false,
+                ["name"] = "T3B_Storage_CENTER",
+                ["radius"] = 1524,
+                ["x"] = -343599.41085716,
+                ["y"] = 738414.86828569,
+                ["zoneId"] = 4364,
+            }, -- end of [17]
         }, -- end of ["zones"]
     }, -- end of ["triggers"]
     ["trigrules"] =
@@ -62165,7 +62508,7 @@ mission =
                         [1] = "",
                         [2] = "",
                     }, -- end of ["ai_task"]
-                    ["file"] = "ResKey_Action_2718",
+                    ["file"] = "ResKey_Action_2892",
                     ["predicate"] = "a_do_script_file",
                 }, -- end of [1]
             }, -- end of ["actions"]
@@ -62174,16 +62517,67 @@ mission =
             ["predicate"] = "triggerOnce",
             ["rules"] =
             {
-                [1] =
-                {
-                    ["airdromelist"] = 29,
-                    ["coalitionlist"] = 2,
-                    ["predicate"] = "c_coalition_has_airdrome",
-                    ["zone"] = 2525,
-                }, -- end of [1]
             }, -- end of ["rules"]
         }, -- end of [2]
         [3] =
+        {
+            ["actions"] =
+            {
+                [1] =
+                {
+                    ["ai_task"] =
+                    {
+                        [1] = "",
+                        [2] = "",
+                    }, -- end of ["ai_task"]
+                    ["file"] = "ResKey_Action_2894",
+                    ["predicate"] = "a_do_script_file",
+                }, -- end of [1]
+            }, -- end of ["actions"]
+            ["comment"] = "MIST",
+            ["eventlist"] = "",
+            ["predicate"] = "triggerOnce",
+            ["rules"] =
+            {
+                [1] =
+                {
+                    ["coalitionlist"] = "red",
+                    ["predicate"] = "c_time_after",
+                    ["seconds"] = 1,
+                    ["zone"] = 2525,
+                }, -- end of [1]
+            }, -- end of ["rules"]
+        }, -- end of [3]
+        [4] =
+        {
+            ["actions"] =
+            {
+                [1] =
+                {
+                    ["ai_task"] =
+                    {
+                        [1] = "",
+                        [2] = "",
+                    }, -- end of ["ai_task"]
+                    ["file"] = "ResKey_Action_2896",
+                    ["predicate"] = "a_do_script_file",
+                }, -- end of [1]
+            }, -- end of ["actions"]
+            ["comment"] = "CTLD",
+            ["eventlist"] = "",
+            ["predicate"] = "triggerOnce",
+            ["rules"] =
+            {
+                [1] =
+                {
+                    ["coalitionlist"] = "red",
+                    ["predicate"] = "c_time_after",
+                    ["seconds"] = 5,
+                    ["zone"] = 2525,
+                }, -- end of [1]
+            }, -- end of ["rules"]
+        }, -- end of [4]
+        [5] =
         {
             ["actions"] =
             {
@@ -62204,8 +62598,8 @@ mission =
             ["rules"] =
             {
             }, -- end of ["rules"]
-        }, -- end of [3]
-        [4] =
+        }, -- end of [5]
+        [6] =
         {
             ["actions"] =
             {
@@ -62226,8 +62620,8 @@ mission =
             ["rules"] =
             {
             }, -- end of ["rules"]
-        }, -- end of [4]
-        [5] =
+        }, -- end of [6]
+        [7] =
         {
             ["actions"] =
             {
@@ -62248,8 +62642,8 @@ mission =
             ["rules"] =
             {
             }, -- end of ["rules"]
-        }, -- end of [5]
-        [6] =
+        }, -- end of [7]
+        [8] =
         {
             ["actions"] =
             {
@@ -62270,7 +62664,7 @@ mission =
             ["rules"] =
             {
             }, -- end of ["rules"]
-        }, -- end of [6]
+        }, -- end of [8]
     }, -- end of ["trigrules"]
     ["version"] = 14,
     ["weather"] =
