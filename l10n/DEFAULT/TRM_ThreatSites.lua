@@ -166,7 +166,7 @@ end
 
 
 
-Menu_Threat_Options = MENU_MISSION:New("Threat Sites")
+
 Menu_Threat_Options_Ranges = MENU_MISSION:New("Ranges", Menu_Threat_Options)
 Menu_Threat_Options_Ranges1_4 = MENU_MISSION:New("Threat Sites 1-4", Menu_Threat_Options_Ranges)
 Menu_Threat_Options_Ranges5_8 = MENU_MISSION:New("Threat Sites 5-8", Menu_Threat_Options_Ranges)
