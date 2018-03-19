@@ -28804,6 +28804,86 @@ mission =
                                 ["x"] = -320108.91142858,
                                 ["y"] = 720007.98000001,
                             }, -- end of [35]
+                            [36] =
+                            {
+                                ["groupId"] = 802,
+                                ["hidden"] = false,
+                                ["name"] = "DictKey_GroupName_2994",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["action"] = "Off Road",
+                                            ["alt"] = 1278,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["name"] = "DictKey_WptName_2996",
+                                            ["speed"] = 5.5555555555556,
+                                            ["speed_locked"] = true,
+                                            ["task"] =
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] =
+                                                {
+                                                    ["tasks"] =
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["x"] = -333747.28771429,
+                                            ["y"] = 721715.91685715,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                    ["spans"] =
+                                    {
+                                        [1] =
+                                        {
+                                            [1] =
+                                            {
+                                                ["x"] = -333766.26142858,
+                                                ["y"] = 721605.23685715,
+                                            }, -- end of [1]
+                                            [2] =
+                                            {
+                                                ["x"] = -334646.95800001,
+                                                ["y"] = 722557.08485715,
+                                            }, -- end of [2]
+                                        }, -- end of [1]
+                                    }, -- end of ["spans"]
+                                }, -- end of ["route"]
+                                ["start_time"] = 0,
+                                ["task"] = "Ground Nothing",
+                                ["taskSelected"] = true,
+                                ["tasks"] =
+                                {
+                                }, -- end of ["tasks"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["heading"] = 1.3788101090755,
+                                        ["name"] = "DictKey_UnitName_2995",
+                                        ["playerCanDrive"] = false,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "Soldier M249",
+                                        ["unitId"] = 909,
+                                        ["x"] = -333747.28771429,
+                                        ["y"] = 721715.91685715,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["visible"] = false,
+                                ["x"] = -333747.28771429,
+                                ["y"] = 721715.91685715,
+                            }, -- end of [36]
                         }, -- end of ["group"]
                     }, -- end of ["vehicle"]
                 }, -- end of [50]
@@ -55632,6 +55712,86 @@ mission =
                                 ["x"] = -320342.13142857,
                                 ["y"] = 719908.08714286,
                             }, -- end of [57]
+                            [58] =
+                            {
+                                ["groupId"] = 803,
+                                ["hidden"] = false,
+                                ["name"] = "DictKey_GroupName_2998",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["action"] = "Off Road",
+                                            ["alt"] = 1278,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["name"] = "DictKey_WptName_3000",
+                                            ["speed"] = 5.5555555555556,
+                                            ["speed_locked"] = true,
+                                            ["task"] =
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] =
+                                                {
+                                                    ["tasks"] =
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["x"] = -334346.54085715,
+                                            ["y"] = 722052.70028572,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                    ["spans"] =
+                                    {
+                                        [1] =
+                                        {
+                                            [1] =
+                                            {
+                                                ["x"] = -333766.26142858,
+                                                ["y"] = 721605.23685715,
+                                            }, -- end of [1]
+                                            [2] =
+                                            {
+                                                ["x"] = -334646.95800001,
+                                                ["y"] = 722557.08485715,
+                                            }, -- end of [2]
+                                        }, -- end of [1]
+                                    }, -- end of ["spans"]
+                                }, -- end of ["route"]
+                                ["start_time"] = 0,
+                                ["task"] = "Ground Nothing",
+                                ["taskSelected"] = true,
+                                ["tasks"] =
+                                {
+                                }, -- end of ["tasks"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["heading"] = 0,
+                                        ["name"] = "DictKey_UnitName_2999",
+                                        ["playerCanDrive"] = false,
+                                        ["skill"] = "Average",
+                                        ["transportable"] =
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["type"] = "Soldier M4 GRG",
+                                        ["unitId"] = 910,
+                                        ["x"] = -334346.54085715,
+                                        ["y"] = 722052.70028572,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["visible"] = false,
+                                ["x"] = -334346.54085715,
+                                ["y"] = 722052.70028572,
+                            }, -- end of [58]
                         }, -- end of ["group"]
                     }, -- end of ["vehicle"]
                 }, -- end of [51]
@@ -59626,7 +59786,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 960742,
+    ["currentKey"] = 966692,
     ["date"] =
     {
         ["Day"] = 1,
@@ -62883,11 +63043,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -347449.18042858,
-        ["centerY"] = 654880.90285715,
-        ["zoom"] = 3485,
+        ["centerX"] = -334061.55285715,
+        ["centerY"] = 722599.77485715,
+        ["zoom"] = 8312,
     }, -- end of ["map"]
-    ["maxDictId"] = 2993,
+    ["maxDictId"] = 3002,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
@@ -62958,8 +63118,9 @@ mission =
             [6] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2983\")); mission.trig.func[6]=nil;",
             [7] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2993\")); mission.trig.func[7]=nil;",
             [8] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2985\")); mission.trig.func[8]=nil;",
-            [9] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2988\")); mission.trig.func[9]=nil;",
-            [10] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2992\")); mission.trig.func[10]=nil;",
+            [9] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_3002\")); mission.trig.func[9]=nil;",
+            [10] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2988\")); mission.trig.func[10]=nil;",
+            [11] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2992\")); mission.trig.func[11]=nil;",
         }, -- end of ["actions"]
         ["conditions"] =
         {
@@ -62973,6 +63134,7 @@ mission =
             [8] = "return(c_time_after(5) )",
             [9] = "return(c_time_after(5) )",
             [10] = "return(c_time_after(5) )",
+            [11] = "return(c_time_after(5) )",
         }, -- end of ["conditions"]
         ["custom"] =
         {
@@ -62995,6 +63157,7 @@ mission =
             [8] = true,
             [9] = true,
             [10] = true,
+            [11] = true,
         }, -- end of ["flag"]
         ["func"] =
         {
@@ -63007,6 +63170,7 @@ mission =
             [8] = "if mission.trig.conditions[8]() then mission.trig.actions[8]() end",
             [9] = "if mission.trig.conditions[9]() then mission.trig.actions[9]() end",
             [10] = "if mission.trig.conditions[10]() then mission.trig.actions[10]() end",
+            [11] = "if mission.trig.conditions[11]() then mission.trig.actions[11]() end",
         }, -- end of ["func"]
         ["funcStartup"] =
         {
@@ -63584,6 +63748,35 @@ mission =
             {
                 [1] =
                 {
+                    ["ai_task"] =
+                    {
+                        [1] = "",
+                        [2] = "",
+                    }, -- end of ["ai_task"]
+                    ["file"] = "ResKey_Action_3002",
+                    ["predicate"] = "a_do_script_file",
+                }, -- end of [1]
+            }, -- end of ["actions"]
+            ["comment"] = "TRM_Range2B",
+            ["eventlist"] = "",
+            ["predicate"] = "triggerOnce",
+            ["rules"] =
+            {
+                [1] =
+                {
+                    ["coalitionlist"] = "red",
+                    ["predicate"] = "c_time_after",
+                    ["seconds"] = 5,
+                    ["zone"] = 2525,
+                }, -- end of [1]
+            }, -- end of ["rules"]
+        }, -- end of [9]
+        [10] =
+        {
+            ["actions"] =
+            {
+                [1] =
+                {
                     ["KeyDict_text"] = "DictKey_ActionText_2987",
                     ["ai_task"] =
                     {
@@ -63609,8 +63802,8 @@ mission =
                     ["zone"] = 2525,
                 }, -- end of [1]
             }, -- end of ["rules"]
-        }, -- end of [9]
-        [10] =
+        }, -- end of [10]
+        [11] =
         {
             ["actions"] =
             {
@@ -63638,7 +63831,7 @@ mission =
                     ["zone"] = 2525,
                 }, -- end of [1]
             }, -- end of ["rules"]
-        }, -- end of [10]
+        }, -- end of [11]
     }, -- end of ["trigrules"]
     ["version"] = 14,
     ["weather"] =
