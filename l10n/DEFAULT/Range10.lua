@@ -1,3 +1,6 @@
+BASE:TraceOnOff(true)
+BASE:TraceClass("RANGE")
+
  -- Strafe pits. Each pit can consist of multiple targets. Here we have two pits and each of the pits has two targets. These are names of the corresponding units defined in the ME.
  local Range10_Strafepit_Table={"Range10_Strafepit1", "Range10_Strafepit2"}
 
@@ -6,6 +9,7 @@
 
  -- Create a range object.
  local Range10=RANGE:New("Range 10")
+Range10:DebugON()
 Range10:SetMaxStrafeAlt(5000)
  -- Distance between foul line and strafe target. Note that this could also be done manually by simply measuring the distance between the target and the foul line in the ME.
  local Range10_Strafepit=UNIT:FindByName("Range10_Strafepit1")
@@ -23,4 +27,5 @@ Range10:SetMaxStrafeAlt(5000)
  Range10:AddBombingTargets(bombtargets_range10, 50)
 
  -- Start range.
+
  Range10:Start()

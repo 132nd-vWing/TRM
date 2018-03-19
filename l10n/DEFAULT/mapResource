@@ -1,6 +1,5 @@
 mapResource = 
 {
-    ["ResKey_Action_2701"] = "Range10.lua",
     ["ResKey_Action_2722"] = "Range1.lua",
     ["ResKey_Action_2858"] = "Range3.lua",
     ["ResKey_Action_2868"] = "beacon.ogg",
@@ -9,6 +8,7 @@ mapResource =
     ["ResKey_Action_2897"] = "beacon.ogg",
     ["ResKey_Action_2899"] = "beaconsilent.ogg",
     ["ResKey_Action_2903"] = "CTLD.lua",
-    ["ResKey_Action_2949"] = "Moose_.lua",
     ["ResKey_Action_2952"] = "ThreatSites.lua",
+    ["ResKey_Action_2953"] = "Moose_.lua",
+    ["ResKey_Action_2957"] = "Range10.lua",
 } -- end of mapResource
