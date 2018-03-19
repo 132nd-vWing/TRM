@@ -10674,9 +10674,10 @@ mission =
                                 ["communication"] = true,
                                 ["frequency"] = 124,
                                 ["groupId"] = 811,
-                                ["hidden"] = false,
+                                ["hidden"] = true,
                                 ["modulation"] = 0,
                                 ["name"] = "DictKey_GroupName_3032",
+                                ["radioSet"] = false,
                                 ["route"] =
                                 {
                                     ["points"] =
@@ -10780,9 +10781,10 @@ mission =
                                 ["communication"] = true,
                                 ["frequency"] = 127.5,
                                 ["groupId"] = 812,
-                                ["hidden"] = false,
+                                ["hidden"] = true,
                                 ["modulation"] = 0,
                                 ["name"] = "DictKey_GroupName_3035",
+                                ["radioSet"] = false,
                                 ["route"] =
                                 {
                                     ["points"] =
@@ -10877,9 +10879,10 @@ mission =
                                 ["communication"] = true,
                                 ["frequency"] = 251,
                                 ["groupId"] = 813,
-                                ["hidden"] = false,
+                                ["hidden"] = true,
                                 ["modulation"] = 0,
                                 ["name"] = "DictKey_GroupName_3039",
+                                ["radioSet"] = false,
                                 ["route"] =
                                 {
                                     ["points"] =
@@ -10971,9 +10974,10 @@ mission =
                                 ["communication"] = true,
                                 ["frequency"] = 124,
                                 ["groupId"] = 814,
-                                ["hidden"] = false,
+                                ["hidden"] = true,
                                 ["modulation"] = 0,
                                 ["name"] = "DictKey_GroupName_3042",
+                                ["radioSet"] = false,
                                 ["route"] =
                                 {
                                     ["points"] =
@@ -14072,9 +14076,10 @@ mission =
                                 ["communication"] = true,
                                 ["frequency"] = 251,
                                 ["groupId"] = 806,
-                                ["hidden"] = false,
+                                ["hidden"] = true,
                                 ["modulation"] = 0,
                                 ["name"] = "DictKey_GroupName_3016",
+                                ["radioSet"] = false,
                                 ["route"] =
                                 {
                                     ["points"] =
@@ -14203,11 +14208,12 @@ mission =
                             [22] =
                             {
                                 ["communication"] = true,
-                                ["frequency"] = 251,
+                                ["frequency"] = 305,
                                 ["groupId"] = 807,
-                                ["hidden"] = false,
+                                ["hidden"] = true,
                                 ["modulation"] = 0,
                                 ["name"] = "DictKey_GroupName_3019",
+                                ["radioSet"] = false,
                                 ["route"] =
                                 {
                                     ["points"] =
@@ -14298,9 +14304,10 @@ mission =
                                 ["communication"] = true,
                                 ["frequency"] = 243,
                                 ["groupId"] = 808,
-                                ["hidden"] = false,
+                                ["hidden"] = true,
                                 ["modulation"] = 0,
                                 ["name"] = "DictKey_GroupName_3023",
+                                ["radioSet"] = false,
                                 ["route"] =
                                 {
                                     ["points"] =
@@ -14415,11 +14422,12 @@ mission =
                             [24] =
                             {
                                 ["communication"] = true,
-                                ["frequency"] = 243,
+                                ["frequency"] = 251,
                                 ["groupId"] = 809,
-                                ["hidden"] = false,
+                                ["hidden"] = true,
                                 ["modulation"] = 0,
                                 ["name"] = "DictKey_GroupName_3026",
+                                ["radioSet"] = false,
                                 ["route"] =
                                 {
                                     ["points"] =
@@ -14529,11 +14537,12 @@ mission =
                             [25] =
                             {
                                 ["communication"] = true,
-                                ["frequency"] = 251,
+                                ["frequency"] = 124,
                                 ["groupId"] = 810,
-                                ["hidden"] = false,
+                                ["hidden"] = true,
                                 ["modulation"] = 0,
                                 ["name"] = "DictKey_GroupName_3029",
+                                ["radioSet"] = false,
                                 ["route"] =
                                 {
                                     ["points"] =
@@ -59342,6 +59351,51 @@ mission =
                             }, -- end of [1]
                         }, -- end of ["group"]
                     }, -- end of ["plane"]
+                    ["static"] =
+                    {
+                        ["group"] =
+                        {
+                            [1] =
+                            {
+                                ["dead"] = false,
+                                ["groupId"] = 815,
+                                ["heading"] = 0,
+                                ["name"] = "DictKey_GroupName_3045",
+                                ["route"] =
+                                {
+                                    ["points"] =
+                                    {
+                                        [1] =
+                                        {
+                                            ["action"] = "",
+                                            ["alt"] = 0,
+                                            ["formation_template"] = "",
+                                            ["name"] = "",
+                                            ["speed"] = 0,
+                                            ["type"] = "",
+                                            ["x"] = 11260.993714286,
+                                            ["y"] = 368225.26114286,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["units"] =
+                                {
+                                    [1] =
+                                    {
+                                        ["category"] = "Unarmed",
+                                        ["heading"] = 0,
+                                        ["name"] = "DictKey_GroupName_3045",
+                                        ["type"] = "ATZ-10",
+                                        ["unitId"] = 922,
+                                        ["x"] = 11260.993714286,
+                                        ["y"] = 368225.26114286,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["x"] = 11260.993714286,
+                                ["y"] = 368225.26114286,
+                            }, -- end of [1]
+                        }, -- end of ["group"]
+                    }, -- end of ["static"]
                     ["vehicle"] =
                     {
                         ["group"] =
@@ -60924,7 +60978,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 987853,
+    ["currentKey"] = 996898,
     ["date"] =
     {
         ["Day"] = 1,
@@ -64181,11 +64235,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = 11205.789714286,
-        ["centerY"] = 368088.288,
-        ["zoom"] = 6192,
+        ["centerX"] = -284968.6325,
+        ["centerY"] = 683146.92992857,
+        ["zoom"] = 5159,
     }, -- end of ["map"]
-    ["maxDictId"] = 3044,
+    ["maxDictId"] = 3047,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
