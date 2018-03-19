@@ -8387,6 +8387,7 @@ mission =
                                 ["frequency"] = 251,
                                 ["groupId"] = 272,
                                 ["hidden"] = false,
+                                ["lateActivation"] = true,
                                 ["modulation"] = 0,
                                 ["name"] = "DictKey_GroupName_873",
                                 ["radioSet"] = false,
@@ -8597,6 +8598,7 @@ mission =
                                             ["y"] = 664939.94228571,
                                         }, -- end of [5]
                                     }, -- end of ["points"]
+                                    ["routeRelativeTOT"] = true,
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "CAS",
@@ -14471,6 +14473,7 @@ mission =
                                 ["frequency"] = 251,
                                 ["groupId"] = 35,
                                 ["hidden"] = false,
+                                ["lateActivation"] = true,
                                 ["modulation"] = 0,
                                 ["name"] = "DictKey_GroupName_120",
                                 ["radioSet"] = false,
@@ -14681,6 +14684,7 @@ mission =
                                             ["y"] = 724727.16657142,
                                         }, -- end of [5]
                                     }, -- end of ["points"]
+                                    ["routeRelativeTOT"] = true,
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "CAS",
@@ -16125,6 +16129,7 @@ mission =
                                 ["frequency"] = 251,
                                 ["groupId"] = 93,
                                 ["hidden"] = false,
+                                ["lateActivation"] = true,
                                 ["modulation"] = 0,
                                 ["name"] = "DictKey_GroupName_322",
                                 ["radioSet"] = false,
@@ -16335,6 +16340,7 @@ mission =
                                             ["y"] = 753687.53742856,
                                         }, -- end of [5]
                                     }, -- end of ["points"]
+                                    ["routeRelativeTOT"] = true,
                                 }, -- end of ["route"]
                                 ["start_time"] = 0,
                                 ["task"] = "CAS",
@@ -59933,7 +59939,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 981543,
+    ["currentKey"] = 984788,
     ["date"] =
     {
         ["Day"] = 1,
@@ -63190,9 +63196,9 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -366417.27900001,
-        ["centerY"] = 701489.34085715,
-        ["zoom"] = 4117,
+        ["centerX"] = -349025.50942857,
+        ["centerY"] = 653059.63771429,
+        ["zoom"] = 13174,
     }, -- end of ["map"]
     ["maxDictId"] = 3015,
     ["pictureFileNameB"] =
