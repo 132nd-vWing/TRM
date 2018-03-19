@@ -59492,7 +59492,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 889937,
+    ["currentKey"] = 898766,
     ["date"] =
     {
         ["Day"] = 1,
@@ -62753,7 +62753,7 @@ mission =
         ["centerY"] = 643243.36457143,
         ["zoom"] = 7774,
     }, -- end of ["map"]
-    ["maxDictId"] = 2949,
+    ["maxDictId"] = 2952,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
@@ -62821,7 +62821,7 @@ mission =
             [3] = "a_out_sound_c(21, getValueResourceByKey(\"ResKey_Action_2897\"));a_out_sound_c(21, getValueResourceByKey(\"ResKey_Action_2899\")); mission.trig.func[3]=nil;",
             [4] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2894\")); mission.trig.func[4]=nil;",
             [5] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2903\")); mission.trig.func[5]=nil;",
-            [6] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2820\")); mission.trig.func[6]=nil;",
+            [6] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2952\")); mission.trig.func[6]=nil;",
             [7] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2722\")); mission.trig.func[7]=nil;",
             [8] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2858\")); mission.trig.func[8]=nil;",
             [9] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2701\")); mission.trig.func[9]=nil;",
@@ -63350,7 +63350,7 @@ mission =
                         [1] = "",
                         [2] = "",
                     }, -- end of ["ai_task"]
-                    ["file"] = "ResKey_Action_2820",
+                    ["file"] = "ResKey_Action_2952",
                     ["predicate"] = "a_do_script_file",
                 }, -- end of [1]
             }, -- end of ["actions"]
