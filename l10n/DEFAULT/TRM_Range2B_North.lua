@@ -1,4 +1,4 @@
---- Range 2B---
+--- Range 2B.2 (North)---
 
 -- ON DEMAND SPAWNING -- 
 BlueSpawnerR2B = UNIT:FindByName("BlueInfantryR2B")
@@ -143,7 +143,7 @@ MISC_SA19_vehicle_R2B:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR
 end
 -- ON DEMAND SPAWNING -- 
 
-Menu_Range_R2B = MENU_MISSION:New("Range 2B", Menu_Range_Options)
+Menu_Range_R2B = MENU_MISSION:New("Range 2B.2", Menu_Range_Options)
 spawn_menu_OD_R2B = MENU_MISSION:New("On Demand Spawning",Menu_Range_R2B)
 spawn_menu_OD_Recon_R2B = MENU_MISSION:New("On Demand - RECON",spawn_menu_OD_R2B)
 spawn_menu_OD_IFV_R2B = MENU_MISSION:New("On Demand - IFV",spawn_menu_OD_R2B)

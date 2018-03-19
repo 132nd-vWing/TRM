@@ -12,5 +12,6 @@ mapResource =
     ["ResKey_Action_2988"] = "TRM_Range3.lua",
     ["ResKey_Action_2992"] = "TRM_Range10.lua",
     ["ResKey_Action_2993"] = "TRM_Range1.lua",
-    ["ResKey_Action_3002"] = "TRM_Range2B.lua",
+    ["ResKey_Action_3014"] = "TRM_Range2B_North.lua",
+    ["ResKey_Action_3015"] = "TRM_Range2B_South.lua",
 } -- end of mapResource
