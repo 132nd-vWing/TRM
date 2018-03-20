@@ -18,3 +18,13 @@ Menu_Range_Options = MENU_MISSION:New("Range Options")
 -- Threat Options -- 
 Menu_Threat_Options = MENU_MISSION:New("Threat Sites")
 
+
+
+-- AWACS -- 
+SPAWN:New("BLUE AWACS #1"):InitLimit(1,0):InitRepeatOnEngineShutDown():SpawnScheduled(120,0)
+SPAWN:New("BLUE AWACS #2"):InitLimit(1,0):InitRepeatOnEngineShutDown():SpawnScheduled(120,0)
+SPAWN:New("RED AGGRESSOR AWACS"):InitLimit(1,0):InitRepeatOnEngineShutDown():SpawnScheduled(120,0)
+
+
+
+  
