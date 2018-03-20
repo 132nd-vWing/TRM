@@ -224,7 +224,7 @@ function SpawnTargets_R2A ()
 R2A_red_recon = SPAWN:New("R2A_red_recon"):InitRandomizeTemplate(R2A_table_red_recon):InitRandomizeRoute(3,0,100):Spawn()  
 R2A_red_IFV = SPAWN:New("R2A_red_IFV"):InitRandomizeTemplate(R2A_table_red_IFV):InitRandomizeRoute(3,0,100):Spawn()
 R2A_red_MBT = SPAWN:New("R2A_red_MBT"):InitRandomizeTemplate(R2A_table_red_MBT):InitRandomizeRoute(3,0,100):Spawn()
-R2A_red_AAA = SPAWN:New("R2A_red_AAA"):InitRandomizeTemplate(R2A_table_red_AAA):InitRandomizeRoute(3,0,100):Spawn()
+R2A_red_AAA = SPAWN:New("R2A_red_AAA"):InitRandomizeTemplate(R2A_table_red_AAA):InitRandomizeRoute(3,0,20):Spawn()
 R2A_red_misc = SPAWN:New("R2A_red_misc"):InitRandomizeTemplate(R2A_table_red_misc):InitRandomizeRoute(3,0,100):Spawn()
 -- RED Spawners
 -- BLUE Spawners

@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2018-03-18T11:17:15.0000000Z-d0283720990843c97122543b7aec6559e069aff9 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2018-03-20T11:16:27.0000000Z-fa1f56fda60fa62366d7dc1025ea435b5341ff14 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 env.setErrorMessageBoxEnabled(false)
 routines={}
@@ -2491,6 +2491,24 @@ end
 env.info(string.format("%6d(%6d)/%1s:%20s%05d.%s(%s)",LineCurrent,LineFrom,"E",self.ClassName,self.ClassID,Function,routines.utils.oneLineSerialize(Arguments)))
 else
 env.info(string.format("%1s:%20s%05d(%s)","E",self.ClassName,self.ClassID,routines.utils.oneLineSerialize(Arguments)))
+end
+end
+function BASE:I(Arguments)
+if BASE.Debug then
+local DebugInfoCurrent=BASE.Debug.getinfo(2,"nl")
+local DebugInfoFrom=BASE.Debug.getinfo(3,"l")
+local Function="function"
+if DebugInfoCurrent.name then
+Function=DebugInfoCurrent.name
+end
+local LineCurrent=DebugInfoCurrent.currentline
+local LineFrom=-1
+if DebugInfoFrom then
+LineFrom=DebugInfoFrom.currentline
+end
+env.info(string.format("%6d(%6d)/%1s:%20s%05d.%s(%s)",LineCurrent,LineFrom,"I",self.ClassName,self.ClassID,Function,routines.utils.oneLineSerialize(Arguments)))
+else
+env.info(string.format("%1s:%20s%05d(%s)","I",self.ClassName,self.ClassID,routines.utils.oneLineSerialize(Arguments)))
 end
 end
 do
@@ -5868,13 +5886,13 @@ ObjectNames=ObjectNames..ObjectName..", "
 end
 return ObjectNames
 end
-function SET_BASE:Flush()
+function SET_BASE:Flush(MasterObject)
 self:F3()
 local ObjectNames=""
 for ObjectName,Object in pairs(self.Set)do
 ObjectNames=ObjectNames..ObjectName..", "
 end
-self:E({"Objects in Set:",ObjectNames})
+self:I({MasterObject=MasterObject:GetClassNameAndID(),"Objects in Set:",ObjectNames})
 return ObjectNames
 end
 SET_GROUP={
@@ -8147,7 +8165,7 @@ local RoutePoint={}
 RoutePoint.x=self.x
 RoutePoint.y=self.z
 RoutePoint.action=Formation or""
-RoutePoint.speed=(Speed or 999)/3.6
+RoutePoint.speed=(Speed or 20)/3.6
 RoutePoint.speed_locked=true
 RoutePoint.task={}
 RoutePoint.task.id="ComboTask"
@@ -18667,6 +18685,7 @@ self.DetectRWR,
 self.DetectDLINK
 )
 self:T2({TargetIsDetected=TargetIsDetected,TargetIsVisible=TargetIsVisible,TargetLastTime=TargetLastTime,TargetKnowType=TargetKnowType,TargetKnowDistance=TargetKnowDistance,TargetLastPos=TargetLastPos,TargetLastVelocity=TargetLastVelocity})
+if Detection.visible==true then
 local DetectionAccepted=true
 local DetectedObjectName=DetectedObject:getName()
 local DetectedObjectType=DetectedObject:getTypeName()
@@ -18763,6 +18782,7 @@ DetectedUnits[DetectedObjectName]=DetectedUnit
 else
 if self.DetectedObjects[DetectedObjectName]then
 self.DetectedObjects[DetectedObjectName]=nil
+end
 end
 end
 end
@@ -20010,7 +20030,7 @@ if DetectedItem.DistanceRecce<=self.MaximumDistanceDesignations then
 if self.Designating[DesignateIndex]==nil then
 self.AttackSet:ForEachGroupAlive(
 function(AttackGroup)
-local DetectionText=self.Detection:DetectedItemReportSummary(DesignateIndex,AttackGroup):Text(", ")
+local DetectionText=self.Detection:DetectedItemReportSummary(DetectedItem,AttackGroup):Text(", ")
 self.CC:GetPositionable():MessageToGroup("Targets detected at \n"..DetectionText,10,AttackGroup,self.DesignateName)
 end
 )
@@ -20079,7 +20099,7 @@ end
 return self
 end
 function DESIGNATE:SetDesignateMenu()
-self.AttackSet:Flush()
+self.AttackSet:Flush(self)
 self.AttackSet:ForEachGroupAlive(
 function(AttackGroup)
 self.MenuDesignate=self.MenuDesignate or{}
@@ -24247,9 +24267,6 @@ self:AddTransition("*","Guard","Guarded")
 self:AddTransition("*","Empty","Empty")
 self:AddTransition({"Guarded","Empty"},"Attack","Attacked")
 self:AddTransition({"Guarded","Attacked","Empty"},"Capture","Captured")
-if not self.ScheduleStatusZone then
-self.ScheduleStatusZone=self:ScheduleRepeat(15,15,0.1,nil,self.StatusZone,self)
-end
 return self
 end
 function ZONE_CAPTURE_COALITION:onenterCaptured()
@@ -24343,6 +24360,19 @@ if State~="Captured"and self:IsCaptured()then
 self:Capture()
 end
 end
+function ZONE_CAPTURE_COALITION:Start(StartInterval,RepeatInterval)
+StartInterval=StartInterval or 15
+RepeatInterval=RepeatInterval or 15
+if self.ScheduleStatusZone then
+self:ScheduleStop(self.ScheduleStatusZone)
+end
+self.ScheduleStatusZone=self:ScheduleRepeat(StartInterval,RepeatInterval,0.1,nil,self.StatusZone,self)
+end
+function ZONE_CAPTURE_COALITION:Stop()
+if self.ScheduleStatusZone then
+self:ScheduleStop(self.ScheduleStatusZone)
+end
+end
 end
 AI_BALANCER={
 ClassName="AI_BALANCER",
@@ -24430,7 +24460,7 @@ else
 local PlayerInRange={Value=false}
 local RangeZone=ZONE_RADIUS:New('RangeZone',AIGroup:GetVec2(),self.ReturnThresholdRange)
 self:T2(RangeZone)
-_DATABASE:ForEachPlayer(
+_DATABASE:ForEachPlayerUnit(
 function(RangeTestUnit,RangeZone,AIGroup,PlayerInRange)
 self:T2({PlayerInRange,RangeTestUnit.UnitName,RangeZone.ZoneName})
 if RangeTestUnit:IsInZone(RangeZone)==true then
@@ -27806,6 +27836,7 @@ self.MissionPriority=MissionPriority
 self.MissionBriefing=MissionBriefing
 self.MissionCoalition=MissionCoalition
 self.Tasks={}
+self.TaskNumber=0
 self.PlayerNames={}
 self:SetStartState("IDLE")
 self:AddTransition("IDLE","Start","ENGAGED")
@@ -27829,7 +27860,7 @@ function MISSION:GetShortText()
 return string.format('Mission "%s"',self.Name)
 end
 function MISSION:JoinUnit(PlayerUnit,PlayerGroup)
-self:E({Mission=self:GetName(),PlayerUnit=PlayerUnit,PlayerGroup=PlayerGroup})
+self:I({Mission=self:GetName(),PlayerUnit=PlayerUnit,PlayerGroup=PlayerGroup})
 local PlayerUnitAdded=false
 for TaskID,Task in pairs(self:GetTasks())do
 local Task=Task
@@ -27911,7 +27942,7 @@ function MISSION:SetGroupAssigned(MissionGroup)
 local MissionName=self:GetName()
 local MissionGroupName=MissionGroup:GetName()
 self.AssignedGroups[MissionGroupName]=MissionGroup
-self:E(string.format("Mission %s is assigned to %s",MissionName,MissionGroupName))
+self:I(string.format("Mission %s is assigned to %s",MissionName,MissionGroupName))
 return self
 end
 function MISSION:ClearGroupAssignment(MissionGroup)
@@ -27962,17 +27993,20 @@ function MISSION:GetTask(TaskName)
 self:F({TaskName})
 return self.Tasks[TaskName]
 end
+function MISSION:GetNextTaskID(Task)
+self.TaskNumber=self.TaskNumber+1
+return self.TaskNumber
+end
 function MISSION:AddTask(Task)
 local TaskName=Task:GetTaskName()
-self:E({"==> Adding TASK ",MissionName=self:GetName(),TaskName=TaskName})
-self.Tasks[TaskName]=self.Tasks[TaskName]or{n=0}
+self:I({"==> Adding TASK ",MissionName=self:GetName(),TaskName=TaskName})
 self.Tasks[TaskName]=Task
 self:GetCommandCenter():SetMenu()
 return Task
 end
 function MISSION:RemoveTask(Task)
 local TaskName=Task:GetTaskName()
-self:E({"<== Removing TASK ",MissionName=self:GetName(),TaskName=TaskName})
+self:I({"<== Removing TASK ",MissionName=self:GetName(),TaskName=TaskName})
 self:F(TaskName)
 self.Tasks[TaskName]=self.Tasks[TaskName]or{n=0}
 self.Tasks[TaskName]=nil
@@ -27980,13 +28014,6 @@ Task=nil
 collectgarbage()
 self:GetCommandCenter():SetMenu()
 return nil
-end
-function MISSION:GetNextTaskID(Task)
-local TaskName=Task:GetTaskName()
-self:F(TaskName)
-self.Tasks[TaskName]=self.Tasks[TaskName]or{n=0}
-self.Tasks[TaskName].n=self.Tasks[TaskName].n+1
-return self.Tasks[TaskName].n
 end
 function MISSION:IsCOMPLETED()
 return self:Is("COMPLETED")

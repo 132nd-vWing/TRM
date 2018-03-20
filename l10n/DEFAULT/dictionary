@@ -30,6 +30,7 @@ end,{},3,5,10) \
     ["DictKey_ActionText_2986"] = "",
     ["DictKey_ActionText_2987"] = "",
     ["DictKey_ActionText_2991"] = "",
+    ["DictKey_ActionText_3331"] = "",
     ["DictKey_GroupName_6"] = "New Vehicle Group",
     ["DictKey_GroupName_9"] = "New Static Object",
     ["DictKey_GroupName_12"] = "New Static Object #001",
