@@ -8802,12 +8802,6 @@ mission =
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["name"] = "DictKey_WptName_1477",
-                                            ["properties"] =
-                                            {
-                                                ["addopt"] =
-                                                {
-                                                }, -- end of ["addopt"]
-                                            }, -- end of ["properties"]
                                             ["speed"] = 55.555555555556,
                                             ["speed_locked"] = true,
                                             ["task"] =
@@ -8821,8 +8815,8 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "TakeOffGround",
-                                            ["x"] = -285555.10399998,
-                                            ["y"] = 683162.3137143,
+                                            ["x"] = -285555.78921429,
+                                            ["y"] = 683164.69457143,
                                         }, -- end of [1]
                                     }, -- end of ["points"]
                                 }, -- end of ["route"]
@@ -8922,12 +8916,12 @@ mission =
                                         ["speed"] = 55.555555555556,
                                         ["type"] = "Mi-8MT",
                                         ["unitId"] = 462,
-                                        ["x"] = -285555.10399998,
-                                        ["y"] = 683162.3137143,
+                                        ["x"] = -285555.78921429,
+                                        ["y"] = 683164.69457143,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
-                                ["x"] = -285555.10399998,
-                                ["y"] = 683162.3137143,
+                                ["x"] = -285555.78921429,
+                                ["y"] = 683164.69457143,
                             }, -- end of [1]
                             [2] =
                             {
@@ -60978,7 +60972,7 @@ mission =
             [21] = 67,
         }, -- end of ["red"]
     }, -- end of ["coalitions"]
-    ["currentKey"] = 996898,
+    ["currentKey"] = 1002912,
     ["date"] =
     {
         ["Day"] = 1,
@@ -64235,11 +64229,11 @@ mission =
     }, -- end of ["groundControl"]
     ["map"] =
     {
-        ["centerX"] = -284968.6325,
-        ["centerY"] = 683146.92992857,
-        ["zoom"] = 5159,
+        ["centerX"] = -286566.90635714,
+        ["centerY"] = 696216.60971429,
+        ["zoom"] = 174522,
     }, -- end of ["map"]
-    ["maxDictId"] = 3047,
+    ["maxDictId"] = 3048,
     ["pictureFileNameB"] =
     {
     }, -- end of ["pictureFileNameB"]
@@ -64313,7 +64307,7 @@ mission =
             [9] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_3014\")); mission.trig.func[9]=nil;",
             [10] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_3015\")); mission.trig.func[10]=nil;",
             [11] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2988\")); mission.trig.func[11]=nil;",
-            [12] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_2992\")); mission.trig.func[12]=nil;",
+            [12] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_3048\")); mission.trig.func[12]=nil;",
         }, -- end of ["actions"]
         ["conditions"] =
         {
@@ -65039,7 +65033,7 @@ mission =
                         [1] = "",
                         [2] = "",
                     }, -- end of ["ai_task"]
-                    ["file"] = "ResKey_Action_2992",
+                    ["file"] = "ResKey_Action_3048",
                     ["predicate"] = "a_do_script_file",
                 }, -- end of [1]
             }, -- end of ["actions"]
