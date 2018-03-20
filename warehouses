@@ -428,7 +428,7 @@ warehouses =
             ["aircrafts"] =
             {
             }, -- end of ["aircrafts"]
-            ["coalition"] = "NEUTRAL",
+            ["coalition"] = "BLUE",
             ["diesel"] =
             {
                 ["InitFuel"] = 100,
