@@ -8,10 +8,9 @@ mapResource =
     ["ResKey_Action_2953"] = "Moose_.lua",
     ["ResKey_Action_2978"] = "TRM_Config.lua",
     ["ResKey_Action_2983"] = "TRM_ThreatSites.lua",
-    ["ResKey_Action_2985"] = "TRM_Range2A.lua",
     ["ResKey_Action_2988"] = "TRM_Range3.lua",
     ["ResKey_Action_2993"] = "TRM_Range1.lua",
-    ["ResKey_Action_3014"] = "TRM_Range2B_North.lua",
-    ["ResKey_Action_3015"] = "TRM_Range2B_South.lua",
-    ["ResKey_Action_3048"] = "TRM_Range10.lua",
+    ["ResKey_Action_3174"] = "TRM_Range2B.lua",
+    ["ResKey_Action_3185"] = "TRM_Range10.lua",
+    ["ResKey_Action_3206"] = "TRM_Range2A.lua",
 } -- end of mapResource

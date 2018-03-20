@@ -32,21 +32,23 @@ Range10:SetMaxStrafeAlt(5000)
  Range10:AddBombingTargets(bombtargets_range10, 50)
 
  -- Start range.
+birthEventandler = EVENTHANDLER:New()
+birthEventandler:HandleEvent(EVENTS.Birth)
 
+slotChangeHandler = EVENTHANDLER:New()
+slotChangeHandler:HandleEvent(EVENTS.PlayerEnterUnit)
+function slotChangeHandler:OnEventPlayerEnterUnit(EventData)
+  BASE:F({EventData})
+  -- Get Group Name
+  local birhtGroup = EventData.IniGroup --Wrapper.Group#GROUP
+  local playerName = birhtGroup:GetPlayerName()
+  if playerName ~= nil then -- We have got a player
+    MESSAGE:New("Hello " .. playerName .."\nHow are you? Welcome to this mission" ,20,"Welcome"):ToGroup(birhtGroup)
+    Range10:_AddF10Commands(EventData.IniUnitName)
+  end
+end
 
 
 
 Range10:Start()
  
-birthEventandler = EVENTHANDLER:New()
-birthEventandler:HandleEvent(EVENTS.Birth)
-
-function birthEventandler:OnEventBirth(EventData)
-  BASE:F({EventData})
-  -- Get Group Name
-  local birhtGroup = EventData.IniGroup --Wrapper.Group#GROUP
-  local playerName = birhtGroup:GetPlayerName()
-    if playerName ~= nil then -- We have got a player
-   Range10:_AddF10Commands(EventData.IniUnitName)
-  end
-end
