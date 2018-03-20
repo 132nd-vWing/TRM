@@ -708,7 +708,7 @@ warehouses =
             ["suppliers"] = 
             {
             }, -- end of ["suppliers"]
-            ["coalition"] = "BLUE",
+            ["coalition"] = "RED",
             ["jet_fuel"] = 
             {
                 ["InitFuel"] = 100,
