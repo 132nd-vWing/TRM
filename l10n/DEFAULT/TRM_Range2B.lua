@@ -146,6 +146,7 @@ end
 Menu_Range_R2 = MENU_MISSION:New("Range 2B", Menu_Range_Options)
 Menu_Range_R2B = MENU_MISSION:New("Range 2B.2", Menu_Range_R2)
 spawn_menu_OD_R2B = MENU_MISSION:New("On Demand Spawning",Menu_Range_R2B)
+
 spawn_menu_OD_Recon_R2B = MENU_MISSION:New("On Demand - RECON",spawn_menu_OD_R2B)
 spawn_menu_OD_IFV_R2B = MENU_MISSION:New("On Demand - IFV",spawn_menu_OD_R2B)
 spawn_menu_OD_IFV_R2B_BMP2 = MENU_MISSION:New("On Demand - IFV - BMP2",spawn_menu_OD_IFV_R2B)
@@ -401,6 +402,48 @@ local menu_ON_DEMAND_4_MISC_MLRS_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("S
 local menu_ON_DEMAND_4_MISC_SA13_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn SA13 Vehicle",spawn_menu_OD_MISC_R2B_SOUTH,_ON_DEMAND_4_MISC_SA13_vehicle_R2B_SOUTH)
 local menu_ON_DEMAND_4_MISC_SA19_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn SA19 Vehicle",spawn_menu_OD_MISC_R2B_SOUTH,_ON_DEMAND_4_MISC_SA19_vehicle_R2B_SOUTH)
 
+
+-- Range Auto Setup -- 
+
+-- RED TABLE
+R2B_2_table_red_recon = { "Template 8.3: Recon platoon", "Template 8.2: Recon section", "Template 8.1: Recon vehicle" } -- table for the red recon
+R2B_2_table_red_IFV = { "Template 9.3: IFV platoon", "Template 9.2: IFV section", "Template 9.1: IFV vehicle" } -- table for the red IFV
+R2B_2_table_red_MBT = { "Template 10.3: MBT platoon", "Template 10.2: MBT section", "Template 10.1: MBT vehicle" } -- table for the red MBT
+R2B_2_table_red_AAA = { "Template 11.1: AAA vehicle", "Template 11.2 AAA vehicle on Ural", "Template 11.3 AAA vehicle with support", "Template 12.1: SA-13 vehicle" } -- table for the red AAA
+R2B_2_table_red_misc = { "Template 13.1: logistics vehicle", "Template 13.2: logistics section", "Template 14.1: C2 vehicle", "Template 15.1: Artillery vehicle", "Template 15.2: Artillery section" } -- table for the red misc
+-- RED TABLE
+
+
+-- BLUE Table
+R2B_2_table_blue_recon = { "Template 1.1: Recon vehicle", "Template 1.2: Recon section", "Template 1.3: Recon platoon" } -- table for the blue recon
+R2B_2_table_blue_IFV = { "Template 2.1: IFV vehicle", "Template 2.2: IFV section", "Template 2.3: IFV platoon" } -- table for the blue IFV
+R2B_2_table_blue_MBT = { "Template 3.1: MBT vehicle", "Template 3.2: MBT section", "Template 3.3: MBT platoon" } -- table for the blue MBT 
+-- BLUE Table
+
+-- random setup for Range 2A.1
+function SpawnTargets_R2B_2 ()
+-- RED Spawners
+R2B_2_red_recon = SPAWN:New("R2B_2_red_recon"):InitRandomizeTemplate(R2B_2_table_red_recon):InitRandomizeRoute(3,0,100):Spawn()  
+R2B_2_red_IFV = SPAWN:New("R2B_2_red_IFV"):InitRandomizeTemplate(R2B_2_table_red_IFV):InitRandomizeRoute(3,0,100):Spawn()
+R2B_2_red_MBT = SPAWN:New("R2B_2_red_MBT"):InitRandomizeTemplate(R2B_2_table_red_MBT):InitRandomizeRoute(3,0,100):Spawn()
+R2B_2_red_AAA = SPAWN:New("R2B_2_red_AAA"):InitRandomizeTemplate(R2B_2_table_red_AAA):InitRandomizeRoute(3,0,20):Spawn()
+R2B_2_red_misc = SPAWN:New("R2B_2_red_misc"):InitRandomizeTemplate(R2B_2_table_red_misc):InitRandomizeRoute(3,0,100):Spawn()
+-- RED Spawners
+-- BLUE Spawners
+R2B_2_blue_recon = SPAWN:New("R2B_2_blue_recon"):InitRandomizeTemplate(R2B_2_table_blue_recon):InitRandomizeRoute(3,0,100):Spawn()
+R2B_2_blue_IFV = SPAWN:New("R2B_2_blue_IFV"):InitRandomizeTemplate(R2B_2_table_blue_IFV):InitRandomizeRoute(3,0,100):Spawn()
+R2B_2_blue_MBT = SPAWN:New("R2B_2_blue_MBT"):InitRandomizeTemplate(R2B_2_table_blue_MBT):InitRandomizeRoute(3,0,100):Spawn()
+-- BLUE Spawners
+spawn_menu_R2B_2:Remove()
+end
+
+spawn_menu_R2B_2 = MENU_MISSION_COMMAND:New("Set up Range 2B.2 dynamically",Menu_Range_R2B,SpawnTargets_R2B_2)
+
+-- random setup for Range 2A.1
+
+
+
+-- Range Auto Setup -- 
 
   
   
