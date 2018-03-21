@@ -209,8 +209,13 @@ ctld.transportPilotNames = {
 -- Use any of the predefined names or set your own ones
 
 ctld.extractableGroups = {
-    "extract1",
-
+    "JTAC T1.1",
+    "JTAC T1.2",
+    "JTAC T1.3",
+    "JTAC T2A.1",
+    "JTAC T2A.4",
+    "JTAC T2B.5",
+    
 }
 
 -- ************** Logistics UNITS FOR CRATE SPAWNING ******************
