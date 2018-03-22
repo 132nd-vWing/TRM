@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2018-03-22T05:20:57.0000000Z-d0886b9596fde9579ddda6588069455822f4f56a ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2018-03-22T18:47:05.0000000Z-b2ffb4daaa2d6c2c64610e2d2a71c1e02efb2645 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 env.setErrorMessageBoxEnabled(false)
 routines={}
@@ -23197,6 +23197,7 @@ scorebombdistance=1000,
 TdelaySmoke=3.0,
 eventmoose=true,
 }
+RANGE.MenuF10={}
 RANGE.id="RANGE | "
 RANGE.version="1.0.1"
 function RANGE:New(rangename)
@@ -23464,14 +23465,17 @@ end
 end
 function RANGE:OnEventHit(EventData)
 self:F({eventhit=EventData})
-local _unitName=EventData.IniUnitName
-local _unit,_playername=self:_GetPlayerUnitAndName(_unitName)
-local _unitID=_unit:GetID()
-local target=EventData.TgtUnit
-local targetname=EventData.TgtUnitName
 self:T3(RANGE.id.."HIT: Ini unit   = "..tostring(EventData.IniUnitName))
 self:T3(RANGE.id.."HIT: Ini group  = "..tostring(EventData.IniGroupName))
 self:T3(RANGE.id.."HIT: Tgt target = "..tostring(EventData.TgtUnitName))
+local _unitName=EventData.IniUnitName
+local _unit,_playername=self:_GetPlayerUnitAndName(_unitName)
+if _unit==nil or _playername==nil then
+return
+end
+local _unitID=_unit:GetID()
+local target=EventData.TgtUnit
+local targetname=EventData.TgtUnitName
 local _currentTarget=self.strafeStatus[_unitID]
 if _currentTarget then
 local playerPos=_unit:GetCoordinate()
@@ -23866,8 +23870,10 @@ local _gid=group:GetID()
 if group and _gid then
 if not self.MenuAddedTo[_gid]then
 self.MenuAddedTo[_gid]=true
-local _rootPath=missionCommands.addSubMenuForGroup(_gid,"On the Range")
-local _rangePath=missionCommands.addSubMenuForGroup(_gid,self.rangename,_rootPath)
+if RANGE.MenuF10[_gid]==nil then
+RANGE.MenuF10[_gid]=missionCommands.addSubMenuForGroup(_gid,"On the Range")
+end
+local _rangePath=missionCommands.addSubMenuForGroup(_gid,self.rangename,RANGE.MenuF10[_gid])
 local _statsPath=missionCommands.addSubMenuForGroup(_gid,"Statistics",_rangePath)
 local _markPath=missionCommands.addSubMenuForGroup(_gid,"Mark Targets",_rangePath)
 local _settingsPath=missionCommands.addSubMenuForGroup(_gid,"My Settings",_rangePath)
