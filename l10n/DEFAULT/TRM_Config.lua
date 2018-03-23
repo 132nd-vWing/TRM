@@ -30,8 +30,8 @@ FARP_Kutaisi = STATIC:FindByName("Windsock_KUTAISI_FARP",true)
 FARP_Kutaisi_Radio = FARP_Kutaisi:GetBeacon()
 FARP_Kutaisi_Radio:RadioBeacon("beacon.ogg",114.166,radio.modulation.AM,150)
 
-FARP_Kutaisi = STATIC:FindByName("Windsock_FARP_LONDON",true)
-FARP_Kutaisi_Radio = FARP_Kutaisi:GetBeacon()
-FARP_Kutaisi_Radio:RadioBeacon("beacon.ogg",114.333,radio.modulation.AM,150)
+FARP_London = STATIC:FindByName("Windsock_FARP_LONDON",true)
+FARP_London_Radio = FARP_London:GetBeacon()
+FARP_London_Radio:RadioBeacon("beacon.ogg",114.333,radio.modulation.AM,150)
 
   
