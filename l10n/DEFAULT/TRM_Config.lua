@@ -25,6 +25,13 @@ SPAWN:New("BLUE AWACS #1"):InitLimit(1,0):InitRepeatOnEngineShutDown():SpawnSche
 SPAWN:New("BLUE AWACS #2"):InitLimit(1,0):InitRepeatOnEngineShutDown():SpawnScheduled(120,0)
 SPAWN:New("RED AGGRESSOR AWACS"):InitLimit(1,0):InitRepeatOnEngineShutDown():SpawnScheduled(120,0)
 
+-- Beacons for the Mi-8 -- 
+FARP_Kutaisi = STATIC:FindByName("Windsock_KUTAISI_FARP",true)
+FARP_Kutaisi_Radio = FARP_Kutaisi:GetBeacon()
+FARP_Kutaisi_Radio:RadioBeacon("beacon.ogg",114.166,radio.modulation.AM,150)
 
+FARP_Kutaisi = STATIC:FindByName("Windsock_FARP_LONDON",true)
+FARP_Kutaisi_Radio = FARP_Kutaisi:GetBeacon()
+FARP_Kutaisi_Radio:RadioBeacon("beacon.ogg",114.333,radio.modulation.AM,150)
 
   
