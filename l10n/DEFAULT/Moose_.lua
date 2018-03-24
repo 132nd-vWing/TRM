@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2018-03-22T18:47:05.0000000Z-b2ffb4daaa2d6c2c64610e2d2a71c1e02efb2645 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2018-03-22T18:59:26.0000000Z-0af967058f7beb76e27430307aeab3353e35da55 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 env.setErrorMessageBoxEnabled(false)
 routines={}
@@ -19868,6 +19868,7 @@ self.Designating={}
 self:SetDesignateName()
 self.LaseDuration=60
 self:SetFlashStatusMenu(false)
+self:SetFlashDetectionMessages(true)
 self:SetMission(Mission)
 self:SetLaserCodes({1688,1130,4785,6547,1465,4578})
 self:SetAutoLase(false,false)
@@ -19888,6 +19889,15 @@ self.FlashStatusMenu={}
 self.AttackSet:ForEachGroupAlive(
 function(AttackGroup)
 self.FlashStatusMenu[AttackGroup]=FlashMenu
+end
+)
+return self
+end
+function DESIGNATE:SetFlashDetectionMessages(FlashDetectionMessage)
+self.FlashDetectionMessage={}
+self.AttackSet:ForEachGroupAlive(
+function(AttackGroup)
+self.FlashDetectionMessage[AttackGroup]=FlashDetectionMessage
 end
 )
 return self
@@ -20028,8 +20038,10 @@ if DetectedItem.DistanceRecce<=self.MaximumDistanceDesignations then
 if self.Designating[DesignateIndex]==nil then
 self.AttackSet:ForEachGroupAlive(
 function(AttackGroup)
+if self.FlashDetectionMessage[AttackGroup]==true then
 local DetectionText=self.Detection:DetectedItemReportSummary(DetectedItem,AttackGroup):Text(", ")
 self.CC:GetPositionable():MessageToGroup("Targets detected at \n"..DetectionText,10,AttackGroup,self.DesignateName)
+end
 end
 )
 self.Designating[DesignateIndex]=""
