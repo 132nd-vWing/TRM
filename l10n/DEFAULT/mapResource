@@ -16,5 +16,5 @@ mapResource =
     ["ResKey_Action_3975"] = "beacon.ogg",
     ["ResKey_Action_3976"] = "beacon.ogg",
     ["ResKey_Action_3985"] = "TRM_Config.lua",
-    ["ResKey_Action_3986"] = "Moose_.lua",
+    ["ResKey_Action_3987"] = "Moose_.lua",
 } -- end of mapResource
