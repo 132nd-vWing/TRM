@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2018-03-27T22:06:29.0000000Z-7b31b172a2b43b74be6da9e74d13f0720163c8f3 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2018-03-30T09:33:13.0000000Z-f646bb8e942c433161d37d45eb4dd1d8ffdbc8e2 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 env.setErrorMessageBoxEnabled(false)
 routines={}
@@ -23548,7 +23548,7 @@ eventmoose=true,
 }
 RANGE.MenuF10={}
 RANGE.id="RANGE | "
-RANGE.version="1.0.1"
+RANGE.version="1.0.2"
 function RANGE:New(rangename)
 BASE:F({rangename=rangename})
 local self=BASE:Inherit(self,BASE:New())
@@ -24170,6 +24170,7 @@ self.strafeStatus[_unitID]=nil
 local _msg=string.format("%s left strafing zone %s too quickly. No Score.",_playername,_currentStrafeRun.zone.name)
 self:_DisplayMessageToGroup(_unit,_msg,nil,true)
 else
+local _ammo=self:_GetAmmo(_unitName)
 local _result=self.strafeStatus[_unitID]
 if _result.hits>=_result.zone.goodPass*2 then
 _result.text="EXCELLENT PASS"
@@ -24180,7 +24181,15 @@ _result.text="INEFFECTIVE PASS"
 else
 _result.text="POOR PASS"
 end
+local shots=_result.ammo-_ammo
+local accur=0
+if shots>0 then
+accur=_result.hits/shots*100
+end
 local _text=string.format("%s, %s with %d hits on target %s.",self:_myname(_unitName),_result.text,_result.hits,_result.zone.name)
+if shots and accur then
+_text=_text..string.format("\nTotal rounds fired %d. Accuracy %.1f %%.",shots,accur)
+end
 self:_DisplayMessageToGroup(_unit,_text)
 self.strafeStatus[_unitID]=nil
 local _stats=self.strafePlayerResults[_playername]or{}
@@ -24201,7 +24210,8 @@ local unitinzone=_unit:IsInZone(zone)and unitalt<=self.strafemaxalt and towardsp
 local text=string.format("Checking zone %s. Unit = %s, player = %s in zone = %s. alt = %d, delta heading = %d",_targetZone.name,_unitName,_playername,tostring(unitinzone),unitalt,deltaheading)
 self:T(RANGE.id..text)
 if unitinzone then
-self.strafeStatus[_unitID]={hits=0,zone=_targetZone,time=1,pastfoulline=false}
+local _ammo=self:_GetAmmo(_unitName)
+self.strafeStatus[_unitID]={hits=0,zone=_targetZone,time=1,ammo=_ammo,pastfoulline=false}
 local _msg=string.format("%s, rolling in on strafe pit %s.",self:_myname(_unitName),_targetZone.name)
 self:_DisplayMessageToGroup(_unit,_msg,10,true)
 break
@@ -24259,6 +24269,30 @@ end
 else
 self:T(RANGE.id.."Player unit does not exist in AddF10Menu() function. Unit name: ".._unitName)
 end
+end
+function RANGE:_GetAmmo(unitname)
+self:F(unitname)
+local unit,playername=self:_GetPlayerUnitAndName(unitname)
+if unit and playername then
+local has_ammo=false
+local ammotable=unit:GetAmmo()
+self:E({ammotable=ammotable})
+if ammotable~=nil then
+local weapons=#ammotable
+self:T2(RANGE.id..string.format("Number of weapons %d.",weapons))
+for w=1,weapons do
+local Nammo=ammotable[w]["count"]
+local Tammo=ammotable[w]["desc"]["typeName"]
+if string.match(Tammo,"shell")then
+local text=string.format("Player %s has %d rounds ammo of type %s",playername,Nammo,Tammo)
+self:T(RANGE.id..text)
+MESSAGE:New(text,10):ToAllIf(self.Debug)
+return Nammo
+end
+end
+end
+end
+return 0
 end
 function RANGE:_MarkTargetsOnMap(_unitName)
 self:F(_unitName)
