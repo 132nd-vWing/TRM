@@ -32,6 +32,12 @@ end,{},3,5,10) \
     ["DictKey_ActionText_2991"] = "",
     ["DictKey_ActionText_3331"] = "",
     ["DictKey_ActionText_3356"] = "",
+    ["DictKey_ActionText_4001"] = "Range2B_4_Groups = SET_GROUP:New():FilterCategoryGround():FilterPrefixes(\"tester\"):FilterStart()\
+\
+Range2B_4_Groups:ForEachGroupAlive(function (move)\
+move:Destroy()\
+end,...)",
+    ["DictKey_ActionText_4006"] = "",
     ["DictKey_GroupName_6"] = "New Vehicle Group",
     ["DictKey_GroupName_9"] = "New Static Object",
     ["DictKey_GroupName_12"] = "New Static Object #001",
