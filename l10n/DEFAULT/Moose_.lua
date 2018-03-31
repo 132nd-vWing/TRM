@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2018-03-30T09:33:13.0000000Z-f646bb8e942c433161d37d45eb4dd1d8ffdbc8e2 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2018-03-30T17:57:00.0000000Z-d7916c4927fc2287a52391c56217bf09820a85ea ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 env.setErrorMessageBoxEnabled(false)
 routines={}
@@ -23548,7 +23548,7 @@ eventmoose=true,
 }
 RANGE.MenuF10={}
 RANGE.id="RANGE | "
-RANGE.version="1.0.2"
+RANGE.version="1.0.3"
 function RANGE:New(rangename)
 BASE:F({rangename=rangename})
 local self=BASE:Inherit(self,BASE:New())
@@ -24272,11 +24272,12 @@ end
 end
 function RANGE:_GetAmmo(unitname)
 self:F(unitname)
+local ammo=0
 local unit,playername=self:_GetPlayerUnitAndName(unitname)
 if unit and playername then
 local has_ammo=false
 local ammotable=unit:GetAmmo()
-self:E({ammotable=ammotable})
+self:T2({ammotable=ammotable})
 if ammotable~=nil then
 local weapons=#ammotable
 self:T2(RANGE.id..string.format("Number of weapons %d.",weapons))
@@ -24284,15 +24285,15 @@ for w=1,weapons do
 local Nammo=ammotable[w]["count"]
 local Tammo=ammotable[w]["desc"]["typeName"]
 if string.match(Tammo,"shell")then
+ammo=ammo+Nammo
 local text=string.format("Player %s has %d rounds ammo of type %s",playername,Nammo,Tammo)
 self:T(RANGE.id..text)
 MESSAGE:New(text,10):ToAllIf(self.Debug)
-return Nammo
 end
 end
 end
 end
-return 0
+return ammo
 end
 function RANGE:_MarkTargetsOnMap(_unitName)
 self:F(_unitName)

@@ -468,8 +468,7 @@ local menu_ON_DEMAND_4_MISC_SA13_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("S
 local menu_ON_DEMAND_4_MISC_SA19_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn SA19 Vehicle",spawn_menu_OD_MISC_R2B_SOUTH,_ON_DEMAND_4_MISC_SA19_vehicle_R2B_SOUTH)
 
 
--- Range Auto Setup -- 
-
+-- random setup for Range 2B.2
 -- RED TABLE
 R2B_2_table_red_recon = { "Template 8.3: Recon platoon", "Template 8.2: Recon section", "Template 8.1: Recon vehicle" } -- table for the red recon
 R2B_2_table_red_IFV = { "Template 9.3: IFV platoon", "Template 9.2: IFV section", "Template 9.1: IFV vehicle" } -- table for the red IFV
@@ -485,7 +484,7 @@ R2B_2_table_blue_IFV = { "Template 2.1: IFV vehicle", "Template 2.2: IFV section
 R2B_2_table_blue_MBT = { "Template 3.1: MBT vehicle", "Template 3.2: MBT section", "Template 3.3: MBT platoon" } -- table for the blue MBT 
 -- BLUE Table
 
--- random setup for Range 2B.2
+
 function SpawnTargets_R2B_2 ()
 -- RED Spawners
 R2B_2_red_recon = SPAWN:New("R2B_2_red_recon"):InitRandomizeTemplate(R2B_2_table_red_recon):InitRandomizeRoute(3,0,100):Spawn()  
@@ -504,21 +503,9 @@ end
 
 spawn_menu_R2B_2 = MENU_MISSION_COMMAND:New("Set up Range 2B.2 dynamically",Menu_Range_R2B,SpawnTargets_R2B_2)
 
--- random setup for Range 2A.1
+-- random setup for Range 2B.2
 
 
-
--- Range Auto Setup -- 
-
-
--- move targets 
-function moveT2B4Groups()
-Range2B_4_Groups = SET_GROUP:New():FilterCategoryGround():FilterPrefixes("Range2B.4 Target"):FilterStart()
-Range2B_4_Groups:ForEachGroupAlive(function (move)
-move:Destroy()
-end)
-end
--- move targets
 
 
 
