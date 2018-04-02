@@ -5,8 +5,6 @@ mapResource =
     ["ResKey_Action_2897"] = "beacon.ogg",
     ["ResKey_Action_2899"] = "beaconsilent.ogg",
     ["ResKey_Action_2983"] = "TRM_ThreatSites.lua",
-    ["ResKey_Action_2988"] = "TRM_Range3.lua",
-    ["ResKey_Action_2993"] = "TRM_Range1.lua",
     ["ResKey_Action_3333"] = "TRM_Range2A.lua",
     ["ResKey_Action_3411"] = "CTLD.lua",
     ["ResKey_Action_3424"] = "TRM_tankers.lua",
@@ -16,5 +14,7 @@ mapResource =
     ["ResKey_Action_3976"] = "beacon.ogg",
     ["ResKey_Action_3985"] = "TRM_Config.lua",
     ["ResKey_Action_4012"] = "Moose_.lua",
-    ["ResKey_Action_4013"] = "TRM_Range2B.lua",
+    ["ResKey_Action_4014"] = "TRM_Range1.lua",
+    ["ResKey_Action_4015"] = "TRM_Range3.lua",
+    ["ResKey_Action_4016"] = "TRM_Range2B.lua",
 } -- end of mapResource
