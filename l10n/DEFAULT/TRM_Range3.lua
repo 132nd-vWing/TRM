@@ -9,10 +9,16 @@ R3A_table_red_hummer = { "Template 16.1: Hummer vehicle", "Template 16.1: Hummer
 -- RED TABLE
 
 -- RED Spawners
-R3A_red_IFV = SPAWN:New("R3A_red_IFV"):InitRandomizeTemplate(R3A_table_red_IFV):Spawn()  
-R3A_red_MBT = SPAWN:New("R3A_red_MBT"):InitRandomizeTemplate(R3A_table_red_MBT):Spawn()
-R3A_red_misc = SPAWN:New("R3A_red_misc"):InitRandomizeTemplate(R3A_table_red_misc):Spawn()
-R3A_red_hummer = SPAWN:New("R3A_red_hummer"):InitRandomizeTemplate(R3A_table_red_hummer):Spawn()
+
+R3A_red_IFV = SPAWN:NewWithAlias("R3A_red_IFV", "Range3A Target1"):InitRandomizeTemplate(R3A_table_red_IFV):Spawn()
+R3A_red_IFV:OptionDisperseOff()
+R3A_red_MBT = SPAWN:NewWithAlias("R3A_red_MBT", "Range3A Target2"):InitRandomizeTemplate(R3A_table_red_MBT):Spawn()
+R3A_red_MBT:OptionDisperseOff()
+R3A_red_misc = SPAWN:NewWithAlias("R3A_red_misc", "Range3A Target3"):InitRandomizeTemplate(R3A_table_red_misc):Spawn()
+R3A_red_misc:OptionDisperseOff()
+R3A_red_hummer = SPAWN:NewWithAlias("R3A_red_hummer", "Range3A Target4"):InitRandomizeTemplate(R3A_table_red_hummer):Spawn()
+R3A_red_hummer:OptionDisperseOff()
+
 -- RED Spawners
 R3A_red_IFV:PatrolRoute()
 R3A_red_MBT:PatrolRoute()

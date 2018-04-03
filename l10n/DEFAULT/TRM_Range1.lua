@@ -399,8 +399,8 @@ end
 
 Range1_Groups_movetimer = 5 -- time in MINUTES for randomized movement
 Range1_Groups_RandomFaktor = 0.5 -- Timer above ranomize Faktor
-Range1_Groups_Distance_Min = 100 -- min Distance in Meters for randomized movement
-Range1_Groups_Distance_Max = 1000 -- max Distance in Meters for randomized movement
+Range1_Groups_Distance_Min = 50 -- min Distance in Meters for randomized movement
+Range1_Groups_Distance_Max = 300 -- max Distance in Meters for randomized movement
 
 
 
