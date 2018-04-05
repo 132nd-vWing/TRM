@@ -4,14 +4,14 @@
 BlueSpawnerR2A = UNIT:FindByName("BlueInfantryR2A")
 RedSpawnerR2A = UNIT:FindByName("REDInfantryR2A")
 
- Recon_HMMWV_vehicle_R2A = SPAWN:NewWithAlias("_ON_DEMAND_1: Recon_HMMWV_vehicle", "Range2A Target1")
- Recon_HMMWV_section_R2A = SPAWN:NewWithAlias("_ON_DEMAND_1: Recon_HMMWV_section", "Range2A Target2")
- Recon_BRDM_vehicle_R2A = SPAWN:NewWithAlias("_ON_DEMAND_1: Recon_BRDM_vehicle", "Range2A Target3")
- Recon_BRDM_section_R2A = SPAWN:NewWithAlias("_ON_DEMAND_1: Recon_BRDM_section", "Range2A Target4")
- Recon_STRYKER_vehicle_R2A = SPAWN:NewWithAlias("_ON_DEMAND_1: Recon_stryker_vehicle", "Range2A Target5")
- Recon_STRYKER_section_R2A = SPAWN:NewWithAlias("_ON_DEMAND_1: Recon_stryker_section", "Range2A Target6")
- IFV_BMP2_vehicle_R2A = SPAWN:NewWithAlias("_ON_DEMAND_2: IFV_BMP2_vehicle", "Range2A Target7" )
- IFV_BMP2_section_R2A = SPAWN:NewWithAlias("_ON_DEMAND_2: IFV_BMP2_section", "Range2A Target8")
+ local Recon_HMMWV_vehicle_R2A = SPAWN:NewWithAlias("_ON_DEMAND_1: Recon_HMMWV_vehicle", "Range2A Target1")
+ local Recon_HMMWV_section_R2A = SPAWN:NewWithAlias("_ON_DEMAND_1: Recon_HMMWV_section", "Range2A Target2")
+ local Recon_BRDM_vehicle_R2A = SPAWN:NewWithAlias("_ON_DEMAND_1: Recon_BRDM_vehicle", "Range2A Target3")
+ local Recon_BRDM_section_R2A = SPAWN:NewWithAlias("_ON_DEMAND_1: Recon_BRDM_section", "Range2A Target4")
+ local Recon_STRYKER_vehicle_R2A = SPAWN:NewWithAlias("_ON_DEMAND_1: Recon_stryker_vehicle", "Range2A Target5")
+ local Recon_STRYKER_section_R2A = SPAWN:NewWithAlias("_ON_DEMAND_1: Recon_stryker_section", "Range2A Target6")
+ local IFV_BMP2_vehicle_R2A = SPAWN:NewWithAlias("_ON_DEMAND_2: IFV_BMP2_vehicle", "Range2A Target7" )
+ local IFV_BMP2_section_R2A = SPAWN:NewWithAlias("_ON_DEMAND_2: IFV_BMP2_section", "Range2A Target8")
  IFV_LAV25_vehicle_R2A = SPAWN:NewWithAlias("_ON_DEMAND_2: IFV_LAV25_vehicle", "Range2A Target9")
  IFV_LAV25_section_R2A = SPAWN:NewWithAlias("_ON_DEMAND_2: IFV_LAV25_section", "Range2A Target10")
  IFV_BRADLEY_vehicle_R2A = SPAWN:NewWithAlias("_ON_DEMAND_2: IFV_Bradley_vehicle", "Range2A Target11")
@@ -38,193 +38,201 @@ RedSpawnerR2A = UNIT:FindByName("REDInfantryR2A")
  MISC_SA19_vehicle_R2A = SPAWN:NewWithAlias("_ON_DEMAND_4: Misc_SA-19_vehicle", "Range2A Target32")
 
 
+function _ON_DEMAND_1_Recon_HMMWV_vehicle_R2A ()
+  Recon_HMMWV_vehicle_R2A:OnSpawnGroup(function(group)
+    group:OptionDisperseOff()
+  end)
+  Recon_HMMWV_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
+end
 
 function _ON_DEMAND_1_Recon_HMMWV_section_R2A ()
-Recon_HMMWV_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
-Recon_HMMWV_section_R2A:OnSpawnGroup(function(group)
-group:OptionDisperseOff()
-end)
+  Recon_HMMWV_section_R2A:OnSpawnGroup(function(group)
+    group:OptionDisperseOff()
+  end)
+  Recon_HMMWV_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 end
 
- function _ON_DEMAND_1_Recon_BRDM_vehicle_R2A ()
-Recon_BRDM_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
-Recon_BRDM_vehicle_R2A:OnSpawnGroup(function(group)
-group:OptionDisperseOff()
-end)
+function _ON_DEMAND_1_Recon_BRDM_vehicle_R2A ()
+  Recon_BRDM_vehicle_R2A:OnSpawnGroup(function(group)
+    group:OptionDisperseOff()
+  end)
+  Recon_BRDM_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 end
 
- function _ON_DEMAND_1_Recon_BRDM_section_R2A ()
-Recon_BRDM_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
-Recon_BRDM_section_R2A:OnSpawnGroup(function(group)
-group:OptionDisperseOff()
-end)
+function _ON_DEMAND_1_Recon_BRDM_section_R2A ()
+  Recon_BRDM_section_R2A:OnSpawnGroup(function(group)
+    group:OptionDisperseOff()
+  end)
+  Recon_BRDM_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 end
 
- function _ON_DEMAND_1_Recon_STRYKER_vehicle_R2A ()
-Recon_STRYKER_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
-Recon_STRYKER_vehicle_R2A:OnSpawnGroup(function(group)
-group:OptionDisperseOff()end)
+function _ON_DEMAND_1_Recon_STRYKER_vehicle_R2A ()
+  Recon_STRYKER_vehicle_R2A:OnSpawnGroup(function(group)
+    group:OptionDisperseOff()end)
+  Recon_STRYKER_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 end
 
  function _ON_DEMAND_1_Recon_STRYKER_section_R2A ()
-Recon_STRYKER_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 Recon_STRYKER_section_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+Recon_STRYKER_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 end
 
  function _ON_DEMAND_2_IFV_BMP2_vehicle_R2A ()
-IFV_BMP2_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 IFV_BMP2_vehicle_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+IFV_BMP2_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 end
+
  function _ON_DEMAND_2_IFV_BMP2_section_R2A ()
-IFV_BMP2_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 IFV_BMP2_section_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+IFV_BMP2_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 end
+
  function _ON_DEMAND_2_IFV_LAV25_vehicle_R2A ()
-IFV_LAV25_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 IFV_LAV25_vehicle_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+IFV_LAV25_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 end
 
  function _ON_DEMAND_2_IFV_LAV25_section_R2A ()
-IFV_LAV25_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 IFV_LAV25_section_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+IFV_LAV25_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 end
 
  function _ON_DEMAND_2_IFV_BRADLEY_vehicle_R2A ()
-IFV_BRADLEY_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 IFV_BRADLEY_vehicle_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+IFV_BRADLEY_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 end
 
  function _ON_DEMAND_2_IFV_BRADLEY_section_R2A ()
-IFV_BRADLEY_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 IFV_BRADLEY_section_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+IFV_BRADLEY_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 end
 
  function _ON_DEMAND_2_IFV_BMP3_vehicle_R2A ()
-IFV_BMP3_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 IFV_BMP3_vehicle_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+IFV_BMP3_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 end
 
  function _ON_DEMAND_2_IFV_BMP3_section_R2A ()
-IFV_BMP3_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 IFV_BMP3_section_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+IFV_BMP3_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 end
 
  function _ON_DEMAND_2_IFV_BTR_vehicle_R2A ()
-IFV_BTR_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 IFV_BTR_vehicle_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+IFV_BTR_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 end
 
  function _ON_DEMAND_2_IFV_BTR_section_R2A ()
-IFV_BTR_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 IFV_BTR_section_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+IFV_BTR_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 end
 
  function _ON_DEMAND_2_IFV_M113_vehicle_R2A ()
-IFV_BTR_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 IFV_BTR_vehicle_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+IFV_BTR_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 end
 
  function _ON_DEMAND_2_IFV_M113_section_R2A ()
-IFV_BTR_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 IFV_BTR_section_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+IFV_BTR_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 end
 
  function _ON_DEMAND_3_MBT_T72_vehicle_R2A ()
-MBT_T72_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 MBT_T72_vehicle_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+MBT_T72_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 end
 
  function _ON_DEMAND_3_MBT_T72_section_R2A ()
-MBT_T72_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 MBT_T72_section_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+MBT_T72_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 end
 
  function _ON_DEMAND_3_MBT_T80_vehicle_R2A ()
-MBT_T80_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 MBT_T80_vehicle_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+MBT_T80_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 end
 
  function _ON_DEMAND_3_MBT_T80_section_R2A ()
-MBT_T80_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 MBT_T80_section_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+MBT_T80_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 end
 
  function _ON_DEMAND_3_MBT_ABRAMS_vehicle_R2A ()
-MBT_ABRAMS_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 MBT_ABRAMS_vehicle_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+MBT_ABRAMS_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 end
 
  function _ON_DEMAND_3_MBT_ABRAMS_section_R2A ()
-MBT_ABRAMS_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 MBT_ABRAMS_section_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+MBT_ABRAMS_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 end
 
  function _ON_DEMAND_3_MBT_LEO2_vehicle_R2A ()
-MBT_LEO2_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 MBT_LEO2_vehicle_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+MBT_LEO2_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 end
 
  function _ON_DEMAND_3_MBT_LEO2_section_R2A ()
-MBT_LEO2_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 MBT_LEO2_section_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+MBT_LEO2_section_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2A)
 end
 
 
  function _ON_DEMAND_4_MISC_SHILKA_vehicle_R2A ()
-MISC_SHILKA_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 MISC_SHILKA_vehicle_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+MISC_SHILKA_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 end
 
  function _ON_DEMAND_4_MISC_C2_vehicle_R2A ()
-MISC_C2_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 MISC_C2_vehicle_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+MISC_C2_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 end
 
  function _ON_DEMAND_4_MISC_ARTY_vehicle_R2A ()
-MISC_ARTY_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 MISC_ARTY_vehicle_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+MISC_ARTY_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 end
 
  function _ON_DEMAND_4_MISC_MLRS_vehicle_R2A ()
-MISC_MLRS_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 MISC_MLRS_vehicle_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+MISC_MLRS_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 end
 
  function _ON_DEMAND_4_MISC_SA13_vehicle_R2A ()
-MISC_SA13_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 MISC_SA13_vehicle_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+MISC_SA13_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 end
 
  function _ON_DEMAND_4_MISC_SA19_vehicle_R2A ()
-MISC_SA19_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 MISC_SA19_vehicle_R2A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
+MISC_SA19_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 end
 -- ON DEMAND SPAWNING -- 
 
@@ -331,7 +339,7 @@ end
 
 spawn_menu_R2A = MENU_MISSION_COMMAND:New("Set up Range 2A.1 dynamically",Menu_Range_R2A,SpawnTargets_R2A)
 
--- random setup for Range 2A.2
+-- random setup for Rang  e 2A.2
 function SpawnTargets_R2A_2 ()
 -- RED Spawners
 spawn_menu_R2A_2:Remove()
