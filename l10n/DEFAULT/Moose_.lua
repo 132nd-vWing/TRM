@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2018-03-30T17:57:00.0000000Z-d7916c4927fc2287a52391c56217bf09820a85ea ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2018-04-07T21:39:48.0000000Z-d78945fc6780044d2d974b9cb9ba6a8762e46c46 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 env.setErrorMessageBoxEnabled(false)
 routines={}
@@ -23536,7 +23536,8 @@ ClassName="RANGE",
 Debug=false,
 rangename=nil,
 location=nil,
-rangeradius=10000,
+rangeradius=5000,
+rangezone=nil,
 strafeTargets={},
 bombingTargets={},
 nbombtargets=0,
@@ -23559,10 +23560,28 @@ illuminationmaxalt=1000,
 scorebombdistance=1000,
 TdelaySmoke=3.0,
 eventmoose=true,
+trackbombs=true,
+trackrockets=true,
+trackmissiles=true,
 }
+RANGE.Defaults={
+goodhitrange=25,
+strafemaxalt=914,
+dtBombtrack=0.005,
+Tmsg=30,
+ndisplayresult=10,
+rangeradius=5000,
+TdelaySmoke=3.0,
+boxlength=3000,
+boxwidth=300,
+goodpass=20,
+goodhitrange=25,
+foulline=610,
+}
+RANGE.Names={}
 RANGE.MenuF10={}
 RANGE.id="RANGE | "
-RANGE.version="1.0.3"
+RANGE.version="1.1.0"
 function RANGE:New(rangename)
 BASE:F({rangename=rangename})
 local self=BASE:Inherit(self,BASE:New())
@@ -23579,7 +23598,7 @@ local _count=0
 for _,_target in pairs(self.bombingTargets)do
 _count=_count+1
 if _location==nil then
-_location=_target.point
+_location=_target.target:GetCoordinate()
 end
 end
 self.nbombtargets=_count
@@ -23593,11 +23612,16 @@ end
 end
 end
 self.nstrafetargets=_count
+if self.location==nil then
 self.location=_location
+end
 if self.location==nil then
 local text=string.format("ERROR! No range location found. Number of strafe targets = %d. Number of bomb targets = %d.",self.rangename,self.nstrafetargets,self.nbombtargets)
 self:E(RANGE.id..text)
-return nil
+return
+end
+if self.rangezone==nil then
+self.rangezone=ZONE_RADIUS:New(self.rangename,{x=self.location.x,y=self.location.z},self.rangeradius)
 end
 local text=string.format("Starting RANGE %s. Number of strafe targets = %d. Number of bomb targets = %d.",self.rangename,self.nstrafetargets,self.nbombtargets)
 self:E(RANGE.id..text)
@@ -23611,21 +23635,41 @@ else
 self:T(RANGE.id.."Events are handled directly by DCS.")
 world.addEventHandler(self)
 end
+for _,_target in pairs(self.bombingTargets)do
+local _static=self:_CheckStatic(_target.target:GetName())
+if _target.move and _static==false and _target.speed>1 then
+local unit=_target.target
+_target.target:PatrolZones({self.rangezone},_target.speed*0.75,"Off road")
+end
+end
+if self.Debug then
+self:_MarkTargetsOnMap()
+self:_SmokeBombTargets()
+self:_SmokeStrafeTargets()
+self:_SmokeStrafeTargetBoxes()
+self.rangezone:SmokeZone(SMOKECOLOR.White)
+end
 end
 function RANGE:SetMaxStrafeAlt(maxalt)
-self.strafemaxalt=maxalt or 914
+self.strafemaxalt=maxalt or RANGE.Defaults.strafemaxalt
 end
 function RANGE:SetBombtrackTimestep(dt)
-self.dtBombtrack=dt or 0.005
+self.dtBombtrack=dt or RANGE.Defaults.dtBombtrack
 end
 function RANGE:SetMessageTimeDuration(time)
-self.Tmsg=time or 30
+self.Tmsg=time or RANGE.Defaults.Tmsg
 end
 function RANGE:SetDisplayedMaxPlayerResults(nmax)
-self.ndisplayresult=nmax or 10
+self.ndisplayresult=nmax or RANGE.Defaults.ndisplayresult
 end
 function RANGE:SetRangeRadius(radius)
-self.rangeradius=radius*1000 or 10000
+self.rangeradius=radius*1000 or RANGE.Defaults.rangeradius
+end
+function RANGE:SetRangeLocation(coordinate)
+self.location=coordinate
+end
+function RANGE:SetRangeLocation(zone)
+self.rangezone=zone
 end
 function RANGE:SetBombTargetSmokeColor(colorid)
 self.BombSmokeColor=colorid or SMOKECOLOR.Red
@@ -23637,7 +23681,7 @@ function RANGE:SetStrafePitSmokeColor(colorid)
 self.StrafePitSmokeColor=colorid or SMOKECOLOR.White
 end
 function RANGE:SetSmokeTimeDelay(delay)
-self.TdelaySmoke=delay or 3.0
+self.TdelaySmoke=delay or RANGE.Defaults.TdelaySmoke
 end
 function RANGE:DebugON()
 self.Debug=true
@@ -23645,31 +23689,62 @@ end
 function RANGE:DebugOFF()
 self.Debug=false
 end
-function RANGE:AddStrafePit(unitnames,boxlength,boxwidth,heading,inverseheading,goodpass,foulline)
-self:F({unitnames=unitnames,boxlength=boxlength,boxwidth=boxwidth,heading=heading,inverseheading=inverseheading,goodpass=goodpass,foulline=foulline})
-if type(unitnames)~="table"then
-unitnames={unitnames}
+function RANGE:TrackBombsON()
+self.trackbombs=true
+end
+function RANGE:TrackBombsOFF()
+self.trackbombs=false
+end
+function RANGE:TrackRocketsON()
+self.trackrockets=true
+end
+function RANGE:TrackRocketsOFF()
+self.trackrockets=false
+end
+function RANGE:TrackMissilesON()
+self.trackmissiles=true
+end
+function RANGE:TrackMissilesOFF()
+self.trackmissiles=false
+end
+function RANGE:AddStrafePit(targetnames,boxlength,boxwidth,heading,inverseheading,goodpass,foulline)
+self:F({targetnames=targetnames,boxlength=boxlength,boxwidth=boxwidth,heading=heading,inverseheading=inverseheading,goodpass=goodpass,foulline=foulline})
+if type(targetnames)~="table"then
+targetnames={targetnames}
 end
 local _targets={}
 local center=nil
 local ntargets=0
-for _i,_name in ipairs(unitnames)do
-self:T(RANGE.id..string.format("Adding strafe target #%d %s",_i,_name))
-local unit=UNIT:FindByName(_name)
+for _i,_name in ipairs(targetnames)do
+local _isstatic=self:_CheckStatic(_name)
+local unit=nil
+if _isstatic==true then
+self:T(RANGE.id..string.format("Adding STATIC object %s as strafe target #%d.",_name,_i))
+unit=STATIC:FindByName(_name,false)
+elseif _isstatic==false then
+self:T(RANGE.id..string.format("Adding UNIT object %s as strafe target #%d.",_name,_i))
+unit=UNIT:FindByName(_name)
+else
+local text=string.format("ERROR! Could not find ANY strafe target object with name %s.",_name)
+self:E(RANGE.id..text)
+MESSAGE:New(text,10):ToAllIf(self.Debug)
+end
 if unit then
 table.insert(_targets,unit)
 if center==nil then
 center=unit
 end
 ntargets=ntargets+1
-else
-local text=string.format("ERROR! Could not find strafe target with name %s.",_name)
+end
+end
+if ntargets==0 then
+local text=string.format("ERROR! No strafe target could be found when calling RANGE:AddStrafePit() for range %s",self.rangename)
 self:E(RANGE.id..text)
 MESSAGE:New(text,10):ToAllIf(self.Debug)
+return
 end
-end
-local l=boxlength or 3000
-local w=(boxwidth or 300)/2
+local l=boxlength or RANGE.Defaults.boxlength
+local w=(boxwidth or RANGE.Defaults.boxwidth)/2
 local heading=heading or center:GetHeading()
 if inverseheading~=nil then
 if inverseheading then
@@ -23682,8 +23757,8 @@ end
 if heading>360 then
 heading=heading-360
 end
-local goodpass=goodpass or 20
-local foulline=foulline or 610
+goodpass=goodpass or RANGE.Defaults.goodpass
+foulline=foulline or RANGE.Defaults.foulline
 local Ccenter=center:GetCoordinate()
 local _name=center:GetName()
 local p={}
@@ -23696,68 +23771,116 @@ for i,p in ipairs(p)do
 pv2[i]={x=p.x,y=p.z}
 end
 local _polygon=ZONE_POLYGON_BASE:New(_name,pv2)
-table.insert(self.strafeTargets,{name=_name,polygon=_polygon,goodPass=goodpass,targets=_targets,foulline=foulline,smokepoints=p,heading=heading})
-local text=string.format("Adding new strafe target %s with %d targets: heading = %03d, box_L = %.1f, box_W = %.1f, goodpass = %d, foul line = %.1f",_name,ntargets,heading,boxlength,boxwidth,goodpass,foulline)
+table.insert(self.strafeTargets,{name=_name,polygon=_polygon,coordinate=Ccenter,goodPass=goodpass,targets=_targets,foulline=foulline,smokepoints=p,heading=heading})
+local text=string.format("Adding new strafe target %s with %d targets: heading = %03d, box_L = %.1f, box_W = %.1f, goodpass = %d, foul line = %.1f",_name,ntargets,heading,l,w,goodpass,foulline)
 self:T(RANGE.id..text)
 MESSAGE:New(text,5):ToAllIf(self.Debug)
 end
-function RANGE:AddBombingTargets(unitnames,goodhitrange,static)
-self:F({unitnames=unitnames,goodhitrange=goodhitrange,static=static})
-if type(unitnames)~="table"then
-unitnames={unitnames}
+function RANGE:AddStrafePitGroup(group,boxlength,boxwidth,heading,inverseheading,goodpass,foulline)
+self:F({group=group,boxlength=boxlength,boxwidth=boxwidth,heading=heading,inverseheading=inverseheading,goodpass=goodpass,foulline=foulline})
+if group and group:IsAlive()then
+local _units=group:GetUnits()
+local _names={}
+for _,_unit in ipairs(_units)do
+local _unit=_unit
+if _unit and _unit:IsAlive()then
+local _name=_unit:GetName()
+table.insert(_names,_name)
 end
-if static==nil or static==false then
-static=false
-else
-static=true
 end
-goodhitrange=goodhitrange or 25
-for _,name in pairs(unitnames)do
-local _unit
-local _static
-if static then
-local _DCSstatic=StaticObject.getByName(name)
-if _DCSstatic and _DCSstatic:isExist()then
-self:T(RANGE.id..string.format("Adding DCS static to database. Name = %s.",name))
-_DATABASE:AddStatic(name)
-else
-self:E(RANGE.id..string.format("ERROR! DCS static DOES NOT exist! Name = %s.",name))
+self:AddStrafePit(_names,boxlength,boxwidth,heading,inverseheading,goodpass,foulline)
 end
-_static=STATIC:FindByName(name)
-if _static then
+end
+function RANGE:AddBombingTargets(targetnames,goodhitrange,randommove)
+self:F({targetnames=targetnames,goodhitrange=goodhitrange,randommove=randommove})
+if type(targetnames)~="table"then
+targetnames={targetnames}
+end
+goodhitrange=goodhitrange or RANGE.Defaults.goodhitrange
+for _,name in pairs(targetnames)do
+local _isstatic=self:_CheckStatic(name)
+if _isstatic==true then
+local _static=STATIC:FindByName(name)
+self:T2(RANGE.id..string.format("Adding static bombing target %s with hit range %d.",name,goodhitrange,false))
 self:AddBombingTargetUnit(_static,goodhitrange)
-self:T(RANGE.id..string.format("Adding static bombing target %s with hit range %d.",name,goodhitrange))
-else
-self:E(RANGE.id..string.format("ERROR! Cound not find static bombing target %s.",name))
-end
-else
-_unit=UNIT:FindByName(name)
-if _unit then
+elseif _isstatic==false then
+local _unit=UNIT:FindByName(name)
+self:T2(RANGE.id..string.format("Adding unit bombing target %s with hit range %d.",name,goodhitrange,randommove))
 self:AddBombingTargetUnit(_unit,goodhitrange)
-self:T(RANGE.id..string.format("Adding bombing target %s with hit range %d.",name,goodhitrange))
 else
 self:E(RANGE.id..string.format("ERROR! Could not find bombing target %s.",name))
 end
 end
 end
-end
-function RANGE:AddBombingTargetUnit(unit,goodhitrange)
-self:F({unit=unit,goodhitrange=goodhitrange})
-local coord=unit:GetCoordinate()
+function RANGE:AddBombingTargetUnit(unit,goodhitrange,randommove)
+self:F({unit=unit,goodhitrange=goodhitrange,randommove=randommove})
 local name=unit:GetName()
-goodhitrange=goodhitrange or 25
-local Vec2=coord:GetVec2()
-local Rzone=ZONE_RADIUS:New(name,Vec2,goodhitrange)
-table.insert(self.bombingTargets,{name=name,point=coord,zone=Rzone,target=unit,goodhitrange=goodhitrange})
+local _isstatic=self:_CheckStatic(name)
+goodhitrange=goodhitrange or RANGE.Defaults.goodhitrange
+if randommove==nil or _isstatic==true then
+randommove=false
+end
+if _isstatic==true then
+self:T(RANGE.id..string.format("Adding STATIC bombing target %s with good hit range %d. Random move = %s.",name,goodhitrange,tostring(randommove)))
+elseif _isstatic==false then
+self:T(RANGE.id..string.format("Adding UNIT bombing target %s with good hit range %d. Random move = %s.",name,goodhitrange,tostring(randommove)))
+else
+self:E(RANGE.id..string.format("ERROR! No bombing target with name %s could be found. Carefully check all UNIT and STATIC names defined in the mission editor!",name))
+end
+local speed=0
+if _isstatic==false then
+speed=self:_GetSpeed(unit)
+end
+table.insert(self.bombingTargets,{name=name,target=unit,goodhitrange=goodhitrange,move=randommove,speed=speed})
+end
+function RANGE:AddBombingTargetGroup(group,goodhitrange,randommove)
+self:F({group=group,goodhitrange=goodhitrange,randommove=randommove})
+if group then
+local _units=group:GetUnits()
+for _,_unit in pairs(_units)do
+if _unit and _unit:IsAlive()then
+self:AddBombingTargetUnit(_unit,goodhitrange,randommove)
+end
+end
+end
+end
+function RANGE:GetFoullineDistance(namepit,namefoulline)
+self:F({namepit=namepit,namefoulline=namefoulline})
+local _staticpit=self:_CheckStatic(namepit)
+local _staticfoul=self:_CheckStatic(namefoulline)
+local pit=nil
+if _staticpit==true then
+pit=STATIC:FindByName(namepit,false)
+elseif _staticpit==false then
+pit=UNIT:FindByName(namepit)
+else
+self:E(RANGE.id..string.format("ERROR! Pit object %s could not be found in GetFoullineDistance function. Check the name in the ME.",namepit))
+end
+local foul=nil
+if _staticfoul==true then
+foul=STATIC:FindByName(namefoulline,false)
+elseif _staticfoul==false then
+foul=UNIT:FindByName(namefoulline)
+else
+self:E(RANGE.id..string.format("ERROR! Foul line object %s could not be found in GetFoullineDistance function. Check the name in the ME.",namefoulline))
+end
+local fouldist=0
+if pit~=nil and foul~=nil then
+fouldist=pit:GetCoordinate():Get2DDistance(foul:GetCoordinate())
+else
+self:E(RANGE.id..string.format("ERROR! Foul line distance could not be determined. Check pit object name %s and foul line object name %s in the ME.",namepit,namefoulline))
+end
+self:T(RANGE.id..string.format("Foul line distance = %.1f m.",fouldist))
+return fouldist
 end
 function RANGE:onEvent(Event)
 self:F3(Event)
 if Event==nil or Event.initiator==nil then
-self:T2("Skipping onEvent. Event or Event.initiator unknown.")
+self:T3("Skipping onEvent. Event or Event.initiator unknown.")
 return true
 end
 if Unit.getByName(Event.initiator:getName())==nil then
-self:T2("Skipping onEvent. Initiator unit name unknown.")
+self:T3("Skipping onEvent. Initiator unit name unknown.")
 return true
 end
 local DCSiniunit=Event.initiator
@@ -23812,6 +23935,7 @@ local _callsign=_unit:GetCallsign()
 local text=string.format("Player %s, callsign %s entered unit %s (UID %d) of group %s (GID %d)",_playername,_callsign,_unitName,_uid,_group:GetName(),_gid)
 self:T(RANGE.id..text)
 MESSAGE:New(text,5):ToAllIf(self.Debug)
+self:_GetAmmo(_unitName)
 self.strafeStatus[_uid]=nil
 self:_AddF10Commands(_unitName)
 self.PlayerSettings[_playername]={}
@@ -23840,11 +23964,11 @@ local _unitID=_unit:GetID()
 local target=EventData.TgtUnit
 local targetname=EventData.TgtUnitName
 local _currentTarget=self.strafeStatus[_unitID]
-if _currentTarget then
+if _currentTarget and target:IsAlive()then
 local playerPos=_unit:GetCoordinate()
 local targetPos=target:GetCoordinate()
 for _,_target in pairs(_currentTarget.zone.targets)do
-if _target:GetName()==targetname then
+if _target and _target:IsAlive()and _target:GetName()==targetname then
 local dist=playerPos:Get2DDistance(targetPos)
 if dist>_currentTarget.zone.foulline then
 _currentTarget.hits=_currentTarget.hits+1
@@ -23863,11 +23987,11 @@ end
 end
 end
 end
-for _,_target in pairs(self.bombingTargets)do
-if _target.name==targetname then
+for _,_bombtarget in pairs(self.bombingTargets)do
+local _target=_bombtarget.target
+if _target and _target:IsAlive()and _bombtarget.name==targetname then
 if _unit and _playername then
-local playerPos=_unit:GetCoordinate()
-local targetPos=target:GetCoordinate()
+local targetPos=_target:GetCoordinate()
 if self.PlayerSettings[_playername].flaredirecthits then
 targetPos:Flare(self.PlayerSettings[_playername].flarecolor)
 end
@@ -23880,11 +24004,16 @@ self:F({eventshot=EventData})
 local _weapon=EventData.Weapon:getTypeName()
 local _weaponStrArray=self:_split(_weapon,"%.")
 local _weaponName=_weaponStrArray[#_weaponStrArray]
-self:T3(RANGE.id.."EVENT SHOT: Ini unit    = "..EventData.IniUnitName)
-self:T3(RANGE.id.."EVENT SHOT: Ini group   = "..EventData.IniGroupName)
-self:T3(RANGE.id.."EVENT SHOT: Weapon type = ".._weapon)
-self:T3(RANGE.id.."EVENT SHOT: Weapon name = ".._weaponName)
-if(string.match(_weapon,"weapons.bombs")or string.match(_weapon,"weapons.nurs"))then
+self:T(RANGE.id.."EVENT SHOT: Ini unit    = "..EventData.IniUnitName)
+self:T(RANGE.id.."EVENT SHOT: Ini group   = "..EventData.IniGroupName)
+self:T(RANGE.id.."EVENT SHOT: Weapon type = ".._weapon)
+self:T(RANGE.id.."EVENT SHOT: Weapon name = ".._weaponName)
+local _viggen=string.match(_weapon,"ROBOT")or string.match(_weapon,"RB75")or string.match(_weapon,"BK90")or string.match(_weapon,"RB15")or string.match(_weapon,"RB04")
+local _bombs=string.match(_weapon,"weapons.bombs")
+local _rockets=string.match(_weapon,"weapons.nurs")
+local _missiles=string.match(_weapon,"weapons.missiles")or _viggen
+local _track=(_bombs and self.trackbombs)or(_rockets and self.trackrockets)or(_missiles and self.trackmissiles)
+if _track then
 local _ordnance=EventData.weapon
 self:T(RANGE.id..string.format("Tracking %s - %s.",_weapon,_ordnance:getName()))
 local _lastBombPos={x=0,y=0,z=0}
@@ -23914,7 +24043,9 @@ impactcoord:Smoke(self.PlayerSettings[_playername].smokecolor)
 end
 end
 for _,_bombtarget in pairs(self.bombingTargets)do
-local _temp=impactcoord:Get2DDistance(_bombtarget.point)
+local _target=_bombtarget.target
+if _target and _target:IsAlive()then
+local _temp=impactcoord:Get2DDistance(_target:GetCoordinate())
 if _distance==nil or _temp<_distance then
 _distance=_temp
 _closetTarget=_bombtarget
@@ -23926,6 +24057,7 @@ elseif _distance<=2*_bombtarget.goodhitrange then
 _hitquality="INEFFECTIVE"
 else
 _hitquality="POOR"
+end
 end
 end
 end
@@ -24160,7 +24292,7 @@ self:T(RANGE.id..string.format("ERROR! Could not find player unit in RangeInfo! 
 end
 end
 function RANGE:_CheckInZone(_unitName)
-self:F(_unitName)
+self:F2(_unitName)
 local _unit,_playername=self:_GetPlayerUnitAndName(_unitName)
 if _unit and _playername then
 local _unitID=_unit:GetID()
@@ -24174,7 +24306,7 @@ local towardspit=math.abs(deltaheading)<=90 or math.abs(deltaheading-360)<=90
 local unitalt=_unit:GetHeight()-_unit:GetCoordinate():GetLandHeight()
 local unitinzone=_unit:IsInZone(zone)and unitalt<=self.strafemaxalt and towardspit
 local text=string.format("Checking stil in zone. Unit = %s, player = %s in zone = %s. alt = %d, delta heading = %d",_unitName,_playername,tostring(unitinzone),unitalt,deltaheading)
-self:T(RANGE.id..text)
+self:T2(RANGE.id..text)
 if unitinzone then
 _currentStrafeRun.time=_currentStrafeRun.time+1
 else
@@ -24222,7 +24354,7 @@ local towardspit=math.abs(deltaheading)<=90 or math.abs(deltaheading-360)<=90
 local unitalt=_unit:GetHeight()-_unit:GetCoordinate():GetLandHeight()
 local unitinzone=_unit:IsInZone(zone)and unitalt<=self.strafemaxalt and towardspit
 local text=string.format("Checking zone %s. Unit = %s, player = %s in zone = %s. alt = %d, delta heading = %d",_targetZone.name,_unitName,_playername,tostring(unitinzone),unitalt,deltaheading)
-self:T(RANGE.id..text)
+self:T2(RANGE.id..text)
 if unitinzone then
 local _ammo=self:_GetAmmo(_unitName)
 self.strafeStatus[_unitID]={hits=0,zone=_targetZone,time=1,ammo=_ammo,pastfoulline=false}
@@ -24285,7 +24417,7 @@ self:T(RANGE.id.."Player unit does not exist in AddF10Menu() function. Unit name
 end
 end
 function RANGE:_GetAmmo(unitname)
-self:F(unitname)
+self:F2(unitname)
 local ammo=0
 local unit,playername=self:_GetPlayerUnitAndName(unitname)
 if unit and playername then
@@ -24303,6 +24435,10 @@ ammo=ammo+Nammo
 local text=string.format("Player %s has %d rounds ammo of type %s",playername,Nammo,Tammo)
 self:T(RANGE.id..text)
 MESSAGE:New(text,10):ToAllIf(self.Debug)
+else
+local text=string.format("Player %s has %d ammo of type %s",playername,Nammo,Tammo)
+self:T(RANGE.id..text)
+MESSAGE:New(text,10):ToAllIf(self.Debug)
 end
 end
 end
@@ -24311,16 +24447,32 @@ return ammo
 end
 function RANGE:_MarkTargetsOnMap(_unitName)
 self:F(_unitName)
-local group=UNIT:FindByName(_unitName):GetGroup()
+local group=nil
+if _unitName then
+group=UNIT:FindByName(_unitName):GetGroup()
+end
+for _,_bombtarget in pairs(self.bombingTargets)do
+local _target=_bombtarget.target
+if _target and _target:IsAlive()then
+local coord=_target:GetCoordinate()
 if group then
-for _,_target in pairs(self.bombingTargets)do
-local coord=_target.point
-coord:MarkToGroup("Bomb target ".._target.name,group)
+coord:MarkToGroup("Bomb target ".._bombtarget.name,group)
+else
+coord:MarkToAll("Bomb target ".._bombtarget.name)
+end
+end
 end
 for _,_strafepit in pairs(self.strafeTargets)do
 for _,_target in pairs(_strafepit.targets)do
+local _target=_target
+if _target and _target:IsAlive()then
 local coord=_target:GetCoordinate()
+if group then
 coord:MarkToGroup("Strafe target ".._target:GetName(),group)
+else
+coord:MarkToAll("Strafe target ".._target:GetName())
+end
+end
 end
 end
 if _unitName then
@@ -24329,13 +24481,15 @@ local text=string.format("%s, %s, range targets are now marked on F10 map.",self
 self:_DisplayMessageToGroup(_unit,text,5)
 end
 end
-end
 function RANGE:_IlluminateBombTargets(_unitName)
 self:F(_unitName)
 local bomb={}
-for _,_target in pairs(self.bombingTargets)do
-local coord=_target.point
+for _,_bombtarget in pairs(self.bombingTargets)do
+local _target=_bombtarget.target
+if _target and _target:IsAlive()then
+local coord=_target:GetCoordinate()
 table.insert(bomb,coord)
+end
 end
 if#bomb>0 then
 local coord=bomb[math.random(#bomb)]
@@ -24345,8 +24499,11 @@ end
 local strafe={}
 for _,_strafepit in pairs(self.strafeTargets)do
 for _,_target in pairs(_strafepit.targets)do
+local _target=_target
+if _target and _target:IsAlive()then
 local coord=_target:GetCoordinate()
 table.insert(strafe,coord)
+end
 end
 end
 if#strafe>0 then
@@ -24432,9 +24589,12 @@ end
 end
 function RANGE:_SmokeBombTargets(unitname)
 self:F(unitname)
-for _,_target in pairs(self.bombingTargets)do
-local coord=_target.point
+for _,_bombtarget in pairs(self.bombingTargets)do
+local _target=_bombtarget.target
+if _target and _target:IsAlive()then
+local coord=_target:GetCoordinate()
 coord:Smoke(self.BombSmokeColor)
+end
 end
 if unitname then
 local unit,playername=self:_GetPlayerUnitAndName(unitname)
@@ -24445,10 +24605,7 @@ end
 function RANGE:_SmokeStrafeTargets(unitname)
 self:F(unitname)
 for _,_target in pairs(self.strafeTargets)do
-for _,_unit in pairs(_target.targets)do
-local coord=_unit:GetCoordinate()
-coord:Smoke(self.StrafeSmokeColor)
-end
+_target.coordinate:Smoke(self.StrafeSmokeColor)
 end
 if unitname then
 local unit,playername=self:_GetPlayerUnitAndName(unitname)
@@ -24523,14 +24680,44 @@ txt=string.format("unkown color (%s)",tostring(color))
 end
 return txt
 end
+function RANGE:_CheckStatic(name)
+self:F2(name)
+local _DCSstatic=StaticObject.getByName(name)
+if _DCSstatic and _DCSstatic:isExist()then
+local _MOOSEstatic=STATIC:FindByName(name,false)
+if not _MOOSEstatic then
+self:T(RANGE.id..string.format("Adding DCS static to MOOSE database. Name = %s.",name))
+_DATABASE:AddStatic(name)
+end
+return true
+else
+self:T3(RANGE.id..string.format("No static object with name %s exists.",name))
+end
+if UNIT:FindByName(name)then
+return false
+else
+self:T3(RANGE.id..string.format("No unit object with name %s exists.",name))
+end
+return nil
+end
+function RANGE:_GetSpeed(controllable)
+self:F2(controllable)
+local desc=controllable:GetDesc()
+local speed=0
+if desc then
+speed=desc.speedMax*3.6
+self:T({speed=speed})
+end
+return speed
+end
 function RANGE:_GetPlayerUnitAndName(_unitName)
-self:F(_unitName)
+self:F2(_unitName)
 if _unitName~=nil then
 local DCSunit=Unit.getByName(_unitName)
 if DCSunit then
 local playername=DCSunit:getPlayerName()
 local unit=UNIT:Find(DCSunit)
-self:T({DCSunit=DCSunit,unit=unit,playername=playername})
+self:T2({DCSunit=DCSunit,unit=unit,playername=playername})
 if DCSunit and unit and playername then
 return unit,playername
 end
@@ -24539,14 +24726,14 @@ end
 return nil,nil
 end
 function RANGE:_myname(unitname)
-self:F(unitname)
+self:F2(unitname)
 local unit=UNIT:FindByName(unitname)
 local pname=unit:GetPlayerName()
 local csign=unit:GetCallsign()
 return string.format("%s (%s)",csign,pname)
 end
 function RANGE:_split(str,sep)
-self:F({str=str,sep=sep})
+self:F2({str=str,sep=sep})
 local result={}
 local regex=("([^%s]+)"):format(sep)
 for each in str:gmatch(regex)do
