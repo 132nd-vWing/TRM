@@ -4111,6 +4111,6 @@ end,...)",
     ["DictKey_descriptionBlueTask_3"] = "",
     ["DictKey_descriptionNeutralsTask_4"] = "",
     ["DictKey_descriptionRedTask_2"] = "",
-    ["DictKey_descriptionText_1"] = "",
-    ["DictKey_sortie_5"] = "",
+    ["DictKey_descriptionText_1"] = "Exercise DRAGON FURY is a tactical exercise designed to put the various squadrons in the 132nd into a war-like scenario. This exercise is inteded as a advanced training, and will be hosted at regular intervals.",
+    ["DictKey_sortie_5"] = "EX DRAGON FURY",
 } -- end of dictionary
