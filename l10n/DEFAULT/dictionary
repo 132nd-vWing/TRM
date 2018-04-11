@@ -1227,6 +1227,7 @@ end,...)",
     ["DictKey_GroupName_4412"] = "Aggressor Mirage KUTAISI #003",
     ["DictKey_GroupName_4421"] = "Aggressor Mirage KUTAISI #004",
     ["DictKey_GroupName_4430"] = "New Airplane Group #007",
+    ["DictKey_GroupName_4458"] = "AGGRESSOR_Il78M_North",
     ["DictKey_UnitName_7"] = "Unit #1",
     ["DictKey_UnitName_10"] = "",
     ["DictKey_UnitName_13"] = "New Static Object",
@@ -2528,6 +2529,7 @@ end,...)",
     ["DictKey_UnitName_4413"] = "Aggressor Mirage KUTAISI #003",
     ["DictKey_UnitName_4422"] = "Aggressor Mirage KUTAISI #004",
     ["DictKey_UnitName_4431"] = "Pilot #022",
+    ["DictKey_UnitName_4459"] = "AGGRESSOR_Il78M_North",
     ["DictKey_WptName_8"] = "",
     ["DictKey_WptName_11"] = "",
     ["DictKey_WptName_14"] = "",
@@ -4133,9 +4135,30 @@ end,...)",
     ["DictKey_WptName_4429"] = "",
     ["DictKey_WptName_4432"] = "",
     ["DictKey_WptName_4433"] = "",
+    ["DictKey_WptName_4460"] = "",
+    ["DictKey_WptName_4461"] = "",
+    ["DictKey_WptName_4462"] = "",
     ["DictKey_descriptionBlueTask_3"] = "",
     ["DictKey_descriptionNeutralsTask_4"] = "",
     ["DictKey_descriptionRedTask_2"] = "",
-    ["DictKey_descriptionText_1"] = "Exercise DRAGON FURY is a tactical exercise designed to put the various squadrons in the 132nd into a war-like scenario. This exercise is inteded as a advanced training, and will be hosted at regular intervals.",
+    ["DictKey_descriptionText_1"] = "Exercise DRAGON FURY is a tactical exercise designed to put the various squadrons in the 132nd into a war-like scenario. This exercise is inteded as a advanced training, and will be hosted at regular intervals.\
+\
+KC-135 TEXACO:\
+11500ft, speed 270kts,TACAN 05Y.Freq: 151.0\
+\
+KC-135 SHELL:\
+12000ft, speed 270kts, TACAN 06Y, Freq: 149.0\
+\
+IL-78 Tanker A (Shell):\
+24000ft, speed 380kts, TACAN 07Y, Freq: 230.750\
+\
+KC-130 Tanker B (ARCO):\
+18000ft, speed 336kts, TACAN 08Y, Freq: 235.500\
+\
+AGGRESSOR IL-78 (C/S 401)\
+18000ft, speed 336, TACAN 09Y, Freq: 244.25\
+\
+AGGRESSOR IL-78 (C/S 401)\
+18000ft, speed 336, TACAN 10Y, Freq: 244.50",
     ["DictKey_sortie_5"] = "132nd Wing Training Mission",
 } -- end of dictionary
