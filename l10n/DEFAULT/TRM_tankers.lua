@@ -39,8 +39,6 @@ _TANKER_UNITS = {
   {NAME='KC-135_SHELL',  TACAN=6},
   {NAME='KC-135_TEXACO', TACAN=5 },
   {NAME='AGGRESSOR_Il78M', TACAN=09},
-  {NAME='AGGRESSOR_Il78M_North', TACAN=10},
-  
 }
 
 -- Minimum fuel
@@ -58,7 +56,7 @@ _TANKER_UNITS = {
 -- The value is written as a decimal expressing a percentage
 -- Ex:
 --      0.2 = 20%
-_TANKER_MIN_FUEL = 0.2
+_TANKER_MIN_FUEL = 0.4
 
 -- Debug
 --------
@@ -75,7 +73,7 @@ _TANKER_DEBUG = false
 -- orbiting waypoint, the out-of-fuel waiting tanker will be sent home.
 --
 -- The distans is expressed in meters
-_TANKER_REINF_RADIUS = 5000
+_TANKER_REINF_RADIUS = 10000
 
 
 ---------------------------------

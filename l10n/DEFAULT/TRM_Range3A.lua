@@ -159,7 +159,7 @@ end
 
 
 
-Menu_Range_T3 = MENU_MISSION:New("Range T3", Menu_Range_Options)
+Menu_Range_T3 = MENU_MISSION:New("Range 3A", Menu_Range_Options)
 Menu_Range_T3_startfire = MENU_MISSION_COMMAND:New("Hostiles: Start Firing",Menu_Range_T3,T3_startfire)
 
 

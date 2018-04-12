@@ -6,7 +6,7 @@
  bombtargets_RangeT3B_13={"T3B.13_Bombingcircle_W", "T3B.13_Bombingcircle_E", "T3B.13_Bombingcircle_N" }
 
  -- Create a range object.
- RangeT3B_13=RANGE:New("RangeT3B.13")
+ RangeT3B_13=RANGE:New("Range3B")
  
 
  
