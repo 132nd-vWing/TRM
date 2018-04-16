@@ -40,22 +40,32 @@
  Civ757:ContinueJourney()
  CivA380:ContinueJourney()
  
- -- disable all ATC messages
- Civ737:ATC_Messages(false)
- -- Spawn  aircraft.
- Civ737:StatusReports(false)
-  
- Civ737:Spawn(math.random(1,3))
+
+Civ737:ATC_Messages(false)
+Civ737:StatusReports(false)
+Civ737:Spawn(math.random(1,3))
  
- local B747= math.random(0,10)
- if B747 <= 7 then 
- Civ747:StatusReports(false) 
- Civ747:Spawn(1)
- else 
- CivA380:StatusReports(false) 
- CivA380:Spawn(math.random(0,1))
- end
- 
- Civ757:StatusReports(false) 
- Civ757:Spawn(math.random(0,2))
+local B747= math.random(1,10)
+if B747 <= 7 then
+  Civ747:StatusReports(false)
+  Civ747:Spawn(1)
+else
+end
+if B747 >7 then
+  local A380 =  math.random(0,1)
+  if A380 == 1 then
+    CivA380:StatusReports(false)
+    CivA380:Spawn(1)
+  else
+  end
+end
+
+local B757 = (math.random(0,2))
+if B757 >= 1 then
+  Civ757:StatusReports(false)
+  Civ757:Spawn(B757)
+else
+end
+
+
 
