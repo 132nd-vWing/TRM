@@ -66,7 +66,7 @@ SPAWN:New("RED AGGRESSOR AWACS"):InitLimit(1,0):InitRepeatOnEngineShutDown():Spa
 --
 
 AllGroundUnits = SET_GROUP:New():FilterCategoryGround()
-AllGroundUnits:FilterStart()
+AllGroundUnits:FilterOnce()
 AllGroundUnits:ForEachGroup(function (allgroups)
 allgroups:OptionDisperseOff() end)
 env.info("We iterated over each Ground Group and set their option to disperse under fire to off")
