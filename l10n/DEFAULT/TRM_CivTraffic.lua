@@ -19,8 +19,11 @@
  CivA380:SetCoalition("sameonly")
  Civ757:SetCoalition("sameonly")
 
--- Civ737:ExcludedAirports({ "Anapa-Vityazevo" , "Krymsk" , "Novorossiysk" , "Kobuleti" })
-
+ Civ737:ExcludedAirports("Soganlug")
+ Civ747:ExcludedAirports("Soganlug")
+ Civ757:ExcludedAirports("Soganlug")
+ CivA380:ExcludedAirports("Soganlug")
+ 
  -- We also change the livery of these groups. If a table of liveries is given, each spawned group gets a random livery.
  Civ737:Livery({"Air France", "airBaltic", "American_Airlines", 
  "British Airways", "UPS","Ukraine Airlines" , "TNT",
