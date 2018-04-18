@@ -60,10 +60,10 @@ if B747 >7 then
   end
 end
 
-local B757 = (math.random(0,2))
+local B757 = (math.random(0,3))
 if B757 >= 1 then
   Civ757:StatusReports(false)
-  Civ757:Spawn(B757)
+  Civ757:Spawn(math.random(1,2))
 else
 end
 
