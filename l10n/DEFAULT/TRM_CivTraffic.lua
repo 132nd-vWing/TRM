@@ -29,7 +29,7 @@
  "British Airways", "UPS","Ukraine Airlines" , "TNT",
   "easyJet", "ThomsonFly", "HARIBO", "Lufthansa BA",
   "Lufthansa KR" ,"OMAN AIR","Polskie Linie Lotnicze LOT"  })
- 
+  
  Civ747:Livery({"Air France", "Lufthansa", "Royal Durch Airlines KLM", "Cathay Pacific Hong Kong" })
  
  CivA380:Livery({"Air France", "British Airways", "China Southern", "Emirates", "Lufthansa", "Singapore Airlines" })
