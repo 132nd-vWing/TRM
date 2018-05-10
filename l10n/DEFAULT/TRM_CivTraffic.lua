@@ -25,7 +25,7 @@
  CivA380:ExcludedAirports("Soganlug")
  
  -- We also change the livery of these groups. If a table of liveries is given, each spawned group gets a random livery.
- Civ737:Livery({"Air France", "airBaltic", "American_Airlines", 
+ Civ737:Livery({"Air France", "airBaltic", 
  "British Airways", "UPS","Ukraine Airlines" , "TNT",
   "easyJet", "ThomsonFly", "HARIBO", "Lufthansa BA",
   "Lufthansa KR" ,"OMAN AIR","Polskie Linie Lotnicze LOT"  })
