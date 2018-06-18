@@ -35,13 +35,12 @@ SCHEDULER:New(nil,function()
   end)
 end,{},300,300,0,0)
 
-
-
-
-
-
-
-
+-- ARK-UD BEACONS -- 
+SCHEDULER:New(nil,function()
+STENNIS = GROUP:FindByName("CVN STENNIS")
+STENNIS_Radio = STENNIS:GetBeacon()
+STENNIS_Radio:RadioBeacon("beacon.ogg",114.583,radio.modulation.AM,150)--preset3
+end,{},15*60,30)
 
 
 
