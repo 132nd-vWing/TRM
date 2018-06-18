@@ -752,7 +752,7 @@ end,...)",
     ["DictKey_GroupName_2418"] = "FOB + Field hospital #004",
     ["DictKey_GroupName_2421"] = "Medic_vehicle",
     ["DictKey_GroupName_2424"] = "FOB + Field hospital #006",
-    ["DictKey_GroupName_2427"] = "FOB + Field hospital #007",
+    ["DictKey_GroupName_2427"] = "FARP FOB",
     ["DictKey_GroupName_2430"] = "FOB + Field hospital #008",
     ["DictKey_GroupName_2433"] = "FOB + Field hospital #009",
     ["DictKey_GroupName_2436"] = "Medic_vehicle",
@@ -1317,6 +1317,8 @@ end,...)",
     ["DictKey_GroupName_4766"] = "New Helicopter Group",
     ["DictKey_GroupName_4785"] = "FCLP RWY 26",
     ["DictKey_GroupName_4788"] = "New Vehicle Group",
+    ["DictKey_GroupName_4791"] = "FOB + Field hospital #004",
+    ["DictKey_GroupName_4794"] = "LHA-1 Tarawa",
     ["DictKey_UnitName_7"] = "Unit #1",
     ["DictKey_UnitName_10"] = "",
     ["DictKey_UnitName_13"] = "New Static Object",
@@ -2708,6 +2710,8 @@ end,...)",
     ["DictKey_UnitName_4767"] = "Pilot #022",
     ["DictKey_UnitName_4786"] = "",
     ["DictKey_UnitName_4789"] = "Unit #124",
+    ["DictKey_UnitName_4792"] = "FOB + Field hospital #007",
+    ["DictKey_UnitName_4795"] = "LHA-1 Tarawa",
     ["DictKey_WptName_8"] = "",
     ["DictKey_WptName_11"] = "",
     ["DictKey_WptName_14"] = "",
@@ -4428,6 +4432,28 @@ end,...)",
     ["DictKey_WptName_4769"] = "",
     ["DictKey_WptName_4787"] = "",
     ["DictKey_WptName_4790"] = "",
+    ["DictKey_WptName_4793"] = "",
+    ["DictKey_WptName_4796"] = "",
+    ["DictKey_WptName_4797"] = "",
+    ["DictKey_WptName_4798"] = "",
+    ["DictKey_WptName_4799"] = "",
+    ["DictKey_WptName_4800"] = "",
+    ["DictKey_WptName_4801"] = "",
+    ["DictKey_WptName_4802"] = "",
+    ["DictKey_WptName_4803"] = "",
+    ["DictKey_WptName_4804"] = "",
+    ["DictKey_WptName_4805"] = "",
+    ["DictKey_WptName_4806"] = "",
+    ["DictKey_WptName_4807"] = "",
+    ["DictKey_WptName_4808"] = "",
+    ["DictKey_WptName_4809"] = "",
+    ["DictKey_WptName_4810"] = "",
+    ["DictKey_WptName_4811"] = "",
+    ["DictKey_WptName_4812"] = "",
+    ["DictKey_WptName_4813"] = "",
+    ["DictKey_WptName_4814"] = "",
+    ["DictKey_WptName_4815"] = "",
+    ["DictKey_WptName_4816"] = "",
     ["DictKey_descriptionBlueTask_3"] = "",
     ["DictKey_descriptionNeutralsTask_4"] = "",
     ["DictKey_descriptionRedTask_2"] = "",
@@ -4449,7 +4475,11 @@ AGGRESSOR IL-78 (C/S 401)\
 18000ft, speed 336, TACAN 09Y, Freq: 244.25\
 \
 CARRIER CVN STENNIS\
-TACAN 26X    170° CRS\
+TACAN 74X   BRC 090° / 270°\
+Frequency: 247.750 (AQUA 6)\
+\
+LHA-1 Tarawa\
+TACAN 1X\
 \
 ARK-UD BEACONS\
 FARP KUTAISI   preset 1\
