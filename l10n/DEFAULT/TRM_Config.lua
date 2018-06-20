@@ -41,14 +41,14 @@ STENNIS = GROUP:FindByName("CVN STENNIS")
 STENNIS_Radio = STENNIS:GetBeacon()
 STENNIS_Radio:RadioBeacon("beacon.ogg",114.583,radio.modulation.AM,150)--preset3
 env.info('Stennis beacons refreshed')
-end,{},3,15*60)
+end,{},5,60)
 
 SCHEDULER:New(nil,function()
 Tarawa = GROUP:FindByName("LHA-1 Tarawa")
 Tarawa_Radio = Tarawa:GetBeacon()
 Tarawa_Radio:RadioBeacon("beacon.ogg",121.500,radio.modulation.AM,150)--preset4
 env.info('Tarawa beacons refreshed')
-end,{},7,15*60)
+end,{},35,60)
 
 -- DISPERSE UNDER FIRE OFF
 --search for this line in moose:

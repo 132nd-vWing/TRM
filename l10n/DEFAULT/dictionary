@@ -1338,6 +1338,8 @@ end,...)",
     ["DictKey_GroupName_4865"] = "New Static Object #098",
     ["DictKey_GroupName_4869"] = "New Helicopter Group",
     ["DictKey_GroupName_4877"] = "New Helicopter Group #001",
+    ["DictKey_GroupName_4885"] = "New Helicopter Group",
+    ["DictKey_GroupName_4890"] = "New Helicopter Group #001",
     ["DictKey_UnitName_7"] = "Unit #1",
     ["DictKey_UnitName_10"] = "",
     ["DictKey_UnitName_13"] = "New Static Object",
@@ -2750,6 +2752,8 @@ end,...)",
     ["DictKey_UnitName_4866"] = "New Static Object #041",
     ["DictKey_UnitName_4870"] = "Pilot #022",
     ["DictKey_UnitName_4878"] = "Pilot #023",
+    ["DictKey_UnitName_4886"] = "Pilot #022",
+    ["DictKey_UnitName_4891"] = "Pilot #023",
     ["DictKey_WptName_8"] = "",
     ["DictKey_WptName_11"] = "",
     ["DictKey_WptName_14"] = "",
@@ -4513,6 +4517,11 @@ end,...)",
     ["DictKey_WptName_4872"] = "",
     ["DictKey_WptName_4879"] = "",
     ["DictKey_WptName_4880"] = "",
+    ["DictKey_WptName_4887"] = "",
+    ["DictKey_WptName_4888"] = "",
+    ["DictKey_WptName_4889"] = "",
+    ["DictKey_WptName_4892"] = "",
+    ["DictKey_WptName_4893"] = "",
     ["DictKey_descriptionBlueTask_3"] = "",
     ["DictKey_descriptionNeutralsTask_4"] = "",
     ["DictKey_descriptionRedTask_2"] = "",
@@ -4543,8 +4552,9 @@ LHA frequncy: 241.250 (LEMON 6)\
 Callsign: TBD (Use TARAWA CONTROL for now)\
 \
 ARK-UD BEACONS\
-FARP KUTAISI    preset 1\
-FARP LONDON  preset 2\
-LHA-1 TARAWA preset 4",
+FARP KUTAISI     preset 1\
+FARP LONDON   preset 2\
+CVN STENNIS     preset 3\
+LHA-1 TARAWA  preset 4",
     ["DictKey_sortie_5"] = "132nd Wing Training Mission",
 } -- end of dictionary
