@@ -26,145 +26,6 @@ R3A_red_misc:PatrolRoute()
 R3A_red_hummer:PatrolRoute()
 
 
-
---JTAC Moving Column Fire--
-
-R3A_JTAC_CONVOY = GROUP:FindByName("R3A_JTAC CONVOY")
-
-T3A2_1 = GROUP:FindByName("T3A.2_1")
-T3A2_2 = GROUP:FindByName("T3A.2_2")
-T3A2_3 = GROUP:FindByName("T3A.2_3")
-T3A2_4 = GROUP:FindByName("T3A.2_4")
-T3A2_5 = GROUP:FindByName("T3A.2_5")
-
-function T3_startfire()
-T3A2_1fire = SCHEDULER:New( nil,
-          function()
-Convoy_location = R3A_JTAC_CONVOY:GetVec2()
-T3A2_1:SetTask(
-                {
-                  id = 'FireAtPoint',
-                  params = {
-                    x=Convoy_location.x + 15,
-                    y=Convoy_location.y + 15,
-                    radius=100,
-                    expendQty=100,
-                    expendQtyEnabled=y
-                  }
-                }, 1)
-
-       
-          end,
-        {}, 2, 30 )
-        
-
-T3A2_2fire = SCHEDULER:New( nil,
-          function()
-Convoy_location = R3A_JTAC_CONVOY:GetVec2()
-T3A2_2:SetTask(
-                {
-                  id = 'FireAtPoint',
-                  params = {
-                    x=Convoy_location.x + 15,
-                    y=Convoy_location.y + 15,
-                    radius=100,
-                    expendQty=100,
-                    expendQtyEnabled=y
-                  }
-                }, 1)
-
-       
-          end,
-        {}, 2, 30 )
-
-T3A2_3fire = SCHEDULER:New( nil,
-          function()
-Convoy_location = R3A_JTAC_CONVOY:GetVec2()
-T3A2_3:SetTask(
-                {
-                  id = 'FireAtPoint',
-                  params = {
-                    x=Convoy_location.x + 15,
-                    y=Convoy_location.y + 15,
-                    radius=100,
-                    expendQty=100,
-                    expendQtyEnabled=y
-                  }
-                }, 1)
-
-       
-          end,
-        {}, 2, 30 )
-        
-
-
-T3A2_4fire = SCHEDULER:New( nil,
-          function()
-Convoy_location = R3A_JTAC_CONVOY:GetVec2()
-T3A2_4:SetTask(
-                {
-                  id = 'FireAtPoint',
-                  params = {
-                    x=Convoy_location.x + 15,
-                    y=Convoy_location.y + 15,
-                    radius=100,
-                    expendQty=100,
-                    expendQtyEnabled=y
-                  }
-                }, 1)
-
-       
-          end,
-        {}, 2, 30 )
-       
-
-
-T3A2_5fire = SCHEDULER:New( nil,
-          function()
-Convoy_location = R3A_JTAC_CONVOY:GetVec2()
-T3A2_5:SetTask(
-                {
-                  id = 'FireAtPoint',
-                  params = {
-                    x=Convoy_location.x + 15,
-                    y=Convoy_location.y + 15,
-                    radius=100,
-                    expendQty=100,
-                    expendQtyEnabled=y
-                  }
-                }, 1)
-
-       
-          end,
-        {}, 2, 30 )
- 
-Menu_Range_T3_startfire:Remove()
-Menu_Range_T3_stopfire = MENU_MISSION_COMMAND:New("Hostiles: Stop Firing",Menu_Range_R3A,T3_stopfire)
-end
-
-function T3_stopfire ()
-T3A2_1:ClearTasks()
-T3A2_2:ClearTasks()
-T3A2_3:ClearTasks()
-T3A2_4:ClearTasks()
-T3A2_5:ClearTasks()
-T3A2_1fire:Stop()
-T3A2_2fire:Stop() 
-T3A2_3fire:Stop() 
-T3A2_4fire:Stop() 
-T3A2_5fire:Stop()
-Menu_Range_T3_stopfire:Remove()
-Menu_Range_T3_startfire = MENU_MISSION_COMMAND:New("Hostiles: Start Firing",Menu_Range_R3A,T3_startfire)  
-end      
-
-
-
-Menu_Range_R3A = MENU_MISSION:New("Range 3A", Menu_Range_Options)
-Menu_Range_T3_startfire = MENU_MISSION_COMMAND:New("Hostiles: Start Firing",Menu_Range_R3A,T3_startfire)
-
-
---JTAC Moving Column Fire--
-
 -- ON DEMAND SPAWNING -- 
 BlueSpawnerR3A = UNIT:FindByName("BlueInfantryR3A")
 RedSpawnerR3A = UNIT:FindByName("REDInfantryR3A")
@@ -400,8 +261,8 @@ group:OptionDisperseOff()end)
 MISC_SA19_vehicle_R3A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR3A)
 end
 -- ON DEMAND SPAWNING -- 
-
-Menu_Range_R3A = MENU_MISSION:New("Range 3A", Menu_Range_Options)
+Menu_Ranges_R3A_B = MENU_MISSION:New("Range 3A and 3B", Menu_Range_Options)
+Menu_Range_R3A = MENU_MISSION:New("Range 3A", Menu_Ranges_R3A_B)
 spawn_menu_OD_R3A = MENU_MISSION:New("On Demand Spawning",Menu_Range_R3A)
 spawn_menu_OD_Recon_R3A = MENU_MISSION:New("On Demand - RECON",spawn_menu_OD_R3A)
 spawn_menu_OD_IFV_R3A = MENU_MISSION:New("On Demand - IFV",spawn_menu_OD_R3A)
@@ -456,7 +317,143 @@ local menu_ON_DEMAND_4_MISC_MLRS_vehicle_R3A = MENU_MISSION_COMMAND:New("Spawn M
 local menu_ON_DEMAND_4_MISC_SA13_vehicle_R3A = MENU_MISSION_COMMAND:New("Spawn SA13 Vehicle",spawn_menu_OD_MISC_R3A,_ON_DEMAND_4_MISC_SA13_vehicle_R3A)
 local menu_ON_DEMAND_4_MISC_SA19_vehicle_R3A = MENU_MISSION_COMMAND:New("Spawn SA19 Vehicle",spawn_menu_OD_MISC_R3A,_ON_DEMAND_4_MISC_SA19_vehicle_R3A)
 
+--JTAC Moving Column Fire--
 
+R3A_JTAC_CONVOY = GROUP:FindByName("R3A_JTAC CONVOY")
+
+T3A2_1 = GROUP:FindByName("T3A.2_1")
+T3A2_2 = GROUP:FindByName("T3A.2_2")
+T3A2_3 = GROUP:FindByName("T3A.2_3")
+T3A2_4 = GROUP:FindByName("T3A.2_4")
+T3A2_5 = GROUP:FindByName("T3A.2_5")
+
+function T3_startfire()
+T3A2_1fire = SCHEDULER:New( nil,
+          function()
+Convoy_location = R3A_JTAC_CONVOY:GetVec2()
+T3A2_1:SetTask(
+                {
+                  id = 'FireAtPoint',
+                  params = {
+                    x=Convoy_location.x + 15,
+                    y=Convoy_location.y + 15,
+                    radius=100,
+                    expendQty=100,
+                    expendQtyEnabled=y
+                  }
+                }, 1)
+
+       
+          end,
+        {}, 2, 30 )
+        
+
+T3A2_2fire = SCHEDULER:New( nil,
+          function()
+Convoy_location = R3A_JTAC_CONVOY:GetVec2()
+T3A2_2:SetTask(
+                {
+                  id = 'FireAtPoint',
+                  params = {
+                    x=Convoy_location.x + 15,
+                    y=Convoy_location.y + 15,
+                    radius=100,
+                    expendQty=100,
+                    expendQtyEnabled=y
+                  }
+                }, 1)
+
+       
+          end,
+        {}, 2, 30 )
+
+T3A2_3fire = SCHEDULER:New( nil,
+          function()
+Convoy_location = R3A_JTAC_CONVOY:GetVec2()
+T3A2_3:SetTask(
+                {
+                  id = 'FireAtPoint',
+                  params = {
+                    x=Convoy_location.x + 15,
+                    y=Convoy_location.y + 15,
+                    radius=100,
+                    expendQty=100,
+                    expendQtyEnabled=y
+                  }
+                }, 1)
+
+       
+          end,
+        {}, 2, 30 )
+        
+
+
+T3A2_4fire = SCHEDULER:New( nil,
+          function()
+Convoy_location = R3A_JTAC_CONVOY:GetVec2()
+T3A2_4:SetTask(
+                {
+                  id = 'FireAtPoint',
+                  params = {
+                    x=Convoy_location.x + 15,
+                    y=Convoy_location.y + 15,
+                    radius=100,
+                    expendQty=100,
+                    expendQtyEnabled=y
+                  }
+                }, 1)
+
+       
+          end,
+        {}, 2, 30 )
+       
+
+
+T3A2_5fire = SCHEDULER:New( nil,
+          function()
+Convoy_location = R3A_JTAC_CONVOY:GetVec2()
+T3A2_5:SetTask(
+                {
+                  id = 'FireAtPoint',
+                  params = {
+                    x=Convoy_location.x + 15,
+                    y=Convoy_location.y + 15,
+                    radius=100,
+                    expendQty=100,
+                    expendQtyEnabled=y
+                  }
+                }, 1)
+
+       
+          end,
+        {}, 2, 30 )
+ 
+Menu_Range_T3_startfire:Remove()
+Menu_Range_T3_stopfire = MENU_MISSION_COMMAND:New("Hostiles: Stop Firing",Menu_Range_R3A,T3_stopfire)
+end
+
+function T3_stopfire ()
+T3A2_1:ClearTasks()
+T3A2_2:ClearTasks()
+T3A2_3:ClearTasks()
+T3A2_4:ClearTasks()
+T3A2_5:ClearTasks()
+T3A2_1fire:Stop()
+T3A2_2fire:Stop() 
+T3A2_3fire:Stop() 
+T3A2_4fire:Stop() 
+T3A2_5fire:Stop()
+Menu_Range_T3_stopfire:Remove()
+Menu_Range_T3_startfire = MENU_MISSION_COMMAND:New("Hostiles: Start Firing",Menu_Range_R3A,T3_startfire)  
+end      
+
+
+
+
+Menu_Range_T3_startfire = MENU_MISSION_COMMAND:New("Hostiles: Start Firing",Menu_Range_R3A,T3_startfire)
+
+
+--JTAC Moving Column Fire--
 
 
 

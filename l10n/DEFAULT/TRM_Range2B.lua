@@ -238,8 +238,7 @@ end
 
 -- ON DEMAND SPAWNING -- 
 
-Menu_Range_R2 = MENU_MISSION:New("Range 2B", Menu_Range_Options)
-Menu_Range_R2B = MENU_MISSION:New("Range 2B.2", Menu_Range_R2)
+Menu_Range_R2B = MENU_MISSION:New("Range 2B.2", Menu_Range_R2A_B)
 spawn_menu_OD_R2B = MENU_MISSION:New("On Demand Spawning",Menu_Range_R2B)
 
 spawn_menu_OD_Recon_R2B = MENU_MISSION:New("On Demand - RECON",spawn_menu_OD_R2B)
@@ -578,7 +577,7 @@ Range2B_4_Groups_Distance_Max = 300 -- max Distance in Meters for randomized mov
 
 -- move targets_periodically 
 function moveT2B4Groups_periodically_start()
-  spawn_menu_OD_R2B_SOUTH_MoveODSpawns_periodically_stop = MENU_MISSION_COMMAND:New("Disable Spawned Group changing Position every " ..Range2B_4_Groups_movetimer.."Minutes",Menu_Range_R2,moveT2B4Groups_periodically_stop)
+  spawn_menu_OD_R2B_SOUTH_MoveODSpawns_periodically_stop = MENU_MISSION_COMMAND:New("Disable Spawned Group changing Position every " ..Range2B_4_Groups_movetimer.."Minutes",Menu_Range_R2B,moveT2B4Groups_periodically_stop)
   spawn_menu_OD_R2B_SOUTH_MoveODSpawns_periodically_start:Remove()
   Range2B_4_PositionChange =
     SCHEDULER:New(nil,function ()
@@ -594,7 +593,7 @@ end
 
 function moveT2B4Groups_periodically_stop()
 spawn_menu_OD_R2B_SOUTH_MoveODSpawns_periodically_stop:Remove()
-spawn_menu_OD_R2B_SOUTH_MoveODSpawns_periodically_start = MENU_MISSION_COMMAND:New("Spawned Groups Change Position every 5 Minutes",Menu_Range_R2,moveT2B4Groups_periodically_start)
+spawn_menu_OD_R2B_SOUTH_MoveODSpawns_periodically_start = MENU_MISSION_COMMAND:New("Spawned Groups Change Position every 5 Minutes",Menu_Range_R2B,moveT2B4Groups_periodically_start)
 Range2B_4_PositionChange:Stop()
 end
 
@@ -603,10 +602,10 @@ end
 
 Range2B_4_Groups = SET_GROUP:New():FilterCategoryGround():FilterPrefixes("Range2B"):FilterStart()
 
-Menu_Range_R2B_SOUTH = MENU_MISSION:New("Range 2B.4", Menu_Range_R2)
+Menu_Range_R2B_SOUTH = MENU_MISSION:New("Range 2B.4", Menu_Range_R2A_B)
 spawn_menu_OD_R2B_SOUTH = MENU_MISSION:New("On Demand Spawning",Menu_Range_R2B_SOUTH)
-spawn_menu_OD_R2B_SOUTH_MoveODSpawns = MENU_MISSION_COMMAND:New("Move Positions of Spawned Groups",Menu_Range_R2,moveT2B4Groups)
-spawn_menu_OD_R2B_SOUTH_MoveODSpawns_periodically_start = MENU_MISSION_COMMAND:New("Spawned Groups Change Position every 5 Minutes",Menu_Range_R2,moveT2B4Groups_periodically_start)
+spawn_menu_OD_R2B_SOUTH_MoveODSpawns = MENU_MISSION_COMMAND:New("Move Positions of Spawned Groups",Menu_Range_R2B,moveT2B4Groups)
+spawn_menu_OD_R2B_SOUTH_MoveODSpawns_periodically_start = MENU_MISSION_COMMAND:New("Spawned Groups Change Position every 5 Minutes",Menu_Range_R2B,moveT2B4Groups_periodically_start)
 
 spawn_menu_OD_Recon_R2B_SOUTH = MENU_MISSION:New("On Demand - RECON",spawn_menu_OD_R2B_SOUTH)
 spawn_menu_OD_IFV_R2B_SOUTH = MENU_MISSION:New("On Demand - IFV",spawn_menu_OD_R2B_SOUTH)
@@ -709,7 +708,6 @@ end
 spawn_menu_R2B_2 = MENU_MISSION_COMMAND:New("Set up Range 2B.2 dynamically",Menu_Range_R2B,SpawnTargets_R2B_2)
 
 -- random setup for Range 2B.2
-
 
 
 

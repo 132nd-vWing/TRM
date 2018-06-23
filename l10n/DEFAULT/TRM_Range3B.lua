@@ -270,7 +270,7 @@ MISC_SA19_vehicle_R3B:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR
 end
 -- ON DEMAND SPAWNING -- 
 
-Menu_Range_R3B = MENU_MISSION:New("Range 3B Center", Menu_Range_Options)
+Menu_Range_R3B = MENU_MISSION:New("Range 3B Center", Menu_Ranges_R3A_B)
 spawn_menu_OD_R3B = MENU_MISSION:New("On Demand Spawning",Menu_Range_R3B)
 spawn_menu_OD_Recon_R3B = MENU_MISSION:New("On Demand - RECON",spawn_menu_OD_R3B)
 spawn_menu_OD_IFV_R3B = MENU_MISSION:New("On Demand - IFV",spawn_menu_OD_R3B)
@@ -564,7 +564,7 @@ MISC_SA19_vehicle_R3B_North:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSp
 end
 -- ON DEMAND SPAWNING -- 
 
-Menu_Range_R3B_North = MENU_MISSION:New("Range 3B North", Menu_Range_Options)
+Menu_Range_R3B_North = MENU_MISSION:New("Range 3B North", Menu_Ranges_R3A_B)
 spawn_menu_OD_R3B_North = MENU_MISSION:New("On Demand Spawning",Menu_Range_R3B_North)
 spawn_menu_OD_Recon_R3B_North = MENU_MISSION:New("On Demand - RECON",spawn_menu_OD_R3B_North)
 spawn_menu_OD_IFV_R3B_North = MENU_MISSION:New("On Demand - IFV",spawn_menu_OD_R3B_North)

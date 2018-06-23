@@ -235,8 +235,8 @@ group:OptionDisperseOff()end)
 MISC_SA19_vehicle_R2A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2A)
 end
 -- ON DEMAND SPAWNING -- 
-
-Menu_Range_R2A = MENU_MISSION:New("Range 2A", Menu_Range_Options)
+Menu_Range_R2A_B = MENU_MISSION:New("Ranges 2A and 2B", Menu_Range_Options)
+Menu_Range_R2A = MENU_MISSION:New("Range 2A",Menu_Range_R2A_B)
 spawn_menu_OD_R2A = MENU_MISSION:New("On Demand Spawning",Menu_Range_R2A)
 spawn_menu_OD_Recon_R2A = MENU_MISSION:New("On Demand - RECON",spawn_menu_OD_R2A)
 spawn_menu_OD_IFV_R2A = MENU_MISSION:New("On Demand - IFV",spawn_menu_OD_R2A)
