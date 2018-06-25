@@ -656,7 +656,7 @@ warehouses =
             ["aircrafts"] =
             {
             }, -- end of ["aircrafts"]
-            ["coalition"] = "BLUE",
+            ["coalition"] = "RED",
             ["diesel"] =
             {
                 ["InitFuel"] = 100,
@@ -732,7 +732,7 @@ warehouses =
             ["aircrafts"] =
             {
             }, -- end of ["aircrafts"]
-            ["coalition"] = "BLUE",
+            ["coalition"] = "RED",
             ["diesel"] =
             {
                 ["InitFuel"] = 100,
