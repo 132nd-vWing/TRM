@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2018-04-07T21:39:48.0000000Z-d78945fc6780044d2d974b9cb9ba6a8762e46c46 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2018-06-18T21:19:08.0000000Z-7cf1c1c13632c4776d3f73a75fdac4bb4351ece3 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 env.setErrorMessageBoxEnabled(false)
 routines={}
@@ -2822,6 +2822,10 @@ PlayerLeaveUnit=world.event.S_EVENT_PLAYER_LEAVE_UNIT,
 PlayerComment=world.event.S_EVENT_PLAYER_COMMENT,
 ShootingStart=world.event.S_EVENT_SHOOTING_START,
 ShootingEnd=world.event.S_EVENT_SHOOTING_END,
+MarkAdded=world.event.S_EVENT_MARK_ADDED,
+MarkChange=world.event.S_EVENT_MARK_CHANGE,
+MarkRemoved=world.event.S_EVENT_MARK_REMOVED,
+ShootingEnd=world.event.S_EVENT_SHOOTING_END,
 NewCargo=world.event.S_EVENT_NEW_CARGO,
 DeleteCargo=world.event.S_EVENT_DELETE_CARGO,
 }
@@ -2963,6 +2967,24 @@ Order=1,
 Side="I",
 Event="OnEventShootingEnd",
 Text="S_EVENT_SHOOTING_END"
+},
+[world.event.S_EVENT_MARK_ADDED]={
+Order=1,
+Side="I",
+Event="OnEventMarkAdded",
+Text="S_EVENT_MARK_ADDED"
+},
+[world.event.S_EVENT_MARK_CHANGE]={
+Order=1,
+Side="I",
+Event="OnEventMarkChange",
+Text="S_EVENT_MARK_CHANGE"
+},
+[world.event.S_EVENT_MARK_REMOVED]={
+Order=1,
+Side="I",
+Event="OnEventMarkRemoved",
+Text="S_EVENT_MARK_REMOVED"
 },
 [EVENTS.NewCargo]={
 Order=1,
@@ -9395,8 +9417,9 @@ end
 function RADIO:NewUnitTransmission(FileName,Subtitle,SubtitleDuration,Frequency,Modulation,Loop)
 self:F({FileName,Subtitle,SubtitleDuration,Frequency,Modulation,Loop})
 self:SetFileName(FileName)
-if Subtitle then self:SetSubtitle(Subtitle)end
-if SubtitleDuration then self:SetSubtitleDuration(SubtitleDuration)end
+local Duration=5
+if SubtitleDuration then Duration=SubtitleDuration end
+if Subtitle then self:SetSubtitle(Subtitle,Duration)end
 if Frequency then self:SetFrequency(Frequency)end
 if Modulation then self:SetModulation(Modulation)end
 if Loop then self:SetLoop(Loop)end
