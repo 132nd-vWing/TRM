@@ -1,39 +1,4 @@
 
- -- Strafe pits. Each pit can consist of multiple targets. Here we have two pits and each of the pits has two targets. These are names of the corresponding units defined in the ME.
- RangeT3B_13_Strafepit_Table={"T3B.13_Strafepit1", "T3B.13_Strafepit2"}
-
- -- Table of bombing target names. 
- bombtargets_RangeT3B_13={"T3B.13_Bombingcircle_W", "T3B.13_Bombingcircle_E", "T3B.13_Bombingcircle_N" }
-
- -- Create a range object.
- RangeT3B_13=RANGE:New("Range3B")
- 
-
- 
- 
- 
- 
- 
---RangeT3B_13:DebugON()
-RangeT3B_13:SetMaxStrafeAlt(3000)
- -- Distance between foul line and strafe target. Note that this could also be done manually by simply measuring the distance between the target and the foul line in the ME.
- RangeT3B_13_Strafepit=UNIT:FindByName("T3B.13_Strafepit1")
- RangeT3B_13_Foulline=UNIT:FindByName("T3B.13_foulline")
-
- RangeT3B_13_fouldist=RangeT3B_13_Strafepit:GetCoordinate():Get2DDistance(RangeT3B_13_Foulline:GetCoordinate())
-
-
-
- -- Add strafe pits. Each pit (left and right) consists of two targets.
- RangeT3B_13:AddStrafePit(RangeT3B_13_Strafepit_Table, 5000, 800, nil, true, 20, RangeT3B_13_fouldist)
-
-
- -- Add bombing targets. A good hit is if the bomb falls less then 50 m from the target.
- RangeT3B_13:AddBombingTargets(bombtargets_RangeT3B_13, 50)
-
-
-RangeT3B_13:Start()
- 
 -- ON DEMAND SPAWNING -- 
 BlueSpawnerR3B = UNIT:FindByName("BlueInfantryR3B")
 RedSpawnerR3B = UNIT:FindByName("REDInfantryR3B")
@@ -269,6 +234,18 @@ group:OptionDisperseOff()end)
 MISC_SA19_vehicle_R3B:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR3B)
 end
 -- ON DEMAND SPAWNING -- 
+
+-- Range Menu--
+if Menu_Range_Options  ~= true then 
+Menu_Range_Options = MENU_MISSION:New("Range Options")
+else 
+end
+-- Range Options --
+
+
+if Menu_Ranges_R3A_B ~= true then 
+Menu_Ranges_R3A_B = MENU_MISSION:New("Range 3A and 3B", Menu_Range_Options)
+else end
 
 Menu_Range_R3B = MENU_MISSION:New("Range 3B Center", Menu_Ranges_R3A_B)
 spawn_menu_OD_R3B = MENU_MISSION:New("On Demand Spawning",Menu_Range_R3B)

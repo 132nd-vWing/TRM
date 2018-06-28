@@ -9,11 +9,6 @@ Trainer = MISSILETRAINER:New( 500, "Missile Trainer is active, ONLY if you see t
 Trainer:InitMessagesOnOff(true):InitAlertsToAll(true):InitAlertsHitsOnOff(true):InitAlertsLaunchesOnOff(true):InitBearingOnOff(false):InitRangeOnOff(false):InitTrackingOnOff(false):InitTrackingToAll(false):InitMenusOnOff(false)
 -- Missile Trainer
 
-
--- Range Menu--
-Menu_Range_Options = MENU_MISSION:New("Range Options")
--- Range Options --
-
 -- Threat Options --
 Menu_Threat_Options = MENU_MISSION:New("Threat Sites")
 -- Threat Options --
@@ -36,19 +31,19 @@ SCHEDULER:New(nil,function()
 end,{},300,300,0,0)
 
 -- ARK-UD BEACONS -- 
-SCHEDULER:New(nil,function()
-STENNIS = GROUP:FindByName("CVN STENNIS")
-STENNIS_Radio = STENNIS:GetBeacon()
-STENNIS_Radio:RadioBeacon("beacon.ogg",114.583,radio.modulation.AM,150)--preset3
-env.info('Stennis beacons refreshed')
-end,{},5,60)
+--SCHEDULER:New(nil,function()
+--STENNIS = GROUP:FindByName("CVN STENNIS")
+--STENNIS_Radio = STENNIS:GetBeacon()
+--STENNIS_Radio:RadioBeacon("beacon.ogg",114.583,radio.modulation.AM,150)--preset3
+--env.info('Stennis beacons refreshed')
+--end,{},5,60)
 
-SCHEDULER:New(nil,function()
-Tarawa = GROUP:FindByName("LHA-1 Tarawa")
-Tarawa_Radio = Tarawa:GetBeacon()
-Tarawa_Radio:RadioBeacon("beacon.ogg",121.500,radio.modulation.AM,150)--preset4
-env.info('Tarawa beacons refreshed')
-end,{},35,60)
+--SCHEDULER:New(nil,function()
+--Tarawa = GROUP:FindByName("LHA-1 Tarawa")
+--Tarawa_Radio = Tarawa:GetBeacon()
+--Tarawa_Radio:RadioBeacon("beacon.ogg",121.500,radio.modulation.AM,150)--preset4
+--env.info('Tarawa beacons refreshed')
+--end,{},35,60)
 
 -- DISPERSE UNDER FIRE OFF
 --search for this line in moose:

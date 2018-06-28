@@ -38,7 +38,7 @@ _TANKER_UNITS = {
   {NAME='KC-130_TANKER_B',  TACAN=8 },
   {NAME='KC-135_SHELL',  TACAN=6},
   {NAME='KC-135_TEXACO', TACAN=5 },
-  {NAME='AGGRESSOR_Il78M', TACAN=09},
+  {NAME='AGGRESSOR_Il78M', TACAN=9},
 }
 
 -- Minimum fuel
@@ -56,7 +56,7 @@ _TANKER_UNITS = {
 -- The value is written as a decimal expressing a percentage
 -- Ex:
 --      0.2 = 20%
-_TANKER_MIN_FUEL = 0.4
+_TANKER_MIN_FUEL = 0.6
 
 -- Debug
 --------

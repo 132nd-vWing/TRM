@@ -237,7 +237,12 @@ MISC_SA19_vehicle_R1:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR1
 end
 -- ON DEMAND SPAWNING -- 
 
-
+-- Range Menu--
+if Menu_Range_Options  ~= true then 
+Menu_Range_Options = MENU_MISSION:New("Range Options")
+else 
+end
+-- Range Options --
 
 Menu_Range_R1 = MENU_MISSION:New("Range 1", Menu_Range_Options)
 

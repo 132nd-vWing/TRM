@@ -238,6 +238,18 @@ end
 
 -- ON DEMAND SPAWNING -- 
 
+-- Range Menu--
+if Menu_Range_Options  ~= true then 
+Menu_Range_Options = MENU_MISSION:New("Range Options")
+else 
+end
+-- Range Options --
+
+
+if Menu_Range_R2A_B ~= true then 
+Menu_Range_R2A_B = MENU_MISSION:New("Ranges 2A and 2B", Menu_Range_Options)
+else end
+
 Menu_Range_R2B = MENU_MISSION:New("Range 2B.2", Menu_Range_R2A_B)
 spawn_menu_OD_R2B = MENU_MISSION:New("On Demand Spawning",Menu_Range_R2B)
 

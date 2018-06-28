@@ -260,8 +260,20 @@ MISC_SA19_vehicle_R3A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
 MISC_SA19_vehicle_R3A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR3A)
 end
--- ON DEMAND SPAWNING -- 
+-- ON DEMAND SPAWNING --
+
+-- Range Menu--
+if Menu_Range_Options  ~= true then 
+Menu_Range_Options = MENU_MISSION:New("Range Options")
+else 
+end
+-- Range Options --
+
+
+if Menu_Ranges_R3A_B ~= true then 
 Menu_Ranges_R3A_B = MENU_MISSION:New("Range 3A and 3B", Menu_Range_Options)
+else end
+
 Menu_Range_R3A = MENU_MISSION:New("Range 3A", Menu_Ranges_R3A_B)
 spawn_menu_OD_R3A = MENU_MISSION:New("On Demand Spawning",Menu_Range_R3A)
 spawn_menu_OD_Recon_R3A = MENU_MISSION:New("On Demand - RECON",spawn_menu_OD_R3A)
