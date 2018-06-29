@@ -24395,7 +24395,7 @@ if group and _gid then
 if not self.MenuAddedTo[_gid]then
 self.MenuAddedTo[_gid]=true
 if RANGE.MenuF10[_gid]==nil then
-RANGE.MenuF10[_gid]=missionCommands.addSubMenuForGroup(_gid,"On the Range")
+RANGE.MenuF10[_gid]=missionCommands.addSubMenuForGroup(_gid,"Basic Weapons Range")
 end
 local _rangePath=missionCommands.addSubMenuForGroup(_gid,self.rangename,RANGE.MenuF10[_gid])
 local _statsPath=missionCommands.addSubMenuForGroup(_gid,"Statistics",_rangePath)
