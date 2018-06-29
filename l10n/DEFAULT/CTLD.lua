@@ -88,7 +88,7 @@ ctld.radioSoundFC3 = "beaconsilent.ogg" -- name of the second silent radio file,
 
 ctld.deployedBeaconBattery = 120 -- the battery on deployed beacons will last for this number minutes before needing to be re-deployed
 
-ctld.enabledRadioBeaconDrop = true -- if its set to false then beacons cannot be dropped by units
+ctld.enabledRadioBeaconDrop = false -- if its set to false then beacons cannot be dropped by units
 
 ctld.allowRandomAiTeamPickups = false -- Allows the AI to randomize the loading of infantry teams (specified below) at pickup zones
 
