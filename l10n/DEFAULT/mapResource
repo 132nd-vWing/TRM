@@ -9,7 +9,6 @@ mapResource =
     ["ResKey_Action_4457"] = "TRM_ThreatSites.lua",
     ["ResKey_Action_5119"] = "TRM_tankers.lua",
     ["ResKey_Action_5179"] = "TRM_Basic Ranges.lua",
-    ["ResKey_Action_5180"] = "TRM_Config.lua",
     ["ResKey_Action_5185"] = "TRM_CivTraffic.lua",
     ["ResKey_Action_5199"] = "TRM_Range1.lua",
     ["ResKey_Action_5200"] = "TRM_Range2A.lua",
@@ -18,4 +17,5 @@ mapResource =
     ["ResKey_Action_5203"] = "TRM_Range3B.lua",
     ["ResKey_Action_5204"] = "CTLD.lua",
     ["ResKey_Action_5205"] = "Moose_.lua",
+    ["ResKey_Action_5228"] = "TRM_Config.lua",
 } -- end of mapResource
