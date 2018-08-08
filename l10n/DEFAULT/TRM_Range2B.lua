@@ -722,6 +722,52 @@ spawn_menu_R2B_2 = MENU_MISSION_COMMAND:New("Set up Range 2B.2 dynamically",Menu
 -- random setup for Range 2B.2
 
 
+-- random setup for Range 2B.4
+-- RED TABLE
+R2B_4_table_red_recon = { "Template 8.3: Recon platoon", "Template 8.2: Recon section", "Template 8.1: Recon vehicle" } -- table for the red recon
+R2B_4_table_red_IFV = { "Template 9.3: IFV platoon", "Template 9.2: IFV section", "Template 9.1: IFV vehicle" } -- table for the red IFV
+R2B_4_table_red_MBT = { "Template 10.3: MBT platoon", "Template 10.2: MBT section", "Template 10.1: MBT vehicle" } -- table for the red MBT
+R2B_4_table_red_AAA = { "Template 11.1: AAA vehicle", "Template 11.2 AAA vehicle on Ural", "Template 11.3 AAA vehicle with support", "Template 12.1: SA-13 vehicle" } -- table for the red AAA
+R2B_4_table_red_misc = { "Template 13.1: logistics vehicle", "Template 13.2: logistics section", "Template 14.1: C2 vehicle"  } -- table for the red misc
+-- RED TABLE
+
+function SpawnTargets_R2B_4 ()
+-- RED Spawners
+
+R2B_4_red_recon = SPAWN:NewWithAlias("R2B_4_red_recon", "Range2B_4 Target38"):InitRandomizeTemplate(R2B_4_table_red_recon):InitRandomizeRoute(3,0,100):Spawn()  
+R2B_4_red_recon:OptionDisperseOff()
+R2B_4_red_IFV = SPAWN:NewWithAlias("R2B_4_red_IFV", "Range2B_4 Target39"):InitRandomizeTemplate(R2B_4_table_red_IFV):InitRandomizeRoute(3,0,100):Spawn()
+R2B_4_red_IFV:OptionDisperseOff()
+R2B_4_red_MBT = SPAWN:NewWithAlias("R2B_4_red_MBT", "Range2B_4 Target40"):InitRandomizeTemplate(R2B_4_table_red_MBT):InitRandomizeRoute(3,0,100):Spawn()
+R2B_4_red_MBT:OptionDisperseOff()
+R2B_4_red_AAA = SPAWN:NewWithAlias("R2B_4_red_AAA", "Range2B_4 Target41"):InitRandomizeTemplate(R2B_4_table_red_AAA):InitRandomizeRoute(3,0,100):Spawn()
+R2B_4_red_AAA:OptionDisperseOff()
+R2B_4_red_misc = SPAWN:NewWithAlias("R2B_4_red_misc", "Range2B_4 Target42"):InitRandomizeTemplate(R2B_4_table_red_misc):InitRandomizeRoute(3,0,100):Spawn()
+R2B_4_red_misc:OptionDisperseOff()
+
+R2B_4_red_manpad1 = SPAWN:NewWithAlias("R2B_4_red_Manpad1", "Range2B_4 Target43"):Spawn()
+R2B_4_red_manpad1:OptionDisperseOff()
+R2B_4_red_manpad2 = SPAWN:NewWithAlias("R2B_4_red_Manpad2", "Range2B_4 Target44"):Spawn()
+R2B_4_red_manpad2:OptionDisperseOff()
+R2B_4_red_manpad3 = SPAWN:NewWithAlias("R2B_4_red_Manpad3", "Range2B_4 Target45"):Spawn()
+R2B_4_red_manpad3:OptionDisperseOff()
+
+R2B_4_red_Infantry_North = SPAWN:NewWithAlias("R2B_4_Infantry_North", "Range2B_4 Target46"):Spawn()
+R2B_4_red_Infantry_North:OptionDisperseOff()
+R2B_4_red_Infantry_South = SPAWN:NewWithAlias("R2B_4_Infantry_South", "Range2B_4 Target47"):Spawn()
+R2B_4_red_Infantry_North:OptionDisperseOff()
+
+R2B_4_red_AAA_North = SPAWN:NewWithAlias("R2B_4_red_AAA_North", "Range2B_4 Target48"):Spawn()
+R2B_4_red_AAA_North:OptionDisperseOff()
+R2B_4_red_AAA_South = SPAWN:NewWithAlias("R2B_4_red_AAA_South", "Range2B_4 Target49"):Spawn()
+R2B_4_red_AAA_South:OptionDisperseOff()
+
+
+spawn_menu_R2B_4:Remove()
+end
+
+spawn_menu_R2B_4 = MENU_MISSION_COMMAND:New("Set up Range 2B.4 dynamically",Menu_Range_R2B_SOUTH,SpawnTargets_R2B_4)
+
 
 
 

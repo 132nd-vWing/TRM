@@ -12,10 +12,10 @@ mapResource =
     ["ResKey_Action_5185"] = "TRM_CivTraffic.lua",
     ["ResKey_Action_5199"] = "TRM_Range1.lua",
     ["ResKey_Action_5200"] = "TRM_Range2A.lua",
-    ["ResKey_Action_5201"] = "TRM_Range2B.lua",
     ["ResKey_Action_5202"] = "TRM_Range3A.lua",
     ["ResKey_Action_5203"] = "TRM_Range3B.lua",
     ["ResKey_Action_5204"] = "CTLD.lua",
     ["ResKey_Action_5205"] = "Moose_.lua",
     ["ResKey_Action_5228"] = "TRM_Config.lua",
+    ["ResKey_Action_5504"] = "TRM_Range2B.lua",
 } -- end of mapResource
