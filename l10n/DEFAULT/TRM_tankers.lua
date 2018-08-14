@@ -274,21 +274,7 @@ function _TANKER.FSM:New( template )
     -- Spawn a tanker group
     function self:SpawnNewTanker()    
         self.group = _TANKER.Tanker:New(self.spawner:Spawn())
-    
-        -- Schedules the creation of the TACAN 10 seconds later, so the unit has time to appear
-        self.tacan_scheduler = SCHEDULER:New(
-          nil,
-          function( fsm )
-            if fsm.beacon ~= nil then
-              fsm.beacon:StopAATACAN()
-              fsm.group:Debug('stopping previous TACAN on channel: '..fsm.tacan_channel..'Y')
-            end
-            local unit = fsm.group:GetUnit(1)
-            fsm.beacon = unit:GetBeacon()
-            fsm.beacon:AATACAN(fsm.tacan_channel, fsm.template_name, true)
-            fsm.group:Debug('starting TACAN on channel: '..fsm.tacan_channel..'Y')
-          end, { self }, 10
-        )
+          
     end
     
     -- Triggered when the FSM is ready to work
@@ -355,7 +341,20 @@ function _TANKER.FSM:New( template )
                 elseif fsm.group:IsCompletelyInZone(fsm.zone) then
                 
                     fsm:Debug('tanker has arrived')
-                    
+                      -- Schedules the creation of the TACAN 10 seconds later, so the unit has time to appear
+        self.tacan_scheduler = SCHEDULER:New(
+          nil,
+          function( fsm )
+            if fsm.beacon ~= nil then
+              fsm.beacon:StopAATACAN()
+              fsm.group:Debug('stopping previous TACAN on channel: '..fsm.tacan_channel..'Y')
+            end
+            local unit = fsm.group:GetUnit(1)
+            fsm.beacon = unit:GetBeacon()
+            fsm.beacon:AATACAN(fsm.tacan_channel, fsm.template_name, true)
+            fsm.group:Debug('starting TACAN on channel: '..fsm.tacan_channel..'Y')
+          end, { self }, 10
+        )
                     -- Kill the periodic check
                     fsm.monitor_arriving_tanker:Stop()
                     
