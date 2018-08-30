@@ -97,16 +97,14 @@ end
 awacs3spawn()
 
 
-
-
 AWACS_Tankers  = SET_GROUP:New():FilterPrefixes({"BLUE AWACS", 'IL-78_TANKER_A', "RED AGGRESSOR", 'KC-130_TANKER_B', 'KC-135_SHELL','KC-135_TEXACO','AGGRESSOR_Il78M'}):FilterStart()
 SCHEDULER:New(nil,function()
-  AWACS_Tankers:ForEachGroup(function(_group)
+  AWACS_Tankers:ForEachGroupAlive(function(_group)
     local _unit = _group:GetUnit(1)
     speed = _unit:GetVelocityMPS()
     if speed <= 1 then
-    env.info (_unit:GetName().." was stuck on the ground and has been despawned")
-    _group:Destroy()
+      env.info (_unit:GetName().." was stuck on the ground and has been despawned")
+      _group:Destroy()
     end
   end)
 end,{},400,330,0,0)
