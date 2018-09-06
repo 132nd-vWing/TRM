@@ -29,7 +29,7 @@ function awacs1spawn()
           awacs1_unit_fuel = awacs1_unit:GetFuel()
           if awacs1_unit_fuel <= 0.3
           then
-            awacs1_group:RouteRTB()
+            awacs1_group:ClearTasks()
             awacs1_unit_fuel_scheduler:Stop()
             env.info(awacs1_group:GetName().." is low on fuel and RTBing")
             awacs1spawn()
@@ -55,7 +55,7 @@ function awacs2spawn()
           awacs2_unit_fuel = awacs2_unit:GetFuel()
           if awacs2_unit_fuel <= 0.3
           then
-            awacs2_group:RouteRTB()
+            awacs2_group:ClearTasks()
             awacs2_unit_fuel_scheduler:Stop()
             env.info(awacs2_group:GetName().." is low on fuel and RTBing")
             awacs2spawn()
@@ -81,7 +81,7 @@ function awacs3spawn()
           awacs3_unit_fuel = awacs3_unit:GetFuel()
           if awacs3_unit_fuel <= 0.3
           then
-            awacs3_group:RouteRTB()
+            awacs3_group:ClearTasks()
             awacs3_unit_fuel_scheduler:Stop()
             env.info(awacs3_group:GetName().." is low on fuel and RTBing")
             awacs3spawn()

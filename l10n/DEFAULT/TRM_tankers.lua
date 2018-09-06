@@ -152,7 +152,6 @@ function _TANKER.Tanker:New( group )
                         if self:IsCompletelyInZone(self.rtb_zone) then
                             self:Debug('no place like home')
                             self:ClearTasks()
-                            self:RouteRTB()
                             self.rtb_scheduler:Stop()
                             if self.remove_debug_menu ~= nil then
                               self:remove_debug_menu()
