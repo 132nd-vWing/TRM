@@ -88,7 +88,7 @@ ctld.radioSoundFC3 = "beaconsilent.ogg" -- name of the second silent radio file,
 
 ctld.deployedBeaconBattery = 120 -- the battery on deployed beacons will last for this number minutes before needing to be re-deployed
 
-ctld.enabledRadioBeaconDrop = false -- if its set to false then beacons cannot be dropped by units
+ctld.enabledRadioBeaconDrop = true -- if its set to false then beacons cannot be dropped by units
 
 ctld.allowRandomAiTeamPickups = false -- Allows the AI to randomize the loading of infantry teams (specified below) at pickup zones
 
@@ -195,6 +195,7 @@ ctld.transportPilotNames = {
     "259 #5",
     "259 #6 w/o hardpoints",
     "259 #7 w/o hardpoints",
+    "JTAC T2B_4",
 
     -- *** AI transports names (different names only to ease identification in mission) ***
 
@@ -215,6 +216,8 @@ ctld.extractableGroups = {
     "JTAC T2A.1",
     "JTAC T2A.4",
     "JTAC T2B.5",
+    "R2B_4_SOF_TEAM",
+    "JTAC T2B.4",
     
 }
 
@@ -238,7 +241,6 @@ ctld.logisticUnits = {
     "R2A_Storage,",
     "R2B_Storage_SOUTH",
     "T3B_Storage_NORTH",
-    
 }
 
 -- ************** UNITS ABLE TO TRANSPORT VEHICLES ******************

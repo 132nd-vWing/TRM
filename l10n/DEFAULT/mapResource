@@ -17,5 +17,5 @@ mapResource =
     ["ResKey_Action_5516"] = "TRM_Config.lua",
     ["ResKey_Action_5517"] = "TRM_tankers.lua",
     ["ResKey_Action_5523"] = "Moose.lua",
-    ["ResKey_Action_5528"] = "CTLD.lua",
+    ["ResKey_Action_5578"] = "CTLD.lua",
 } -- end of mapResource
