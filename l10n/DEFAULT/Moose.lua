@@ -1,4 +1,4 @@
-env.info( '*** MOOSE GITHUB Commit Hash ID: 2018-09-08T15:10:00.0000000Z-58f7a449e5f5967a4dbc34f960a1161cbe690115 ***' )
+env.info( '*** MOOSE GITHUB Commit Hash ID: 2018-09-13T20:21:01.0000000Z-f199b42f2894fe1972f1b6bd95e202eb8bb8b39f ***' )
 env.info( '*** MOOSE STATIC INCLUDE START *** ' )
 
 --- Various routines
@@ -3744,6 +3744,22 @@ function BASE:CreateEventDead( EventTime, Initiator )
   world.onEvent( Event )
 end
 
+--- Creation of a Remove Unit Event.
+-- @param #BASE self
+-- @param DCS#Time EventTime The time stamp of the event.
+-- @param DCS#Object Initiator The initiating object of the event.
+function BASE:CreateEventRemoveUnit( EventTime, Initiator )
+  self:F( { EventTime, Initiator } )
+
+  local Event = {
+    id = EVENTS.RemoveUnit,
+    time = EventTime,
+    initiator = Initiator,
+    }
+
+  world.onEvent( Event )
+end
+
 --- Creation of a Takeoff Event.
 -- @param #BASE self
 -- @param DCS#Time EventTime The time stamp of the event.
@@ -5295,6 +5311,8 @@ world.event.S_EVENT_NEW_CARGO = world.event.S_EVENT_MAX + 1000
 world.event.S_EVENT_DELETE_CARGO = world.event.S_EVENT_MAX + 1001
 world.event.S_EVENT_NEW_ZONE = world.event.S_EVENT_MAX + 1002
 world.event.S_EVENT_DELETE_ZONE = world.event.S_EVENT_MAX + 1003
+world.event.S_EVENT_REMOVE_UNIT = world.event.S_EVENT_MAX + 1004
+
 
 --- The different types of events supported by MOOSE.
 -- Use this structure to subscribe to events using the @{Core.Base#BASE.HandleEvent}() method.
@@ -5330,6 +5348,7 @@ EVENTS = {
   DeleteCargo =       world.event.S_EVENT_DELETE_CARGO,
   NewZone =           world.event.S_EVENT_NEW_ZONE,
   DeleteZone =        world.event.S_EVENT_DELETE_ZONE,
+  RemoveUnit =        world.event.S_EVENT_REMOVE_UNIT,
 }
 
 --- The Event structure
@@ -5554,6 +5573,11 @@ local _EVENTMETA = {
      Order = 1,
      Event = "OnEventDeleteZone",
      Text = "S_EVENT_DELETE_ZONE" 
+   },
+   [EVENTS.RemoveUnit] = {
+     Order = -1,
+     Event = "OnEventRemoveUnit",
+     Text = "S_EVENT_REMOVE_UNIT" 
    },
 }
 
@@ -6099,7 +6123,8 @@ function EVENT:onEvent( Event )
             if EventClass:IsAlive() or
                Event.id == EVENTS.PlayerEnterUnit or 
                Event.id == EVENTS.Crash or 
-               Event.id == EVENTS.Dead then
+               Event.id == EVENTS.Dead or 
+               Event.id == EVENTS.RemoveUnit then
             
               local UnitName = EventClass:GetName()
 
@@ -6149,7 +6174,8 @@ function EVENT:onEvent( Event )
               if EventClass:IsAlive() or
                  Event.id == EVENTS.PlayerEnterUnit or
                  Event.id == EVENTS.Crash or
-                 Event.id == EVENTS.Dead then
+                 Event.id == EVENTS.Dead or
+                 Event.id == EVENTS.RemoveUnit then
 
                 -- We can get the name of the EventClass, which is now always a GROUP object.
                 local GroupName = EventClass:GetName()
@@ -6631,7 +6657,6 @@ do -- SETTINGS
   -- @param #SETTINGS self
   -- @return #boolean true if BRA
   function SETTINGS:IsA2A_BRAA()
-    self:E( { BRA = ( self.A2ASystem and self.A2ASystem == "BRAA" ) or ( not self.A2ASystem and _SETTINGS:IsA2A_BRAA() ) } )
     return ( self.A2ASystem and self.A2ASystem == "BRAA" ) or ( not self.A2ASystem and _SETTINGS:IsA2A_BRAA() )
   end
 
@@ -10162,6 +10187,7 @@ function DATABASE:New()
   self:HandleEvent( EVENTS.Birth, self._EventOnBirth )
   self:HandleEvent( EVENTS.Dead, self._EventOnDeadOrCrash )
   self:HandleEvent( EVENTS.Crash, self._EventOnDeadOrCrash )
+  self:HandleEvent( EVENTS.RemoveUnit, self._EventOnDeadOrCrash )
   self:HandleEvent( EVENTS.Hit, self.AccountHits )
   self:HandleEvent( EVENTS.NewCargo )
   self:HandleEvent( EVENTS.DeleteCargo )
@@ -11414,18 +11440,12 @@ end
       self:T( { TargetUnitName, TargetGroupName, TargetPlayerName, TargetCoalition, TargetCategory, TargetType } )
     end
   
-    self:T( "Something got destroyed" )
-
     local Destroyed = false
 
     -- What is the player destroying?
     if self.HITS[Event.IniUnitName] then -- Was there a hit for this unit for this player before registered???
-      
-
       self.DESTROYS[Event.IniUnitName] = self.DESTROYS[Event.IniUnitName] or {}
-      
       self.DESTROYS[Event.IniUnitName] = true
-
     end
   end
 
@@ -12071,7 +12091,7 @@ function SET_BASE:Flush( MasterObject )
   for ObjectName, Object in pairs( self.Set ) do
     ObjectNames = ObjectNames .. ObjectName .. ", "
   end
-  self:I( { MasterObject = MasterObject and MasterObject:GetClassNameAndID(), "Objects in Set:", ObjectNames } )
+  self:F( { MasterObject = MasterObject and MasterObject:GetClassNameAndID(), "Objects in Set:", ObjectNames } )
   
   return ObjectNames
 end
@@ -12107,6 +12127,7 @@ end
 --    * @{#SET_GROUP.FilterCategories}: Builds the SET_GROUP with the groups belonging to the category(ies).
 --    * @{#SET_GROUP.FilterCountries}: Builds the SET_GROUP with the gruops belonging to the country(ies).
 --    * @{#SET_GROUP.FilterPrefixes}: Builds the SET_GROUP with the groups starting with the same prefix string(s).
+--    * @{#SET_GROUP.FilterActive}: Builds the SET_GROUP with the groups that are only active. Groups that are inactive (late activation) won't be included in the set!
 -- 
 -- For the Category Filter, extra methods have been added:
 -- 
@@ -12120,6 +12141,7 @@ end
 -- Once the filter criteria have been set for the SET_GROUP, you can start filtering using:
 -- 
 --    * @{#SET_GROUP.FilterStart}: Starts the filtering of the groups within the SET_GROUP and add or remove GROUP objects **dynamically**.
+--    * @{#SET_GROUP.FilterOnce}: Filters of the groups **once**.
 -- 
 -- Planned filter criteria within development are (so these are not yet available):
 -- 
@@ -12218,7 +12240,9 @@ SET_GROUP = {
 function SET_GROUP:New()
 
   -- Inherits from BASE
-  local self = BASE:Inherit( self, SET_BASE:New( _DATABASE.GROUPS ) )
+  local self = BASE:Inherit( self, SET_BASE:New( _DATABASE.GROUPS ) ) -- #SET_GROUP
+
+  self:FilterActive( false )
 
   return self
 end
@@ -12447,6 +12471,32 @@ function SET_GROUP:FilterPrefixes( Prefixes )
   return self
 end
 
+--- Builds a set of groups that are only active.
+-- Only the groups that are active will be included within the set.
+-- @param #SET_GROUP self
+-- @param #boolean Active (optional) Include only active groups to the set.
+-- Include inactive groups if you provide false.
+-- @return #SET_GROUP self
+-- @usage
+-- 
+-- -- Include only active groups to the set.
+-- GroupSet = SET_GROUP:New():FilterActive():FilterStart()
+-- 
+-- -- Include only active groups to the set of the blue coalition, and filter one time.
+-- GroupSet = SET_GROUP:New():FilterActive():FilterCoalition( "blue" ):FilterOnce()
+-- 
+-- -- Include only active groups to the set of the blue coalition, and filter one time.
+-- -- Later, reset to include back inactive groups to the set.
+-- GroupSet = SET_GROUP:New():FilterActive():FilterCoalition( "blue" ):FilterOnce()
+-- ... logic ...
+-- GroupSet = SET_GROUP:New():FilterActive( false ):FilterCoalition( "blue" ):FilterOnce()
+-- 
+function SET_GROUP:FilterActive( Active )
+  Active = Active or not ( Active == false )
+  self.Filter.Active = Active
+  return self
+end
+  
 
 --- Starts the filtering.
 -- @param #SET_GROUP self
@@ -12458,6 +12508,7 @@ function SET_GROUP:FilterStart()
     self:HandleEvent( EVENTS.Birth, self._EventOnBirth )
     self:HandleEvent( EVENTS.Dead, self._EventOnDeadOrCrash )
     self:HandleEvent( EVENTS.Crash, self._EventOnDeadOrCrash )
+    self:HandleEvent( EVENTS.RemoveUnit, self._EventOnDeadOrCrash )
   end
   
   
@@ -12811,58 +12862,67 @@ end
 
 ---
 -- @param #SET_GROUP self
--- @param Wrapper.Group#GROUP MooseGroup
+-- @param Wrapper.Group#GROUP MGroup The group that is checked for inclusion.
 -- @return #SET_GROUP self
-function SET_GROUP:IsIncludeObject( MooseGroup )
-  self:F2( MooseGroup )
-  local MooseGroupInclude = true
+function SET_GROUP:IsIncludeObject( MGroup )
+  self:F2( MGroup )
+  local MGroupInclude = true
 
+  if self.Filter.Active ~= nil then
+    local MGroupActive = false
+    self:F( { Active = self.Filter.Active } )
+    if self.Filter.Active == false or ( self.Filter.Active == true and MGroup:IsActive() == true ) then
+      MGroupActive = true
+    end
+    MGroupInclude = MGroupInclude and MGroupActive
+  end
+  
   if self.Filter.Coalitions then
-    local MooseGroupCoalition = false
+    local MGroupCoalition = false
     for CoalitionID, CoalitionName in pairs( self.Filter.Coalitions ) do
-      self:T3( { "Coalition:", MooseGroup:GetCoalition(), self.FilterMeta.Coalitions[CoalitionName], CoalitionName } )
-      if self.FilterMeta.Coalitions[CoalitionName] and self.FilterMeta.Coalitions[CoalitionName] == MooseGroup:GetCoalition() then
-        MooseGroupCoalition = true
+      self:T3( { "Coalition:", MGroup:GetCoalition(), self.FilterMeta.Coalitions[CoalitionName], CoalitionName } )
+      if self.FilterMeta.Coalitions[CoalitionName] and self.FilterMeta.Coalitions[CoalitionName] == MGroup:GetCoalition() then
+        MGroupCoalition = true
       end
     end
-    MooseGroupInclude = MooseGroupInclude and MooseGroupCoalition
+    MGroupInclude = MGroupInclude and MGroupCoalition
   end
   
   if self.Filter.Categories then
-    local MooseGroupCategory = false
+    local MGroupCategory = false
     for CategoryID, CategoryName in pairs( self.Filter.Categories ) do
-      self:T3( { "Category:", MooseGroup:GetCategory(), self.FilterMeta.Categories[CategoryName], CategoryName } )
-      if self.FilterMeta.Categories[CategoryName] and self.FilterMeta.Categories[CategoryName] == MooseGroup:GetCategory() then
-        MooseGroupCategory = true
+      self:T3( { "Category:", MGroup:GetCategory(), self.FilterMeta.Categories[CategoryName], CategoryName } )
+      if self.FilterMeta.Categories[CategoryName] and self.FilterMeta.Categories[CategoryName] == MGroup:GetCategory() then
+        MGroupCategory = true
       end
     end
-    MooseGroupInclude = MooseGroupInclude and MooseGroupCategory
+    MGroupInclude = MGroupInclude and MGroupCategory
   end
   
   if self.Filter.Countries then
-    local MooseGroupCountry = false
+    local MGroupCountry = false
     for CountryID, CountryName in pairs( self.Filter.Countries ) do
-      self:T3( { "Country:", MooseGroup:GetCountry(), CountryName } )
-      if country.id[CountryName] == MooseGroup:GetCountry() then
-        MooseGroupCountry = true
+      self:T3( { "Country:", MGroup:GetCountry(), CountryName } )
+      if country.id[CountryName] == MGroup:GetCountry() then
+        MGroupCountry = true
       end
     end
-    MooseGroupInclude = MooseGroupInclude and MooseGroupCountry
+    MGroupInclude = MGroupInclude and MGroupCountry
   end
 
   if self.Filter.GroupPrefixes then
-    local MooseGroupPrefix = false
+    local MGroupPrefix = false
     for GroupPrefixId, GroupPrefix in pairs( self.Filter.GroupPrefixes ) do
-      self:T3( { "Prefix:", string.find( MooseGroup:GetName(), GroupPrefix, 1 ), GroupPrefix } )
-      if string.find( MooseGroup:GetName(), GroupPrefix:gsub ("-", "%%-"), 1 ) then
-        MooseGroupPrefix = true
+      self:T3( { "Prefix:", string.find( MGroup:GetName(), GroupPrefix, 1 ), GroupPrefix } )
+      if string.find( MGroup:GetName(), GroupPrefix:gsub ("-", "%%-"), 1 ) then
+        MGroupPrefix = true
       end
     end
-    MooseGroupInclude = MooseGroupInclude and MooseGroupPrefix
+    MGroupInclude = MGroupInclude and MGroupPrefix
   end
 
-  self:T2( MooseGroupInclude )
-  return MooseGroupInclude
+  self:T2( MGroupInclude )
+  return MGroupInclude
 end
 
 
@@ -12897,18 +12957,18 @@ do -- SET_UNIT
   --  * Unit types
   --  * Starting with certain prefix strings.
   --  
-  -- ## SET_UNIT constructor
+  -- ## 1) SET_UNIT constructor
   --
   -- Create a new SET_UNIT object with the @{#SET_UNIT.New} method:
   -- 
   --    * @{#SET_UNIT.New}: Creates a new SET_UNIT object.
   --   
-  -- ## Add or Remove UNIT(s) from SET_UNIT
+  -- ## 2) Add or Remove UNIT(s) from SET_UNIT
   --
   -- UNITs can be added and removed using the @{Core.Set#SET_UNIT.AddUnitsByName} and @{Core.Set#SET_UNIT.RemoveUnitsByName} respectively. 
   -- These methods take a single UNIT name or an array of UNIT names to be added or removed from SET_UNIT.
   -- 
-  -- ## SET_UNIT filter criteria
+  -- ## 3) SET_UNIT filter criteria
   -- 
   -- You can set filter criteria to define the set of units within the SET_UNIT.
   -- Filter criteria are defined by:
@@ -12918,24 +12978,26 @@ do -- SET_UNIT
   --    * @{#SET_UNIT.FilterTypes}: Builds the SET_UNIT with the units belonging to the unit type(s).
   --    * @{#SET_UNIT.FilterCountries}: Builds the SET_UNIT with the units belonging to the country(ies).
   --    * @{#SET_UNIT.FilterPrefixes}: Builds the SET_UNIT with the units starting with the same prefix string(s).
+  --    * @{#SET_UNIT.FilterActive}: Builds the SET_UNIT with the units that are only active. Units that are inactive (late activation) won't be included in the set!
   --   
   -- Once the filter criteria have been set for the SET_UNIT, you can start filtering using:
   -- 
-  --   * @{#SET_UNIT.FilterStart}: Starts the filtering of the units within the SET_UNIT.
+  --   * @{#SET_UNIT.FilterStart}: Starts the filtering of the units **dynamically**.
+  --   * @{#SET_UNIT.FilterOnce}: Filters of the units **once**.
   -- 
   -- Planned filter criteria within development are (so these are not yet available):
   -- 
   --    * @{#SET_UNIT.FilterZones}: Builds the SET_UNIT with the units within a @{Core.Zone#ZONE}.
   -- 
-  -- ## SET_UNIT iterators
+  -- ## 4) SET_UNIT iterators
   -- 
   -- Once the filters have been defined and the SET_UNIT has been built, you can iterate the SET_UNIT with the available iterator methods.
   -- The iterator methods will walk the SET_UNIT set, and call for each element within the set a function that you provide.
   -- The following iterator methods are currently available within the SET_UNIT:
   -- 
   --   * @{#SET_UNIT.ForEachUnit}: Calls a function for each alive unit it finds within the SET_UNIT.
-  --   * @{#SET_GROUP.ForEachGroupCompletelyInZone}: Iterate the SET_GROUP and call an iterator function for each **alive** GROUP presence completely in a @{Zone}, providing the GROUP and optional parameters to the called function.
-  --   * @{#SET_GROUP.ForEachGroupNotInZone}: Iterate the SET_GROUP and call an iterator function for each **alive** GROUP presence not in a @{Zone}, providing the GROUP and optional parameters to the called function.
+  --   * @{#SET_UNIT.ForEachUnitInZone}: Iterate the SET_UNIT and call an iterator function for each **alive** UNIT object presence completely in a @{Zone}, providing the UNIT object and optional parameters to the called function.
+  --   * @{#SET_UNIT.ForEachUnitNotInZone}: Iterate the SET_UNIT and call an iterator function for each **alive** UNIT object presence not in a @{Zone}, providing the UNIT object and optional parameters to the called function.
   --   
   -- Planned iterators methods in development are (so these are not yet available):
   -- 
@@ -12943,27 +13005,17 @@ do -- SET_UNIT
   --   * @{#SET_UNIT.ForEachUnitCompletelyInZone}: Iterate and call an iterator function for each **alive** UNIT presence completely in a @{Zone}, providing the UNIT and optional parameters to the called function.
   --   * @{#SET_UNIT.ForEachUnitNotInZone}: Iterate and call an iterator function for each **alive** UNIT presence not in a @{Zone}, providing the UNIT and optional parameters to the called function.
   -- 
-  -- ## SET_UNIT atomic methods
+  -- ## 5) SET_UNIT atomic methods
   -- 
   -- Various methods exist for a SET_UNIT to perform actions or calculations and retrieve results from the SET_UNIT:
   -- 
   --   * @{#SET_UNIT.GetTypeNames}(): Retrieve the type names of the @{Wrapper.Unit}s in the SET, delimited by a comma.
   -- 
-  -- ## SET_UNIT iterators
-  -- 
-  -- Once the filters have been defined and the SET_UNIT has been built, you can iterate the SET_UNIT with the available iterator methods.
-  -- The iterator methods will walk the SET_UNIT set, and call for each element within the set a function that you provide.
-  -- The following iterator methods are currently available within the SET_UNIT:
-  -- 
-  --   * @{#SET_UNIT.ForEachUnit}: Calls a function for each alive group it finds within the SET_UNIT.
-  --   * @{#SET_UNIT.ForEachUnitInZone}: Iterate the SET_UNIT and call an iterator function for each **alive** UNIT object presence completely in a @{Zone}, providing the UNIT object and optional parameters to the called function.
-  --   * @{#SET_UNIT.ForEachUnitNotInZone}: Iterate the SET_UNIT and call an iterator function for each **alive** UNIT object presence not in a @{Zone}, providing the UNIT object and optional parameters to the called function.
-  --
-  -- ## SET_UNIT trigger events on the UNIT objects.
+  -- ## 6) SET_UNIT trigger events on the UNIT objects.
   -- 
   -- The SET is derived from the FSM class, which provides extra capabilities to track the contents of the UNIT objects in the SET_UNIT.
   -- 
-  -- ### When a UNIT object crashes or is dead, the SET_UNIT will trigger a **Dead** event.
+  -- ### 6.1) When a UNIT object crashes or is dead, the SET_UNIT will trigger a **Dead** event.
   -- 
   -- You can handle the event using the OnBefore and OnAfter event handlers. 
   -- The event handlers need to have the paramters From, Event, To, GroupObject.
@@ -13045,7 +13097,9 @@ do -- SET_UNIT
   function SET_UNIT:New()
   
     -- Inherits from BASE
-    local self = BASE:Inherit( self, SET_BASE:New( _DATABASE.UNITS ) ) -- Core.Set#SET_UNIT
+    local self = BASE:Inherit( self, SET_BASE:New( _DATABASE.UNITS ) ) -- #SET_UNIT
+  
+    self:FilterActive( false )
   
     return self
   end
@@ -13203,6 +13257,32 @@ do -- SET_UNIT
     return self
   end
   
+  --- Builds a set of units that are only active.
+  -- Only the units that are active will be included within the set.
+  -- @param #SET_UNIT self
+  -- @param #boolean Active (optional) Include only active units to the set.
+  -- Include inactive units if you provide false.
+  -- @return #SET_UNIT self
+  -- @usage
+  -- 
+  -- -- Include only active units to the set.
+  -- UnitSet = SET_UNIT:New():FilterActive():FilterStart()
+  -- 
+  -- -- Include only active units to the set of the blue coalition, and filter one time.
+  -- UnitSet = SET_UNIT:New():FilterActive():FilterCoalition( "blue" ):FilterOnce()
+  -- 
+  -- -- Include only active units to the set of the blue coalition, and filter one time.
+  -- -- Later, reset to include back inactive units to the set.
+  -- UnitSet = SET_UNIT:New():FilterActive():FilterCoalition( "blue" ):FilterOnce()
+  -- ... logic ...
+  -- UnitSet = SET_UNIT:New():FilterActive( false ):FilterCoalition( "blue" ):FilterOnce()
+  -- 
+  function SET_UNIT:FilterActive( Active )
+    Active = Active or not ( Active == false )
+    self.Filter.Active = Active
+    return self
+  end
+  
   --- Builds a set of units having a radar of give types.
   -- All the units having a radar of a given type will be included within the set.
   -- @param #SET_UNIT self
@@ -13239,8 +13319,9 @@ do -- SET_UNIT
     if _DATABASE then
       self:_FilterStart()
       self:HandleEvent( EVENTS.Birth, self._EventOnBirth )
-      self:HandleEvent( EVENTS.Dead, self._EventOnDeadOrCrash )
+      self:HandleEvent( EVENTS.Dead, self._EventOnDeadOrCrashOr )
       self:HandleEvent( EVENTS.Crash, self._EventOnDeadOrCrash )
+      self:HandleEvent( EVENTS.RemoveUnit, self._EventOnDeadOrCrash )
     end
     
     return self
@@ -13775,6 +13856,14 @@ do -- SET_UNIT
   function SET_UNIT:IsIncludeObject( MUnit )
     self:F2( MUnit )
     local MUnitInclude = true
+  
+    if self.Filter.Active ~= nil then
+      local MUnitActive = false
+      if self.Filter.Active == false or ( self.Filter.Active == true and MUnit:IsActive() == true ) then
+        MUnitActive = true
+      end
+      MUnitInclude = MUnitInclude and MUnitActive
+    end
   
     if self.Filter.Coalitions then
       local MUnitCoalition = false
@@ -14588,18 +14677,18 @@ end
 --  * Client types
 --  * Starting with certain prefix strings.
 --  
--- ## SET_CLIENT constructor
+-- ## 1) SET_CLIENT constructor
 -- 
 -- Create a new SET_CLIENT object with the @{#SET_CLIENT.New} method:
 -- 
 --    * @{#SET_CLIENT.New}: Creates a new SET_CLIENT object.
 --   
--- ## Add or Remove CLIENT(s) from SET_CLIENT 
+-- ## 2) Add or Remove CLIENT(s) from SET_CLIENT 
 -- 
 -- CLIENTs can be added and removed using the @{Core.Set#SET_CLIENT.AddClientsByName} and @{Core.Set#SET_CLIENT.RemoveClientsByName} respectively. 
 -- These methods take a single CLIENT name or an array of CLIENT names to be added or removed from SET_CLIENT.
 -- 
--- ## SET_CLIENT filter criteria
+-- ## 3) SET_CLIENT filter criteria
 -- 
 -- You can set filter criteria to define the set of clients within the SET_CLIENT.
 -- Filter criteria are defined by:
@@ -14609,16 +14698,18 @@ end
 --    * @{#SET_CLIENT.FilterTypes}: Builds the SET_CLIENT with the clients belonging to the client type(s).
 --    * @{#SET_CLIENT.FilterCountries}: Builds the SET_CLIENT with the clients belonging to the country(ies).
 --    * @{#SET_CLIENT.FilterPrefixes}: Builds the SET_CLIENT with the clients starting with the same prefix string(s).
+--    * @{#SET_CLIENT.FilterActive}: Builds the SET_CLIENT with the units that are only active. Units that are inactive (late activation) won't be included in the set!
 --   
 -- Once the filter criteria have been set for the SET_CLIENT, you can start filtering using:
 -- 
---   * @{#SET_CLIENT.FilterStart}: Starts the filtering of the clients within the SET_CLIENT.
+--   * @{#SET_CLIENT.FilterStart}: Starts the filtering of the clients **dynamically**.
+--   * @{#SET_CLIENT.FilterOnce}: Filters the clients **once**.
 -- 
 -- Planned filter criteria within development are (so these are not yet available):
 -- 
 --    * @{#SET_CLIENT.FilterZones}: Builds the SET_CLIENT with the clients within a @{Core.Zone#ZONE}.
 -- 
--- ## SET_CLIENT iterators
+-- ## 4) SET_CLIENT iterators
 -- 
 -- Once the filters have been defined and the SET_CLIENT has been built, you can iterate the SET_CLIENT with the available iterator methods.
 -- The iterator methods will walk the SET_CLIENT set, and call for each element within the set a function that you provide.
@@ -14663,7 +14754,9 @@ SET_CLIENT = {
 -- DBObject = SET_CLIENT:New()
 function SET_CLIENT:New()
   -- Inherits from BASE
-  local self = BASE:Inherit( self, SET_BASE:New( _DATABASE.CLIENTS ) )
+  local self = BASE:Inherit( self, SET_BASE:New( _DATABASE.CLIENTS ) ) -- #SET_CLIENT
+
+  self:FilterActive( false )
 
   return self
 end
@@ -14805,6 +14898,31 @@ function SET_CLIENT:FilterPrefixes( Prefixes )
   return self
 end
 
+--- Builds a set of clients that are only active.
+-- Only the clients that are active will be included within the set.
+-- @param #SET_CLIENT self
+-- @param #boolean Active (optional) Include only active clients to the set.
+-- Include inactive clients if you provide false.
+-- @return #SET_CLIENT self
+-- @usage
+-- 
+-- -- Include only active clients to the set.
+-- ClientSet = SET_CLIENT:New():FilterActive():FilterStart()
+-- 
+-- -- Include only active clients to the set of the blue coalition, and filter one time.
+-- ClientSet = SET_CLIENT:New():FilterActive():FilterCoalition( "blue" ):FilterOnce()
+-- 
+-- -- Include only active clients to the set of the blue coalition, and filter one time.
+-- -- Later, reset to include back inactive clients to the set.
+-- ClientSet = SET_CLIENT:New():FilterActive():FilterCoalition( "blue" ):FilterOnce()
+-- ... logic ...
+-- ClientSet = SET_CLIENT:New():FilterActive( false ):FilterCoalition( "blue" ):FilterOnce()
+-- 
+function SET_CLIENT:FilterActive( Active )
+  Active = Active or not ( Active == false )
+  self.Filter.Active = Active
+  return self
+end
 
 
 
@@ -14914,6 +15032,14 @@ function SET_CLIENT:IsIncludeObject( MClient )
 
   if MClient then
     local MClientName = MClient.UnitName
+  
+    if self.Filter.Active ~= nil then
+      local MClientActive = false
+      if self.Filter.Active == false or ( self.Filter.Active == true and MClient:IsActive() == true ) then
+        MClientActive = true
+      end
+      MClientInclude = MClientInclude and MClientActive
+    end
   
     if self.Filter.Coalitions then
       local MClientCoalition = false
@@ -22177,6 +22303,7 @@ function SPAWN:InitArray( SpawnAngle, SpawnWidth, SpawnDeltaX, SpawnDeltaY )
     self:HandleEvent( EVENTS.Birth, self._OnBirth )
     self:HandleEvent( EVENTS.Dead, self._OnDeadOrCrash )
     self:HandleEvent( EVENTS.Crash, self._OnDeadOrCrash )
+    self:HandleEvent( EVENTS.RemoveUnit, self._OnDeadOrCrash )
     if self.Repeat then
       self:HandleEvent( EVENTS.Takeoff, self._OnTakeOff )
       self:HandleEvent( EVENTS.Land, self._OnLand )
@@ -22396,6 +22523,7 @@ function SPAWN:SpawnWithIndex( SpawnIndex )
       self:HandleEvent( EVENTS.Birth, self._OnBirth )
       self:HandleEvent( EVENTS.Dead, self._OnDeadOrCrash )
       self:HandleEvent( EVENTS.Crash, self._OnDeadOrCrash )
+      self:HandleEvent( EVENTS.RemoveUnit, self._OnDeadOrCrash )
       if self.Repeat then
         self:HandleEvent( EVENTS.Takeoff, self._OnTakeOff )
         self:HandleEvent( EVENTS.Land, self._OnLand )
@@ -25045,6 +25173,58 @@ function POSITIONABLE:New( PositionableName )
 
   self.PositionableName = PositionableName
   return self
+end
+
+--- Destroys the POSITIONABLE.
+-- @param #POSITIONABLE self
+-- @param #boolean GenerateEvent (Optional) true if you want to generate a crash or dead event for the unit.
+-- @return #nil The DCS Unit is not existing or alive.  
+-- @usage
+-- -- Air unit example: destroy the Helicopter and generate a S_EVENT_CRASH for each unit in the Helicopter group.
+-- Helicopter = UNIT:FindByName( "Helicopter" )
+-- Helicopter:Destroy( true )
+-- @usage
+-- -- Ground unit example: destroy the Tanks and generate a S_EVENT_DEAD for each unit in the Tanks group.
+-- Tanks = UNIT:FindByName( "Tanks" )
+-- Tanks:Destroy( true )
+-- @usage
+-- -- Ship unit example: destroy the Ship silently.
+-- Ship = STATIC:FindByName( "Ship" )
+-- Ship:Destroy()
+-- 
+-- @usage
+-- -- Destroy without event generation example.
+-- Ship = STATIC:FindByName( "Boat" )
+-- Ship:Destroy( false ) -- Don't generate an event upon destruction.
+-- 
+function POSITIONABLE:Destroy( GenerateEvent )
+  self:F2( self.ObjectName )
+
+  local DCSObject = self:GetDCSObject()
+  
+  if DCSObject then
+  
+    local UnitGroup = self:GetGroup()
+    local UnitGroupName = UnitGroup:GetName()
+    self:F( { UnitGroupName = UnitGroupName } )
+    
+    if GenerateEvent and GenerateEvent == true then
+      if self:IsAir() then
+        self:CreateEventCrash( timer.getTime(), DCSObject )
+      else
+        self:CreateEventDead( timer.getTime(), DCSObject )
+      end
+    elseif GenerateEvent == false then
+      -- Do nothing!
+    else
+      self:CreateEventRemoveUnit( timer.getTime(), DCSObject )
+    end
+    
+    USERFLAG:New( UnitGroupName ):Set( 100 )
+    DCSObject:destroy()
+  end
+
+  return nil
 end
 
 --- Returns the @{DCS#Position3} position vectors indicating the point and direction vectors in 3D of the POSITIONABLE within the mission.
@@ -28590,6 +28770,7 @@ function CONTROLLABLE:OptionDisperseOff()
   return nil
 end
 
+
 --- Openfire.
 -- @param #CONTROLLABLE self
 -- @return #CONTROLLABLE self
@@ -29223,18 +29404,18 @@ function GROUP:GetPositionVec3() -- Overridden from POSITIONABLE:GetPositionVec3
   return nil
 end
 
---- Returns if the Group is alive.
+--- Returns if the group is alive.
 -- The Group must:
 -- 
 --   * Exist at run-time.
 --   * Has at least one unit.
 -- 
--- When the first @{Wrapper.Unit} of the Group is active, it will return true.
--- If the first @{Wrapper.Unit} of the Group is inactive, it will return false.
+-- When the first @{Wrapper.Unit} of the group is active, it will return true.
+-- If the first @{Wrapper.Unit} of the group is inactive, it will return false.
 -- 
 -- @param #GROUP self
--- @return #boolean true if the Group is alive and active.
--- @return #boolean false if the Group is alive but inactive.
+-- @return #boolean true if the group is alive and active.
+-- @return #boolean false if the group is alive but inactive.
 -- @return #nil if the group does not exist anymore.
 function GROUP:IsAlive()
   self:F2( self.GroupName )
@@ -29255,6 +29436,26 @@ function GROUP:IsAlive()
   return nil
 end
 
+--- Returns if the group is activated.
+-- @param #GROUP self
+-- @return #boolean true if group is activated.
+-- @return #nil The group is not existing or alive.  
+function GROUP:IsActive()
+  self:F2( self.GroupName )
+
+  local DCSGroup = self:GetDCSObject() -- DCS#Group
+  
+  if DCSGroup then
+  
+    local GroupIsActive = DCSGroup:getUnit(1):isActive()
+    return GroupIsActive 
+  end
+
+  return nil
+end
+
+
+
 --- Destroys the DCS Group and all of its DCS Units.
 -- Note that this destroy method also can raise a destroy event at run-time.
 -- So all event listeners will catch the destroy event of this group for each unit in the group.
@@ -29272,20 +29473,30 @@ end
 -- @usage
 -- -- Ship unit example: destroy the Ship silently.
 -- Ship = GROUP:FindByName( "Ship" )
--- Ship:Destroy( true )
+-- Ship:Destroy()
+-- 
+-- @usage
+-- -- Destroy without event generation example.
+-- Ship = GROUP:FindByName( "Boat" )
+-- Ship:Destroy( false ) -- Don't generate an event upon destruction.
+-- 
 function GROUP:Destroy( GenerateEvent )
   self:F2( self.GroupName )
 
   local DCSGroup = self:GetDCSObject()
 
   if DCSGroup then
-    if GenerateEvent and GenerateEvent == true then
-      for Index, UnitData in pairs( DCSGroup:getUnits() ) do
+    for Index, UnitData in pairs( DCSGroup:getUnits() ) do
+      if GenerateEvent and GenerateEvent == true then
         if self:IsAir() then
           self:CreateEventCrash( timer.getTime(), UnitData )
         else
           self:CreateEventDead( timer.getTime(), UnitData )
         end
+      elseif GenerateEvent == false then
+        -- Do nothing!
+      else
+        self:CreateEventRemoveUnit( timer.getTime(), UnitData )
       end
     end
     USERFLAG:New( self:GetName() ):Set( 100 )
@@ -30479,7 +30690,7 @@ function GROUP:RespawnAtCurrentAirbase(SpawnTemplate, Takeoff, Uncontrolled) -- 
     SpawnTemplate.uncontrolled=Uncontrolled
     
     -- Destroy and respawn.
-    self:Destroy()
+    self:Destroy( false )
     _DATABASE:Spawn( SpawnTemplate )
   
     -- Reset events.
@@ -31015,35 +31226,7 @@ function UNIT:GetDCSObject()
   return nil
 end
 
---- Destroys the UNIT.
--- @param #UNIT self
--- @param #boolean GenerateEvent (Optional) true if you want to generate a crash or dead event for the unit.
--- @return #nil The DCS Unit is not existing or alive.  
-function UNIT:Destroy( GenerateEvent )
-  self:F2( self.ObjectName )
 
-  local DCSObject = self:GetDCSObject()
-  
-  if DCSObject then
-  
-    local UnitGroup = self:GetGroup()
-    local UnitGroupName = UnitGroup:GetName()
-    self:F( { UnitGroupName = UnitGroupName } )
-    
-    if GenerateEvent and GenerateEvent == true then
-      if self:IsAir() then
-        self:CreateEventCrash( timer.getTime(), DCSObject )
-      else
-        self:CreateEventDead( timer.getTime(), DCSObject )
-      end
-    end
-    
-    USERFLAG:New( UnitGroupName ):Set( 100 )
-    DCSObject:destroy()
-  end
-
-  return nil
-end
 
 
 --- Respawn the @{Wrapper.Unit} using a (tweaked) template of the parent Group.
@@ -33966,7 +34149,7 @@ do -- CARGO
   -- @param #CARGO self
   function CARGO:Destroy()
     if self.CargoObject then
-      self.CargoObject:Destroy( false )
+      self.CargoObject:Destroy()
     end
     self:Destroyed()
   end
@@ -35281,6 +35464,7 @@ do -- CARGO_SLINGLOAD
     
     self:HandleEvent( EVENTS.Dead, self.OnEventCargoDead )
     self:HandleEvent( EVENTS.Crash, self.OnEventCargoDead )
+    --self:HandleEvent( EVENTS.RemoveUnit, self.OnEventCargoDead )
     self:HandleEvent( EVENTS.PlayerLeaveUnit, self.OnEventCargoDead )
     
     self:SetEventPriority( 4 )
@@ -35555,6 +35739,7 @@ do -- CARGO_CRATE
     
     self:HandleEvent( EVENTS.Dead, self.OnEventCargoDead )
     self:HandleEvent( EVENTS.Crash, self.OnEventCargoDead )
+    --self:HandleEvent( EVENTS.RemoveUnit, self.OnEventCargoDead )
     self:HandleEvent( EVENTS.PlayerLeaveUnit, self.OnEventCargoDead )
     
     self:SetEventPriority( 4 )
@@ -35890,7 +36075,7 @@ do -- CARGO_GROUP
     local WeightGroup = 0
     local VolumeGroup = 0
     
-    self.CargoGroup:Destroy( true ) -- generate the crash events, so that the database gets cleaned, and the linked sets get properly cleaned.
+    self.CargoGroup:Destroy() -- destroy and generate a unit removal event, so that the database gets cleaned, and the linked sets get properly cleaned.
 
     local GroupName = CargoGroup:GetName()
     self.CargoName = Name
@@ -35942,6 +36127,7 @@ do -- CARGO_GROUP
     
     self:HandleEvent( EVENTS.Dead, self.OnEventCargoDead )
     self:HandleEvent( EVENTS.Crash, self.OnEventCargoDead )
+    --self:HandleEvent( EVENTS.RemoveUnit, self.OnEventCargoDead )
     self:HandleEvent( EVENTS.PlayerLeaveUnit, self.OnEventCargoDead )
     
     self:SetEventPriority( 4 )
@@ -35958,7 +36144,7 @@ do -- CARGO_GROUP
 
     for CargoID, CargoData in pairs( self.CargoSet:GetSet() ) do
       local Cargo = CargoData -- Cargo.Cargo#CARGO
-      Cargo:Destroy()
+      Cargo:Destroy() -- Destroy the cargo and generate a remove unit event to update the sets.
       Cargo:SetStartState( "UnLoaded" )
     end
 
@@ -36078,7 +36264,8 @@ do -- CARGO_GROUP
   --- @param #CARGO_GROUP self
   -- @param Core.Event#EVENTDATA EventData 
   function CARGO_GROUP:OnEventCargoDead( EventData )
-    self:I( EventData )
+  
+    self:E(EventData)
 
     local Destroyed = false
   
@@ -36244,7 +36431,7 @@ do -- CARGO_GROUP
               ToVec=ToPointVec2
             end
             Cargo:__UnBoard( Timer, ToVec, NearRadius )
-            Timer = Timer + 3
+            Timer = Timer + 1
           end
         end, { NearRadius }
       )
@@ -43843,6 +44030,7 @@ do -- DETECTION_BASE
   -- @list <#DETECTION_BASE.DetectedItem>
   
   --- @type DETECTION_BASE.DetectedItem
+  -- @field #boolean IsDetected Indicates if the DetectedItem has been detected or not.
   -- @field Core.Set#SET_UNIT Set
   -- @field Core.Set#SET_UNIT Set -- The Set of Units in the detected area.
   -- @field Core.Zone#ZONE_UNIT Zone -- The Zone of the detected area.
@@ -44001,7 +44189,16 @@ do -- DETECTION_BASE
     -- @param #DETECTION_BASE self
     -- @param #number Delay The delay in seconds.
     
+    self:AddTransition( "Detecting", "DetectedItem", "Detecting" )
     
+    --- OnAfter Transition Handler for Event DetectedItem.
+    -- @function [parent=#DETECTION_BASE] OnAfterDetectedItem
+    -- @param #DETECTION_BASE self
+    -- @param #string From The From State string.
+    -- @param #string Event The Event string.
+    -- @param #string To The To State string.
+    -- @param #table DetectedItem The DetectedItem.
+      
     self:AddTransition( "*", "Stop", "Stopped" )
     
     --- OnBefore Transition Handler for Event Stop.
@@ -44069,9 +44266,21 @@ do -- DETECTION_BASE
       
       local DetectionTimeStamp = timer.getTime()
       
+      -- Reset detection cache for the next detection run.
+      for DetectionObjectName, DetectedObjectData in pairs( self.DetectedObjects ) do
+        
+        self.DetectedObjects[DetectionObjectName].IsDetected = false
+        self.DetectedObjects[DetectionObjectName].IsVisible = false
+        self.DetectedObjects[DetectionObjectName].KnowDistance = nil
+        self.DetectedObjects[DetectionObjectName].LastTime = nil
+        self.DetectedObjects[DetectionObjectName].LastPos = nil
+        self.DetectedObjects[DetectionObjectName].LastVelocity = nil
+        self.DetectedObjects[DetectionObjectName].Distance = 10000000
+      
+      end
       for DetectionGroupID, DetectionGroupData in pairs( self.DetectionSetGroup:GetSet() ) do
         --self:F( { DetectionGroupData } )
-        self:F( {"FF", DetectionGroupData } )
+        self:F( { DetectionGroup = DetectionGroupData:GetName() } )
         self:__DetectionGroup( DetectDelay, DetectionGroupData, DetectionTimeStamp ) -- Process each detection asynchronously.
         self.DetectionCount = self.DetectionCount + 1
         DetectDelay = DetectDelay + 1
@@ -44085,6 +44294,8 @@ do -- DETECTION_BASE
     -- @param Wrapper.Group#GROUP DetectionGroup The Group detecting.
     -- @param #number DetectionTimeStamp Time stamp of detection event.
     function DETECTION_BASE:onafterDetectionGroup( From, Event, To, DetectionGroup, DetectionTimeStamp  )
+      
+      --self:F( { DetectedObjects = self.DetectedObjects } )
       
       self.DetectionRun = self.DetectionRun + 1
       
@@ -44108,13 +44319,27 @@ do -- DETECTION_BASE
           self.DetectDLINK
         )
         
-        --self:F( DetectedTargets )
+        self:F( { DetectedTargets = DetectedTargets } )
         
         for DetectionObjectID, Detection in pairs( DetectedTargets ) do
           local DetectedObject = Detection.object -- DCS#Object
           
           if DetectedObject and DetectedObject:isExist() and DetectedObject.id_ < 50000000 then -- and ( DetectedObject:getCategory() == Object.Category.UNIT or DetectedObject:getCategory() == Object.Category.STATIC ) then
-    
+            local DetectedObjectName = DetectedObject:getName()
+            if not self.DetectedObjects[DetectedObjectName] then
+              self.DetectedObjects[DetectedObjectName] = self.DetectedObjects[DetectedObjectName] or {} 
+              self.DetectedObjects[DetectedObjectName].Name = DetectedObjectName
+              self.DetectedObjects[DetectedObjectName].Object = DetectedObject
+            end
+          end
+        end
+        
+        for DetectionObjectName, DetectedObjectData in pairs( self.DetectedObjects ) do
+        
+          local DetectedObject = DetectedObjectData.Object
+          
+          if DetectedObject:isExist() then
+  
             local TargetIsDetected, TargetIsVisible, TargetLastTime, TargetKnowType, TargetKnowDistance, TargetLastPos, TargetLastVelocity = DetectionUnit:IsTargetDetected( 
               DetectedObject,
               self.DetectVisual,
@@ -44126,7 +44351,7 @@ do -- DETECTION_BASE
             )
             
             --self:T2( { TargetIsDetected = TargetIsDetected, TargetIsVisible = TargetIsVisible, TargetLastTime = TargetLastTime, TargetKnowType = TargetKnowType, TargetKnowDistance = TargetKnowDistance, TargetLastPos = TargetLastPos, TargetLastVelocity = TargetLastVelocity } )
-
+  
             -- Only process if the target is visible. Detection also returns invisible units.
             --if Detection.visible == true then
             
@@ -44189,7 +44414,7 @@ do -- DETECTION_BASE
               
               -- Calculate additional probabilities
               
-              if not self.DetectedObjects[DetectedObjectName] and Detection.visible and self.DistanceProbability then
+              if not self.DetectedObjects[DetectedObjectName] and TargetIsVisible and self.DistanceProbability then
                 local DistanceFactor = Distance / 4
                 local DistanceProbabilityReversed = ( 1 - self.DistanceProbability ) * DistanceFactor
                 local DistanceProbability = 1 - DistanceProbabilityReversed
@@ -44201,7 +44426,7 @@ do -- DETECTION_BASE
                 end
               end
               
-              if not self.DetectedObjects[DetectedObjectName] and Detection.visible and self.AlphaAngleProbability then
+              if not self.DetectedObjects[DetectedObjectName] and TargetIsVisible and self.AlphaAngleProbability then
                 local NormalVec2 = { x = DetectedObjectVec2.x - DetectionGroupVec2.x, y = DetectedObjectVec2.y - DetectionGroupVec2.y }
                 local AlphaAngle = math.atan2( NormalVec2.y, NormalVec2.x )
                 local Sinus = math.sin( AlphaAngle )
@@ -44218,7 +44443,7 @@ do -- DETECTION_BASE
                  
               end
               
-              if not self.DetectedObjects[DetectedObjectName] and Detection.visible and self.ZoneProbability then
+              if not self.DetectedObjects[DetectedObjectName] and TargetIsVisible and self.ZoneProbability then
               
                 for ZoneDataID, ZoneData in pairs( self.ZoneProbability ) do
                   self:F({ZoneData})
@@ -44241,33 +44466,50 @@ do -- DETECTION_BASE
                 
                 HasDetectedObjects = true
       
-                self.DetectedObjects[DetectedObjectName] = self.DetectedObjects[DetectedObjectName] or {} 
+                self.DetectedObjects[DetectedObjectName] = self.DetectedObjects[DetectedObjectName] or {}
                 self.DetectedObjects[DetectedObjectName].Name = DetectedObjectName
-                self.DetectedObjects[DetectedObjectName].IsDetected = TargetIsDetected
-                self.DetectedObjects[DetectedObjectName].IsVisible = TargetIsVisible 
-                self.DetectedObjects[DetectedObjectName].LastTime = TargetLastTime
-                self.DetectedObjects[DetectedObjectName].LastPos = TargetLastPos
-                self.DetectedObjects[DetectedObjectName].LastVelocity = TargetLastVelocity
-                self.DetectedObjects[DetectedObjectName].KnowType = TargetKnowType
-                self.DetectedObjects[DetectedObjectName].KnowDistance = Detection.distance   -- TargetKnowDistance
-                self.DetectedObjects[DetectedObjectName].Distance = Distance
+  
+                if TargetIsDetected and TargetIsDetected == true then
+                  self.DetectedObjects[DetectedObjectName].IsDetected = TargetIsDetected
+                end
+                
+                if TargetIsDetected and TargetIsVisible and TargetIsVisible == true then
+                  self.DetectedObjects[DetectedObjectName].IsVisible = TargetIsDetected and TargetIsVisible
+                end
+                
+                if TargetIsDetected and not self.DetectedObjects[DetectedObjectName].KnowType then
+                  self.DetectedObjects[DetectedObjectName].KnowType = TargetIsDetected and TargetKnowType
+                end
+                self.DetectedObjects[DetectedObjectName].KnowDistance = TargetKnowDistance -- Detection.distance   -- TargetKnowDistance
+                self.DetectedObjects[DetectedObjectName].LastTime = ( TargetIsDetected and TargetIsVisible == false )  and TargetLastTime
+                self.DetectedObjects[DetectedObjectName].LastPos = ( TargetIsDetected and TargetIsVisible == false )  and TargetLastPos
+                self.DetectedObjects[DetectedObjectName].LastVelocity = ( TargetIsDetected and TargetIsVisible == false )  and TargetLastVelocity
+                
+                if not self.DetectedObjects[DetectedObjectName].Distance or ( Distance and self.DetectedObjects[DetectedObjectName].Distance > Distance ) then
+                  self.DetectedObjects[DetectedObjectName].Distance = Distance
+                end
+  
                 self.DetectedObjects[DetectedObjectName].DetectionTimeStamp = DetectionTimeStamp
                 
-                --self:F( { DetectedObject = self.DetectedObjects[DetectedObjectName] } )
+                self:F( { DetectedObject = self.DetectedObjects[DetectedObjectName] } )
                 
                 local DetectedUnit = UNIT:FindByName( DetectedObjectName )
                 
                 DetectedUnits[DetectedObjectName] = DetectedUnit
               else
                 -- if beyond the DetectionRange then nullify...
+                self:F( { DetectedObject = "No more detection for " .. DetectedObjectName } )
                 if self.DetectedObjects[DetectedObjectName] then
                   self.DetectedObjects[DetectedObjectName] = nil
                 end
               end
-            --end
+            
+            --self:T2( self.DetectedObjects )
+          else
+            -- The previously detected object does not exist anymore, delete from the cache.
+            self:F( "Removing from DetectedObjects: " .. DetectionObjectName )
+            self.DetectedObjects[DetectionObjectName] = nil
           end
-          
-          --self:T2( self.DetectedObjects )
         end
         
         if HasDetectedObjects then
@@ -44293,6 +44535,9 @@ do -- DETECTION_BASE
         for DetectedItemID, DetectedItem in pairs( self.DetectedItems ) do
           self:UpdateDetectedItemDetection( DetectedItem )
           self:CleanDetectionItem( DetectedItem, DetectedItemID ) -- Any DetectionItem that has a Set with zero elements in it, must be removed from the DetectionItems list.
+          if DetectedItem then
+            self:__DetectedItem( 0.1, DetectedItem )
+          end
         end
  
         self:__Detect( self.RefreshTimeInterval )
@@ -44954,16 +45199,18 @@ do -- DETECTION_BASE
   -- @param #string ObjectName
   -- @return #DETECTION_BASE.DetectedObject
   function DETECTION_BASE:GetDetectedObject( ObjectName )
-  	--self:F2( ObjectName )
+  	self:F2( { ObjectName = ObjectName } )
     
     if ObjectName then
       local DetectedObject = self.DetectedObjects[ObjectName]
       
       if DetectedObject then
+        --self:F( { DetectedObjects = self.DetectedObjects } )
         -- Only return detected objects that are alive!
         local DetectedUnit = UNIT:FindByName( ObjectName )
         if DetectedUnit and DetectedUnit:IsAlive() then
           if self:IsDetectedObjectIdentified( DetectedObject ) == false then
+            --self:F( { DetectedObject = DetectedObject } )
             return DetectedObject
           end
         end
@@ -45162,7 +45409,7 @@ do -- DETECTION_BASE
     return nil
   end
   
-  --- Set IsDetected flag for all DetectedItems.
+  --- Set IsDetected flag for the DetectedItem, which can have more units.
   -- @param #DETECTION_BASE self
   -- @return #DETECTION_BASE.DetectedItem DetectedItem
   -- @return #boolean true if at least one UNIT is detected from the DetectedSet, false if no UNIT was detected from the DetectedSet.
@@ -45455,6 +45702,7 @@ do -- DETECTION_UNITS
           -- Yes, the DetectedUnit is still detected or exists. Flag as identified.
           self:IdentifyDetectedObject( DetectedObject )
           
+          self:F( { "**DETECTED**", IsVisible = DetectedObject.IsVisible } )
           -- Update the detection with the new data provided.
           DetectedItem.TypeName = DetectedUnit:GetTypeName()            
           DetectedItem.CategoryName = DetectedUnit:GetCategoryName()            
@@ -45579,6 +45827,9 @@ do -- DETECTION_UNITS
       Report:Add(DetectedItemID .. ", " .. DetectedItemCoordText)
       Report:Add( string.format( "Threat: [%s]", string.rep(  "■", ThreatLevelA2G ), string.rep(  "□", 10-ThreatLevelA2G ) ) )
       Report:Add( string.format("Type: %s%s", UnitCategoryText, UnitDistanceText ) )
+      Report:Add( string.format("Visible: %s", DetectedItem.IsVisible and "yes" or "no" ) )
+      Report:Add( string.format("Detected: %s", DetectedItem.IsDetected and "yes" or "no" ) )
+      Report:Add( string.format("Distance: %s", DetectedItem.KnowDistance and "yes" or "no" ) )
       return Report
     end
     return nil
@@ -45905,6 +46156,7 @@ do -- DETECTION_AREAS
       Report:Add(DetectedItemID .. ", " .. DetectedItemCoordText)
       Report:Add( string.format( "Threat: [%s]", string.rep(  "■", ThreatLevelA2G ), string.rep(  "□", 10-ThreatLevelA2G ) ) )
       Report:Add( string.format("Type: %2d of %s", DetectedItemsCount, DetectedItemsTypes ) )
+      Report:Add( string.format("Detected: %s", DetectedItem.IsDetected and "yes" or "no" ) )
       
       return Report
     end
@@ -46069,7 +46321,9 @@ do -- DETECTION_AREAS
   function DETECTION_AREAS:CreateDetectionItems()
   
   
-    self:T2( "Checking Detected Items for new Detected Units ..." )
+    self:F( "Checking Detected Items for new Detected Units ..." )
+    --self:F( { DetectedObjects = self.DetectedObjects } )
+    
     -- First go through all detected sets, and check if there are new detected units, match all existing detected units and identify undetected units.
     -- Regroup when needed, split groups when needed.
     for DetectedItemID, DetectedItemData in pairs( self.DetectedItems ) do
@@ -69683,6 +69937,7 @@ do -- AI_A2A_DISPATCHER
     
     self:HandleEvent( EVENTS.Crash, self.OnEventCrashOrDead )
     self:HandleEvent( EVENTS.Dead, self.OnEventCrashOrDead )
+    --self:HandleEvent( EVENTS.RemoveUnit, self.OnEventCrashOrDead )
     
     self:HandleEvent( EVENTS.Land )
     self:HandleEvent( EVENTS.EngineShutdown )
@@ -71238,8 +71493,12 @@ do -- AI_A2A_DISPATCHER
         local SquadronOverhead = Squadron.Overhead or self.DefenderDefault.Overhead
         
         local DefenderSize = Defender:GetInitialSize()
-        DefenderCount = DefenderCount + DefenderSize / SquadronOverhead
-        self:F( "Defender Group Name: " .. Defender:GetName() .. ", Size: " .. DefenderSize )
+        if DefenderSize then
+          DefenderCount = DefenderCount + DefenderSize / SquadronOverhead
+          self:F( "Defender Group Name: " .. Defender:GetName() .. ", Size: " .. DefenderSize )
+        else
+          DefenderCount = 0
+        end
       end
     end
 
@@ -71681,6 +71940,8 @@ do -- AI_A2A_DISPATCHER
 
     local Report = REPORT:New( "\nTactical Overview" )
 
+    local DefenderGroupCount = 0
+
     -- Now that all obsolete tasks are removed, loop through the detected targets.
     for DetectedItemID, DetectedItem in pairs( Detection:GetDetectedItems() ) do
     
@@ -71718,16 +71979,19 @@ do -- AI_A2A_DISPATCHER
         for Defender, DefenderTask in pairs( self:GetDefenderTasks() ) do
           local Defender = Defender -- Wrapper.Group#GROUP
            if DefenderTask.Target and DefenderTask.Target.Index == DetectedItem.Index then
-             local Fuel = Defender:GetFuelMin() * 100
-             local Damage = Defender:GetLife() / Defender:GetLife0() * 100
-             Report:Add( string.format( "   - %s ( %s - %s ): ( #%d ) F: %3d, D:%3d - %s", 
-                                        Defender:GetName(), 
-                                        DefenderTask.Type, 
-                                        DefenderTask.Fsm:GetState(), 
-                                        Defender:GetSize(), 
-                                        Fuel,
-                                        Damage, 
-                                        Defender:HasTask() == true and "Executing" or "Idle" ) )
+             if Defender:IsAlive() then
+               DefenderGroupCount = DefenderGroupCount + 1
+               local Fuel = Defender:GetFuelMin() * 100
+               local Damage = Defender:GetLife() / Defender:GetLife0() * 100
+               Report:Add( string.format( "   - %s ( %s - %s ): ( #%d ) F: %3d, D:%3d - %s", 
+                                          Defender:GetName(), 
+                                          DefenderTask.Type, 
+                                          DefenderTask.Fsm:GetState(), 
+                                          Defender:GetSize(), 
+                                          Fuel,
+                                          Damage, 
+                                          Defender:HasTask() == true and "Executing" or "Idle" ) )
+             end
            end
         end
       end
@@ -71740,20 +72004,23 @@ do -- AI_A2A_DISPATCHER
         TaskCount = TaskCount + 1
         local Defender = Defender -- Wrapper.Group#GROUP
         if not DefenderTask.Target then
-          local DefenderHasTask = Defender:HasTask()
-          local Fuel = Defender:GetFuelMin() * 100
-          local Damage = Defender:GetLife() / Defender:GetLife0() * 100
-          Report:Add( string.format( "   - %s ( %s - %s ): ( #%d ) F: %3d, D:%3d - %s", 
-                                     Defender:GetName(), 
-                                     DefenderTask.Type, 
-                                     DefenderTask.Fsm:GetState(), 
-                                     Defender:GetSize(),
-                                     Fuel,
-                                     Damage, 
-                                     Defender:HasTask() == true and "Executing" or "Idle" ) )
+          if Defender:IsAlive() then
+            local DefenderHasTask = Defender:HasTask()
+            local Fuel = Defender:GetFuelMin() * 100
+            local Damage = Defender:GetLife() / Defender:GetLife0() * 100
+            DefenderGroupCount = DefenderGroupCount + 1
+            Report:Add( string.format( "   - %s ( %s - %s ): ( #%d ) F: %3d, D:%3d - %s", 
+                                       Defender:GetName(), 
+                                       DefenderTask.Type, 
+                                       DefenderTask.Fsm:GetState(), 
+                                       Defender:GetSize(),
+                                       Fuel,
+                                       Damage, 
+                                       Defender:HasTask() == true and "Executing" or "Idle" ) )
+          end
         end
       end
-      Report:Add( string.format( "\n - %d Tasks", TaskCount ) )
+      Report:Add( string.format( "\n - %d Tasks - %d Defender Groups", TaskCount, DefenderGroupCount ) )
   
       self:F( Report:Text( "\n" ) )
       trigger.action.outText( Report:Text( "\n" ), 25 )
@@ -72246,23 +72513,23 @@ do
 
     -- Setup squadrons
     
-    self:F( { Airbases = AirbaseNames  } )
+    self:I( { Airbases = AirbaseNames  } )
 
-    self:F( "Defining Templates for Airbases ..." )    
+    self:I( "Defining Templates for Airbases ..." )    
     for AirbaseID, AirbaseName in pairs( AirbaseNames ) do
       local Airbase = _DATABASE:FindAirbase( AirbaseName ) -- Wrapper.Airbase#AIRBASE
       local AirbaseName = Airbase:GetName()
       local AirbaseCoord = Airbase:GetCoordinate()
       local AirbaseZone = ZONE_RADIUS:New( "Airbase", AirbaseCoord:GetVec2(), 3000 )
       local Templates = nil
-      self:F( { Airbase = AirbaseName } )    
+      self:I( { Airbase = AirbaseName } )    
       for TemplateID, Template in pairs( self.Templates:GetSet() ) do
         local Template = Template -- Wrapper.Group#GROUP
         local TemplateCoord = Template:GetCoordinate()
         if AirbaseZone:IsVec2InZone( TemplateCoord:GetVec2() ) then
           Templates = Templates or {}
           table.insert( Templates, Template:GetName() )
-          self:F( { Template = Template:GetName() } )
+          self:I( { Template = Template:GetName() } )
         end
       end
       if Templates then
@@ -72278,13 +72545,13 @@ do
     self.CAPTemplates:FilterPrefixes( CapPrefixes )
     self.CAPTemplates:FilterOnce()
     
-    self:F( "Setting up CAP ..." )    
+    self:I( "Setting up CAP ..." )    
     for CAPID, CAPTemplate in pairs( self.CAPTemplates:GetSet() ) do
       local CAPZone = ZONE_POLYGON:New( CAPTemplate:GetName(), CAPTemplate )
       -- Now find the closest airbase from the ZONE (start or center)
       local AirbaseDistance = 99999999
       local AirbaseClosest = nil -- Wrapper.Airbase#AIRBASE
-      self:F( { CAPZoneGroup = CAPID } )    
+      self:I( { CAPZoneGroup = CAPID } )    
       for AirbaseID, AirbaseName in pairs( AirbaseNames ) do
         local Airbase = _DATABASE:FindAirbase( AirbaseName ) -- Wrapper.Airbase#AIRBASE
         local AirbaseName = Airbase:GetName()
@@ -72292,7 +72559,7 @@ do
         local Squadron = self.DefenderSquadrons[AirbaseName]
         if Squadron then
           local Distance = AirbaseCoord:Get2DDistance( CAPZone:GetCoordinate() )
-          self:F( { AirbaseDistance = Distance } )    
+          self:I( { AirbaseDistance = Distance } )    
           if Distance < AirbaseDistance then
             AirbaseDistance = Distance
             AirbaseClosest = Airbase
@@ -72300,7 +72567,7 @@ do
         end
       end
       if AirbaseClosest then
-        self:F( { CAPAirbase = AirbaseClosest:GetName() } )    
+        self:I( { CAPAirbase = AirbaseClosest:GetName() } )    
         self:SetSquadronCap( AirbaseClosest:GetName(), CAPZone, 6000, 10000, 500, 800, 800, 1200, "RADIO" )
         self:SetSquadronCapInterval( AirbaseClosest:GetName(), CapLimit, 300, 600, 1 )
       end          
@@ -72308,14 +72575,14 @@ do
 
     -- Setup GCI.
     -- GCI is setup for all Squadrons.
-    self:F( "Setting up GCI ..." )    
+    self:I( "Setting up GCI ..." )    
     for AirbaseID, AirbaseName in pairs( AirbaseNames ) do
       local Airbase = _DATABASE:FindAirbase( AirbaseName ) -- Wrapper.Airbase#AIRBASE
       local AirbaseName = Airbase:GetName()
       local Squadron = self.DefenderSquadrons[AirbaseName]
       self:F( { Airbase = AirbaseName } )    
       if Squadron then
-        self:F( { GCIAirbase = AirbaseName } )    
+        self:I( { GCIAirbase = AirbaseName } )    
         self:SetSquadronGci( AirbaseName, 800, 1200 )
       end
     end
@@ -72324,6 +72591,7 @@ do
     
     self:HandleEvent( EVENTS.Crash, self.OnEventCrashOrDead )
     self:HandleEvent( EVENTS.Dead, self.OnEventCrashOrDead )
+    --self:HandleEvent( EVENTS.RemoveUnit, self.OnEventCrashOrDead )
     
     self:HandleEvent( EVENTS.Land )
     self:HandleEvent( EVENTS.EngineShutdown )
@@ -76347,8 +76615,8 @@ function AI_CARGO:onbeforeLoad( Carrier, From, Event, To, PickupZone )
 
   local Boarding = false
 
-  local LoadInterval = 10
-  local LoadDelay = 10
+  local LoadInterval = 2
+  local LoadDelay = 0
   local Carrier_List = {}
   local Carrier_Weight = {}
 
@@ -76415,7 +76683,8 @@ function AI_CARGO:onbeforeLoad( Carrier, From, Event, To, PickupZone )
       end
       
       if not Loaded then
-        -- If the cargo wasn't loaded in one of the carriers, then we need to stop the loading.
+        -- No loading happened, so we need to pickup something else.
+        self.Relocating = false
       end
       
     end
@@ -76513,6 +76782,7 @@ function AI_CARGO:onafterUnload( Carrier, From, Event, To, DeployZone )
       local CarrierUnit = CarrierUnit -- Wrapper.Unit#UNIT
       Carrier:RouteStop()
       for _, Cargo in pairs( CarrierUnit:GetCargo() ) do
+        self:F( { Cargo = Cargo:GetName(), Isloaded = Cargo:IsLoaded() } )
         if Cargo:IsLoaded() then
           Cargo:__UnBoard( UnboardDelay )
           UnboardDelay = UnboardDelay + UnboardInterval
@@ -77331,7 +77601,6 @@ function AI_CARGO_HELICOPTER:onafterLanded( Helicopter, From, Event, To )
         --self:Load( Helicopter:GetPointVec2() )
         self:Load( self.PickupZone )
         self.RoutePickup = false
-        self.Relocating = true
       end
     end
     
@@ -77339,8 +77608,6 @@ function AI_CARGO_HELICOPTER:onafterLanded( Helicopter, From, Event, To )
       if Helicopter:GetHeight( true ) <= 5 and Helicopter:GetVelocityKMH() < 10 then
         self:Unload( self.DeployZone )
         self.RouteDeploy = false
-        self.Transporting = false
-        self.Relocating = false
       end
     end
      
@@ -77438,37 +77705,35 @@ function AI_CARGO_HELICOPTER:onafterOrbit( Helicopter, From, Event, To, Coordina
 
   if Helicopter and Helicopter:IsAlive() then
     
-    if not self:IsTransporting() then
-      local Route = {}
-      
-  --          local CoordinateFrom = Helicopter:GetCoordinate()
-  --          local WaypointFrom = CoordinateFrom:WaypointAir( 
-  --            "RADIO", 
-  --            POINT_VEC3.RoutePointType.TurningPoint, 
-  --            POINT_VEC3.RoutePointAction.TurningPoint, 
-  --            Speed, 
-  --            true 
-  --          )
-  --          Route[#Route+1] = WaypointFrom
-      local CoordinateTo   = Coordinate
-      local WaypointTo = CoordinateTo:WaypointAir( 
-        "RADIO", 
-        POINT_VEC3.RoutePointType.TurningPoint, 
-        POINT_VEC3.RoutePointAction.TurningPoint, 
-        50, 
-        true 
-      )
-      Route[#Route+1] = WaypointTo
-      
-      local Tasks = {}
-      Tasks[#Tasks+1] = Helicopter:TaskOrbitCircle( math.random( 30, 80 ), 150, CoordinateTo:GetRandomCoordinateInRadius( 800, 500 ) )
-      Route[#Route].task = Helicopter:TaskCombo( Tasks )
-  
-      Route[#Route+1] = WaypointTo
-  
-      -- Now route the helicopter
-      Helicopter:Route( Route, 0 )
-    end
+    local Route = {}
+    
+--          local CoordinateFrom = Helicopter:GetCoordinate()
+--          local WaypointFrom = CoordinateFrom:WaypointAir( 
+--            "RADIO", 
+--            POINT_VEC3.RoutePointType.TurningPoint, 
+--            POINT_VEC3.RoutePointAction.TurningPoint, 
+--            Speed, 
+--            true 
+--          )
+--          Route[#Route+1] = WaypointFrom
+    local CoordinateTo   = Coordinate
+    local WaypointTo = CoordinateTo:WaypointAir( 
+      "RADIO", 
+      POINT_VEC3.RoutePointType.TurningPoint, 
+      POINT_VEC3.RoutePointAction.TurningPoint, 
+      50, 
+      true 
+    )
+    Route[#Route+1] = WaypointTo
+    
+    local Tasks = {}
+    Tasks[#Tasks+1] = Helicopter:TaskOrbitCircle( math.random( 30, 80 ), 150, CoordinateTo:GetRandomCoordinateInRadius( 800, 500 ) )
+    Route[#Route].task = Helicopter:TaskCombo( Tasks )
+
+    Route[#Route+1] = WaypointTo
+
+    -- Now route the helicopter
+    Helicopter:Route( Route, 0 )
   end
 end
 
@@ -77486,8 +77751,16 @@ end
 function AI_CARGO_HELICOPTER:onafterPickedUp( Helicopter, From, Event, To, PickupZone )
   self:F( { Helicopter, From, Event, To } )
   
+  local HasCargo = false
   if Helicopter and Helicopter:IsAlive() then
-    self.Transporting = true
+    for Cargo, CarrierUnit in pairs( self.Carrier_Cargo ) do
+      HasCargo = true
+      break
+    end
+    self.Relocating = false
+    if HasCargo then
+      self.Transporting = true
+    end
   end
 end
 
@@ -77513,6 +77786,8 @@ function AI_CARGO_HELICOPTER:onafterDeployed( Helicopter, From, Event, To, Deplo
       AI_CARGO_QUEUE[Helicopter] = nil
     end, Helicopter
   )
+  
+  self.Transporting = false
   
 end
 
@@ -77577,7 +77852,9 @@ function AI_CARGO_HELICOPTER:onafterPickup( Helicopter, From, Event, To, Coordin
     Helicopter:Route( Route, 1 )
     
     self.PickupZone = PickupZone
-    self.Transporting = true
+
+    self.Relocating = true
+    self.Transporting = false
   end
   
 end
@@ -77653,7 +77930,9 @@ function AI_CARGO_HELICOPTER:onafterDeploy( Helicopter, From, Event, To, Coordin
 
     -- Now route the helicopter
     Helicopter:Route( Route, 0 )
-    
+
+    self.Relocating = false
+    self.Transporting = true
   end
   
 end
@@ -79121,7 +79400,7 @@ function AI_CARGO_DISPATCHER:onafterMonitor()
     -- The Pickup sequence ...
     -- Check if this Carrier need to go and Pickup something...
     -- So, if the cargo bay is not full yet with cargo to be loaded ...
-    self:I( { IsRelocating = AI_Cargo:IsRelocating(), IsTransporting = AI_Cargo:IsTransporting() } )
+    self:I( { Carrier = CarrierGroupName, IsRelocating = AI_Cargo:IsRelocating(), IsTransporting = AI_Cargo:IsTransporting() } )
     if AI_Cargo:IsRelocating() == false and AI_Cargo:IsTransporting() == false then
       -- ok, so there is a free Carrier
       -- now find the first cargo that is Unloaded
@@ -79139,7 +79418,8 @@ function AI_CARGO_DISPATCHER:onafterMonitor()
           if not self.PickupZoneSet or PickupZone then
             for CarrierPickup, Coordinate in pairs( self.PickupCargo ) do
               if CarrierPickup:IsAlive() == true then
-                if CargoCoordinate:Get2DDistance( Coordinate ) <= 100 then
+                if CargoCoordinate:Get2DDistance( Coordinate ) <= 25 then
+                  self:F( { "Coordinate not free for ", Cargo = Cargo:GetName(), Carrier:GetName(), PickupCargo = self.PickupCargo[Carrier] ~= nil } )
                   CoordinateFree = false
                   break
                 end
@@ -79179,7 +79459,7 @@ function AI_CARGO_DISPATCHER:onafterMonitor()
         if self.HomeZone then
           if not self.CarrierHome[Carrier] then
             self.CarrierHome[Carrier] = true
-            AI_Cargo:__Home( 60, self.HomeZone:GetRandomPointVec2(), math.random( self.PickupMinSpeed, self.PickupMaxSpeed ), self.HomeZone )
+            AI_Cargo:Home( self.HomeZone:GetRandomPointVec2(), math.random( self.PickupMinSpeed, self.PickupMaxSpeed ), self.HomeZone )
           end
         end
       end
@@ -79261,6 +79541,7 @@ function AI_CARGO_DISPATCHER:onafterTransport( From, Event, To, Carrier, Cargo )
     end
   end
   
+   self:F( { Carrier = Carrier:GetName(), PickupCargo = self.PickupCargo } )
    self.PickupCargo[Carrier] = nil
 end
 

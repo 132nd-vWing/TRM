@@ -139,15 +139,15 @@ IFV_BTR_section_R2B:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR2B
 end
 
  function _ON_DEMAND_2_IFV_M113_vehicle_R2B ()
-IFV_BTR_vehicle_R2B:OnSpawnGroup(function(group)
+IFV_M113_vehicle_R2B:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
-IFV_BTR_vehicle_R2B:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2B)
+IFV_M113_vehicle_R2B:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2B)
 end
 
  function _ON_DEMAND_2_IFV_M113_section_R2B ()
-IFV_BTR_section_R2B:OnSpawnGroup(function(group)
+IFV_M113_section_R2B:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
-IFV_BTR_section_R2B:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2B)
+IFV_M113_section_R2B:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2B)
 end
 
  function _ON_DEMAND_3_MBT_T72_vehicle_R2B ()
@@ -455,15 +455,15 @@ IFV_BTR_section_R2B_SOUTH:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpaw
 end
 
  function _ON_DEMAND_2_IFV_M113_vehicle_R2B_SOUTH ()
-IFV_BTR_vehicle_R2B_SOUTH:OnSpawnGroup(function(group)
+IFV_M113_vehicle_R2B_SOUTH:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
-IFV_BTR_vehicle_R2B_SOUTH:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2B_SOUTH)
+IFV_M113_vehicle_R2B_SOUTH:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2B_SOUTH)
 end
 
  function _ON_DEMAND_2_IFV_M113_section_R2B_SOUTH ()
-IFV_BTR_section_R2B_SOUTH:OnSpawnGroup(function(group)
+IFV_M113_section_R2B_SOUTH:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
-IFV_BTR_section_R2B_SOUTH:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2B_SOUTH)
+IFV_M113_section_R2B_SOUTH:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR2B_SOUTH)
 end
 
  function _ON_DEMAND_3_MBT_T72_vehicle_R2B_SOUTH ()
@@ -636,36 +636,36 @@ spawn_menu_OD_MISC_R2B_SOUTH = MENU_MISSION:New("On Demand - MISC",spawn_menu_OD
 
 
 
-local menu_ON_DEMAND_1_Recon_HMMWV_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn Recon HMMWV Vehicle",spawn_menu_OD_Recon_R2B_SOUTH,_ON_DEMAND_1_Recon_HMMWV_vehicle_R2B_SOUTH)
+--local menu_ON_DEMAND_1_Recon_HMMWV_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn Recon HMMWV Vehicle",spawn_menu_OD_Recon_R2B_SOUTH,_ON_DEMAND_1_Recon_HMMWV_vehicle_R2B_SOUTH)
 local menu_ON_DEMAND_1_Recon_HMMWV_section_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn Recon HMMWV Section",spawn_menu_OD_Recon_R2B_SOUTH,_ON_DEMAND_1_Recon_HMMWV_section_R2B_SOUTH)
-local menu_ON_DEMAND_1_Recon_BRDM_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn Recon BRDM Vehicle",spawn_menu_OD_Recon_R2B_SOUTH,_ON_DEMAND_1_Recon_BRDM_vehicle_R2B_SOUTH)
+--local menu_ON_DEMAND_1_Recon_BRDM_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn Recon BRDM Vehicle",spawn_menu_OD_Recon_R2B_SOUTH,_ON_DEMAND_1_Recon_BRDM_vehicle_R2B_SOUTH)
 local menu_ON_DEMAND_1_Recon_BRDM_section_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn Recon BRDM Section",spawn_menu_OD_Recon_R2B_SOUTH,_ON_DEMAND_1_Recon_BRDM_section_R2B_SOUTH)
-local menu_ON_DEMAND_1_Recon_STRYKER_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn Recon STRYKER Vehicle",spawn_menu_OD_Recon_R2B_SOUTH,_ON_DEMAND_1_Recon_STRYKER_vehicle_R2B_SOUTH)
+--local menu_ON_DEMAND_1_Recon_STRYKER_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn Recon STRYKER Vehicle",spawn_menu_OD_Recon_R2B_SOUTH,_ON_DEMAND_1_Recon_STRYKER_vehicle_R2B_SOUTH)
 local menu_ON_DEMAND_1_Recon_STRYKER_section_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn Recon STRYKER Section",spawn_menu_OD_Recon_R2B_SOUTH,_ON_DEMAND_1_Recon_STRYKER_section_R2B_SOUTH)
 
-local menu_ON_DEMAND_2_IFV_BMP2_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn IFV BMP2 Vehicle",spawn_menu_OD_IFV_R2B_SOUTH_BMP2,_ON_DEMAND_2_IFV_BMP2_vehicle_R2B_SOUTH)
+--local menu_ON_DEMAND_2_IFV_BMP2_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn IFV BMP2 Vehicle",spawn_menu_OD_IFV_R2B_SOUTH_BMP2,_ON_DEMAND_2_IFV_BMP2_vehicle_R2B_SOUTH)
 local menu_ON_DEMAND_2_IFV_BMP2_section_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn IFV BMP2 Section",spawn_menu_OD_IFV_R2B_SOUTH_BMP2,_ON_DEMAND_2_IFV_BMP2_section_R2B_SOUTH)
-local menu_ON_DEMAND_2_IFV_LAV25_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn IFV LAV25 Vehicle",spawn_menu_OD_IFV_R2B_SOUTH_LAV25,_ON_DEMAND_2_IFV_LAV25_vehicle_R2B_SOUTH)
+--local menu_ON_DEMAND_2_IFV_LAV25_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn IFV LAV25 Vehicle",spawn_menu_OD_IFV_R2B_SOUTH_LAV25,_ON_DEMAND_2_IFV_LAV25_vehicle_R2B_SOUTH)
 local menu_ON_DEMAND_2_IFV_LAV25_section_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn IFV LAV25 Section",spawn_menu_OD_IFV_R2B_SOUTH_LAV25,_ON_DEMAND_2_IFV_LAV25_section_R2B_SOUTH)
-local menu_ON_DEMAND_2_IFV_BRADLEY_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn IFV BRADLEY Vehicle",spawn_menu_OD_IFV_R2B_SOUTH_BRADLEY,_ON_DEMAND_2_IFV_BRADLEY_vehicle_R2B_SOUTH)
+--local menu_ON_DEMAND_2_IFV_BRADLEY_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn IFV BRADLEY Vehicle",spawn_menu_OD_IFV_R2B_SOUTH_BRADLEY,_ON_DEMAND_2_IFV_BRADLEY_vehicle_R2B_SOUTH)
 local menu_ON_DEMAND_2_IFV_BRADLEY_section_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn IFV BRADLEY Section",spawn_menu_OD_IFV_R2B_SOUTH_BRADLEY,_ON_DEMAND_2_IFV_BRADLEY_section_R2B_SOUTH)
-local menu_ON_DEMAND_2_IFV_BMP3_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn IFV BMP3 Vehicle",spawn_menu_OD_IFV_R2B_SOUTH_BMP3,_ON_DEMAND_2_IFV_BMP3_vehicle_R2B_SOUTH)
+--local menu_ON_DEMAND_2_IFV_BMP3_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn IFV BMP3 Vehicle",spawn_menu_OD_IFV_R2B_SOUTH_BMP3,_ON_DEMAND_2_IFV_BMP3_vehicle_R2B_SOUTH)
 local menu_ON_DEMAND_2_IFV_BMP3_section_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn IFV BMP3 Section",spawn_menu_OD_IFV_R2B_SOUTH_BMP3,_ON_DEMAND_2_IFV_BMP3_section_R2B_SOUTH)
-local menu_ON_DEMAND_2_IFV_BTR_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn IFV BTR Vehicle",spawn_menu_OD_IFV_R2B_SOUTH_BTR,_ON_DEMAND_2_IFV_BTR_vehicle_R2B_SOUTH)
+--local menu_ON_DEMAND_2_IFV_BTR_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn IFV BTR Vehicle",spawn_menu_OD_IFV_R2B_SOUTH_BTR,_ON_DEMAND_2_IFV_BTR_vehicle_R2B_SOUTH)
 local menu_ON_DEMAND_2_IFV_BTR_section_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn IFV BTR Section",spawn_menu_OD_IFV_R2B_SOUTH_BTR,_ON_DEMAND_2_IFV_BTR_section_R2B_SOUTH)
-local menu_ON_DEMAND_2_IFV_M113_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn IFV M113 Vehicle",spawn_menu_OD_IFV_R2B_SOUTH_M113,_ON_DEMAND_2_IFV_M113_vehicle_R2B_SOUTH)
+--local menu_ON_DEMAND_2_IFV_M113_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn IFV M113 Vehicle",spawn_menu_OD_IFV_R2B_SOUTH_M113,_ON_DEMAND_2_IFV_M113_vehicle_R2B_SOUTH)
 local menu_ON_DEMAND_2_IFV_M113_section_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn IFV M113 Section",spawn_menu_OD_IFV_R2B_SOUTH_M113,_ON_DEMAND_2_IFV_M113_section_R2B_SOUTH)
 
-local menu_ON_DEMAND_3_MBT_T72_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn MBT T72 Vehicle",spawn_menu_OD_MBT_R2B_SOUTH_T72,_ON_DEMAND_3_MBT_T72_vehicle_R2B_SOUTH)
+--local menu_ON_DEMAND_3_MBT_T72_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn MBT T72 Vehicle",spawn_menu_OD_MBT_R2B_SOUTH_T72,_ON_DEMAND_3_MBT_T72_vehicle_R2B_SOUTH)
 local menu_ON_DEMAND_3_MBT_T72_section_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn MBT T72 Section",spawn_menu_OD_MBT_R2B_SOUTH_T72,_ON_DEMAND_3_MBT_T72_section_R2B_SOUTH)
-local menu_ON_DEMAND_3_MBT_T80_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn MBT T80 Vehicle",spawn_menu_OD_MBT_R2B_SOUTH_T80,_ON_DEMAND_3_MBT_T80_vehicle_R2B_SOUTH)
+--local menu_ON_DEMAND_3_MBT_T80_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn MBT T80 Vehicle",spawn_menu_OD_MBT_R2B_SOUTH_T80,_ON_DEMAND_3_MBT_T80_vehicle_R2B_SOUTH)
 local menu_ON_DEMAND_3_MBT_T80_section_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn MBT T80 Section",spawn_menu_OD_MBT_R2B_SOUTH_T80,_ON_DEMAND_3_MBT_T80_section_R2B_SOUTH)
-local menu_ON_DEMAND_3_MBT_ABRAMS_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn MBT ABRAMS Vehicle",spawn_menu_OD_MBT_R2B_SOUTH_ABRAMS,_ON_DEMAND_3_MBT_ABRAMS_vehicle_R2B_SOUTH)
+--local menu_ON_DEMAND_3_MBT_ABRAMS_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn MBT ABRAMS Vehicle",spawn_menu_OD_MBT_R2B_SOUTH_ABRAMS,_ON_DEMAND_3_MBT_ABRAMS_vehicle_R2B_SOUTH)
 local menu_ON_DEMAND_3_MBT_ABRAMS_section_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn MBT ABRAMS Section",spawn_menu_OD_MBT_R2B_SOUTH_ABRAMS,_ON_DEMAND_3_MBT_ABRAMS_section_R2B_SOUTH)
-local menu_ON_DEMAND_3_MBT_LEO2_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn MBT Leopard2 Vehicle",spawn_menu_OD_MBT_R2B_SOUTH_LEO2,_ON_DEMAND_3_MBT_LEO2_vehicle_R2B_SOUTH)
+--local menu_ON_DEMAND_3_MBT_LEO2_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn MBT Leopard2 Vehicle",spawn_menu_OD_MBT_R2B_SOUTH_LEO2,_ON_DEMAND_3_MBT_LEO2_vehicle_R2B_SOUTH)
 local menu_ON_DEMAND_3_MBT_LEO2_section_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn MBT Leopard2 Section",spawn_menu_OD_MBT_R2B_SOUTH_LEO2,_ON_DEMAND_3_MBT_LEO2_section_R2B_SOUTH)
 
-local menu_ON_DEMAND_4_MISC_SHILKA_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn SHILKA Vehicle",spawn_menu_OD_MISC_R2B_SOUTH,_ON_DEMAND_4_MISC_SHILKA_vehicle_R2B_SOUTH)
+--local menu_ON_DEMAND_4_MISC_SHILKA_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn SHILKA Vehicle",spawn_menu_OD_MISC_R2B_SOUTH,_ON_DEMAND_4_MISC_SHILKA_vehicle_R2B_SOUTH)
 local menu_ON_DEMAND_4_MISC_C2_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn C2 Vehicle",spawn_menu_OD_MISC_R2B_SOUTH,_ON_DEMAND_4_MISC_C2_vehicle_R2B_SOUTH)
 local menu_ON_DEMAND_4_MISC_ARTY_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn Artillery Vehicle",spawn_menu_OD_MISC_R2B_SOUTH,_ON_DEMAND_4_MISC_ARTY_vehicle_R2B_SOUTH)
 local menu_ON_DEMAND_4_MISC_MLRS_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn MLRS Vehicle",spawn_menu_OD_MISC_R2B_SOUTH,_ON_DEMAND_4_MISC_MLRS_vehicle_R2B_SOUTH)
