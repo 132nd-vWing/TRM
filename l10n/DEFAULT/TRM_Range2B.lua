@@ -1,4 +1,5 @@
 --- Range 2B.2 (North)---
+Range2B_4_Groups = SET_GROUP:New():FilterCategoryGround():FilterPrefixes("Range2B"):FilterStart()
 
 -- ON DEMAND SPAWNING -- 
 BlueSpawnerR2B = UNIT:FindByName("BlueInfantryR2B")
@@ -562,6 +563,7 @@ Range2B_4_Groups_Distance_Max = 300 -- max Distance in Meters for randomized mov
 
 
 
+
 function moveT2B4Groups()
 
 Range2B_4_Groups:ForEachGroupAlive(function (move)
@@ -665,7 +667,7 @@ local menu_ON_DEMAND_3_MBT_ABRAMS_section_R2B_SOUTH = MENU_MISSION_COMMAND:New("
 --local menu_ON_DEMAND_3_MBT_LEO2_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn MBT Leopard2 Vehicle",spawn_menu_OD_MBT_R2B_SOUTH_LEO2,_ON_DEMAND_3_MBT_LEO2_vehicle_R2B_SOUTH)
 local menu_ON_DEMAND_3_MBT_LEO2_section_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn MBT Leopard2 Section",spawn_menu_OD_MBT_R2B_SOUTH_LEO2,_ON_DEMAND_3_MBT_LEO2_section_R2B_SOUTH)
 
---local menu_ON_DEMAND_4_MISC_SHILKA_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn SHILKA Vehicle",spawn_menu_OD_MISC_R2B_SOUTH,_ON_DEMAND_4_MISC_SHILKA_vehicle_R2B_SOUTH)
+local menu_ON_DEMAND_4_MISC_SHILKA_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn SHILKA Vehicle",spawn_menu_OD_MISC_R2B_SOUTH,_ON_DEMAND_4_MISC_SHILKA_vehicle_R2B_SOUTH)
 local menu_ON_DEMAND_4_MISC_C2_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn C2 Vehicle",spawn_menu_OD_MISC_R2B_SOUTH,_ON_DEMAND_4_MISC_C2_vehicle_R2B_SOUTH)
 local menu_ON_DEMAND_4_MISC_ARTY_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn Artillery Vehicle",spawn_menu_OD_MISC_R2B_SOUTH,_ON_DEMAND_4_MISC_ARTY_vehicle_R2B_SOUTH)
 local menu_ON_DEMAND_4_MISC_MLRS_vehicle_R2B_SOUTH = MENU_MISSION_COMMAND:New("Spawn MLRS Vehicle",spawn_menu_OD_MISC_R2B_SOUTH,_ON_DEMAND_4_MISC_MLRS_vehicle_R2B_SOUTH)

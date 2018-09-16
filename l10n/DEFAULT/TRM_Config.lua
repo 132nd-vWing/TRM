@@ -18,7 +18,7 @@ Menu_Threat_Options = MENU_MISSION:New("Threat Sites")
 
 
 
-awacs1 = SPAWN:New("BLUE AWACS #1")
+awacs1 = SPAWN:NewWithAlias("BLUE AWACS #1","BLUE AWACS1 #IFF:1204FR")
 function awacs1spawn()
   awacs1:OnSpawnGroup(
     function (awacs1_group)
@@ -44,7 +44,7 @@ function awacs1spawn()
 end
 awacs1spawn()
 
-awacs2 = SPAWN:New("BLUE AWACS #2")
+awacs2 = SPAWN:NewWithAlias("BLUE AWACS #2","BLUE AWACS2 #IFF:1205FR")
 function awacs2spawn()
   awacs2:OnSpawnGroup(
     function (awacs2_group)
@@ -70,7 +70,9 @@ function awacs2spawn()
 end
 awacs2spawn()
 
-awacs3 = SPAWN:New("RED AGGRESSOR AWACS")
+
+
+awacs3 = SPAWN:NewWithAlias("RED AGGRESSOR AWACS","RED AGGRESSOR AWACS #IFF:2207HO")
 function awacs3spawn()
   awacs3:OnSpawnGroup(
     function (awacs3_group)

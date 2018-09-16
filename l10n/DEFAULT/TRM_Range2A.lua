@@ -1,4 +1,5 @@
 --- Range 2A---
+Range2A_Groups = SET_GROUP:New():FilterCategoryGround():FilterPrefixes("Range2A"):FilterStart()
 
 -- ON DEMAND SPAWNING -- 
 BlueSpawnerR2A = UNIT:FindByName("BlueInfantryR2A")
@@ -351,7 +352,7 @@ R2A_blue_MBT:OptionDisperseOff()
 spawn_menu_R2A:Remove()
 end
 
-spawn_menu_R2A = MENU_MISSION_COMMAND:New("Set up Range 2A.1 dynamically",Menu_Range_R2A,SpawnTargets_R2A)
+spawn_menu_R2A = MENU_MISSION_COMMAND:New("Set up Friendlies at Range 2A.1",Menu_Range_R2A,SpawnTargets_R2A)
 
 -- random setup for Rang  e 2A.2
 function SpawnTargets_R2A_2 ()
@@ -371,7 +372,7 @@ R2A_2_red_misc:OptionDisperseOff()
 -- RED Spawners
 
 end
-spawn_menu_R2A_2 = MENU_MISSION_COMMAND:New("Set up Targets at 2A.2 dynamically",Menu_Range_R2A,SpawnTargets_R2A_2)
+spawn_menu_R2A_2 = MENU_MISSION_COMMAND:New("Set up Hostiles at 2A.2",Menu_Range_R2A,SpawnTargets_R2A_2)
 
 -- Range Auto Setup -- 
 -- move targets 
@@ -400,19 +401,12 @@ end
 -- move targets
 
 
-Range2A_Groups_movetimer = 5 -- time in MINUTES for randomized movement
-Range2A_Groups_RandomFaktor = 0.5 -- Timer above ranomize Faktor
-Range2A_Groups_Distance_Min = 50 -- min Distance in Meters for randomized movement
-Range2A_Groups_Distance_Max = 300 -- max Distance in Meters for randomized movement
-
-
-
-
 -- move targets_periodically 
 function moveRange2AGroups_periodically_start()
   spawn_menu_OD_Range2A_MoveODSpawns_periodically_stop = MENU_MISSION_COMMAND:New("Disable Spawned Group changing Position every " ..Range2A_Groups_movetimer.."Minutes",Menu_Range_R2A,moveRange2AGroups_periodically_stop)
   spawn_menu_OD_Range2A_MoveODSpawns_periodically_start:Remove()
   Range2A_PositionChange =
+
     SCHEDULER:New(nil,function ()
       Range2A_Groups:ForEachGroupAlive(function (move)
         -- Get the current coordinate of GroundGroup
@@ -422,6 +416,7 @@ function moveRange2AGroups_periodically_start()
         move:RouteGroundTo(ToCoord,20,5)
       end)
     end,{},5,Range2A_Groups_movetimer*60,Range2A_Groups_RandomFaktor)
+    
 end
 
 function moveRange2AGroups_periodically_stop()
@@ -434,5 +429,39 @@ spawn_menu_OD_Range2A_MoveODSpawns = MENU_MISSION_COMMAND:New("Move Positions of
 spawn_menu_OD_Range2A_MoveODSpawns_periodically_start = MENU_MISSION_COMMAND:New("Spawned Groups Change Position every 5 Minutes",Menu_Range_R2A,moveRange2AGroups_periodically_start)
 
 -- move targets_periodically
+
+
+-- Range Convoy -- 
+
+convoy1 = SPAWN:New("R2A_2_Convoy1"):InitAIOff():Spawn()
+
+spawn_menu_OD_R2A_Convoy1 = MENU_MISSION:New("Convoy Control",Menu_Range_R2A)
+
+
+
+function StartConvoy1()
+convoy1:SetAIOn()
+spawn_menu_OD_R2A_Convoy1_start:Remove()
+spawn_menu_OD_R2A_Convoy1_stop = MENU_MISSION_COMMAND:New("Convoy Stop Moving",spawn_menu_OD_R2A_Convoy1,StopConvoy1)
+end
+
+function StopConvoy1()
+convoy1:SetAIOff()
+spawn_menu_OD_R2A_Convoy1_stop:Remove()
+spawn_menu_OD_R2A_Convoy1_start = MENU_MISSION_COMMAND:New("Convoy Start Moving",spawn_menu_OD_R2A_Convoy1,StartConvoy1)
+end
+
+function SmokeConvoy1()
+  if convoy1 then
+    convoy1unit = convoy1:GetUnit(1)
+    convoy1unit:SmokeGreen()
+  end
+end
+
+spawn_menu_OD_R2A_Convoy1_start = MENU_MISSION_COMMAND:New("Convoy Start Moving",spawn_menu_OD_R2A_Convoy1,StartConvoy1)
+spawn_menu_OD_R2A_Convoy1_smoke = MENU_MISSION_COMMAND:New("Mark Convoy with Smoke",spawn_menu_OD_R2A_Convoy1,SmokeConvoy1)
+
+
+
 
 
