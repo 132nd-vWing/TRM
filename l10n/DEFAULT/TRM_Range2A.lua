@@ -352,7 +352,7 @@ R2A_blue_MBT:OptionDisperseOff()
 spawn_menu_R2A:Remove()
 end
 
-spawn_menu_R2A = MENU_MISSION_COMMAND:New("Set up Friendlies at Range 2A.1",Menu_Range_R2A,SpawnTargets_R2A)
+spawn_menu_R2A = MENU_MISSION_COMMAND:New("Set up Range 2A.1",Menu_Range_R2A,SpawnTargets_R2A)
 
 -- random setup for Rang  e 2A.2
 function SpawnTargets_R2A_2 ()
@@ -372,7 +372,7 @@ R2A_2_red_misc:OptionDisperseOff()
 -- RED Spawners
 
 end
-spawn_menu_R2A_2 = MENU_MISSION_COMMAND:New("Set up Hostiles at 2A.2",Menu_Range_R2A,SpawnTargets_R2A_2)
+spawn_menu_R2A_2 = MENU_MISSION_COMMAND:New("Set up roadblock at 2A.2",Menu_Range_R2A,SpawnTargets_R2A_2)
 
 -- Range Auto Setup -- 
 -- move targets 

@@ -218,6 +218,9 @@ ctld.extractableGroups = {
     "JTAC T2B.5",
     "R2B_4_SOF_TEAM",
     "JTAC T2B.4",
+    "R2A_SOF_TEAM",
+    "RW Training Area Troops1",
+    "RW Training Area Troops2",
     
 }
 
