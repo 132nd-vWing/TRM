@@ -1,4 +1,4 @@
-env.info( '*** MOOSE GITHUB Commit Hash ID: 2018-09-15T05:09:07.0000000Z-268d3da90b4019cdcbd7c615cf7402e84cb2cb4e ***' )
+env.info( '*** MOOSE GITHUB Commit Hash ID: 2018-09-26T20:16:25.0000000Z-74eea74c170f3ae4fc6f908ce1e657fb782fe031 ***' )
 env.info( '*** MOOSE STATIC INCLUDE START *** ' )
 
 --- Various routines
@@ -3086,7 +3086,75 @@ function UTILS.DisplayMissionTime(duration)
   local local_time=UTILS.SecondsToClock(Tnow)  
   local text=string.format("Time: %s - %02d:%02d", local_time, mission_time_minutes, mission_time_seconds)
   MESSAGE:New(text, duration):ToAll()
-end--- **Core** -- BASE forms **the basis of the MOOSE framework**. Each class within the MOOSE framework derives from BASE.
+end
+
+
+--- Generate a Gaussian pseudo-random number.
+-- @param #number x0 Expectation value of distribution.
+-- @param #number sigma (Optional) Standard deviation. Default 10.
+-- @param #number xmin (Optional) Lower cut-off value.
+-- @param #number xmax (Optional) Upper cut-off value.
+-- @param #number imax (Optional) Max number of tries to get a value between xmin and xmax (if specified). Default 100.
+-- @return #number Gaussian random number.
+function UTILS.RandomGaussian(x0, sigma, xmin, xmax, imax)
+
+  -- Standard deviation. Default 10 if not given.
+  sigma=sigma or 10
+  
+  -- Max attempts.
+  imax=imax or 100
+    
+  local r
+  local gotit=false
+  local i=0
+  while not gotit do
+  
+    -- Uniform numbers in [0,1). We need two.
+    local x1=math.random()
+    local x2=math.random()
+  
+    -- Transform to Gaussian exp(-(x-x0)²/(2*sigma²).
+    r = math.sqrt(-2*sigma*sigma * math.log(x1)) * math.cos(2*math.pi * x2) + x0
+    
+    i=i+1
+    if (r>=xmin and r<=xmax) or i>imax then
+      gotit=true
+    end
+  end
+  
+  return r
+end
+
+--- Randomize a value by a certain amount.
+-- @param #number value The value which should be randomized
+-- @param #number fac Randomization factor.
+-- @param #number lower (Optional) Lower limit of the returned value.
+-- @param #number upper (Optional) Upper limit of the returned value.
+-- @return #number Randomized value.
+-- @usage UTILS.Randomize(100, 0.1) returns a value between 90 and 110, i.e. a plus/minus ten percent variation.
+-- @usage UTILS.Randomize(100, 0.5, nil, 120) returns a value between 50 and 120, i.e. a plus/minus fivty percent variation with upper bound 120.
+function UTILS.Randomize(value, fac, lower, upper)
+  local min
+  if lower then
+    min=math.max(value-value*fac, lower)
+  else
+    min=value-value*fac
+  end
+  local max
+  if upper then
+    max=math.min(value+value*fac, upper)
+  else
+    max=value+value*fac
+  end
+  
+  local r=math.random(min, max)
+  
+  return r
+end
+
+
+
+--- **Core** -- BASE forms **the basis of the MOOSE framework**. Each class within the MOOSE framework derives from BASE.
 -- 
 -- ### Author: **FlightControl**
 -- ### Contributions: 
@@ -5390,6 +5458,10 @@ EVENTS = {
 -- @field DCS#Unit.Category TgtCategory (UNIT) The category of the target.
 -- @field #string TgtTypeName (UNIT) The type name of the target.
 -- 
+-- @field DCS#Airbase place The @{DCS#Airbase}
+-- @field Wrapper.Airbase#AIRBASE Place The MOOSE airbase object.
+-- @field #string PlaceName The name of the airbase.
+-- 
 -- @field weapon The weapon used during the event.
 -- @field Weapon
 -- @field WeaponName
@@ -5633,7 +5705,6 @@ function EVENT:RemoveEvent( EventClass, EventID  )
   self.Events = self.Events or {}
   self.Events[EventID] = self.Events[EventID] or {}
   self.Events[EventID][EventPriority] = self.Events[EventID][EventPriority] or {}  
-  self.Events[EventID][EventPriority][EventClass] = self.Events[EventID][EventPriority][EventClass]
     
   self.Events[EventID][EventPriority][EventClass] = nil
   
@@ -6071,6 +6142,12 @@ function EVENT:onEvent( Event )
       Event.WeaponTypeName = Event.WeaponUNIT and Event.Weapon:getTypeName()
       --Event.WeaponTgtDCSUnit = Event.Weapon:getTarget()
     end
+    
+    -- Place should be given for takeoff and landing events as well as base captured. It should be a DCS airbase. 
+    if Event.place then      
+      Event.Place=AIRBASE:Find(Event.place)
+      Event.PlaceName=Event.Place:GetName()
+    end
 
 --  @FC: something like this should be added.
 --[[    
@@ -6099,7 +6176,7 @@ function EVENT:onEvent( Event )
     local PriorityEnd = PriorityOrder == -1 and 1 or 5
 
     if Event.IniObjectCategory ~= Object.Category.STATIC then
-      self:E( { EventMeta.Text, Event, Event.IniDCSUnitName, Event.TgtDCSUnitName, PriorityOrder } )
+      self:T( { EventMeta.Text, Event, Event.IniDCSUnitName, Event.TgtDCSUnitName, PriorityOrder } )
     end
     
     for EventPriority = PriorityBegin, PriorityEnd, PriorityOrder do
@@ -8711,12 +8788,13 @@ end
 -- @param Utilities.Utils#SMOKECOLOR SmokeColor The smoke color.
 function ZONE_BASE:SmokeZone( SmokeColor )
   self:F2( SmokeColor )
-
+  
 end
 
 --- Set the randomization probability of a zone to be selected.
 -- @param #ZONE_BASE self
--- @param ZoneProbability A value between 0 and 1. 0 = 0% and 1 = 100% probability.
+-- @param #number ZoneProbability A value between 0 and 1. 0 = 0% and 1 = 100% probability.
+-- @return #ZONE_BASE self
 function ZONE_BASE:SetZoneProbability( ZoneProbability )
   self:F( { self:GetName(), ZoneProbability = ZoneProbability } )
   
@@ -8728,7 +8806,7 @@ end
 -- @param #ZONE_BASE self
 -- @return #number A value between 0 and 1. 0 = 0% and 1 = 100% probability.
 function ZONE_BASE:GetZoneProbability()
-  self:F2()
+  self:F2()  
   
   return self.ZoneProbability
 end
@@ -9333,7 +9411,7 @@ end
 function ZONE_RADIUS:GetRandomCoordinate( inner, outer )
   self:F( self.ZoneName, inner, outer )
 
-  local Coordinate = COORDINATE:NewFromVec2( self:GetRandomVec2() )
+  local Coordinate = COORDINATE:NewFromVec2( self:GetRandomVec2(inner, outer) )
 
   self:T3( { Coordinate = Coordinate } )
   
@@ -9478,6 +9556,7 @@ function ZONE_UNIT:GetVec2()
   local ZoneVec2 = self.ZoneUNIT:GetVec2()
   if ZoneVec2 then
   
+    local heading
     if self.relative_to_unit then
         heading = ( self.ZoneUNIT:GetHeading() or 0.0 ) * math.pi / 180.0
       else
@@ -9517,7 +9596,8 @@ function ZONE_UNIT:GetRandomVec2()
   self:F( self.ZoneName )
 
   local RandomVec2 = {}
-  local Vec2 = self.ZoneUNIT:GetVec2()
+  --local Vec2 = self.ZoneUNIT:GetVec2()  -- FF: This does not take care of the new offset feature!
+  local Vec2 = self:GetVec2()
   
   if not Vec2 then
     Vec2 = self.LastVec2
@@ -9957,6 +10037,9 @@ function ZONE_POLYGON:New( ZoneName, ZoneGroup )
   local self = BASE:Inherit( self, ZONE_POLYGON_BASE:New( ZoneName, GroupPoints ) )
   self:F( { ZoneName, ZoneGroup, self._.Polygon } )
 
+  -- Zone objects are added to the _DATABASE and SET_ZONE objects.
+  _EVENTDISPATCHER:CreateEventNewZone( self )
+
   return self
 end
 
@@ -9964,7 +10047,6 @@ end
 --- Constructor to create a ZONE_POLYGON instance, taking the zone name and the **name** of the @{Wrapper.Group#GROUP} defined within the Mission Editor.
 -- The @{Wrapper.Group#GROUP} waypoints define the polygon corners. The first and the last point are automatically connected by ZONE_POLYGON.
 -- @param #ZONE_POLYGON self
--- @param #string ZoneName Name of the zone.
 -- @param #string GroupName The group name of the GROUP defining the waypoints within the Mission Editor to define the polygon shape.
 -- @return #ZONE_POLYGON self
 function ZONE_POLYGON:NewFromGroupName( GroupName )
@@ -9975,6 +10057,9 @@ function ZONE_POLYGON:NewFromGroupName( GroupName )
 
   local self = BASE:Inherit( self, ZONE_POLYGON_BASE:New( GroupName, GroupPoints ) )
   self:F( { GroupName, ZoneGroup, self._.Polygon } )
+
+  -- Zone objects are added to the _DATABASE and SET_ZONE objects.
+  _EVENTDISPATCHER:CreateEventNewZone( self )
 
   return self
 end
@@ -10008,16 +10093,16 @@ do -- ZONE_AIRBASE
     
   --- Constructor to create a ZONE_AIRBASE instance, taking the zone name, a zone @{Wrapper.Airbase#AIRBASE} and a radius.
   -- @param #ZONE_AIRBASE self
-  -- @param #string ZoneName Name of the zone.
-  -- @param Wrapper.Airbase#AIRBASE ZoneAirbase The @{Wrapper.Airbase} as the center of the zone.
-  -- @param DCS#Distance Radius The radius of the zone.
+  -- @param #string AirbaseName Name of the airbase.
+  -- @param DCS#Distance Radius (Optional)The radius of the zone in meters. Default 4000 meters.
   -- @return #ZONE_AIRBASE self
-  function ZONE_AIRBASE:New( AirbaseName )
+  function ZONE_AIRBASE:New( AirbaseName, Radius )
   
+    Radius=Radius or 4000
   
     local Airbase = AIRBASE:FindByName( AirbaseName )
   
-    local self = BASE:Inherit( self, ZONE_RADIUS:New( AirbaseName, Airbase:GetVec2(), 4000 ) )
+    local self = BASE:Inherit( self, ZONE_RADIUS:New( AirbaseName, Airbase:GetVec2(), Radius ) )
   
     self._.ZoneAirbase = Airbase
     self._.ZoneVec2Cache = self._.ZoneAirbase:GetVec2()
@@ -10402,9 +10487,9 @@ do -- Zones
     end
   
     for ZoneGroupName, ZoneGroup in pairs( self.GROUPS ) do
-      if ZoneGroupName:match("~ZONE_POLYGON") then
-        local ZoneName1 = ZoneGroupName:match("(.*)~ZONE_POLYGON")
-        local ZoneName2 = ZoneGroupName:match(".*~ZONE_POLYGON(.*)")
+      if ZoneGroupName:match("#ZONE_POLYGON") then
+        local ZoneName1 = ZoneGroupName:match("(.*)#ZONE_POLYGON")
+        local ZoneName2 = ZoneGroupName:match(".*#ZONE_POLYGON(.*)")
         local ZoneName = ZoneName1 .. ( ZoneName2 or "" )
         
         self:I( { "Register ZONE_POLYGON:", Name = ZoneName } )
@@ -10630,8 +10715,8 @@ end
 -- SpawnCountryID, SpawnCategoryID
 -- This method is used by the SPAWN class.
 -- @param #DATABASE self
--- @param #table SpawnTemplate
--- @return #DATABASE self
+-- @param #table SpawnTemplate Template of the group to spawn.
+-- @return Wrapper.Group#GROUP Spawned group.
 function DATABASE:Spawn( SpawnTemplate )
   self:F( SpawnTemplate.name )
 
@@ -10764,9 +10849,11 @@ end
 
 --- Private method that registers new Static Templates within the DATABASE Object.
 -- @param #DATABASE self
--- @param #table GroupTemplate
+-- @param #table StaticTemplate
 -- @return #DATABASE self
 function DATABASE:_RegisterStaticTemplate( StaticTemplate, CoalitionID, CategoryID, CountryID )
+
+  local StaticTemplate = UTILS.DeepCopy( StaticTemplate )
 
   local StaticTemplateName = env.getValueDictByKey(StaticTemplate.name)
   
@@ -10796,9 +10883,15 @@ end
 
 
 --- @param #DATABASE self
-function DATABASE:GetStaticUnitTemplate( StaticName )
-  local StaticTemplate = self.Templates.Statics[StaticName].UnitTemplate
+function DATABASE:GetStaticGroupTemplate( StaticName )
+  local StaticTemplate = self.Templates.Statics[StaticName].GroupTemplate
   return StaticTemplate, self.Templates.Statics[StaticName].CoalitionID, self.Templates.Statics[StaticName].CategoryID, self.Templates.Statics[StaticName].CountryID
+end
+
+--- @param #DATABASE self
+function DATABASE:GetStaticUnitTemplate( StaticName )
+  local UnitTemplate = self.Templates.Statics[StaticName].UnitTemplate
+  return UnitTemplate, self.Templates.Statics[StaticName].CoalitionID, self.Templates.Statics[StaticName].CategoryID, self.Templates.Statics[StaticName].CountryID
 end
 
 
@@ -11490,1460 +11583,1468 @@ end
 -- @image Core_Sets.JPG
 
 
---- @type SET_BASE
--- @field #table Filter
--- @field #table Set
--- @field #table List
--- @field Core.Scheduler#SCHEDULER CallScheduler
--- @extends Core.Base#BASE
+do -- SET_BASE
 
-
---- The @{Core.Set#SET_BASE} class defines the core functions that define a collection of objects.
--- A SET provides iterators to iterate the SET, but will **temporarily** yield the ForEach interator loop at defined **"intervals"** to the mail simulator loop.
--- In this way, large loops can be done while not blocking the simulator main processing loop.
--- The default **"yield interval"** is after 10 objects processed.
--- The default **"time interval"** is after 0.001 seconds.
--- 
--- ## Add or remove objects from the SET
--- 
--- Some key core functions are @{Core.Set#SET_BASE.Add} and @{Core.Set#SET_BASE.Remove} to add or remove objects from the SET in your logic.
--- 
--- ## Define the SET iterator **"yield interval"** and the **"time interval"**
--- 
--- Modify the iterator intervals with the @{Core.Set#SET_BASE.SetInteratorIntervals} method.
--- You can set the **"yield interval"**, and the **"time interval"**. (See above).
--- 
--- @field #SET_BASE SET_BASE 
-SET_BASE = {
-  ClassName = "SET_BASE",
-  Filter = {},
-  Set = {},
-  List = {},
-  Index = {},
-}
-
-
---- Creates a new SET_BASE object, building a set of units belonging to a coalitions, categories, countries, types or with defined prefix names.
--- @param #SET_BASE self
--- @return #SET_BASE
--- @usage
--- -- Define a new SET_BASE Object. This DBObject will contain a reference to all Group and Unit Templates defined within the ME and the DCSRTE.
--- DBObject = SET_BASE:New()
-function SET_BASE:New( Database )
-
-  -- Inherits from BASE
-  local self = BASE:Inherit( self, FSM:New() ) -- Core.Set#SET_BASE
+  --- @type SET_BASE
+  -- @field #table Filter
+  -- @field #table Set
+  -- @field #table List
+  -- @field Core.Scheduler#SCHEDULER CallScheduler
+  -- @extends Core.Base#BASE
   
-  self.Database = Database
-
-  self:SetStartState( "Started" )
   
-  --- Added Handler OnAfter for SET_BASE
-  -- @function [parent=#SET_BASE] OnAfterAdded
+  --- The @{Core.Set#SET_BASE} class defines the core functions that define a collection of objects.
+  -- A SET provides iterators to iterate the SET, but will **temporarily** yield the ForEach interator loop at defined **"intervals"** to the mail simulator loop.
+  -- In this way, large loops can be done while not blocking the simulator main processing loop.
+  -- The default **"yield interval"** is after 10 objects processed.
+  -- The default **"time interval"** is after 0.001 seconds.
+  -- 
+  -- ## Add or remove objects from the SET
+  -- 
+  -- Some key core functions are @{Core.Set#SET_BASE.Add} and @{Core.Set#SET_BASE.Remove} to add or remove objects from the SET in your logic.
+  -- 
+  -- ## Define the SET iterator **"yield interval"** and the **"time interval"**
+  -- 
+  -- Modify the iterator intervals with the @{Core.Set#SET_BASE.SetInteratorIntervals} method.
+  -- You can set the **"yield interval"**, and the **"time interval"**. (See above).
+  -- 
+  -- @field #SET_BASE SET_BASE 
+  SET_BASE = {
+    ClassName = "SET_BASE",
+    Filter = {},
+    Set = {},
+    List = {},
+    Index = {},
+  }
+  
+  
+  --- Creates a new SET_BASE object, building a set of units belonging to a coalitions, categories, countries, types or with defined prefix names.
   -- @param #SET_BASE self
-  -- @param #string From
-  -- @param #string Event
-  -- @param #string To
-  -- @param #string ObjectName The name of the object.
-  -- @param Object The object.
+  -- @return #SET_BASE
+  -- @usage
+  -- -- Define a new SET_BASE Object. This DBObject will contain a reference to all Group and Unit Templates defined within the ME and the DCSRTE.
+  -- DBObject = SET_BASE:New()
+  function SET_BASE:New( Database )
   
+    -- Inherits from BASE
+    local self = BASE:Inherit( self, FSM:New() ) -- Core.Set#SET_BASE
+    
+    self.Database = Database
   
-  self:AddTransition( "*",  "Added", "*" )
+    self:SetStartState( "Started" )
+    
+    --- Added Handler OnAfter for SET_BASE
+    -- @function [parent=#SET_BASE] OnAfterAdded
+    -- @param #SET_BASE self
+    -- @param #string From
+    -- @param #string Event
+    -- @param #string To
+    -- @param #string ObjectName The name of the object.
+    -- @param Object The object.
+    
+    
+    self:AddTransition( "*",  "Added", "*" )
+    
+    --- Removed Handler OnAfter for SET_BASE
+    -- @function [parent=#SET_BASE] OnAfterRemoved
+    -- @param #SET_BASE self
+    -- @param #string From
+    -- @param #string Event
+    -- @param #string To
+    -- @param #string ObjectName The name of the object.
+    -- @param Object The object.
+    
+    self:AddTransition( "*",  "Removed", "*" )
   
-  --- Removed Handler OnAfter for SET_BASE
-  -- @function [parent=#SET_BASE] OnAfterRemoved
+    self.YieldInterval = 10
+    self.TimeInterval = 0.001
+  
+    self.Set = {}
+    self.Index = {}
+    
+    self.CallScheduler = SCHEDULER:New( self )
+  
+    self:SetEventPriority( 2 )
+  
+    return self
+  end
+  
+  --- Finds an @{Core.Base#BASE} object based on the object Name.
   -- @param #SET_BASE self
-  -- @param #string From
-  -- @param #string Event
-  -- @param #string To
-  -- @param #string ObjectName The name of the object.
-  -- @param Object The object.
+  -- @param #string ObjectName
+  -- @return Core.Base#BASE The Object found.
+  function SET_BASE:_Find( ObjectName )
   
-  self:AddTransition( "*",  "Removed", "*" )
-
-  self.YieldInterval = 10
-  self.TimeInterval = 0.001
-
-  self.Set = {}
-  self.Index = {}
-  
-  self.CallScheduler = SCHEDULER:New( self )
-
-  self:SetEventPriority( 2 )
-
-  return self
-end
-
---- Finds an @{Core.Base#BASE} object based on the object Name.
--- @param #SET_BASE self
--- @param #string ObjectName
--- @return Core.Base#BASE The Object found.
-function SET_BASE:_Find( ObjectName )
-
-  local ObjectFound = self.Set[ObjectName]
-  return ObjectFound
-end
-
-
---- Gets the Set.
--- @param #SET_BASE self
--- @return #SET_BASE self
-function SET_BASE:GetSet()
-	self:F2()
-	
-  return self.Set
-end
-
---- Gets a list of the Names of the Objects in the Set.
--- @param #SET_BASE self
--- @return #SET_BASE self
-function SET_BASE:GetSetNames()  -- R2.3
-  self:F2()
-  
-  local Names = {}
-  
-  for Name, Object in pairs( self.Set ) do
-    table.insert( Names, Name )
+    local ObjectFound = self.Set[ObjectName]
+    return ObjectFound
   end
   
-  return Names
-end
-
-
---- Gets a list of the Objects in the Set.
--- @param #SET_BASE self
--- @return #SET_BASE self
-function SET_BASE:GetSetObjects()  -- R2.3
-  self:F2()
   
-  local Objects = {}
-  
-  for Name, Object in pairs( self.Set ) do
-    table.insert( Objects, Object )
+  --- Gets the Set.
+  -- @param #SET_BASE self
+  -- @return #SET_BASE self
+  function SET_BASE:GetSet()
+    self:F2()
+    
+    return self.Set
   end
   
-  return Objects
-end
-
-
---- Removes a @{Core.Base#BASE} object from the @{Core.Set#SET_BASE} and derived classes, based on the Object Name.
--- @param #SET_BASE self
--- @param #string ObjectName
--- @param NoTriggerEvent (optional) When `true`, the :Remove() method will not trigger a **Removed** event.
-function SET_BASE:Remove( ObjectName, NoTriggerEvent )
-  self:F2( { ObjectName = ObjectName } )
-
-  local Object = self.Set[ObjectName]
-  
-  if Object then  
-    for Index, Key in ipairs( self.Index ) do
-      if Key == ObjectName then
-        table.remove( self.Index, Index )
-        self.Set[ObjectName] = nil
-        break
-      end
+  --- Gets a list of the Names of the Objects in the Set.
+  -- @param #SET_BASE self
+  -- @return #SET_BASE self
+  function SET_BASE:GetSetNames()  -- R2.3
+    self:F2()
+    
+    local Names = {}
+    
+    for Name, Object in pairs( self.Set ) do
+      table.insert( Names, Name )
     end
-    -- When NoTriggerEvent is true, then no Removed event will be triggered.
-    if not NoTriggerEvent then
-      self:Removed( ObjectName, Object )
+    
+    return Names
+  end
+  
+  
+  --- Gets a list of the Objects in the Set.
+  -- @param #SET_BASE self
+  -- @return #SET_BASE self
+  function SET_BASE:GetSetObjects()  -- R2.3
+    self:F2()
+    
+    local Objects = {}
+    
+    for Name, Object in pairs( self.Set ) do
+      table.insert( Objects, Object )
     end
-  end
-end
-
-
---- Adds a @{Core.Base#BASE} object in the @{Core.Set#SET_BASE}, using a given ObjectName as the index.
--- @param #SET_BASE self
--- @param #string ObjectName
--- @param Core.Base#BASE Object
--- @return Core.Base#BASE The added BASE Object.
-function SET_BASE:Add( ObjectName, Object )
-  self:F2( { ObjectName = ObjectName, Object = Object } )
-
-  -- Ensure that the existing element is removed from the Set before a new one is inserted to the Set
-  if self.Set[ObjectName] then
-    self:Remove( ObjectName, true )
-  end
-  self.Set[ObjectName] = Object
-  table.insert( self.Index, ObjectName )
-  
-  self:Added( ObjectName, Object )
-end
-
---- Adds a @{Core.Base#BASE} object in the @{Core.Set#SET_BASE}, using the Object Name as the index.
--- @param #SET_BASE self
--- @param Wrapper.Object#OBJECT Object
--- @return Core.Base#BASE The added BASE Object.
-function SET_BASE:AddObject( Object )
-  self:F2( Object.ObjectName )
-  
-  self:T( Object.UnitName )
-  self:T( Object.ObjectName )
-  self:Add( Object.ObjectName, Object )
-  
-end
-
-
-
-
---- Gets a @{Core.Base#BASE} object from the @{Core.Set#SET_BASE} and derived classes, based on the Object Name.
--- @param #SET_BASE self
--- @param #string ObjectName
--- @return Core.Base#BASE
-function SET_BASE:Get( ObjectName )
-  self:F( ObjectName )
-
-  local Object = self.Set[ObjectName]
-  
-  self:T3( { ObjectName, Object } )
-  return Object
-end
-
---- Gets the first object from the @{Core.Set#SET_BASE} and derived classes.
--- @param #SET_BASE self
--- @return Core.Base#BASE
-function SET_BASE:GetFirst()
-
-  local ObjectName = self.Index[1]
-  local FirstObject = self.Set[ObjectName]
-  self:T3( { FirstObject } )
-  return FirstObject 
-end
-
---- Gets the last object from the @{Core.Set#SET_BASE} and derived classes.
--- @param #SET_BASE self
--- @return Core.Base#BASE
-function SET_BASE:GetLast()
-
-  local ObjectName = self.Index[#self.Index]
-  local LastObject = self.Set[ObjectName]
-  self:T3( { LastObject } )
-  return LastObject 
-end
-
---- Gets a random object from the @{Core.Set#SET_BASE} and derived classes.
--- @param #SET_BASE self
--- @return Core.Base#BASE
-function SET_BASE:GetRandom()
-
-  local RandomItem = self.Set[self.Index[math.random(#self.Index)]]
-  self:T3( { RandomItem } )
-  return RandomItem
-end
-
-
---- Retrieves the amount of objects in the @{Core.Set#SET_BASE} and derived classes.
--- @param #SET_BASE self
--- @return #number Count
-function SET_BASE:Count()
-
-  return self.Index and #self.Index or 0
-end
-
-
---- Copies the Filter criteria from a given Set (for rebuilding a new Set based on an existing Set).
--- @param #SET_BASE self
--- @param #SET_BASE BaseSet
--- @return #SET_BASE
-function SET_BASE:SetDatabase( BaseSet )
-
-  -- Copy the filter criteria of the BaseSet
-  local OtherFilter = routines.utils.deepCopy( BaseSet.Filter )
-  self.Filter = OtherFilter
-  
-  -- Now base the new Set on the BaseSet
-  self.Database = BaseSet:GetSet()
-  return self
-end
-
-
-
---- Define the SET iterator **"yield interval"** and the **"time interval"**.
--- @param #SET_BASE self
--- @param #number YieldInterval Sets the frequency when the iterator loop will yield after the number of objects processed. The default frequency is 10 objects processed.
--- @param #number TimeInterval Sets the time in seconds when the main logic will resume the iterator loop. The default time is 0.001 seconds.
--- @return #SET_BASE self
-function SET_BASE:SetIteratorIntervals( YieldInterval, TimeInterval )
-
-  self.YieldInterval = YieldInterval
-  self.TimeInterval = TimeInterval
-  
-  return self
-end
-
-
---- Filters for the defined collection.
--- @param #SET_BASE self
--- @return #SET_BASE self
-function SET_BASE:FilterOnce()
-
-  for ObjectName, Object in pairs( self.Database ) do
-
-    if self:IsIncludeObject( Object ) then
-      self:Add( ObjectName, Object )
-    end
+    
+    return Objects
   end
   
-  return self
-end
-
---- Starts the filtering for the defined collection.
--- @param #SET_BASE self
--- @return #SET_BASE self
-function SET_BASE:_FilterStart()
-
-  for ObjectName, Object in pairs( self.Database ) do
-
-    if self:IsIncludeObject( Object ) then
-      self:E( { "Adding Object:", ObjectName } )
-      self:Add( ObjectName, Object )
-    end
-  end
   
-  -- Follow alive players and clients
-  --self:HandleEvent( EVENTS.PlayerEnterUnit, self._EventOnPlayerEnterUnit )
-  --self:HandleEvent( EVENTS.PlayerLeaveUnit, self._EventOnPlayerLeaveUnit )
+  --- Removes a @{Core.Base#BASE} object from the @{Core.Set#SET_BASE} and derived classes, based on the Object Name.
+  -- @param #SET_BASE self
+  -- @param #string ObjectName
+  -- @param NoTriggerEvent (optional) When `true`, the :Remove() method will not trigger a **Removed** event.
+  function SET_BASE:Remove( ObjectName, NoTriggerEvent )
+    self:F2( { ObjectName = ObjectName } )
   
-  
-  return self
-end
-
---- Starts the filtering of the Dead events for the collection.
--- @param #SET_BASE self
--- @return #SET_BASE self
-function SET_BASE:FilterDeads() --R2.1 allow deads to be filtered to automatically handle deads in the collection.
-
-  self:HandleEvent( EVENTS.Dead, self._EventOnDeadOrCrash )
-  
-  return self
-end
-
---- Starts the filtering of the Crash events for the collection.
--- @param #SET_BASE self
--- @return #SET_BASE self
-function SET_BASE:FilterCrashes() --R2.1 allow crashes to be filtered to automatically handle crashes in the collection.
-
-  self:HandleEvent( EVENTS.Crash, self._EventOnDeadOrCrash )
-  
-  return self
-end
-
---- Stops the filtering for the defined collection.
--- @param #SET_BASE self
--- @return #SET_BASE self
-function SET_BASE:FilterStop()
-
-  self:UnHandleEvent( EVENTS.Birth )
-  self:UnHandleEvent( EVENTS.Dead )
-  self:UnHandleEvent( EVENTS.Crash )
-  
-  return self
-end
-
---- Iterate the SET_BASE while identifying the nearest object from a @{Core.Point#POINT_VEC2}.
--- @param #SET_BASE self
--- @param Core.Point#POINT_VEC2 PointVec2 A @{Core.Point#POINT_VEC2} object from where to evaluate the closest object in the set.
--- @return Core.Base#BASE The closest object.
-function SET_BASE:FindNearestObjectFromPointVec2( PointVec2 )
-  self:F2( PointVec2 )
-  
-  local NearestObject = nil
-  local ClosestDistance = nil
-  
-  for ObjectID, ObjectData in pairs( self.Set ) do
-    if NearestObject == nil then
-      NearestObject = ObjectData
-      ClosestDistance = PointVec2:DistanceFromVec2( ObjectData:GetVec2() )
-    else
-      local Distance = PointVec2:DistanceFromVec2( ObjectData:GetVec2() )
-      if Distance < ClosestDistance then
-        NearestObject = ObjectData
-        ClosestDistance = Distance
-      end
-    end
-  end
-  
-  return NearestObject
-end
-
-
-
------ Private method that registers all alive players in the mission.
----- @param #SET_BASE self
----- @return #SET_BASE self
---function SET_BASE:_RegisterPlayers()
---
---  local CoalitionsData = { AlivePlayersRed = coalition.getPlayers( coalition.side.RED ), AlivePlayersBlue = coalition.getPlayers( coalition.side.BLUE ) }
---  for CoalitionId, CoalitionData in pairs( CoalitionsData ) do
---    for UnitId, UnitData in pairs( CoalitionData ) do
---      self:T3( { "UnitData:", UnitData } )
---      if UnitData and UnitData:isExist() then
---        local UnitName = UnitData:getName()
---        if not self.PlayersAlive[UnitName] then
---          self:E( { "Add player for unit:", UnitName, UnitData:getPlayerName() } )
---          self.PlayersAlive[UnitName] = UnitData:getPlayerName()
---        end
---      end
---    end
---  end
---  
---  return self
---end
-
---- Events
-
---- Handles the OnBirth event for the Set.
--- @param #SET_BASE self
--- @param Core.Event#EVENTDATA Event
-function SET_BASE:_EventOnBirth( Event )
-  self:F3( { Event } )
-
-  if Event.IniDCSUnit then
-    local ObjectName, Object = self:AddInDatabase( Event )
-    self:T3( ObjectName, Object )
-    if Object and self:IsIncludeObject( Object ) then
-      self:Add( ObjectName, Object )
-      --self:_EventOnPlayerEnterUnit( Event )
-    end
-  end
-end
-
---- Handles the OnDead or OnCrash event for alive units set.
--- @param #SET_BASE self
--- @param Core.Event#EVENTDATA Event
-function SET_BASE:_EventOnDeadOrCrash( Event )
-  self:F( { Event } )
-
-  if Event.IniDCSUnit then
-    local ObjectName, Object = self:FindInDatabase( Event )
-    if ObjectName then
-      self:Remove( ObjectName )
-    end
-  end
-end
-
---- Handles the OnPlayerEnterUnit event to fill the active players table (with the unit filter applied).
--- @param #SET_BASE self
--- @param Core.Event#EVENTDATA Event
---function SET_BASE:_EventOnPlayerEnterUnit( Event )
---  self:F3( { Event } )
---
---  if Event.IniDCSUnit then
---    local ObjectName, Object = self:AddInDatabase( Event )
---    self:T3( ObjectName, Object )
---    if self:IsIncludeObject( Object ) then
---      self:Add( ObjectName, Object )
---      --self:_EventOnPlayerEnterUnit( Event )
---    end
---  end
---end
-
---- Handles the OnPlayerLeaveUnit event to clean the active players table.
--- @param #SET_BASE self
--- @param Core.Event#EVENTDATA Event
---function SET_BASE:_EventOnPlayerLeaveUnit( Event )
---  self:F3( { Event } )
---
---  local ObjectName = Event.IniDCSUnit
---  if Event.IniDCSUnit then
---    if Event.IniDCSGroup then
---      local GroupUnits = Event.IniDCSGroup:getUnits()
---      local PlayerCount = 0
---      for _, DCSUnit in pairs( GroupUnits ) do
---        if DCSUnit ~= Event.IniDCSUnit then
---          if DCSUnit:getPlayerName() ~= nil then
---            PlayerCount = PlayerCount + 1
---          end
---        end
---      end
---      self:E(PlayerCount)
---      if PlayerCount == 0 then
---        self:Remove( Event.IniDCSGroupName )
---      end
---    end
---  end
---end
-
--- Iterators
-
---- Iterate the SET_BASE and derived classes and call an iterator function for the given SET_BASE, providing the Object for each element within the set and optional parameters.
--- @param #SET_BASE self
--- @param #function IteratorFunction The function that will be called.
--- @return #SET_BASE self
-function SET_BASE:ForEach( IteratorFunction, arg, Set, Function, FunctionArguments )
-  self:F3( arg )
-  
-  Set = Set or self:GetSet()
-  arg = arg or {}
-  
-  local function CoRoutine()
-    local Count = 0
-    for ObjectID, ObjectData in pairs( Set ) do
-      local Object = ObjectData
-        self:T3( Object )
-        if Function then
-          if Function( unpack( FunctionArguments ), Object ) == true then
-            IteratorFunction( Object, unpack( arg ) )
-          end
-        else
-          IteratorFunction( Object, unpack( arg ) )
+    local Object = self.Set[ObjectName]
+    
+    if Object then  
+      for Index, Key in ipairs( self.Index ) do
+        if Key == ObjectName then
+          table.remove( self.Index, Index )
+          self.Set[ObjectName] = nil
+          break
         end
-        Count = Count + 1
---        if Count % self.YieldInterval == 0 then
---          coroutine.yield( false )
---        end    
-    end
-    return true
-  end
-  
---  local co = coroutine.create( CoRoutine )
-  local co = CoRoutine
-  
-  local function Schedule()
-  
---    local status, res = coroutine.resume( co )
-    local status, res = co()
-    self:T3( { status, res } )
-    
-    if status == false then
-      error( res )
-    end
-    if res == false then
-      return true -- resume next time the loop
-    end
-    
-    return false
-  end
-
-  --self.CallScheduler:Schedule( self, Schedule, {}, self.TimeInterval, self.TimeInterval, 0 )
-  Schedule()
-  
-  return self
-end
-
-
------ Iterate the SET_BASE and call an interator function for each **alive** unit, providing the Unit and optional parameters.
----- @param #SET_BASE self
----- @param #function IteratorFunction The function that will be called when there is an alive unit in the SET_BASE. The function needs to accept a UNIT parameter.
----- @return #SET_BASE self
---function SET_BASE:ForEachDCSUnitAlive( IteratorFunction, ... )
---  self:F3( arg )
---  
---  self:ForEach( IteratorFunction, arg, self.DCSUnitsAlive )
---
---  return self
---end
---
------ Iterate the SET_BASE and call an interator function for each **alive** player, providing the Unit of the player and optional parameters.
----- @param #SET_BASE self
----- @param #function IteratorFunction The function that will be called when there is an alive player in the SET_BASE. The function needs to accept a UNIT parameter.
----- @return #SET_BASE self
---function SET_BASE:ForEachPlayer( IteratorFunction, ... )
---  self:F3( arg )
---  
---  self:ForEach( IteratorFunction, arg, self.PlayersAlive )
---  
---  return self
---end
---
---
------ Iterate the SET_BASE and call an interator function for each client, providing the Client to the function and optional parameters.
----- @param #SET_BASE self
----- @param #function IteratorFunction The function that will be called when there is an alive player in the SET_BASE. The function needs to accept a CLIENT parameter.
----- @return #SET_BASE self
---function SET_BASE:ForEachClient( IteratorFunction, ... )
---  self:F3( arg )
---  
---  self:ForEach( IteratorFunction, arg, self.Clients )
---
---  return self
---end
-
-
---- Decides whether to include the Object
--- @param #SET_BASE self
--- @param #table Object
--- @return #SET_BASE self
-function SET_BASE:IsIncludeObject( Object )
-  self:F3( Object )
-  
-  return true
-end
-
---- Gets a string with all the object names.
--- @param #SET_BASE self
--- @return #string A string with the names of the objects.
-function SET_BASE:GetObjectNames()
-  self:F3()
-
-  local ObjectNames = ""
-  for ObjectName, Object in pairs( self.Set ) do
-    ObjectNames = ObjectNames .. ObjectName .. ", "
-  end
-  
-  return ObjectNames
-end
-
---- Flushes the current SET_BASE contents in the log ... (for debugging reasons).
--- @param #SET_BASE self
--- @param Core.Base#BASE MasterObject (optional) The master object as a reference.
--- @return #string A string with the names of the objects.
-function SET_BASE:Flush( MasterObject )
-  self:F3()
-
-  local ObjectNames = ""
-  for ObjectName, Object in pairs( self.Set ) do
-    ObjectNames = ObjectNames .. ObjectName .. ", "
-  end
-  self:F( { MasterObject = MasterObject and MasterObject:GetClassNameAndID(), "Objects in Set:", ObjectNames } )
-  
-  return ObjectNames
-end
-
-
---- @type SET_GROUP
--- @extends Core.Set#SET_BASE
-
---- Mission designers can use the @{Core.Set#SET_GROUP} class to build sets of groups belonging to certain:
--- 
---  * Coalitions
---  * Categories
---  * Countries
---  * Starting with certain prefix strings.
---  
--- ## SET_GROUP constructor
--- 
--- Create a new SET_GROUP object with the @{#SET_GROUP.New} method:
--- 
---    * @{#SET_GROUP.New}: Creates a new SET_GROUP object.
--- 
--- ## Add or Remove GROUP(s) from SET_GROUP
--- 
--- GROUPS can be added and removed using the @{Core.Set#SET_GROUP.AddGroupsByName} and @{Core.Set#SET_GROUP.RemoveGroupsByName} respectively. 
--- These methods take a single GROUP name or an array of GROUP names to be added or removed from SET_GROUP.
--- 
--- ## SET_GROUP filter criteria
--- 
--- You can set filter criteria to define the set of groups within the SET_GROUP.
--- Filter criteria are defined by:
--- 
---    * @{#SET_GROUP.FilterCoalitions}: Builds the SET_GROUP with the groups belonging to the coalition(s).
---    * @{#SET_GROUP.FilterCategories}: Builds the SET_GROUP with the groups belonging to the category(ies).
---    * @{#SET_GROUP.FilterCountries}: Builds the SET_GROUP with the gruops belonging to the country(ies).
---    * @{#SET_GROUP.FilterPrefixes}: Builds the SET_GROUP with the groups starting with the same prefix string(s).
---    * @{#SET_GROUP.FilterActive}: Builds the SET_GROUP with the groups that are only active. Groups that are inactive (late activation) won't be included in the set!
--- 
--- For the Category Filter, extra methods have been added:
--- 
---    * @{#SET_GROUP.FilterCategoryAirplane}: Builds the SET_GROUP from airplanes.
---    * @{#SET_GROUP.FilterCategoryHelicopter}: Builds the SET_GROUP from helicopters.
---    * @{#SET_GROUP.FilterCategoryGround}: Builds the SET_GROUP from ground vehicles or infantry.
---    * @{#SET_GROUP.FilterCategoryShip}: Builds the SET_GROUP from ships.
---    * @{#SET_GROUP.FilterCategoryStructure}: Builds the SET_GROUP from structures.
--- 
---   
--- Once the filter criteria have been set for the SET_GROUP, you can start filtering using:
--- 
---    * @{#SET_GROUP.FilterStart}: Starts the filtering of the groups within the SET_GROUP and add or remove GROUP objects **dynamically**.
---    * @{#SET_GROUP.FilterOnce}: Filters of the groups **once**.
--- 
--- Planned filter criteria within development are (so these are not yet available):
--- 
---    * @{#SET_GROUP.FilterZones}: Builds the SET_GROUP with the groups within a @{Core.Zone#ZONE}.
--- 
--- ## SET_GROUP iterators
--- 
--- Once the filters have been defined and the SET_GROUP has been built, you can iterate the SET_GROUP with the available iterator methods.
--- The iterator methods will walk the SET_GROUP set, and call for each element within the set a function that you provide.
--- The following iterator methods are currently available within the SET_GROUP:
--- 
---   * @{#SET_GROUP.ForEachGroup}: Calls a function for each alive group it finds within the SET_GROUP.
---   * @{#SET_GROUP.ForEachGroupCompletelyInZone}: Iterate the SET_GROUP and call an iterator function for each **alive** GROUP presence completely in a @{Zone}, providing the GROUP and optional parameters to the called function.
---   * @{#SET_GROUP.ForEachGroupPartlyInZone}: Iterate the SET_GROUP and call an iterator function for each **alive** GROUP presence partly in a @{Zone}, providing the GROUP and optional parameters to the called function.
---   * @{#SET_GROUP.ForEachGroupNotInZone}: Iterate the SET_GROUP and call an iterator function for each **alive** GROUP presence not in a @{Zone}, providing the GROUP and optional parameters to the called function.
---
---
--- ## SET_GROUP trigger events on the GROUP objects.
--- 
--- The SET is derived from the FSM class, which provides extra capabilities to track the contents of the GROUP objects in the SET_GROUP.
--- 
--- ### When a GROUP object crashes or is dead, the SET_GROUP will trigger a **Dead** event.
--- 
--- You can handle the event using the OnBefore and OnAfter event handlers. 
--- The event handlers need to have the paramters From, Event, To, GroupObject.
--- The GroupObject is the GROUP object that is dead and within the SET_GROUP, and is passed as a parameter to the event handler.
--- See the following example:
--- 
---        -- Create the SetCarrier SET_GROUP collection.
---
---        local SetHelicopter = SET_GROUP:New():FilterPrefixes( "Helicopter" ):FilterStart()
--- 
---        -- Put a Dead event handler on SetCarrier, to ensure that when a carrier is destroyed, that all internal parameters are reset.
---
---        function SetHelicopter:OnAfterDead( From, Event, To, GroupObject )
---          self:F( { GroupObject = GroupObject:GetName() } )
---        end
--- 
--- While this is a good example, there is a catch.
--- Imageine you want to execute the code above, the the self would need to be from the object declared outside (above) the OnAfterDead method.
--- So, the self would need to contain another object. Fortunately, this can be done, but you must use then the **`.`** notation for the method.
--- See the modified example:
--- 
---        -- Now we have a constructor of the class AI_CARGO_DISPATCHER, that receives the SetHelicopter as a parameter.
---        -- Within that constructor, we want to set an enclosed event handler OnAfterDead for SetHelicopter.
---        -- But within the OnAfterDead method, we want to refer to the self variable of the AI_CARGO_DISPATCHER.
--- 
---        function AI_CARGO_DISPATCHER:New( SetCarrier, SetCargo, SetDeployZones )
---         
---          local self = BASE:Inherit( self, FSM:New() ) -- #AI_CARGO_DISPATCHER
--- 
---          -- Put a Dead event handler on SetCarrier, to ensure that when a carrier is destroyed, that all internal parameters are reset.
---          -- Note the "." notation, and the explicit declaration of SetHelicopter, which would be using the ":" notation the implicit self variable declaration.
---
---          function SetHelicopter.OnAfterDead( SetHelicopter, From, Event, To, GroupObject )
---            SetHelicopter:F( { GroupObject = GroupObject:GetName() } )
---            self.PickupCargo[GroupObject] = nil  -- So here I clear the PickupCargo table entry of the self object AI_CARGO_DISPATCHER.
---            self.CarrierHome[GroupObject] = nil
---          end
---        
---        end
--- 
--- ===
--- @field #SET_GROUP SET_GROUP 
-SET_GROUP = {
-  ClassName = "SET_GROUP",
-  Filter = {
-    Coalitions = nil,
-    Categories = nil,
-    Countries = nil,
-    GroupPrefixes = nil,
-  },
-  FilterMeta = {
-    Coalitions = {
-      red = coalition.side.RED,
-      blue = coalition.side.BLUE,
-      neutral = coalition.side.NEUTRAL,
-    },
-    Categories = {
-      plane = Group.Category.AIRPLANE,
-      helicopter = Group.Category.HELICOPTER,
-      ground = Group.Category.GROUND, -- R2.2
-      ship = Group.Category.SHIP,
-      structure = Group.Category.STRUCTURE,
-    },
-  },
-}
-
-
---- Creates a new SET_GROUP object, building a set of groups belonging to a coalitions, categories, countries, types or with defined prefix names.
--- @param #SET_GROUP self
--- @return #SET_GROUP
--- @usage
--- -- Define a new SET_GROUP Object. This DBObject will contain a reference to all alive GROUPS.
--- DBObject = SET_GROUP:New()
-function SET_GROUP:New()
-
-  -- Inherits from BASE
-  local self = BASE:Inherit( self, SET_BASE:New( _DATABASE.GROUPS ) ) -- #SET_GROUP
-
-  self:FilterActive( false )
-
-  return self
-end
-
---- Gets the Set.
--- @param #SET_GROUP self
--- @return #SET_GROUP self
-function SET_GROUP:GetAliveSet()
-  self:F2()
-  
-  local AliveSet = SET_GROUP:New()
-  
-  -- Clean the Set before returning with only the alive Groups.
-  for GroupName, GroupObject in pairs( self.Set ) do
-    local GroupObject=GroupObject --Wrapper.Group#GROUP
-    if GroupObject then
-      if GroupObject:IsAlive() then
-        AliveSet:Add( GroupName, GroupObject )
+      end
+      -- When NoTriggerEvent is true, then no Removed event will be triggered.
+      if not NoTriggerEvent then
+        self:Removed( ObjectName, Object )
       end
     end
   end
   
-  return AliveSet.Set or {}
-end
-
---- Add a GROUP to SET_GROUP.
--- Note that for each unit in the group that is set, a default cargo bay limit is initialized.
--- @param Core.Set#SET_GROUP self
--- @param Wrapper.Group#GROUP group The group which should be added to the set.
--- @return self
-function SET_GROUP:AddGroup( group )
-
-  self:Add( group:GetName(), group )
   
-  -- I set the default cargo bay weight limit each time a new group is added to the set.
-  for UnitID, UnitData in pairs( group:GetUnits() ) do
-    UnitData:SetCargoBayWeightLimit()
-  end
+  --- Adds a @{Core.Base#BASE} object in the @{Core.Set#SET_BASE}, using a given ObjectName as the index.
+  -- @param #SET_BASE self
+  -- @param #string ObjectName
+  -- @param Core.Base#BASE Object
+  -- @return Core.Base#BASE The added BASE Object.
+  function SET_BASE:Add( ObjectName, Object )
+    self:F2( { ObjectName = ObjectName, Object = Object } )
+  
+    -- Ensure that the existing element is removed from the Set before a new one is inserted to the Set
+    if self.Set[ObjectName] then
+      self:Remove( ObjectName, true )
+    end
+    self.Set[ObjectName] = Object
+    table.insert( self.Index, ObjectName )
     
-  return self
-end
-
---- Add GROUP(s) to SET_GROUP.
--- @param Core.Set#SET_GROUP self
--- @param #string AddGroupNames A single name or an array of GROUP names.
--- @return self
-function SET_GROUP:AddGroupsByName( AddGroupNames )
-
-  local AddGroupNamesArray = ( type( AddGroupNames ) == "table" ) and AddGroupNames or { AddGroupNames }
-  
-  for AddGroupID, AddGroupName in pairs( AddGroupNamesArray ) do
-    self:Add( AddGroupName, GROUP:FindByName( AddGroupName ) )
+    self:Added( ObjectName, Object )
   end
-    
-  return self
-end
-
---- Remove GROUP(s) from SET_GROUP.
--- @param Core.Set#SET_GROUP self
--- @param Wrapper.Group#GROUP RemoveGroupNames A single name or an array of GROUP names.
--- @return self
-function SET_GROUP:RemoveGroupsByName( RemoveGroupNames )
-
-  local RemoveGroupNamesArray = ( type( RemoveGroupNames ) == "table" ) and RemoveGroupNames or { RemoveGroupNames }
   
-  for RemoveGroupID, RemoveGroupName in pairs( RemoveGroupNamesArray ) do
-    self:Remove( RemoveGroupName.GroupName )
+  --- Adds a @{Core.Base#BASE} object in the @{Core.Set#SET_BASE}, using the Object Name as the index.
+  -- @param #SET_BASE self
+  -- @param Wrapper.Object#OBJECT Object
+  -- @return Core.Base#BASE The added BASE Object.
+  function SET_BASE:AddObject( Object )
+    self:F2( Object.ObjectName )
+    
+    self:T( Object.UnitName )
+    self:T( Object.ObjectName )
+    self:Add( Object.ObjectName, Object )
+    
   end
+  
+  
+  
+  
+  --- Gets a @{Core.Base#BASE} object from the @{Core.Set#SET_BASE} and derived classes, based on the Object Name.
+  -- @param #SET_BASE self
+  -- @param #string ObjectName
+  -- @return Core.Base#BASE
+  function SET_BASE:Get( ObjectName )
+    self:F( ObjectName )
+  
+    local Object = self.Set[ObjectName]
     
-  return self
-end
-
-
-
-
---- Finds a Group based on the Group Name.
--- @param #SET_GROUP self
--- @param #string GroupName
--- @return Wrapper.Group#GROUP The found Group.
-function SET_GROUP:FindGroup( GroupName )
-
-  local GroupFound = self.Set[GroupName]
-  return GroupFound
-end
-
---- Iterate the SET_GROUP while identifying the nearest object from a @{Core.Point#POINT_VEC2}.
--- @param #SET_GROUP self
--- @param Core.Point#POINT_VEC2 PointVec2 A @{Core.Point#POINT_VEC2} object from where to evaluate the closest object in the set.
--- @return Wrapper.Group#GROUP The closest group.
-function SET_GROUP:FindNearestGroupFromPointVec2( PointVec2 )
-  self:F2( PointVec2 )
+    self:T3( { ObjectName, Object } )
+    return Object
+  end
   
-  local NearestGroup = nil --Wrapper.Group#GROUP
-  local ClosestDistance = nil
+  --- Gets the first object from the @{Core.Set#SET_BASE} and derived classes.
+  -- @param #SET_BASE self
+  -- @return Core.Base#BASE
+  function SET_BASE:GetFirst()
   
-  for ObjectID, ObjectData in pairs( self.Set ) do
-    if NearestGroup == nil then
-      NearestGroup = ObjectData 
-      ClosestDistance = PointVec2:DistanceFromPointVec2( ObjectData:GetCoordinate() )
-    else
-      local Distance = PointVec2:DistanceFromPointVec2( ObjectData:GetCoordinate() )
-      if Distance < ClosestDistance then
-        NearestGroup = ObjectData
-        ClosestDistance = Distance
+    local ObjectName = self.Index[1]
+    local FirstObject = self.Set[ObjectName]
+    self:T3( { FirstObject } )
+    return FirstObject 
+  end
+  
+  --- Gets the last object from the @{Core.Set#SET_BASE} and derived classes.
+  -- @param #SET_BASE self
+  -- @return Core.Base#BASE
+  function SET_BASE:GetLast()
+  
+    local ObjectName = self.Index[#self.Index]
+    local LastObject = self.Set[ObjectName]
+    self:T3( { LastObject } )
+    return LastObject 
+  end
+  
+  --- Gets a random object from the @{Core.Set#SET_BASE} and derived classes.
+  -- @param #SET_BASE self
+  -- @return Core.Base#BASE
+  function SET_BASE:GetRandom()
+  
+    local RandomItem = self.Set[self.Index[math.random(#self.Index)]]
+    self:T3( { RandomItem } )
+    return RandomItem
+  end
+  
+  
+  --- Retrieves the amount of objects in the @{Core.Set#SET_BASE} and derived classes.
+  -- @param #SET_BASE self
+  -- @return #number Count
+  function SET_BASE:Count()
+  
+    return self.Index and #self.Index or 0
+  end
+  
+  
+  --- Copies the Filter criteria from a given Set (for rebuilding a new Set based on an existing Set).
+  -- @param #SET_BASE self
+  -- @param #SET_BASE BaseSet
+  -- @return #SET_BASE
+  function SET_BASE:SetDatabase( BaseSet )
+  
+    -- Copy the filter criteria of the BaseSet
+    local OtherFilter = routines.utils.deepCopy( BaseSet.Filter )
+    self.Filter = OtherFilter
+    
+    -- Now base the new Set on the BaseSet
+    self.Database = BaseSet:GetSet()
+    return self
+  end
+  
+  
+  
+  --- Define the SET iterator **"yield interval"** and the **"time interval"**.
+  -- @param #SET_BASE self
+  -- @param #number YieldInterval Sets the frequency when the iterator loop will yield after the number of objects processed. The default frequency is 10 objects processed.
+  -- @param #number TimeInterval Sets the time in seconds when the main logic will resume the iterator loop. The default time is 0.001 seconds.
+  -- @return #SET_BASE self
+  function SET_BASE:SetIteratorIntervals( YieldInterval, TimeInterval )
+  
+    self.YieldInterval = YieldInterval
+    self.TimeInterval = TimeInterval
+    
+    return self
+  end
+  
+  
+  --- Filters for the defined collection.
+  -- @param #SET_BASE self
+  -- @return #SET_BASE self
+  function SET_BASE:FilterOnce()
+  
+    for ObjectName, Object in pairs( self.Database ) do
+  
+      if self:IsIncludeObject( Object ) then
+        self:Add( ObjectName, Object )
       end
     end
+    
+    return self
   end
   
-  return NearestGroup
-end
-
-
---- Builds a set of groups of coalitions.
--- Possible current coalitions are red, blue and neutral.
--- @param #SET_GROUP self
--- @param #string Coalitions Can take the following values: "red", "blue", "neutral".
--- @return #SET_GROUP self
-function SET_GROUP:FilterCoalitions( Coalitions )
-  if not self.Filter.Coalitions then
-    self.Filter.Coalitions = {}
-  end
-  if type( Coalitions ) ~= "table" then
-    Coalitions = { Coalitions }
-  end
-  for CoalitionID, Coalition in pairs( Coalitions ) do
-    self.Filter.Coalitions[Coalition] = Coalition
-  end
-  return self
-end
-
-
---- Builds a set of groups out of categories.
--- Possible current categories are plane, helicopter, ground, ship.
--- @param #SET_GROUP self
--- @param #string Categories Can take the following values: "plane", "helicopter", "ground", "ship".
--- @return #SET_GROUP self
-function SET_GROUP:FilterCategories( Categories )
-  if not self.Filter.Categories then
-    self.Filter.Categories = {}
-  end
-  if type( Categories ) ~= "table" then
-    Categories = { Categories }
-  end
-  for CategoryID, Category in pairs( Categories ) do
-    self.Filter.Categories[Category] = Category
-  end
-  return self
-end
-
---- Builds a set of groups out of ground category.
--- @param #SET_GROUP self
--- @return #SET_GROUP self
-function SET_GROUP:FilterCategoryGround()
-  self:FilterCategories( "ground" )
-  return self
-end
-
---- Builds a set of groups out of airplane category.
--- @param #SET_GROUP self
--- @return #SET_GROUP self
-function SET_GROUP:FilterCategoryAirplane()
-  self:FilterCategories( "plane" )
-  return self
-end
-
---- Builds a set of groups out of helicopter category.
--- @param #SET_GROUP self
--- @return #SET_GROUP self
-function SET_GROUP:FilterCategoryHelicopter()
-  self:FilterCategories( "helicopter" )
-  return self
-end
-
---- Builds a set of groups out of ship category.
--- @param #SET_GROUP self
--- @return #SET_GROUP self
-function SET_GROUP:FilterCategoryShip()
-  self:FilterCategories( "ship" )
-  return self
-end
-
---- Builds a set of groups out of structure category.
--- @param #SET_GROUP self
--- @return #SET_GROUP self
-function SET_GROUP:FilterCategoryStructure()
-  self:FilterCategories( "structure" )
-  return self
-end
-
-
-
---- Builds a set of groups of defined countries.
--- Possible current countries are those known within DCS world.
--- @param #SET_GROUP self
--- @param #string Countries Can take those country strings known within DCS world.
--- @return #SET_GROUP self
-function SET_GROUP:FilterCountries( Countries )
-  if not self.Filter.Countries then
-    self.Filter.Countries = {}
-  end
-  if type( Countries ) ~= "table" then
-    Countries = { Countries }
-  end
-  for CountryID, Country in pairs( Countries ) do
-    self.Filter.Countries[Country] = Country
-  end
-  return self
-end
-
-
---- Builds a set of groups of defined GROUP prefixes.
--- All the groups starting with the given prefixes will be included within the set.
--- @param #SET_GROUP self
--- @param #string Prefixes The prefix of which the group name starts with.
--- @return #SET_GROUP self
-function SET_GROUP:FilterPrefixes( Prefixes )
-  if not self.Filter.GroupPrefixes then
-    self.Filter.GroupPrefixes = {}
-  end
-  if type( Prefixes ) ~= "table" then
-    Prefixes = { Prefixes }
-  end
-  for PrefixID, Prefix in pairs( Prefixes ) do
-    self.Filter.GroupPrefixes[Prefix] = Prefix
-  end
-  return self
-end
-
---- Builds a set of groups that are only active.
--- Only the groups that are active will be included within the set.
--- @param #SET_GROUP self
--- @param #boolean Active (optional) Include only active groups to the set.
--- Include inactive groups if you provide false.
--- @return #SET_GROUP self
--- @usage
--- 
--- -- Include only active groups to the set.
--- GroupSet = SET_GROUP:New():FilterActive():FilterStart()
--- 
--- -- Include only active groups to the set of the blue coalition, and filter one time.
--- GroupSet = SET_GROUP:New():FilterActive():FilterCoalition( "blue" ):FilterOnce()
--- 
--- -- Include only active groups to the set of the blue coalition, and filter one time.
--- -- Later, reset to include back inactive groups to the set.
--- GroupSet = SET_GROUP:New():FilterActive():FilterCoalition( "blue" ):FilterOnce()
--- ... logic ...
--- GroupSet = SET_GROUP:New():FilterActive( false ):FilterCoalition( "blue" ):FilterOnce()
--- 
-function SET_GROUP:FilterActive( Active )
-  Active = Active or not ( Active == false )
-  self.Filter.Active = Active
-  return self
-end
+  --- Starts the filtering for the defined collection.
+  -- @param #SET_BASE self
+  -- @return #SET_BASE self
+  function SET_BASE:_FilterStart()
   
-
---- Starts the filtering.
--- @param #SET_GROUP self
--- @return #SET_GROUP self
-function SET_GROUP:FilterStart()
-
-  if _DATABASE then
-    self:_FilterStart()
-    self:HandleEvent( EVENTS.Birth, self._EventOnBirth )
+    for ObjectName, Object in pairs( self.Database ) do
+  
+      if self:IsIncludeObject( Object ) then
+        self:E( { "Adding Object:", ObjectName } )
+        self:Add( ObjectName, Object )
+      end
+    end
+    
+    -- Follow alive players and clients
+    --self:HandleEvent( EVENTS.PlayerEnterUnit, self._EventOnPlayerEnterUnit )
+    --self:HandleEvent( EVENTS.PlayerLeaveUnit, self._EventOnPlayerLeaveUnit )
+    
+    
+    return self
+  end
+  
+  --- Starts the filtering of the Dead events for the collection.
+  -- @param #SET_BASE self
+  -- @return #SET_BASE self
+  function SET_BASE:FilterDeads() --R2.1 allow deads to be filtered to automatically handle deads in the collection.
+  
     self:HandleEvent( EVENTS.Dead, self._EventOnDeadOrCrash )
+    
+    return self
+  end
+  
+  --- Starts the filtering of the Crash events for the collection.
+  -- @param #SET_BASE self
+  -- @return #SET_BASE self
+  function SET_BASE:FilterCrashes() --R2.1 allow crashes to be filtered to automatically handle crashes in the collection.
+  
     self:HandleEvent( EVENTS.Crash, self._EventOnDeadOrCrash )
-    self:HandleEvent( EVENTS.RemoveUnit, self._EventOnDeadOrCrash )
+    
+    return self
+  end
+  
+  --- Stops the filtering for the defined collection.
+  -- @param #SET_BASE self
+  -- @return #SET_BASE self
+  function SET_BASE:FilterStop()
+  
+    self:UnHandleEvent( EVENTS.Birth )
+    self:UnHandleEvent( EVENTS.Dead )
+    self:UnHandleEvent( EVENTS.Crash )
+    
+    return self
+  end
+  
+  --- Iterate the SET_BASE while identifying the nearest object from a @{Core.Point#POINT_VEC2}.
+  -- @param #SET_BASE self
+  -- @param Core.Point#POINT_VEC2 PointVec2 A @{Core.Point#POINT_VEC2} object from where to evaluate the closest object in the set.
+  -- @return Core.Base#BASE The closest object.
+  function SET_BASE:FindNearestObjectFromPointVec2( PointVec2 )
+    self:F2( PointVec2 )
+    
+    local NearestObject = nil
+    local ClosestDistance = nil
+    
+    for ObjectID, ObjectData in pairs( self.Set ) do
+      if NearestObject == nil then
+        NearestObject = ObjectData
+        ClosestDistance = PointVec2:DistanceFromVec2( ObjectData:GetVec2() )
+      else
+        local Distance = PointVec2:DistanceFromVec2( ObjectData:GetVec2() )
+        if Distance < ClosestDistance then
+          NearestObject = ObjectData
+          ClosestDistance = Distance
+        end
+      end
+    end
+    
+    return NearestObject
   end
   
   
   
-  return self
-end
-
---- Handles the OnDead or OnCrash event for alive groups set.
--- Note: The GROUP object in the SET_GROUP collection will only be removed if the last unit is destroyed of the GROUP.
--- @param #SET_GROUP self
--- @param Core.Event#EVENTDATA Event
-function SET_GROUP:_EventOnDeadOrCrash( Event )
-  self:F( { Event } )
-
-  if Event.IniDCSUnit then
-    local ObjectName, Object = self:FindInDatabase( Event )
-    if ObjectName then
-      if Event.IniDCSGroup:getSize() == 1 then -- Only remove if the last unit of the group was destroyed.
+  ----- Private method that registers all alive players in the mission.
+  ---- @param #SET_BASE self
+  ---- @return #SET_BASE self
+  --function SET_BASE:_RegisterPlayers()
+  --
+  --  local CoalitionsData = { AlivePlayersRed = coalition.getPlayers( coalition.side.RED ), AlivePlayersBlue = coalition.getPlayers( coalition.side.BLUE ) }
+  --  for CoalitionId, CoalitionData in pairs( CoalitionsData ) do
+  --    for UnitId, UnitData in pairs( CoalitionData ) do
+  --      self:T3( { "UnitData:", UnitData } )
+  --      if UnitData and UnitData:isExist() then
+  --        local UnitName = UnitData:getName()
+  --        if not self.PlayersAlive[UnitName] then
+  --          self:E( { "Add player for unit:", UnitName, UnitData:getPlayerName() } )
+  --          self.PlayersAlive[UnitName] = UnitData:getPlayerName()
+  --        end
+  --      end
+  --    end
+  --  end
+  --  
+  --  return self
+  --end
+  
+  --- Events
+  
+  --- Handles the OnBirth event for the Set.
+  -- @param #SET_BASE self
+  -- @param Core.Event#EVENTDATA Event
+  function SET_BASE:_EventOnBirth( Event )
+    self:F3( { Event } )
+  
+    if Event.IniDCSUnit then
+      local ObjectName, Object = self:AddInDatabase( Event )
+      self:T3( ObjectName, Object )
+      if Object and self:IsIncludeObject( Object ) then
+        self:Add( ObjectName, Object )
+        --self:_EventOnPlayerEnterUnit( Event )
+      end
+    end
+  end
+  
+  --- Handles the OnDead or OnCrash event for alive units set.
+  -- @param #SET_BASE self
+  -- @param Core.Event#EVENTDATA Event
+  function SET_BASE:_EventOnDeadOrCrash( Event )
+    self:F( { Event } )
+  
+    if Event.IniDCSUnit then
+      local ObjectName, Object = self:FindInDatabase( Event )
+      if ObjectName then
         self:Remove( ObjectName )
       end
     end
   end
-end
-
---- Handles the Database to check on an event (birth) that the Object was added in the Database.
--- This is required, because sometimes the _DATABASE birth event gets called later than the SET_BASE birth event!
--- @param #SET_GROUP self
--- @param Core.Event#EVENTDATA Event
--- @return #string The name of the GROUP
--- @return #table The GROUP
-function SET_GROUP:AddInDatabase( Event )
-  self:F3( { Event } )
-
-  if Event.IniObjectCategory == 1 then
-    if not self.Database[Event.IniDCSGroupName] then
-      self.Database[Event.IniDCSGroupName] = GROUP:Register( Event.IniDCSGroupName )
-      self:T3( self.Database[Event.IniDCSGroupName] )
-    end
-  end
   
-  return Event.IniDCSGroupName, self.Database[Event.IniDCSGroupName]
-end
-
---- Handles the Database to check on any event that Object exists in the Database.
--- This is required, because sometimes the _DATABASE event gets called later than the SET_BASE event or vise versa!
--- @param #SET_GROUP self
--- @param Core.Event#EVENTDATA Event
--- @return #string The name of the GROUP
--- @return #table The GROUP
-function SET_GROUP:FindInDatabase( Event )
-  self:F3( { Event } )
-
-  return Event.IniDCSGroupName, self.Database[Event.IniDCSGroupName]
-end
-
---- Iterate the SET_GROUP and call an iterator function for each GROUP object, providing the GROUP and optional parameters.
--- @param #SET_GROUP self
--- @param #function IteratorFunction The function that will be called when there is an alive GROUP in the SET_GROUP. The function needs to accept a GROUP parameter.
--- @return #SET_GROUP self
-function SET_GROUP:ForEachGroup( IteratorFunction, ... )
-  self:F2( arg )
+  --- Handles the OnPlayerEnterUnit event to fill the active players table (with the unit filter applied).
+  -- @param #SET_BASE self
+  -- @param Core.Event#EVENTDATA Event
+  --function SET_BASE:_EventOnPlayerEnterUnit( Event )
+  --  self:F3( { Event } )
+  --
+  --  if Event.IniDCSUnit then
+  --    local ObjectName, Object = self:AddInDatabase( Event )
+  --    self:T3( ObjectName, Object )
+  --    if self:IsIncludeObject( Object ) then
+  --      self:Add( ObjectName, Object )
+  --      --self:_EventOnPlayerEnterUnit( Event )
+  --    end
+  --  end
+  --end
   
-  self:ForEach( IteratorFunction, arg, self:GetSet() )
-
-  return self
-end
-
---- Iterate the SET_GROUP and call an iterator function for each **alive** GROUP object, providing the GROUP and optional parameters.
--- @param #SET_GROUP self
--- @param #function IteratorFunction The function that will be called when there is an alive GROUP in the SET_GROUP. The function needs to accept a GROUP parameter.
--- @return #SET_GROUP self
-function SET_GROUP:ForEachGroupAlive( IteratorFunction, ... )
-  self:F2( arg )
+  --- Handles the OnPlayerLeaveUnit event to clean the active players table.
+  -- @param #SET_BASE self
+  -- @param Core.Event#EVENTDATA Event
+  --function SET_BASE:_EventOnPlayerLeaveUnit( Event )
+  --  self:F3( { Event } )
+  --
+  --  local ObjectName = Event.IniDCSUnit
+  --  if Event.IniDCSUnit then
+  --    if Event.IniDCSGroup then
+  --      local GroupUnits = Event.IniDCSGroup:getUnits()
+  --      local PlayerCount = 0
+  --      for _, DCSUnit in pairs( GroupUnits ) do
+  --        if DCSUnit ~= Event.IniDCSUnit then
+  --          if DCSUnit:getPlayerName() ~= nil then
+  --            PlayerCount = PlayerCount + 1
+  --          end
+  --        end
+  --      end
+  --      self:E(PlayerCount)
+  --      if PlayerCount == 0 then
+  --        self:Remove( Event.IniDCSGroupName )
+  --      end
+  --    end
+  --  end
+  --end
   
-  self:ForEach( IteratorFunction, arg, self:GetAliveSet() )
-
-  return self
-end
-
---- Iterate the SET_GROUP and call an iterator function for each **alive** GROUP presence completely in a @{Zone}, providing the GROUP and optional parameters to the called function.
--- @param #SET_GROUP self
--- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
--- @param #function IteratorFunction The function that will be called when there is an alive GROUP in the SET_GROUP. The function needs to accept a GROUP parameter.
--- @return #SET_GROUP self
-function SET_GROUP:ForEachGroupCompletelyInZone( ZoneObject, IteratorFunction, ... )
-  self:F2( arg )
+  -- Iterators
   
-  self:ForEach( IteratorFunction, arg, self:GetSet(),
-    --- @param Core.Zone#ZONE_BASE ZoneObject
-    -- @param Wrapper.Group#GROUP GroupObject
-    function( ZoneObject, GroupObject )
-      if GroupObject:IsCompletelyInZone( ZoneObject ) then
-        return true
-      else
-        return false
+  --- Iterate the SET_BASE and derived classes and call an iterator function for the given SET_BASE, providing the Object for each element within the set and optional parameters.
+  -- @param #SET_BASE self
+  -- @param #function IteratorFunction The function that will be called.
+  -- @return #SET_BASE self
+  function SET_BASE:ForEach( IteratorFunction, arg, Set, Function, FunctionArguments )
+    self:F3( arg )
+    
+    Set = Set or self:GetSet()
+    arg = arg or {}
+    
+    local function CoRoutine()
+      local Count = 0
+      for ObjectID, ObjectData in pairs( Set ) do
+        local Object = ObjectData
+          self:T3( Object )
+          if Function then
+            if Function( unpack( FunctionArguments ), Object ) == true then
+              IteratorFunction( Object, unpack( arg ) )
+            end
+          else
+            IteratorFunction( Object, unpack( arg ) )
+          end
+          Count = Count + 1
+  --        if Count % self.YieldInterval == 0 then
+  --          coroutine.yield( false )
+  --        end    
       end
-    end, { ZoneObject } )
-
-  return self
-end
-
---- Iterate the SET_GROUP and call an iterator function for each **alive** GROUP presence partly in a @{Zone}, providing the GROUP and optional parameters to the called function.
--- @param #SET_GROUP self
--- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
--- @param #function IteratorFunction The function that will be called when there is an alive GROUP in the SET_GROUP. The function needs to accept a GROUP parameter.
--- @return #SET_GROUP self
-function SET_GROUP:ForEachGroupPartlyInZone( ZoneObject, IteratorFunction, ... )
-  self:F2( arg )
-  
-  self:ForEach( IteratorFunction, arg, self:GetSet(),
-    --- @param Core.Zone#ZONE_BASE ZoneObject
-    -- @param Wrapper.Group#GROUP GroupObject
-    function( ZoneObject, GroupObject )
-      if GroupObject:IsPartlyInZone( ZoneObject ) then
-        return true
-      else
-        return false
-      end
-    end, { ZoneObject } )
-
-  return self
-end
-
---- Iterate the SET_GROUP and call an iterator function for each **alive** GROUP presence not in a @{Zone}, providing the GROUP and optional parameters to the called function.
--- @param #SET_GROUP self
--- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
--- @param #function IteratorFunction The function that will be called when there is an alive GROUP in the SET_GROUP. The function needs to accept a GROUP parameter.
--- @return #SET_GROUP self
-function SET_GROUP:ForEachGroupNotInZone( ZoneObject, IteratorFunction, ... )
-  self:F2( arg )
-  
-  self:ForEach( IteratorFunction, arg, self:GetSet(),
-    --- @param Core.Zone#ZONE_BASE ZoneObject
-    -- @param Wrapper.Group#GROUP GroupObject
-    function( ZoneObject, GroupObject )
-      if GroupObject:IsNotInZone( ZoneObject ) then
-        return true
-      else
-        return false
-      end
-    end, { ZoneObject } )
-
-  return self
-end
-
---- Iterate the SET_GROUP and return true if all the @{Wrapper.Group#GROUP} are completely in the @{Core.Zone#ZONE}
--- @param #SET_GROUP self
--- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
--- @return #boolean true if all the @{Wrapper.Group#GROUP} are completly in the @{Core.Zone#ZONE}, false otherwise
--- @usage
--- local MyZone = ZONE:New("Zone1")
--- local MySetGroup = SET_GROUP:New()
--- MySetGroup:AddGroupsByName({"Group1", "Group2"})
---
--- if MySetGroup:AllCompletelyInZone(MyZone) then
---   MESSAGE:New("All the SET's GROUP are in zone !", 10):ToAll()
--- else
---   MESSAGE:New("Some or all SET's GROUP are outside zone !", 10):ToAll()
--- end
-function SET_GROUP:AllCompletelyInZone(Zone)
-  self:F2(Zone)
-  local Set = self:GetSet()
-  for GroupID, GroupData in pairs(Set) do -- For each GROUP in SET_GROUP
-    if not GroupData:IsCompletelyInZone(Zone) then 
-      return false
-    end
-  end
-  return true
-end
-
---- Iterate the SET_GROUP and return true if at least one of the @{Wrapper.Group#GROUP} is completely inside the @{Core.Zone#ZONE}
--- @param #SET_GROUP self
--- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
--- @return #boolean true if at least one of the @{Wrapper.Group#GROUP} is completly inside the @{Core.Zone#ZONE}, false otherwise.
--- @usage
--- local MyZone = ZONE:New("Zone1")
--- local MySetGroup = SET_GROUP:New()
--- MySetGroup:AddGroupsByName({"Group1", "Group2"})
---
--- if MySetGroup:AnyCompletelyInZone(MyZone) then
---   MESSAGE:New("At least one GROUP is completely in zone !", 10):ToAll()
--- else
---   MESSAGE:New("No GROUP is completely in zone !", 10):ToAll()
--- end
-function SET_GROUP:AnyCompletelyInZone(Zone)
-  self:F2(Zone)
-  local Set = self:GetSet()
-  for GroupID, GroupData in pairs(Set) do -- For each GROUP in SET_GROUP
-    if GroupData:IsCompletelyInZone(Zone) then 
       return true
     end
-  end
-  return false
-end
-
---- Iterate the SET_GROUP and return true if at least one @{#UNIT} of one @{GROUP} of the @{SET_GROUP} is in @{ZONE}
--- @param #SET_GROUP self
--- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
--- @return #boolean true if at least one of the @{Wrapper.Group#GROUP} is partly or completly inside the @{Core.Zone#ZONE}, false otherwise.
--- @usage
--- local MyZone = ZONE:New("Zone1")
--- local MySetGroup = SET_GROUP:New()
--- MySetGroup:AddGroupsByName({"Group1", "Group2"})
---
--- if MySetGroup:AnyPartlyInZone(MyZone) then
---   MESSAGE:New("At least one GROUP has at least one UNIT in zone !", 10):ToAll()
--- else
---   MESSAGE:New("No UNIT of any GROUP is in zone !", 10):ToAll()
--- end
-function SET_GROUP:AnyInZone(Zone)
-  self:F2(Zone)
-  local Set = self:GetSet()
-  for GroupID, GroupData in pairs(Set) do -- For each GROUP in SET_GROUP
-    if GroupData:IsPartlyInZone(Zone) or GroupData:IsCompletelyInZone(Zone) then 
-      return true
-    end
-  end
-  return false
-end
-
---- Iterate the SET_GROUP and return true if at least one @{GROUP} of the @{SET_GROUP} is partly in @{ZONE}.
--- Will return false if a @{GROUP} is fully in the @{ZONE}
--- @param #SET_GROUP self
--- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
--- @return #boolean true if at least one of the @{Wrapper.Group#GROUP} is partly or completly inside the @{Core.Zone#ZONE}, false otherwise.
--- @usage
--- local MyZone = ZONE:New("Zone1")
--- local MySetGroup = SET_GROUP:New()
--- MySetGroup:AddGroupsByName({"Group1", "Group2"})
---
--- if MySetGroup:AnyPartlyInZone(MyZone) then
---   MESSAGE:New("At least one GROUP is partially in the zone, but none are fully in it !", 10):ToAll()
--- else
---   MESSAGE:New("No GROUP are in zone, or one (or more) GROUP is completely in it !", 10):ToAll()
--- end
-function SET_GROUP:AnyPartlyInZone(Zone)
-  self:F2(Zone)
-  local IsPartlyInZone = false
-  local Set = self:GetSet()
-  for GroupID, GroupData in pairs(Set) do -- For each GROUP in SET_GROUP
-    if GroupData:IsCompletelyInZone(Zone) then
+    
+  --  local co = coroutine.create( CoRoutine )
+    local co = CoRoutine
+    
+    local function Schedule()
+    
+  --    local status, res = coroutine.resume( co )
+      local status, res = co()
+      self:T3( { status, res } )
+      
+      if status == false then
+        error( res )
+      end
+      if res == false then
+        return true -- resume next time the loop
+      end
+      
       return false
-    elseif GroupData:IsPartlyInZone(Zone) then 
-      IsPartlyInZone = true -- at least one GROUP is partly in zone
     end
+  
+    --self.CallScheduler:Schedule( self, Schedule, {}, self.TimeInterval, self.TimeInterval, 0 )
+    Schedule()
+    
+    return self
   end
   
-  if IsPartlyInZone then
+  
+  ----- Iterate the SET_BASE and call an interator function for each **alive** unit, providing the Unit and optional parameters.
+  ---- @param #SET_BASE self
+  ---- @param #function IteratorFunction The function that will be called when there is an alive unit in the SET_BASE. The function needs to accept a UNIT parameter.
+  ---- @return #SET_BASE self
+  --function SET_BASE:ForEachDCSUnitAlive( IteratorFunction, ... )
+  --  self:F3( arg )
+  --  
+  --  self:ForEach( IteratorFunction, arg, self.DCSUnitsAlive )
+  --
+  --  return self
+  --end
+  --
+  ----- Iterate the SET_BASE and call an interator function for each **alive** player, providing the Unit of the player and optional parameters.
+  ---- @param #SET_BASE self
+  ---- @param #function IteratorFunction The function that will be called when there is an alive player in the SET_BASE. The function needs to accept a UNIT parameter.
+  ---- @return #SET_BASE self
+  --function SET_BASE:ForEachPlayer( IteratorFunction, ... )
+  --  self:F3( arg )
+  --  
+  --  self:ForEach( IteratorFunction, arg, self.PlayersAlive )
+  --  
+  --  return self
+  --end
+  --
+  --
+  ----- Iterate the SET_BASE and call an interator function for each client, providing the Client to the function and optional parameters.
+  ---- @param #SET_BASE self
+  ---- @param #function IteratorFunction The function that will be called when there is an alive player in the SET_BASE. The function needs to accept a CLIENT parameter.
+  ---- @return #SET_BASE self
+  --function SET_BASE:ForEachClient( IteratorFunction, ... )
+  --  self:F3( arg )
+  --  
+  --  self:ForEach( IteratorFunction, arg, self.Clients )
+  --
+  --  return self
+  --end
+  
+  
+  --- Decides whether to include the Object
+  -- @param #SET_BASE self
+  -- @param #table Object
+  -- @return #SET_BASE self
+  function SET_BASE:IsIncludeObject( Object )
+    self:F3( Object )
+    
     return true
-  else
-    return false
-  end
-end
-
---- Iterate the SET_GROUP and return true if no @{GROUP} of the @{SET_GROUP} is in @{ZONE}
--- This could also be achieved with `not SET_GROUP:AnyPartlyInZone(Zone)`, but it's easier for the 
--- mission designer to add a dedicated method
--- @param #SET_GROUP self
--- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
--- @return #boolean true if no @{Wrapper.Group#GROUP} is inside the @{Core.Zone#ZONE} in any way, false otherwise.
--- @usage
--- local MyZone = ZONE:New("Zone1")
--- local MySetGroup = SET_GROUP:New()
--- MySetGroup:AddGroupsByName({"Group1", "Group2"})
---
--- if MySetGroup:NoneInZone(MyZone) then
---   MESSAGE:New("No GROUP is completely in zone !", 10):ToAll()
--- else
---   MESSAGE:New("No UNIT of any GROUP is in zone !", 10):ToAll()
--- end
-function SET_GROUP:NoneInZone(Zone)
-  self:F2(Zone)
-  local Set = self:GetSet()
-  for GroupID, GroupData in pairs(Set) do -- For each GROUP in SET_GROUP
-    if not GroupData:IsNotInZone(Zone) then -- If the GROUP is in Zone in any way
-      return false
-    end
-  end
-  return true
-end
-
---- Iterate the SET_GROUP and count how many GROUPs are completely in the Zone
--- That could easily be done with SET_GROUP:ForEachGroupCompletelyInZone(), but this function
--- provides an easy to use shortcut...
--- @param #SET_GROUP self
--- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
--- @return #number the number of GROUPs completely in the Zone
--- @usage
--- local MyZone = ZONE:New("Zone1")
--- local MySetGroup = SET_GROUP:New()
--- MySetGroup:AddGroupsByName({"Group1", "Group2"})
---
--- MESSAGE:New("There are " .. MySetGroup:CountInZone(MyZone) .. " GROUPs in the Zone !", 10):ToAll()
-function SET_GROUP:CountInZone(Zone)
-  self:F2(Zone)
-  local Count = 0
-  local Set = self:GetSet()
-  for GroupID, GroupData in pairs(Set) do -- For each GROUP in SET_GROUP
-    if GroupData:IsCompletelyInZone(Zone) then 
-      Count = Count + 1
-    end
-  end
-  return Count
-end
-
---- Iterate the SET_GROUP and count how many UNITs are completely in the Zone
--- @param #SET_GROUP self
--- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
--- @return #number the number of GROUPs completely in the Zone
--- @usage
--- local MyZone = ZONE:New("Zone1")
--- local MySetGroup = SET_GROUP:New()
--- MySetGroup:AddGroupsByName({"Group1", "Group2"})
---
--- MESSAGE:New("There are " .. MySetGroup:CountUnitInZone(MyZone) .. " UNITs in the Zone !", 10):ToAll()
-function SET_GROUP:CountUnitInZone(Zone)
-  self:F2(Zone)
-  local Count = 0
-  local Set = self:GetSet()
-  for GroupID, GroupData in pairs(Set) do -- For each GROUP in SET_GROUP
-    Count = Count + GroupData:CountInZone(Zone)
-  end
-  return Count
-end
-
------ Iterate the SET_GROUP and call an interator function for each **alive** player, providing the Group of the player and optional parameters.
----- @param #SET_GROUP self
----- @param #function IteratorFunction The function that will be called when there is an alive player in the SET_GROUP. The function needs to accept a GROUP parameter.
----- @return #SET_GROUP self
---function SET_GROUP:ForEachPlayer( IteratorFunction, ... )
---  self:F2( arg )
---  
---  self:ForEach( IteratorFunction, arg, self.PlayersAlive )
---  
---  return self
---end
---
---
------ Iterate the SET_GROUP and call an interator function for each client, providing the Client to the function and optional parameters.
----- @param #SET_GROUP self
----- @param #function IteratorFunction The function that will be called when there is an alive player in the SET_GROUP. The function needs to accept a CLIENT parameter.
----- @return #SET_GROUP self
---function SET_GROUP:ForEachClient( IteratorFunction, ... )
---  self:F2( arg )
---  
---  self:ForEach( IteratorFunction, arg, self.Clients )
---
---  return self
---end
-
-
----
--- @param #SET_GROUP self
--- @param Wrapper.Group#GROUP MGroup The group that is checked for inclusion.
--- @return #SET_GROUP self
-function SET_GROUP:IsIncludeObject( MGroup )
-  self:F2( MGroup )
-  local MGroupInclude = true
-
-  if self.Filter.Active ~= nil then
-    local MGroupActive = false
-    self:F( { Active = self.Filter.Active } )
-    if self.Filter.Active == false or ( self.Filter.Active == true and MGroup:IsActive() == true ) then
-      MGroupActive = true
-    end
-    MGroupInclude = MGroupInclude and MGroupActive
   end
   
-  if self.Filter.Coalitions then
-    local MGroupCoalition = false
-    for CoalitionID, CoalitionName in pairs( self.Filter.Coalitions ) do
-      self:T3( { "Coalition:", MGroup:GetCoalition(), self.FilterMeta.Coalitions[CoalitionName], CoalitionName } )
-      if self.FilterMeta.Coalitions[CoalitionName] and self.FilterMeta.Coalitions[CoalitionName] == MGroup:GetCoalition() then
-        MGroupCoalition = true
-      end
+  --- Gets a string with all the object names.
+  -- @param #SET_BASE self
+  -- @return #string A string with the names of the objects.
+  function SET_BASE:GetObjectNames()
+    self:F3()
+  
+    local ObjectNames = ""
+    for ObjectName, Object in pairs( self.Set ) do
+      ObjectNames = ObjectNames .. ObjectName .. ", "
     end
-    MGroupInclude = MGroupInclude and MGroupCoalition
+    
+    return ObjectNames
   end
   
-  if self.Filter.Categories then
-    local MGroupCategory = false
-    for CategoryID, CategoryName in pairs( self.Filter.Categories ) do
-      self:T3( { "Category:", MGroup:GetCategory(), self.FilterMeta.Categories[CategoryName], CategoryName } )
-      if self.FilterMeta.Categories[CategoryName] and self.FilterMeta.Categories[CategoryName] == MGroup:GetCategory() then
-        MGroupCategory = true
-      end
-    end
-    MGroupInclude = MGroupInclude and MGroupCategory
-  end
+  --- Flushes the current SET_BASE contents in the log ... (for debugging reasons).
+  -- @param #SET_BASE self
+  -- @param Core.Base#BASE MasterObject (optional) The master object as a reference.
+  -- @return #string A string with the names of the objects.
+  function SET_BASE:Flush( MasterObject )
+    self:F3()
   
-  if self.Filter.Countries then
-    local MGroupCountry = false
-    for CountryID, CountryName in pairs( self.Filter.Countries ) do
-      self:T3( { "Country:", MGroup:GetCountry(), CountryName } )
-      if country.id[CountryName] == MGroup:GetCountry() then
-        MGroupCountry = true
-      end
+    local ObjectNames = ""
+    for ObjectName, Object in pairs( self.Set ) do
+      ObjectNames = ObjectNames .. ObjectName .. ", "
     end
-    MGroupInclude = MGroupInclude and MGroupCountry
+    self:F( { MasterObject = MasterObject and MasterObject:GetClassNameAndID(), "Objects in Set:", ObjectNames } )
+    
+    return ObjectNames
   end
 
-  if self.Filter.GroupPrefixes then
-    local MGroupPrefix = false
-    for GroupPrefixId, GroupPrefix in pairs( self.Filter.GroupPrefixes ) do
-      self:T3( { "Prefix:", string.find( MGroup:GetName(), GroupPrefix, 1 ), GroupPrefix } )
-      if string.find( MGroup:GetName(), GroupPrefix:gsub ("-", "%%-"), 1 ) then
-        MGroupPrefix = true
-      end
-    end
-    MGroupInclude = MGroupInclude and MGroupPrefix
-  end
-
-  self:T2( MGroupInclude )
-  return MGroupInclude
 end
 
 
---- Iterate the SET_GROUP and set for each unit the default cargo bay weight limit.
--- Because within a group, the type of carriers can differ, each cargo bay weight limit is set on @{Wrapper.Unit} level.
--- @param #SET_GROUP self
--- @usage
--- -- Set the default cargo bay weight limits of the carrier units.
--- local MySetGroup = SET_GROUP:New()
--- MySetGroup:SetCargoBayWeightLimit()
-function SET_GROUP:SetCargoBayWeightLimit()
-  local Set = self:GetSet()
-  for GroupID, GroupData in pairs( Set ) do -- For each GROUP in SET_GROUP
-    for UnitName, UnitData in pairs( GroupData:GetUnits() ) do
-      --local UnitData = UnitData -- Wrapper.Unit#UNIT
+do -- SET_GROUP
+
+  --- @type SET_GROUP
+  -- @extends Core.Set#SET_BASE
+  
+  --- Mission designers can use the @{Core.Set#SET_GROUP} class to build sets of groups belonging to certain:
+  -- 
+  --  * Coalitions
+  --  * Categories
+  --  * Countries
+  --  * Starting with certain prefix strings.
+  --  
+  -- ## SET_GROUP constructor
+  -- 
+  -- Create a new SET_GROUP object with the @{#SET_GROUP.New} method:
+  -- 
+  --    * @{#SET_GROUP.New}: Creates a new SET_GROUP object.
+  -- 
+  -- ## Add or Remove GROUP(s) from SET_GROUP
+  -- 
+  -- GROUPS can be added and removed using the @{Core.Set#SET_GROUP.AddGroupsByName} and @{Core.Set#SET_GROUP.RemoveGroupsByName} respectively. 
+  -- These methods take a single GROUP name or an array of GROUP names to be added or removed from SET_GROUP.
+  -- 
+  -- ## SET_GROUP filter criteria
+  -- 
+  -- You can set filter criteria to define the set of groups within the SET_GROUP.
+  -- Filter criteria are defined by:
+  -- 
+  --    * @{#SET_GROUP.FilterCoalitions}: Builds the SET_GROUP with the groups belonging to the coalition(s).
+  --    * @{#SET_GROUP.FilterCategories}: Builds the SET_GROUP with the groups belonging to the category(ies).
+  --    * @{#SET_GROUP.FilterCountries}: Builds the SET_GROUP with the gruops belonging to the country(ies).
+  --    * @{#SET_GROUP.FilterPrefixes}: Builds the SET_GROUP with the groups starting with the same prefix string(s).
+  --    * @{#SET_GROUP.FilterActive}: Builds the SET_GROUP with the groups that are only active. Groups that are inactive (late activation) won't be included in the set!
+  -- 
+  -- For the Category Filter, extra methods have been added:
+  -- 
+  --    * @{#SET_GROUP.FilterCategoryAirplane}: Builds the SET_GROUP from airplanes.
+  --    * @{#SET_GROUP.FilterCategoryHelicopter}: Builds the SET_GROUP from helicopters.
+  --    * @{#SET_GROUP.FilterCategoryGround}: Builds the SET_GROUP from ground vehicles or infantry.
+  --    * @{#SET_GROUP.FilterCategoryShip}: Builds the SET_GROUP from ships.
+  --    * @{#SET_GROUP.FilterCategoryStructure}: Builds the SET_GROUP from structures.
+  -- 
+  --   
+  -- Once the filter criteria have been set for the SET_GROUP, you can start filtering using:
+  -- 
+  --    * @{#SET_GROUP.FilterStart}: Starts the filtering of the groups within the SET_GROUP and add or remove GROUP objects **dynamically**.
+  --    * @{#SET_GROUP.FilterOnce}: Filters of the groups **once**.
+  -- 
+  -- Planned filter criteria within development are (so these are not yet available):
+  -- 
+  --    * @{#SET_GROUP.FilterZones}: Builds the SET_GROUP with the groups within a @{Core.Zone#ZONE}.
+  -- 
+  -- ## SET_GROUP iterators
+  -- 
+  -- Once the filters have been defined and the SET_GROUP has been built, you can iterate the SET_GROUP with the available iterator methods.
+  -- The iterator methods will walk the SET_GROUP set, and call for each element within the set a function that you provide.
+  -- The following iterator methods are currently available within the SET_GROUP:
+  -- 
+  --   * @{#SET_GROUP.ForEachGroup}: Calls a function for each alive group it finds within the SET_GROUP.
+  --   * @{#SET_GROUP.ForEachGroupCompletelyInZone}: Iterate the SET_GROUP and call an iterator function for each **alive** GROUP presence completely in a @{Zone}, providing the GROUP and optional parameters to the called function.
+  --   * @{#SET_GROUP.ForEachGroupPartlyInZone}: Iterate the SET_GROUP and call an iterator function for each **alive** GROUP presence partly in a @{Zone}, providing the GROUP and optional parameters to the called function.
+  --   * @{#SET_GROUP.ForEachGroupNotInZone}: Iterate the SET_GROUP and call an iterator function for each **alive** GROUP presence not in a @{Zone}, providing the GROUP and optional parameters to the called function.
+  --
+  --
+  -- ## SET_GROUP trigger events on the GROUP objects.
+  -- 
+  -- The SET is derived from the FSM class, which provides extra capabilities to track the contents of the GROUP objects in the SET_GROUP.
+  -- 
+  -- ### When a GROUP object crashes or is dead, the SET_GROUP will trigger a **Dead** event.
+  -- 
+  -- You can handle the event using the OnBefore and OnAfter event handlers. 
+  -- The event handlers need to have the paramters From, Event, To, GroupObject.
+  -- The GroupObject is the GROUP object that is dead and within the SET_GROUP, and is passed as a parameter to the event handler.
+  -- See the following example:
+  -- 
+  --        -- Create the SetCarrier SET_GROUP collection.
+  --
+  --        local SetHelicopter = SET_GROUP:New():FilterPrefixes( "Helicopter" ):FilterStart()
+  -- 
+  --        -- Put a Dead event handler on SetCarrier, to ensure that when a carrier is destroyed, that all internal parameters are reset.
+  --
+  --        function SetHelicopter:OnAfterDead( From, Event, To, GroupObject )
+  --          self:F( { GroupObject = GroupObject:GetName() } )
+  --        end
+  -- 
+  -- While this is a good example, there is a catch.
+  -- Imageine you want to execute the code above, the the self would need to be from the object declared outside (above) the OnAfterDead method.
+  -- So, the self would need to contain another object. Fortunately, this can be done, but you must use then the **`.`** notation for the method.
+  -- See the modified example:
+  -- 
+  --        -- Now we have a constructor of the class AI_CARGO_DISPATCHER, that receives the SetHelicopter as a parameter.
+  --        -- Within that constructor, we want to set an enclosed event handler OnAfterDead for SetHelicopter.
+  --        -- But within the OnAfterDead method, we want to refer to the self variable of the AI_CARGO_DISPATCHER.
+  -- 
+  --        function AI_CARGO_DISPATCHER:New( SetCarrier, SetCargo, SetDeployZones )
+  --         
+  --          local self = BASE:Inherit( self, FSM:New() ) -- #AI_CARGO_DISPATCHER
+  -- 
+  --          -- Put a Dead event handler on SetCarrier, to ensure that when a carrier is destroyed, that all internal parameters are reset.
+  --          -- Note the "." notation, and the explicit declaration of SetHelicopter, which would be using the ":" notation the implicit self variable declaration.
+  --
+  --          function SetHelicopter.OnAfterDead( SetHelicopter, From, Event, To, GroupObject )
+  --            SetHelicopter:F( { GroupObject = GroupObject:GetName() } )
+  --            self.PickupCargo[GroupObject] = nil  -- So here I clear the PickupCargo table entry of the self object AI_CARGO_DISPATCHER.
+  --            self.CarrierHome[GroupObject] = nil
+  --          end
+  --        
+  --        end
+  -- 
+  -- ===
+  -- @field #SET_GROUP SET_GROUP 
+  SET_GROUP = {
+    ClassName = "SET_GROUP",
+    Filter = {
+      Coalitions = nil,
+      Categories = nil,
+      Countries = nil,
+      GroupPrefixes = nil,
+    },
+    FilterMeta = {
+      Coalitions = {
+        red = coalition.side.RED,
+        blue = coalition.side.BLUE,
+        neutral = coalition.side.NEUTRAL,
+      },
+      Categories = {
+        plane = Group.Category.AIRPLANE,
+        helicopter = Group.Category.HELICOPTER,
+        ground = Group.Category.GROUND, -- R2.2
+        ship = Group.Category.SHIP,
+        structure = Group.Category.STRUCTURE,
+      },
+    },
+  }
+  
+  
+  --- Creates a new SET_GROUP object, building a set of groups belonging to a coalitions, categories, countries, types or with defined prefix names.
+  -- @param #SET_GROUP self
+  -- @return #SET_GROUP
+  -- @usage
+  -- -- Define a new SET_GROUP Object. This DBObject will contain a reference to all alive GROUPS.
+  -- DBObject = SET_GROUP:New()
+  function SET_GROUP:New()
+  
+    -- Inherits from BASE
+    local self = BASE:Inherit( self, SET_BASE:New( _DATABASE.GROUPS ) ) -- #SET_GROUP
+  
+    self:FilterActive( false )
+  
+    return self
+  end
+  
+  --- Gets the Set.
+  -- @param #SET_GROUP self
+  -- @return #SET_GROUP self
+  function SET_GROUP:GetAliveSet()
+    self:F2()
+    
+    local AliveSet = SET_GROUP:New()
+    
+    -- Clean the Set before returning with only the alive Groups.
+    for GroupName, GroupObject in pairs( self.Set ) do
+      local GroupObject=GroupObject --Wrapper.Group#GROUP
+      if GroupObject then
+        if GroupObject:IsAlive() then
+          AliveSet:Add( GroupName, GroupObject )
+        end
+      end
+    end
+    
+    return AliveSet.Set or {}
+  end
+  
+  --- Add a GROUP to SET_GROUP.
+  -- Note that for each unit in the group that is set, a default cargo bay limit is initialized.
+  -- @param Core.Set#SET_GROUP self
+  -- @param Wrapper.Group#GROUP group The group which should be added to the set.
+  -- @return self
+  function SET_GROUP:AddGroup( group )
+  
+    self:Add( group:GetName(), group )
+    
+    -- I set the default cargo bay weight limit each time a new group is added to the set.
+    for UnitID, UnitData in pairs( group:GetUnits() ) do
       UnitData:SetCargoBayWeightLimit()
     end
+      
+    return self
   end
+  
+  --- Add GROUP(s) to SET_GROUP.
+  -- @param Core.Set#SET_GROUP self
+  -- @param #string AddGroupNames A single name or an array of GROUP names.
+  -- @return self
+  function SET_GROUP:AddGroupsByName( AddGroupNames )
+  
+    local AddGroupNamesArray = ( type( AddGroupNames ) == "table" ) and AddGroupNames or { AddGroupNames }
+    
+    for AddGroupID, AddGroupName in pairs( AddGroupNamesArray ) do
+      self:Add( AddGroupName, GROUP:FindByName( AddGroupName ) )
+    end
+      
+    return self
+  end
+  
+  --- Remove GROUP(s) from SET_GROUP.
+  -- @param Core.Set#SET_GROUP self
+  -- @param Wrapper.Group#GROUP RemoveGroupNames A single name or an array of GROUP names.
+  -- @return self
+  function SET_GROUP:RemoveGroupsByName( RemoveGroupNames )
+  
+    local RemoveGroupNamesArray = ( type( RemoveGroupNames ) == "table" ) and RemoveGroupNames or { RemoveGroupNames }
+    
+    for RemoveGroupID, RemoveGroupName in pairs( RemoveGroupNamesArray ) do
+      self:Remove( RemoveGroupName.GroupName )
+    end
+      
+    return self
+  end
+  
+  
+  
+  
+  --- Finds a Group based on the Group Name.
+  -- @param #SET_GROUP self
+  -- @param #string GroupName
+  -- @return Wrapper.Group#GROUP The found Group.
+  function SET_GROUP:FindGroup( GroupName )
+  
+    local GroupFound = self.Set[GroupName]
+    return GroupFound
+  end
+  
+  --- Iterate the SET_GROUP while identifying the nearest object from a @{Core.Point#POINT_VEC2}.
+  -- @param #SET_GROUP self
+  -- @param Core.Point#POINT_VEC2 PointVec2 A @{Core.Point#POINT_VEC2} object from where to evaluate the closest object in the set.
+  -- @return Wrapper.Group#GROUP The closest group.
+  function SET_GROUP:FindNearestGroupFromPointVec2( PointVec2 )
+    self:F2( PointVec2 )
+    
+    local NearestGroup = nil --Wrapper.Group#GROUP
+    local ClosestDistance = nil
+    
+    for ObjectID, ObjectData in pairs( self.Set ) do
+      if NearestGroup == nil then
+        NearestGroup = ObjectData 
+        ClosestDistance = PointVec2:DistanceFromPointVec2( ObjectData:GetCoordinate() )
+      else
+        local Distance = PointVec2:DistanceFromPointVec2( ObjectData:GetCoordinate() )
+        if Distance < ClosestDistance then
+          NearestGroup = ObjectData
+          ClosestDistance = Distance
+        end
+      end
+    end
+    
+    return NearestGroup
+  end
+  
+  
+  --- Builds a set of groups of coalitions.
+  -- Possible current coalitions are red, blue and neutral.
+  -- @param #SET_GROUP self
+  -- @param #string Coalitions Can take the following values: "red", "blue", "neutral".
+  -- @return #SET_GROUP self
+  function SET_GROUP:FilterCoalitions( Coalitions )
+    if not self.Filter.Coalitions then
+      self.Filter.Coalitions = {}
+    end
+    if type( Coalitions ) ~= "table" then
+      Coalitions = { Coalitions }
+    end
+    for CoalitionID, Coalition in pairs( Coalitions ) do
+      self.Filter.Coalitions[Coalition] = Coalition
+    end
+    return self
+  end
+  
+  
+  --- Builds a set of groups out of categories.
+  -- Possible current categories are plane, helicopter, ground, ship.
+  -- @param #SET_GROUP self
+  -- @param #string Categories Can take the following values: "plane", "helicopter", "ground", "ship".
+  -- @return #SET_GROUP self
+  function SET_GROUP:FilterCategories( Categories )
+    if not self.Filter.Categories then
+      self.Filter.Categories = {}
+    end
+    if type( Categories ) ~= "table" then
+      Categories = { Categories }
+    end
+    for CategoryID, Category in pairs( Categories ) do
+      self.Filter.Categories[Category] = Category
+    end
+    return self
+  end
+  
+  --- Builds a set of groups out of ground category.
+  -- @param #SET_GROUP self
+  -- @return #SET_GROUP self
+  function SET_GROUP:FilterCategoryGround()
+    self:FilterCategories( "ground" )
+    return self
+  end
+  
+  --- Builds a set of groups out of airplane category.
+  -- @param #SET_GROUP self
+  -- @return #SET_GROUP self
+  function SET_GROUP:FilterCategoryAirplane()
+    self:FilterCategories( "plane" )
+    return self
+  end
+  
+  --- Builds a set of groups out of helicopter category.
+  -- @param #SET_GROUP self
+  -- @return #SET_GROUP self
+  function SET_GROUP:FilterCategoryHelicopter()
+    self:FilterCategories( "helicopter" )
+    return self
+  end
+  
+  --- Builds a set of groups out of ship category.
+  -- @param #SET_GROUP self
+  -- @return #SET_GROUP self
+  function SET_GROUP:FilterCategoryShip()
+    self:FilterCategories( "ship" )
+    return self
+  end
+  
+  --- Builds a set of groups out of structure category.
+  -- @param #SET_GROUP self
+  -- @return #SET_GROUP self
+  function SET_GROUP:FilterCategoryStructure()
+    self:FilterCategories( "structure" )
+    return self
+  end
+  
+  
+  
+  --- Builds a set of groups of defined countries.
+  -- Possible current countries are those known within DCS world.
+  -- @param #SET_GROUP self
+  -- @param #string Countries Can take those country strings known within DCS world.
+  -- @return #SET_GROUP self
+  function SET_GROUP:FilterCountries( Countries )
+    if not self.Filter.Countries then
+      self.Filter.Countries = {}
+    end
+    if type( Countries ) ~= "table" then
+      Countries = { Countries }
+    end
+    for CountryID, Country in pairs( Countries ) do
+      self.Filter.Countries[Country] = Country
+    end
+    return self
+  end
+  
+  
+  --- Builds a set of groups of defined GROUP prefixes.
+  -- All the groups starting with the given prefixes will be included within the set.
+  -- @param #SET_GROUP self
+  -- @param #string Prefixes The prefix of which the group name starts with.
+  -- @return #SET_GROUP self
+  function SET_GROUP:FilterPrefixes( Prefixes )
+    if not self.Filter.GroupPrefixes then
+      self.Filter.GroupPrefixes = {}
+    end
+    if type( Prefixes ) ~= "table" then
+      Prefixes = { Prefixes }
+    end
+    for PrefixID, Prefix in pairs( Prefixes ) do
+      self.Filter.GroupPrefixes[Prefix] = Prefix
+    end
+    return self
+  end
+  
+  --- Builds a set of groups that are only active.
+  -- Only the groups that are active will be included within the set.
+  -- @param #SET_GROUP self
+  -- @param #boolean Active (optional) Include only active groups to the set.
+  -- Include inactive groups if you provide false.
+  -- @return #SET_GROUP self
+  -- @usage
+  -- 
+  -- -- Include only active groups to the set.
+  -- GroupSet = SET_GROUP:New():FilterActive():FilterStart()
+  -- 
+  -- -- Include only active groups to the set of the blue coalition, and filter one time.
+  -- GroupSet = SET_GROUP:New():FilterActive():FilterCoalition( "blue" ):FilterOnce()
+  -- 
+  -- -- Include only active groups to the set of the blue coalition, and filter one time.
+  -- -- Later, reset to include back inactive groups to the set.
+  -- GroupSet = SET_GROUP:New():FilterActive():FilterCoalition( "blue" ):FilterOnce()
+  -- ... logic ...
+  -- GroupSet = SET_GROUP:New():FilterActive( false ):FilterCoalition( "blue" ):FilterOnce()
+  -- 
+  function SET_GROUP:FilterActive( Active )
+    Active = Active or not ( Active == false )
+    self.Filter.Active = Active
+    return self
+  end
+    
+  
+  --- Starts the filtering.
+  -- @param #SET_GROUP self
+  -- @return #SET_GROUP self
+  function SET_GROUP:FilterStart()
+  
+    if _DATABASE then
+      self:_FilterStart()
+      self:HandleEvent( EVENTS.Birth, self._EventOnBirth )
+      self:HandleEvent( EVENTS.Dead, self._EventOnDeadOrCrash )
+      self:HandleEvent( EVENTS.Crash, self._EventOnDeadOrCrash )
+      self:HandleEvent( EVENTS.RemoveUnit, self._EventOnDeadOrCrash )
+    end
+    
+    
+    
+    return self
+  end
+  
+  --- Handles the OnDead or OnCrash event for alive groups set.
+  -- Note: The GROUP object in the SET_GROUP collection will only be removed if the last unit is destroyed of the GROUP.
+  -- @param #SET_GROUP self
+  -- @param Core.Event#EVENTDATA Event
+  function SET_GROUP:_EventOnDeadOrCrash( Event )
+    self:F( { Event } )
+  
+    if Event.IniDCSUnit then
+      local ObjectName, Object = self:FindInDatabase( Event )
+      if ObjectName then
+        if Event.IniDCSGroup:getSize() == 1 then -- Only remove if the last unit of the group was destroyed.
+          self:Remove( ObjectName )
+        end
+      end
+    end
+  end
+  
+  --- Handles the Database to check on an event (birth) that the Object was added in the Database.
+  -- This is required, because sometimes the _DATABASE birth event gets called later than the SET_BASE birth event!
+  -- @param #SET_GROUP self
+  -- @param Core.Event#EVENTDATA Event
+  -- @return #string The name of the GROUP
+  -- @return #table The GROUP
+  function SET_GROUP:AddInDatabase( Event )
+    self:F3( { Event } )
+  
+    if Event.IniObjectCategory == 1 then
+      if not self.Database[Event.IniDCSGroupName] then
+        self.Database[Event.IniDCSGroupName] = GROUP:Register( Event.IniDCSGroupName )
+        self:T3( self.Database[Event.IniDCSGroupName] )
+      end
+    end
+    
+    return Event.IniDCSGroupName, self.Database[Event.IniDCSGroupName]
+  end
+  
+  --- Handles the Database to check on any event that Object exists in the Database.
+  -- This is required, because sometimes the _DATABASE event gets called later than the SET_BASE event or vise versa!
+  -- @param #SET_GROUP self
+  -- @param Core.Event#EVENTDATA Event
+  -- @return #string The name of the GROUP
+  -- @return #table The GROUP
+  function SET_GROUP:FindInDatabase( Event )
+    self:F3( { Event } )
+  
+    return Event.IniDCSGroupName, self.Database[Event.IniDCSGroupName]
+  end
+  
+  --- Iterate the SET_GROUP and call an iterator function for each GROUP object, providing the GROUP and optional parameters.
+  -- @param #SET_GROUP self
+  -- @param #function IteratorFunction The function that will be called when there is an alive GROUP in the SET_GROUP. The function needs to accept a GROUP parameter.
+  -- @return #SET_GROUP self
+  function SET_GROUP:ForEachGroup( IteratorFunction, ... )
+    self:F2( arg )
+    
+    self:ForEach( IteratorFunction, arg, self:GetSet() )
+  
+    return self
+  end
+  
+  --- Iterate the SET_GROUP and call an iterator function for each **alive** GROUP object, providing the GROUP and optional parameters.
+  -- @param #SET_GROUP self
+  -- @param #function IteratorFunction The function that will be called when there is an alive GROUP in the SET_GROUP. The function needs to accept a GROUP parameter.
+  -- @return #SET_GROUP self
+  function SET_GROUP:ForEachGroupAlive( IteratorFunction, ... )
+    self:F2( arg )
+    
+    self:ForEach( IteratorFunction, arg, self:GetAliveSet() )
+  
+    return self
+  end
+  
+  --- Iterate the SET_GROUP and call an iterator function for each **alive** GROUP presence completely in a @{Zone}, providing the GROUP and optional parameters to the called function.
+  -- @param #SET_GROUP self
+  -- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
+  -- @param #function IteratorFunction The function that will be called when there is an alive GROUP in the SET_GROUP. The function needs to accept a GROUP parameter.
+  -- @return #SET_GROUP self
+  function SET_GROUP:ForEachGroupCompletelyInZone( ZoneObject, IteratorFunction, ... )
+    self:F2( arg )
+    
+    self:ForEach( IteratorFunction, arg, self:GetSet(),
+      --- @param Core.Zone#ZONE_BASE ZoneObject
+      -- @param Wrapper.Group#GROUP GroupObject
+      function( ZoneObject, GroupObject )
+        if GroupObject:IsCompletelyInZone( ZoneObject ) then
+          return true
+        else
+          return false
+        end
+      end, { ZoneObject } )
+  
+    return self
+  end
+  
+  --- Iterate the SET_GROUP and call an iterator function for each **alive** GROUP presence partly in a @{Zone}, providing the GROUP and optional parameters to the called function.
+  -- @param #SET_GROUP self
+  -- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
+  -- @param #function IteratorFunction The function that will be called when there is an alive GROUP in the SET_GROUP. The function needs to accept a GROUP parameter.
+  -- @return #SET_GROUP self
+  function SET_GROUP:ForEachGroupPartlyInZone( ZoneObject, IteratorFunction, ... )
+    self:F2( arg )
+    
+    self:ForEach( IteratorFunction, arg, self:GetSet(),
+      --- @param Core.Zone#ZONE_BASE ZoneObject
+      -- @param Wrapper.Group#GROUP GroupObject
+      function( ZoneObject, GroupObject )
+        if GroupObject:IsPartlyInZone( ZoneObject ) then
+          return true
+        else
+          return false
+        end
+      end, { ZoneObject } )
+  
+    return self
+  end
+  
+  --- Iterate the SET_GROUP and call an iterator function for each **alive** GROUP presence not in a @{Zone}, providing the GROUP and optional parameters to the called function.
+  -- @param #SET_GROUP self
+  -- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
+  -- @param #function IteratorFunction The function that will be called when there is an alive GROUP in the SET_GROUP. The function needs to accept a GROUP parameter.
+  -- @return #SET_GROUP self
+  function SET_GROUP:ForEachGroupNotInZone( ZoneObject, IteratorFunction, ... )
+    self:F2( arg )
+    
+    self:ForEach( IteratorFunction, arg, self:GetSet(),
+      --- @param Core.Zone#ZONE_BASE ZoneObject
+      -- @param Wrapper.Group#GROUP GroupObject
+      function( ZoneObject, GroupObject )
+        if GroupObject:IsNotInZone( ZoneObject ) then
+          return true
+        else
+          return false
+        end
+      end, { ZoneObject } )
+  
+    return self
+  end
+  
+  --- Iterate the SET_GROUP and return true if all the @{Wrapper.Group#GROUP} are completely in the @{Core.Zone#ZONE}
+  -- @param #SET_GROUP self
+  -- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
+  -- @return #boolean true if all the @{Wrapper.Group#GROUP} are completly in the @{Core.Zone#ZONE}, false otherwise
+  -- @usage
+  -- local MyZone = ZONE:New("Zone1")
+  -- local MySetGroup = SET_GROUP:New()
+  -- MySetGroup:AddGroupsByName({"Group1", "Group2"})
+  --
+  -- if MySetGroup:AllCompletelyInZone(MyZone) then
+  --   MESSAGE:New("All the SET's GROUP are in zone !", 10):ToAll()
+  -- else
+  --   MESSAGE:New("Some or all SET's GROUP are outside zone !", 10):ToAll()
+  -- end
+  function SET_GROUP:AllCompletelyInZone(Zone)
+    self:F2(Zone)
+    local Set = self:GetSet()
+    for GroupID, GroupData in pairs(Set) do -- For each GROUP in SET_GROUP
+      if not GroupData:IsCompletelyInZone(Zone) then 
+        return false
+      end
+    end
+    return true
+  end
+  
+  --- Iterate the SET_GROUP and return true if at least one of the @{Wrapper.Group#GROUP} is completely inside the @{Core.Zone#ZONE}
+  -- @param #SET_GROUP self
+  -- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
+  -- @return #boolean true if at least one of the @{Wrapper.Group#GROUP} is completly inside the @{Core.Zone#ZONE}, false otherwise.
+  -- @usage
+  -- local MyZone = ZONE:New("Zone1")
+  -- local MySetGroup = SET_GROUP:New()
+  -- MySetGroup:AddGroupsByName({"Group1", "Group2"})
+  --
+  -- if MySetGroup:AnyCompletelyInZone(MyZone) then
+  --   MESSAGE:New("At least one GROUP is completely in zone !", 10):ToAll()
+  -- else
+  --   MESSAGE:New("No GROUP is completely in zone !", 10):ToAll()
+  -- end
+  function SET_GROUP:AnyCompletelyInZone(Zone)
+    self:F2(Zone)
+    local Set = self:GetSet()
+    for GroupID, GroupData in pairs(Set) do -- For each GROUP in SET_GROUP
+      if GroupData:IsCompletelyInZone(Zone) then 
+        return true
+      end
+    end
+    return false
+  end
+  
+  --- Iterate the SET_GROUP and return true if at least one @{#UNIT} of one @{GROUP} of the @{SET_GROUP} is in @{ZONE}
+  -- @param #SET_GROUP self
+  -- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
+  -- @return #boolean true if at least one of the @{Wrapper.Group#GROUP} is partly or completly inside the @{Core.Zone#ZONE}, false otherwise.
+  -- @usage
+  -- local MyZone = ZONE:New("Zone1")
+  -- local MySetGroup = SET_GROUP:New()
+  -- MySetGroup:AddGroupsByName({"Group1", "Group2"})
+  --
+  -- if MySetGroup:AnyPartlyInZone(MyZone) then
+  --   MESSAGE:New("At least one GROUP has at least one UNIT in zone !", 10):ToAll()
+  -- else
+  --   MESSAGE:New("No UNIT of any GROUP is in zone !", 10):ToAll()
+  -- end
+  function SET_GROUP:AnyInZone(Zone)
+    self:F2(Zone)
+    local Set = self:GetSet()
+    for GroupID, GroupData in pairs(Set) do -- For each GROUP in SET_GROUP
+      if GroupData:IsPartlyInZone(Zone) or GroupData:IsCompletelyInZone(Zone) then 
+        return true
+      end
+    end
+    return false
+  end
+  
+  --- Iterate the SET_GROUP and return true if at least one @{GROUP} of the @{SET_GROUP} is partly in @{ZONE}.
+  -- Will return false if a @{GROUP} is fully in the @{ZONE}
+  -- @param #SET_GROUP self
+  -- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
+  -- @return #boolean true if at least one of the @{Wrapper.Group#GROUP} is partly or completly inside the @{Core.Zone#ZONE}, false otherwise.
+  -- @usage
+  -- local MyZone = ZONE:New("Zone1")
+  -- local MySetGroup = SET_GROUP:New()
+  -- MySetGroup:AddGroupsByName({"Group1", "Group2"})
+  --
+  -- if MySetGroup:AnyPartlyInZone(MyZone) then
+  --   MESSAGE:New("At least one GROUP is partially in the zone, but none are fully in it !", 10):ToAll()
+  -- else
+  --   MESSAGE:New("No GROUP are in zone, or one (or more) GROUP is completely in it !", 10):ToAll()
+  -- end
+  function SET_GROUP:AnyPartlyInZone(Zone)
+    self:F2(Zone)
+    local IsPartlyInZone = false
+    local Set = self:GetSet()
+    for GroupID, GroupData in pairs(Set) do -- For each GROUP in SET_GROUP
+      if GroupData:IsCompletelyInZone(Zone) then
+        return false
+      elseif GroupData:IsPartlyInZone(Zone) then 
+        IsPartlyInZone = true -- at least one GROUP is partly in zone
+      end
+    end
+    
+    if IsPartlyInZone then
+      return true
+    else
+      return false
+    end
+  end
+  
+  --- Iterate the SET_GROUP and return true if no @{GROUP} of the @{SET_GROUP} is in @{ZONE}
+  -- This could also be achieved with `not SET_GROUP:AnyPartlyInZone(Zone)`, but it's easier for the 
+  -- mission designer to add a dedicated method
+  -- @param #SET_GROUP self
+  -- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
+  -- @return #boolean true if no @{Wrapper.Group#GROUP} is inside the @{Core.Zone#ZONE} in any way, false otherwise.
+  -- @usage
+  -- local MyZone = ZONE:New("Zone1")
+  -- local MySetGroup = SET_GROUP:New()
+  -- MySetGroup:AddGroupsByName({"Group1", "Group2"})
+  --
+  -- if MySetGroup:NoneInZone(MyZone) then
+  --   MESSAGE:New("No GROUP is completely in zone !", 10):ToAll()
+  -- else
+  --   MESSAGE:New("No UNIT of any GROUP is in zone !", 10):ToAll()
+  -- end
+  function SET_GROUP:NoneInZone(Zone)
+    self:F2(Zone)
+    local Set = self:GetSet()
+    for GroupID, GroupData in pairs(Set) do -- For each GROUP in SET_GROUP
+      if not GroupData:IsNotInZone(Zone) then -- If the GROUP is in Zone in any way
+        return false
+      end
+    end
+    return true
+  end
+  
+  --- Iterate the SET_GROUP and count how many GROUPs are completely in the Zone
+  -- That could easily be done with SET_GROUP:ForEachGroupCompletelyInZone(), but this function
+  -- provides an easy to use shortcut...
+  -- @param #SET_GROUP self
+  -- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
+  -- @return #number the number of GROUPs completely in the Zone
+  -- @usage
+  -- local MyZone = ZONE:New("Zone1")
+  -- local MySetGroup = SET_GROUP:New()
+  -- MySetGroup:AddGroupsByName({"Group1", "Group2"})
+  --
+  -- MESSAGE:New("There are " .. MySetGroup:CountInZone(MyZone) .. " GROUPs in the Zone !", 10):ToAll()
+  function SET_GROUP:CountInZone(Zone)
+    self:F2(Zone)
+    local Count = 0
+    local Set = self:GetSet()
+    for GroupID, GroupData in pairs(Set) do -- For each GROUP in SET_GROUP
+      if GroupData:IsCompletelyInZone(Zone) then 
+        Count = Count + 1
+      end
+    end
+    return Count
+  end
+  
+  --- Iterate the SET_GROUP and count how many UNITs are completely in the Zone
+  -- @param #SET_GROUP self
+  -- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
+  -- @return #number the number of GROUPs completely in the Zone
+  -- @usage
+  -- local MyZone = ZONE:New("Zone1")
+  -- local MySetGroup = SET_GROUP:New()
+  -- MySetGroup:AddGroupsByName({"Group1", "Group2"})
+  --
+  -- MESSAGE:New("There are " .. MySetGroup:CountUnitInZone(MyZone) .. " UNITs in the Zone !", 10):ToAll()
+  function SET_GROUP:CountUnitInZone(Zone)
+    self:F2(Zone)
+    local Count = 0
+    local Set = self:GetSet()
+    for GroupID, GroupData in pairs(Set) do -- For each GROUP in SET_GROUP
+      Count = Count + GroupData:CountInZone(Zone)
+    end
+    return Count
+  end
+  
+  ----- Iterate the SET_GROUP and call an interator function for each **alive** player, providing the Group of the player and optional parameters.
+  ---- @param #SET_GROUP self
+  ---- @param #function IteratorFunction The function that will be called when there is an alive player in the SET_GROUP. The function needs to accept a GROUP parameter.
+  ---- @return #SET_GROUP self
+  --function SET_GROUP:ForEachPlayer( IteratorFunction, ... )
+  --  self:F2( arg )
+  --  
+  --  self:ForEach( IteratorFunction, arg, self.PlayersAlive )
+  --  
+  --  return self
+  --end
+  --
+  --
+  ----- Iterate the SET_GROUP and call an interator function for each client, providing the Client to the function and optional parameters.
+  ---- @param #SET_GROUP self
+  ---- @param #function IteratorFunction The function that will be called when there is an alive player in the SET_GROUP. The function needs to accept a CLIENT parameter.
+  ---- @return #SET_GROUP self
+  --function SET_GROUP:ForEachClient( IteratorFunction, ... )
+  --  self:F2( arg )
+  --  
+  --  self:ForEach( IteratorFunction, arg, self.Clients )
+  --
+  --  return self
+  --end
+  
+  
+  ---
+  -- @param #SET_GROUP self
+  -- @param Wrapper.Group#GROUP MGroup The group that is checked for inclusion.
+  -- @return #SET_GROUP self
+  function SET_GROUP:IsIncludeObject( MGroup )
+    self:F2( MGroup )
+    local MGroupInclude = true
+  
+    if self.Filter.Active ~= nil then
+      local MGroupActive = false
+      self:F( { Active = self.Filter.Active } )
+      if self.Filter.Active == false or ( self.Filter.Active == true and MGroup:IsActive() == true ) then
+        MGroupActive = true
+      end
+      MGroupInclude = MGroupInclude and MGroupActive
+    end
+    
+    if self.Filter.Coalitions then
+      local MGroupCoalition = false
+      for CoalitionID, CoalitionName in pairs( self.Filter.Coalitions ) do
+        self:T3( { "Coalition:", MGroup:GetCoalition(), self.FilterMeta.Coalitions[CoalitionName], CoalitionName } )
+        if self.FilterMeta.Coalitions[CoalitionName] and self.FilterMeta.Coalitions[CoalitionName] == MGroup:GetCoalition() then
+          MGroupCoalition = true
+        end
+      end
+      MGroupInclude = MGroupInclude and MGroupCoalition
+    end
+    
+    if self.Filter.Categories then
+      local MGroupCategory = false
+      for CategoryID, CategoryName in pairs( self.Filter.Categories ) do
+        self:T3( { "Category:", MGroup:GetCategory(), self.FilterMeta.Categories[CategoryName], CategoryName } )
+        if self.FilterMeta.Categories[CategoryName] and self.FilterMeta.Categories[CategoryName] == MGroup:GetCategory() then
+          MGroupCategory = true
+        end
+      end
+      MGroupInclude = MGroupInclude and MGroupCategory
+    end
+    
+    if self.Filter.Countries then
+      local MGroupCountry = false
+      for CountryID, CountryName in pairs( self.Filter.Countries ) do
+        self:T3( { "Country:", MGroup:GetCountry(), CountryName } )
+        if country.id[CountryName] == MGroup:GetCountry() then
+          MGroupCountry = true
+        end
+      end
+      MGroupInclude = MGroupInclude and MGroupCountry
+    end
+  
+    if self.Filter.GroupPrefixes then
+      local MGroupPrefix = false
+      for GroupPrefixId, GroupPrefix in pairs( self.Filter.GroupPrefixes ) do
+        self:T3( { "Prefix:", string.find( MGroup:GetName(), GroupPrefix, 1 ), GroupPrefix } )
+        if string.find( MGroup:GetName(), GroupPrefix:gsub ("-", "%%-"), 1 ) then
+          MGroupPrefix = true
+        end
+      end
+      MGroupInclude = MGroupInclude and MGroupPrefix
+    end
+  
+    self:T2( MGroupInclude )
+    return MGroupInclude
+  end
+  
+  
+  --- Iterate the SET_GROUP and set for each unit the default cargo bay weight limit.
+  -- Because within a group, the type of carriers can differ, each cargo bay weight limit is set on @{Wrapper.Unit} level.
+  -- @param #SET_GROUP self
+  -- @usage
+  -- -- Set the default cargo bay weight limits of the carrier units.
+  -- local MySetGroup = SET_GROUP:New()
+  -- MySetGroup:SetCargoBayWeightLimit()
+  function SET_GROUP:SetCargoBayWeightLimit()
+    local Set = self:GetSet()
+    for GroupID, GroupData in pairs( Set ) do -- For each GROUP in SET_GROUP
+      for UnitName, UnitData in pairs( GroupData:GetUnits() ) do
+        --local UnitData = UnitData -- Wrapper.Unit#UNIT
+        UnitData:SetCargoBayWeightLimit()
+      end
+    end
+  end
+
 end
 
 
@@ -13993,6 +14094,7 @@ do -- SET_UNIT
   
 end
 
+
 do -- SET_STATIC
 
   --- @type SET_STATIC
@@ -14664,1941 +14766,1979 @@ do -- SET_STATIC
 end
 
 
---- SET_CLIENT
+do -- SET_CLIENT
 
 
---- @type SET_CLIENT
--- @extends Core.Set#SET_BASE
-
-
-
---- Mission designers can use the @{Core.Set#SET_CLIENT} class to build sets of units belonging to certain:
--- 
---  * Coalitions
---  * Categories
---  * Countries
---  * Client types
---  * Starting with certain prefix strings.
---  
--- ## 1) SET_CLIENT constructor
--- 
--- Create a new SET_CLIENT object with the @{#SET_CLIENT.New} method:
--- 
---    * @{#SET_CLIENT.New}: Creates a new SET_CLIENT object.
---   
--- ## 2) Add or Remove CLIENT(s) from SET_CLIENT 
--- 
--- CLIENTs can be added and removed using the @{Core.Set#SET_CLIENT.AddClientsByName} and @{Core.Set#SET_CLIENT.RemoveClientsByName} respectively. 
--- These methods take a single CLIENT name or an array of CLIENT names to be added or removed from SET_CLIENT.
--- 
--- ## 3) SET_CLIENT filter criteria
--- 
--- You can set filter criteria to define the set of clients within the SET_CLIENT.
--- Filter criteria are defined by:
--- 
---    * @{#SET_CLIENT.FilterCoalitions}: Builds the SET_CLIENT with the clients belonging to the coalition(s).
---    * @{#SET_CLIENT.FilterCategories}: Builds the SET_CLIENT with the clients belonging to the category(ies).
---    * @{#SET_CLIENT.FilterTypes}: Builds the SET_CLIENT with the clients belonging to the client type(s).
---    * @{#SET_CLIENT.FilterCountries}: Builds the SET_CLIENT with the clients belonging to the country(ies).
---    * @{#SET_CLIENT.FilterPrefixes}: Builds the SET_CLIENT with the clients starting with the same prefix string(s).
---    * @{#SET_CLIENT.FilterActive}: Builds the SET_CLIENT with the units that are only active. Units that are inactive (late activation) won't be included in the set!
---   
--- Once the filter criteria have been set for the SET_CLIENT, you can start filtering using:
--- 
---   * @{#SET_CLIENT.FilterStart}: Starts the filtering of the clients **dynamically**.
---   * @{#SET_CLIENT.FilterOnce}: Filters the clients **once**.
--- 
--- Planned filter criteria within development are (so these are not yet available):
--- 
---    * @{#SET_CLIENT.FilterZones}: Builds the SET_CLIENT with the clients within a @{Core.Zone#ZONE}.
--- 
--- ## 4) SET_CLIENT iterators
--- 
--- Once the filters have been defined and the SET_CLIENT has been built, you can iterate the SET_CLIENT with the available iterator methods.
--- The iterator methods will walk the SET_CLIENT set, and call for each element within the set a function that you provide.
--- The following iterator methods are currently available within the SET_CLIENT:
--- 
---   * @{#SET_CLIENT.ForEachClient}: Calls a function for each alive client it finds within the SET_CLIENT.
--- 
--- ===
--- @field #SET_CLIENT SET_CLIENT 
-SET_CLIENT = {
-  ClassName = "SET_CLIENT",
-  Clients = {},
-  Filter = {
-    Coalitions = nil,
-    Categories = nil,
-    Types = nil,
-    Countries = nil,
-    ClientPrefixes = nil,
-  },
-  FilterMeta = {
-    Coalitions = {
-      red = coalition.side.RED,
-      blue = coalition.side.BLUE,
-      neutral = coalition.side.NEUTRAL,
+  --- @type SET_CLIENT
+  -- @extends Core.Set#SET_BASE
+  
+  
+  
+  --- Mission designers can use the @{Core.Set#SET_CLIENT} class to build sets of units belonging to certain:
+  -- 
+  --  * Coalitions
+  --  * Categories
+  --  * Countries
+  --  * Client types
+  --  * Starting with certain prefix strings.
+  --  
+  -- ## 1) SET_CLIENT constructor
+  -- 
+  -- Create a new SET_CLIENT object with the @{#SET_CLIENT.New} method:
+  -- 
+  --    * @{#SET_CLIENT.New}: Creates a new SET_CLIENT object.
+  --   
+  -- ## 2) Add or Remove CLIENT(s) from SET_CLIENT 
+  -- 
+  -- CLIENTs can be added and removed using the @{Core.Set#SET_CLIENT.AddClientsByName} and @{Core.Set#SET_CLIENT.RemoveClientsByName} respectively. 
+  -- These methods take a single CLIENT name or an array of CLIENT names to be added or removed from SET_CLIENT.
+  -- 
+  -- ## 3) SET_CLIENT filter criteria
+  -- 
+  -- You can set filter criteria to define the set of clients within the SET_CLIENT.
+  -- Filter criteria are defined by:
+  -- 
+  --    * @{#SET_CLIENT.FilterCoalitions}: Builds the SET_CLIENT with the clients belonging to the coalition(s).
+  --    * @{#SET_CLIENT.FilterCategories}: Builds the SET_CLIENT with the clients belonging to the category(ies).
+  --    * @{#SET_CLIENT.FilterTypes}: Builds the SET_CLIENT with the clients belonging to the client type(s).
+  --    * @{#SET_CLIENT.FilterCountries}: Builds the SET_CLIENT with the clients belonging to the country(ies).
+  --    * @{#SET_CLIENT.FilterPrefixes}: Builds the SET_CLIENT with the clients starting with the same prefix string(s).
+  --    * @{#SET_CLIENT.FilterActive}: Builds the SET_CLIENT with the units that are only active. Units that are inactive (late activation) won't be included in the set!
+  --   
+  -- Once the filter criteria have been set for the SET_CLIENT, you can start filtering using:
+  -- 
+  --   * @{#SET_CLIENT.FilterStart}: Starts the filtering of the clients **dynamically**.
+  --   * @{#SET_CLIENT.FilterOnce}: Filters the clients **once**.
+  -- 
+  -- Planned filter criteria within development are (so these are not yet available):
+  -- 
+  --    * @{#SET_CLIENT.FilterZones}: Builds the SET_CLIENT with the clients within a @{Core.Zone#ZONE}.
+  -- 
+  -- ## 4) SET_CLIENT iterators
+  -- 
+  -- Once the filters have been defined and the SET_CLIENT has been built, you can iterate the SET_CLIENT with the available iterator methods.
+  -- The iterator methods will walk the SET_CLIENT set, and call for each element within the set a function that you provide.
+  -- The following iterator methods are currently available within the SET_CLIENT:
+  -- 
+  --   * @{#SET_CLIENT.ForEachClient}: Calls a function for each alive client it finds within the SET_CLIENT.
+  -- 
+  -- ===
+  -- @field #SET_CLIENT SET_CLIENT 
+  SET_CLIENT = {
+    ClassName = "SET_CLIENT",
+    Clients = {},
+    Filter = {
+      Coalitions = nil,
+      Categories = nil,
+      Types = nil,
+      Countries = nil,
+      ClientPrefixes = nil,
     },
-    Categories = {
-      plane = Unit.Category.AIRPLANE,
-      helicopter = Unit.Category.HELICOPTER,
-      ground = Unit.Category.GROUND_UNIT,
-      ship = Unit.Category.SHIP,
-      structure = Unit.Category.STRUCTURE,
+    FilterMeta = {
+      Coalitions = {
+        red = coalition.side.RED,
+        blue = coalition.side.BLUE,
+        neutral = coalition.side.NEUTRAL,
+      },
+      Categories = {
+        plane = Unit.Category.AIRPLANE,
+        helicopter = Unit.Category.HELICOPTER,
+        ground = Unit.Category.GROUND_UNIT,
+        ship = Unit.Category.SHIP,
+        structure = Unit.Category.STRUCTURE,
+      },
     },
-  },
-}
-
-
---- Creates a new SET_CLIENT object, building a set of clients belonging to a coalitions, categories, countries, types or with defined prefix names.
--- @param #SET_CLIENT self
--- @return #SET_CLIENT
--- @usage
--- -- Define a new SET_CLIENT Object. This DBObject will contain a reference to all Clients.
--- DBObject = SET_CLIENT:New()
-function SET_CLIENT:New()
-  -- Inherits from BASE
-  local self = BASE:Inherit( self, SET_BASE:New( _DATABASE.CLIENTS ) ) -- #SET_CLIENT
-
-  self:FilterActive( false )
-
-  return self
-end
-
---- Add CLIENT(s) to SET_CLIENT.
--- @param Core.Set#SET_CLIENT self
--- @param #string AddClientNames A single name or an array of CLIENT names.
--- @return self
-function SET_CLIENT:AddClientsByName( AddClientNames )
-
-  local AddClientNamesArray = ( type( AddClientNames ) == "table" ) and AddClientNames or { AddClientNames }
+  }
   
-  for AddClientID, AddClientName in pairs( AddClientNamesArray ) do
-    self:Add( AddClientName, CLIENT:FindByName( AddClientName ) )
+  
+  --- Creates a new SET_CLIENT object, building a set of clients belonging to a coalitions, categories, countries, types or with defined prefix names.
+  -- @param #SET_CLIENT self
+  -- @return #SET_CLIENT
+  -- @usage
+  -- -- Define a new SET_CLIENT Object. This DBObject will contain a reference to all Clients.
+  -- DBObject = SET_CLIENT:New()
+  function SET_CLIENT:New()
+    -- Inherits from BASE
+    local self = BASE:Inherit( self, SET_BASE:New( _DATABASE.CLIENTS ) ) -- #SET_CLIENT
+  
+    self:FilterActive( false )
+  
+    return self
   end
+  
+  --- Add CLIENT(s) to SET_CLIENT.
+  -- @param Core.Set#SET_CLIENT self
+  -- @param #string AddClientNames A single name or an array of CLIENT names.
+  -- @return self
+  function SET_CLIENT:AddClientsByName( AddClientNames )
+  
+    local AddClientNamesArray = ( type( AddClientNames ) == "table" ) and AddClientNames or { AddClientNames }
     
-  return self
-end
-
---- Remove CLIENT(s) from SET_CLIENT.
--- @param Core.Set#SET_CLIENT self
--- @param Wrapper.Client#CLIENT RemoveClientNames A single name or an array of CLIENT names.
--- @return self
-function SET_CLIENT:RemoveClientsByName( RemoveClientNames )
-
-  local RemoveClientNamesArray = ( type( RemoveClientNames ) == "table" ) and RemoveClientNames or { RemoveClientNames }
-  
-  for RemoveClientID, RemoveClientName in pairs( RemoveClientNamesArray ) do
-    self:Remove( RemoveClientName.ClientName )
-  end
-    
-  return self
-end
-
-
---- Finds a Client based on the Client Name.
--- @param #SET_CLIENT self
--- @param #string ClientName
--- @return Wrapper.Client#CLIENT The found Client.
-function SET_CLIENT:FindClient( ClientName )
-
-  local ClientFound = self.Set[ClientName]
-  return ClientFound
-end
-
-
-
---- Builds a set of clients of coalitions.
--- Possible current coalitions are red, blue and neutral.
--- @param #SET_CLIENT self
--- @param #string Coalitions Can take the following values: "red", "blue", "neutral".
--- @return #SET_CLIENT self
-function SET_CLIENT:FilterCoalitions( Coalitions )
-  if not self.Filter.Coalitions then
-    self.Filter.Coalitions = {}
-  end
-  if type( Coalitions ) ~= "table" then
-    Coalitions = { Coalitions }
-  end
-  for CoalitionID, Coalition in pairs( Coalitions ) do
-    self.Filter.Coalitions[Coalition] = Coalition
-  end
-  return self
-end
-
-
---- Builds a set of clients out of categories.
--- Possible current categories are plane, helicopter, ground, ship.
--- @param #SET_CLIENT self
--- @param #string Categories Can take the following values: "plane", "helicopter", "ground", "ship".
--- @return #SET_CLIENT self
-function SET_CLIENT:FilterCategories( Categories )
-  if not self.Filter.Categories then
-    self.Filter.Categories = {}
-  end
-  if type( Categories ) ~= "table" then
-    Categories = { Categories }
-  end
-  for CategoryID, Category in pairs( Categories ) do
-    self.Filter.Categories[Category] = Category
-  end
-  return self
-end
-
-
---- Builds a set of clients of defined client types.
--- Possible current types are those types known within DCS world.
--- @param #SET_CLIENT self
--- @param #string Types Can take those type strings known within DCS world.
--- @return #SET_CLIENT self
-function SET_CLIENT:FilterTypes( Types )
-  if not self.Filter.Types then
-    self.Filter.Types = {}
-  end
-  if type( Types ) ~= "table" then
-    Types = { Types }
-  end
-  for TypeID, Type in pairs( Types ) do
-    self.Filter.Types[Type] = Type
-  end
-  return self
-end
-
-
---- Builds a set of clients of defined countries.
--- Possible current countries are those known within DCS world.
--- @param #SET_CLIENT self
--- @param #string Countries Can take those country strings known within DCS world.
--- @return #SET_CLIENT self
-function SET_CLIENT:FilterCountries( Countries )
-  if not self.Filter.Countries then
-    self.Filter.Countries = {}
-  end
-  if type( Countries ) ~= "table" then
-    Countries = { Countries }
-  end
-  for CountryID, Country in pairs( Countries ) do
-    self.Filter.Countries[Country] = Country
-  end
-  return self
-end
-
-
---- Builds a set of clients of defined client prefixes.
--- All the clients starting with the given prefixes will be included within the set.
--- @param #SET_CLIENT self
--- @param #string Prefixes The prefix of which the client name starts with.
--- @return #SET_CLIENT self
-function SET_CLIENT:FilterPrefixes( Prefixes )
-  if not self.Filter.ClientPrefixes then
-    self.Filter.ClientPrefixes = {}
-  end
-  if type( Prefixes ) ~= "table" then
-    Prefixes = { Prefixes }
-  end
-  for PrefixID, Prefix in pairs( Prefixes ) do
-    self.Filter.ClientPrefixes[Prefix] = Prefix
-  end
-  return self
-end
-
---- Builds a set of clients that are only active.
--- Only the clients that are active will be included within the set.
--- @param #SET_CLIENT self
--- @param #boolean Active (optional) Include only active clients to the set.
--- Include inactive clients if you provide false.
--- @return #SET_CLIENT self
--- @usage
--- 
--- -- Include only active clients to the set.
--- ClientSet = SET_CLIENT:New():FilterActive():FilterStart()
--- 
--- -- Include only active clients to the set of the blue coalition, and filter one time.
--- ClientSet = SET_CLIENT:New():FilterActive():FilterCoalition( "blue" ):FilterOnce()
--- 
--- -- Include only active clients to the set of the blue coalition, and filter one time.
--- -- Later, reset to include back inactive clients to the set.
--- ClientSet = SET_CLIENT:New():FilterActive():FilterCoalition( "blue" ):FilterOnce()
--- ... logic ...
--- ClientSet = SET_CLIENT:New():FilterActive( false ):FilterCoalition( "blue" ):FilterOnce()
--- 
-function SET_CLIENT:FilterActive( Active )
-  Active = Active or not ( Active == false )
-  self.Filter.Active = Active
-  return self
-end
-
-
-
---- Starts the filtering.
--- @param #SET_CLIENT self
--- @return #SET_CLIENT self
-function SET_CLIENT:FilterStart()
-
-  if _DATABASE then
-    self:_FilterStart()
-    self:HandleEvent( EVENTS.Birth, self._EventOnBirth )
-    self:HandleEvent( EVENTS.Dead, self._EventOnDeadOrCrash )
-    self:HandleEvent( EVENTS.Crash, self._EventOnDeadOrCrash )
-  end
-  
-  return self
-end
-
---- Handles the Database to check on an event (birth) that the Object was added in the Database.
--- This is required, because sometimes the _DATABASE birth event gets called later than the SET_BASE birth event!
--- @param #SET_CLIENT self
--- @param Core.Event#EVENTDATA Event
--- @return #string The name of the CLIENT
--- @return #table The CLIENT
-function SET_CLIENT:AddInDatabase( Event )
-  self:F3( { Event } )
-
-  return Event.IniDCSUnitName, self.Database[Event.IniDCSUnitName]
-end
-
---- Handles the Database to check on any event that Object exists in the Database.
--- This is required, because sometimes the _DATABASE event gets called later than the SET_BASE event or vise versa!
--- @param #SET_CLIENT self
--- @param Core.Event#EVENTDATA Event
--- @return #string The name of the CLIENT
--- @return #table The CLIENT
-function SET_CLIENT:FindInDatabase( Event )
-  self:F3( { Event } )
-
-  return Event.IniDCSUnitName, self.Database[Event.IniDCSUnitName]
-end
-
---- Iterate the SET_CLIENT and call an interator function for each **alive** CLIENT, providing the CLIENT and optional parameters.
--- @param #SET_CLIENT self
--- @param #function IteratorFunction The function that will be called when there is an alive CLIENT in the SET_CLIENT. The function needs to accept a CLIENT parameter.
--- @return #SET_CLIENT self
-function SET_CLIENT:ForEachClient( IteratorFunction, ... )
-  self:F2( arg )
-  
-  self:ForEach( IteratorFunction, arg, self:GetSet() )
-
-  return self
-end
-
---- Iterate the SET_CLIENT and call an iterator function for each **alive** CLIENT presence completely in a @{Zone}, providing the CLIENT and optional parameters to the called function.
--- @param #SET_CLIENT self
--- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
--- @param #function IteratorFunction The function that will be called when there is an alive CLIENT in the SET_CLIENT. The function needs to accept a CLIENT parameter.
--- @return #SET_CLIENT self
-function SET_CLIENT:ForEachClientInZone( ZoneObject, IteratorFunction, ... )
-  self:F2( arg )
-  
-  self:ForEach( IteratorFunction, arg, self:GetSet(),
-    --- @param Core.Zone#ZONE_BASE ZoneObject
-    -- @param Wrapper.Client#CLIENT ClientObject
-    function( ZoneObject, ClientObject )
-      if ClientObject:IsInZone( ZoneObject ) then
-        return true
-      else
-        return false
-      end
-    end, { ZoneObject } )
-
-  return self
-end
-
---- Iterate the SET_CLIENT and call an iterator function for each **alive** CLIENT presence not in a @{Zone}, providing the CLIENT and optional parameters to the called function.
--- @param #SET_CLIENT self
--- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
--- @param #function IteratorFunction The function that will be called when there is an alive CLIENT in the SET_CLIENT. The function needs to accept a CLIENT parameter.
--- @return #SET_CLIENT self
-function SET_CLIENT:ForEachClientNotInZone( ZoneObject, IteratorFunction, ... )
-  self:F2( arg )
-  
-  self:ForEach( IteratorFunction, arg, self:GetSet(),
-    --- @param Core.Zone#ZONE_BASE ZoneObject
-    -- @param Wrapper.Client#CLIENT ClientObject
-    function( ZoneObject, ClientObject )
-      if ClientObject:IsNotInZone( ZoneObject ) then
-        return true
-      else
-        return false
-      end
-    end, { ZoneObject } )
-
-  return self
-end
-
----
--- @param #SET_CLIENT self
--- @param Wrapper.Client#CLIENT MClient
--- @return #SET_CLIENT self
-function SET_CLIENT:IsIncludeObject( MClient )
-  self:F2( MClient )
-
-  local MClientInclude = true
-
-  if MClient then
-    local MClientName = MClient.UnitName
-  
-    if self.Filter.Active ~= nil then
-      local MClientActive = false
-      if self.Filter.Active == false or ( self.Filter.Active == true and MClient:IsActive() == true ) then
-        MClientActive = true
-      end
-      MClientInclude = MClientInclude and MClientActive
-    end
-  
-    if self.Filter.Coalitions then
-      local MClientCoalition = false
-      for CoalitionID, CoalitionName in pairs( self.Filter.Coalitions ) do
-        local ClientCoalitionID = _DATABASE:GetCoalitionFromClientTemplate( MClientName )
-        self:T3( { "Coalition:", ClientCoalitionID, self.FilterMeta.Coalitions[CoalitionName], CoalitionName } )
-        if self.FilterMeta.Coalitions[CoalitionName] and self.FilterMeta.Coalitions[CoalitionName] == ClientCoalitionID then
-          MClientCoalition = true
-        end
-      end
-      self:T( { "Evaluated Coalition", MClientCoalition } )
-      MClientInclude = MClientInclude and MClientCoalition
-    end
-    
-    if self.Filter.Categories then
-      local MClientCategory = false
-      for CategoryID, CategoryName in pairs( self.Filter.Categories ) do
-        local ClientCategoryID = _DATABASE:GetCategoryFromClientTemplate( MClientName )
-        self:T3( { "Category:", ClientCategoryID, self.FilterMeta.Categories[CategoryName], CategoryName } )
-        if self.FilterMeta.Categories[CategoryName] and self.FilterMeta.Categories[CategoryName] == ClientCategoryID then
-          MClientCategory = true
-        end
-      end
-      self:T( { "Evaluated Category", MClientCategory } )
-      MClientInclude = MClientInclude and MClientCategory
-    end
-    
-    if self.Filter.Types then
-      local MClientType = false
-      for TypeID, TypeName in pairs( self.Filter.Types ) do
-        self:T3( { "Type:", MClient:GetTypeName(), TypeName } )
-        if TypeName == MClient:GetTypeName() then
-          MClientType = true
-        end
-      end
-      self:T( { "Evaluated Type", MClientType } )
-      MClientInclude = MClientInclude and MClientType
-    end
-    
-    if self.Filter.Countries then
-      local MClientCountry = false
-      for CountryID, CountryName in pairs( self.Filter.Countries ) do
-        local ClientCountryID = _DATABASE:GetCountryFromClientTemplate(MClientName)
-        self:T3( { "Country:", ClientCountryID, country.id[CountryName], CountryName } )
-        if country.id[CountryName] and country.id[CountryName] == ClientCountryID then
-          MClientCountry = true
-        end
-      end
-      self:T( { "Evaluated Country", MClientCountry } )
-      MClientInclude = MClientInclude and MClientCountry
-    end
-  
-    if self.Filter.ClientPrefixes then
-      local MClientPrefix = false
-      for ClientPrefixId, ClientPrefix in pairs( self.Filter.ClientPrefixes ) do
-        self:T3( { "Prefix:", string.find( MClient.UnitName, ClientPrefix, 1 ), ClientPrefix } )
-        if string.find( MClient.UnitName, ClientPrefix, 1 ) then
-          MClientPrefix = true
-        end
-      end
-      self:T( { "Evaluated Prefix", MClientPrefix } )
-      MClientInclude = MClientInclude and MClientPrefix
-    end
-  end
-  
-  self:T2( MClientInclude )
-  return MClientInclude
-end
-
---- SET_PLAYER
-
-
---- @type SET_PLAYER
--- @extends Core.Set#SET_BASE
-
-
-
---- Mission designers can use the @{Core.Set#SET_PLAYER} class to build sets of units belonging to alive players:
--- 
--- ## SET_PLAYER constructor
--- 
--- Create a new SET_PLAYER object with the @{#SET_PLAYER.New} method:
--- 
---    * @{#SET_PLAYER.New}: Creates a new SET_PLAYER object.
---   
--- ## SET_PLAYER filter criteria
--- 
--- You can set filter criteria to define the set of clients within the SET_PLAYER.
--- Filter criteria are defined by:
--- 
---    * @{#SET_PLAYER.FilterCoalitions}: Builds the SET_PLAYER with the clients belonging to the coalition(s).
---    * @{#SET_PLAYER.FilterCategories}: Builds the SET_PLAYER with the clients belonging to the category(ies).
---    * @{#SET_PLAYER.FilterTypes}: Builds the SET_PLAYER with the clients belonging to the client type(s).
---    * @{#SET_PLAYER.FilterCountries}: Builds the SET_PLAYER with the clients belonging to the country(ies).
---    * @{#SET_PLAYER.FilterPrefixes}: Builds the SET_PLAYER with the clients starting with the same prefix string(s).
---   
--- Once the filter criteria have been set for the SET_PLAYER, you can start filtering using:
--- 
---   * @{#SET_PLAYER.FilterStart}: Starts the filtering of the clients within the SET_PLAYER.
--- 
--- Planned filter criteria within development are (so these are not yet available):
--- 
---    * @{#SET_PLAYER.FilterZones}: Builds the SET_PLAYER with the clients within a @{Core.Zone#ZONE}.
--- 
--- ## SET_PLAYER iterators
--- 
--- Once the filters have been defined and the SET_PLAYER has been built, you can iterate the SET_PLAYER with the available iterator methods.
--- The iterator methods will walk the SET_PLAYER set, and call for each element within the set a function that you provide.
--- The following iterator methods are currently available within the SET_PLAYER:
--- 
---   * @{#SET_PLAYER.ForEachClient}: Calls a function for each alive client it finds within the SET_PLAYER.
--- 
--- ===
--- @field #SET_PLAYER SET_PLAYER 
-SET_PLAYER = {
-  ClassName = "SET_PLAYER",
-  Clients = {},
-  Filter = {
-    Coalitions = nil,
-    Categories = nil,
-    Types = nil,
-    Countries = nil,
-    ClientPrefixes = nil,
-  },
-  FilterMeta = {
-    Coalitions = {
-      red = coalition.side.RED,
-      blue = coalition.side.BLUE,
-      neutral = coalition.side.NEUTRAL,
-    },
-    Categories = {
-      plane = Unit.Category.AIRPLANE,
-      helicopter = Unit.Category.HELICOPTER,
-      ground = Unit.Category.GROUND_UNIT,
-      ship = Unit.Category.SHIP,
-      structure = Unit.Category.STRUCTURE,
-    },
-  },
-}
-
-
---- Creates a new SET_PLAYER object, building a set of clients belonging to a coalitions, categories, countries, types or with defined prefix names.
--- @param #SET_PLAYER self
--- @return #SET_PLAYER
--- @usage
--- -- Define a new SET_PLAYER Object. This DBObject will contain a reference to all Clients.
--- DBObject = SET_PLAYER:New()
-function SET_PLAYER:New()
-  -- Inherits from BASE
-  local self = BASE:Inherit( self, SET_BASE:New( _DATABASE.PLAYERS ) )
-
-  return self
-end
-
---- Add CLIENT(s) to SET_PLAYER.
--- @param Core.Set#SET_PLAYER self
--- @param #string AddClientNames A single name or an array of CLIENT names.
--- @return self
-function SET_PLAYER:AddClientsByName( AddClientNames )
-
-  local AddClientNamesArray = ( type( AddClientNames ) == "table" ) and AddClientNames or { AddClientNames }
-  
-  for AddClientID, AddClientName in pairs( AddClientNamesArray ) do
-    self:Add( AddClientName, CLIENT:FindByName( AddClientName ) )
-  end
-    
-  return self
-end
-
---- Remove CLIENT(s) from SET_PLAYER.
--- @param Core.Set#SET_PLAYER self
--- @param Wrapper.Client#CLIENT RemoveClientNames A single name or an array of CLIENT names.
--- @return self
-function SET_PLAYER:RemoveClientsByName( RemoveClientNames )
-
-  local RemoveClientNamesArray = ( type( RemoveClientNames ) == "table" ) and RemoveClientNames or { RemoveClientNames }
-  
-  for RemoveClientID, RemoveClientName in pairs( RemoveClientNamesArray ) do
-    self:Remove( RemoveClientName.ClientName )
-  end
-    
-  return self
-end
-
-
---- Finds a Client based on the Player Name.
--- @param #SET_PLAYER self
--- @param #string PlayerName
--- @return Wrapper.Client#CLIENT The found Client.
-function SET_PLAYER:FindClient( PlayerName )
-
-  local ClientFound = self.Set[PlayerName]
-  return ClientFound
-end
-
-
-
---- Builds a set of clients of coalitions joined by specific players.
--- Possible current coalitions are red, blue and neutral.
--- @param #SET_PLAYER self
--- @param #string Coalitions Can take the following values: "red", "blue", "neutral".
--- @return #SET_PLAYER self
-function SET_PLAYER:FilterCoalitions( Coalitions )
-  if not self.Filter.Coalitions then
-    self.Filter.Coalitions = {}
-  end
-  if type( Coalitions ) ~= "table" then
-    Coalitions = { Coalitions }
-  end
-  for CoalitionID, Coalition in pairs( Coalitions ) do
-    self.Filter.Coalitions[Coalition] = Coalition
-  end
-  return self
-end
-
-
---- Builds a set of clients out of categories joined by players.
--- Possible current categories are plane, helicopter, ground, ship.
--- @param #SET_PLAYER self
--- @param #string Categories Can take the following values: "plane", "helicopter", "ground", "ship".
--- @return #SET_PLAYER self
-function SET_PLAYER:FilterCategories( Categories )
-  if not self.Filter.Categories then
-    self.Filter.Categories = {}
-  end
-  if type( Categories ) ~= "table" then
-    Categories = { Categories }
-  end
-  for CategoryID, Category in pairs( Categories ) do
-    self.Filter.Categories[Category] = Category
-  end
-  return self
-end
-
-
---- Builds a set of clients of defined client types joined by players.
--- Possible current types are those types known within DCS world.
--- @param #SET_PLAYER self
--- @param #string Types Can take those type strings known within DCS world.
--- @return #SET_PLAYER self
-function SET_PLAYER:FilterTypes( Types )
-  if not self.Filter.Types then
-    self.Filter.Types = {}
-  end
-  if type( Types ) ~= "table" then
-    Types = { Types }
-  end
-  for TypeID, Type in pairs( Types ) do
-    self.Filter.Types[Type] = Type
-  end
-  return self
-end
-
-
---- Builds a set of clients of defined countries.
--- Possible current countries are those known within DCS world.
--- @param #SET_PLAYER self
--- @param #string Countries Can take those country strings known within DCS world.
--- @return #SET_PLAYER self
-function SET_PLAYER:FilterCountries( Countries )
-  if not self.Filter.Countries then
-    self.Filter.Countries = {}
-  end
-  if type( Countries ) ~= "table" then
-    Countries = { Countries }
-  end
-  for CountryID, Country in pairs( Countries ) do
-    self.Filter.Countries[Country] = Country
-  end
-  return self
-end
-
-
---- Builds a set of clients of defined client prefixes.
--- All the clients starting with the given prefixes will be included within the set.
--- @param #SET_PLAYER self
--- @param #string Prefixes The prefix of which the client name starts with.
--- @return #SET_PLAYER self
-function SET_PLAYER:FilterPrefixes( Prefixes )
-  if not self.Filter.ClientPrefixes then
-    self.Filter.ClientPrefixes = {}
-  end
-  if type( Prefixes ) ~= "table" then
-    Prefixes = { Prefixes }
-  end
-  for PrefixID, Prefix in pairs( Prefixes ) do
-    self.Filter.ClientPrefixes[Prefix] = Prefix
-  end
-  return self
-end
-
-
-
-
---- Starts the filtering.
--- @param #SET_PLAYER self
--- @return #SET_PLAYER self
-function SET_PLAYER:FilterStart()
-
-  if _DATABASE then
-    self:_FilterStart()
-    self:HandleEvent( EVENTS.Birth, self._EventOnBirth )
-    self:HandleEvent( EVENTS.Dead, self._EventOnDeadOrCrash )
-    self:HandleEvent( EVENTS.Crash, self._EventOnDeadOrCrash )
-  end
-  
-  return self
-end
-
---- Handles the Database to check on an event (birth) that the Object was added in the Database.
--- This is required, because sometimes the _DATABASE birth event gets called later than the SET_BASE birth event!
--- @param #SET_PLAYER self
--- @param Core.Event#EVENTDATA Event
--- @return #string The name of the CLIENT
--- @return #table The CLIENT
-function SET_PLAYER:AddInDatabase( Event )
-  self:F3( { Event } )
-
-  return Event.IniDCSUnitName, self.Database[Event.IniDCSUnitName]
-end
-
---- Handles the Database to check on any event that Object exists in the Database.
--- This is required, because sometimes the _DATABASE event gets called later than the SET_BASE event or vise versa!
--- @param #SET_PLAYER self
--- @param Core.Event#EVENTDATA Event
--- @return #string The name of the CLIENT
--- @return #table The CLIENT
-function SET_PLAYER:FindInDatabase( Event )
-  self:F3( { Event } )
-
-  return Event.IniDCSUnitName, self.Database[Event.IniDCSUnitName]
-end
-
---- Iterate the SET_PLAYER and call an interator function for each **alive** CLIENT, providing the CLIENT and optional parameters.
--- @param #SET_PLAYER self
--- @param #function IteratorFunction The function that will be called when there is an alive CLIENT in the SET_PLAYER. The function needs to accept a CLIENT parameter.
--- @return #SET_PLAYER self
-function SET_PLAYER:ForEachPlayer( IteratorFunction, ... )
-  self:F2( arg )
-  
-  self:ForEach( IteratorFunction, arg, self:GetSet() )
-
-  return self
-end
-
---- Iterate the SET_PLAYER and call an iterator function for each **alive** CLIENT presence completely in a @{Zone}, providing the CLIENT and optional parameters to the called function.
--- @param #SET_PLAYER self
--- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
--- @param #function IteratorFunction The function that will be called when there is an alive CLIENT in the SET_PLAYER. The function needs to accept a CLIENT parameter.
--- @return #SET_PLAYER self
-function SET_PLAYER:ForEachPlayerInZone( ZoneObject, IteratorFunction, ... )
-  self:F2( arg )
-  
-  self:ForEach( IteratorFunction, arg, self:GetSet(),
-    --- @param Core.Zone#ZONE_BASE ZoneObject
-    -- @param Wrapper.Client#CLIENT ClientObject
-    function( ZoneObject, ClientObject )
-      if ClientObject:IsInZone( ZoneObject ) then
-        return true
-      else
-        return false
-      end
-    end, { ZoneObject } )
-
-  return self
-end
-
---- Iterate the SET_PLAYER and call an iterator function for each **alive** CLIENT presence not in a @{Zone}, providing the CLIENT and optional parameters to the called function.
--- @param #SET_PLAYER self
--- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
--- @param #function IteratorFunction The function that will be called when there is an alive CLIENT in the SET_PLAYER. The function needs to accept a CLIENT parameter.
--- @return #SET_PLAYER self
-function SET_PLAYER:ForEachPlayerNotInZone( ZoneObject, IteratorFunction, ... )
-  self:F2( arg )
-  
-  self:ForEach( IteratorFunction, arg, self:GetSet(),
-    --- @param Core.Zone#ZONE_BASE ZoneObject
-    -- @param Wrapper.Client#CLIENT ClientObject
-    function( ZoneObject, ClientObject )
-      if ClientObject:IsNotInZone( ZoneObject ) then
-        return true
-      else
-        return false
-      end
-    end, { ZoneObject } )
-
-  return self
-end
-
----
--- @param #SET_PLAYER self
--- @param Wrapper.Client#CLIENT MClient
--- @return #SET_PLAYER self
-function SET_PLAYER:IsIncludeObject( MClient )
-  self:F2( MClient )
-
-  local MClientInclude = true
-
-  if MClient then
-    local MClientName = MClient.UnitName
-  
-    if self.Filter.Coalitions then
-      local MClientCoalition = false
-      for CoalitionID, CoalitionName in pairs( self.Filter.Coalitions ) do
-        local ClientCoalitionID = _DATABASE:GetCoalitionFromClientTemplate( MClientName )
-        self:T3( { "Coalition:", ClientCoalitionID, self.FilterMeta.Coalitions[CoalitionName], CoalitionName } )
-        if self.FilterMeta.Coalitions[CoalitionName] and self.FilterMeta.Coalitions[CoalitionName] == ClientCoalitionID then
-          MClientCoalition = true
-        end
-      end
-      self:T( { "Evaluated Coalition", MClientCoalition } )
-      MClientInclude = MClientInclude and MClientCoalition
-    end
-    
-    if self.Filter.Categories then
-      local MClientCategory = false
-      for CategoryID, CategoryName in pairs( self.Filter.Categories ) do
-        local ClientCategoryID = _DATABASE:GetCategoryFromClientTemplate( MClientName )
-        self:T3( { "Category:", ClientCategoryID, self.FilterMeta.Categories[CategoryName], CategoryName } )
-        if self.FilterMeta.Categories[CategoryName] and self.FilterMeta.Categories[CategoryName] == ClientCategoryID then
-          MClientCategory = true
-        end
-      end
-      self:T( { "Evaluated Category", MClientCategory } )
-      MClientInclude = MClientInclude and MClientCategory
-    end
-    
-    if self.Filter.Types then
-      local MClientType = false
-      for TypeID, TypeName in pairs( self.Filter.Types ) do
-        self:T3( { "Type:", MClient:GetTypeName(), TypeName } )
-        if TypeName == MClient:GetTypeName() then
-          MClientType = true
-        end
-      end
-      self:T( { "Evaluated Type", MClientType } )
-      MClientInclude = MClientInclude and MClientType
-    end
-    
-    if self.Filter.Countries then
-      local MClientCountry = false
-      for CountryID, CountryName in pairs( self.Filter.Countries ) do
-        local ClientCountryID = _DATABASE:GetCountryFromClientTemplate(MClientName)
-        self:T3( { "Country:", ClientCountryID, country.id[CountryName], CountryName } )
-        if country.id[CountryName] and country.id[CountryName] == ClientCountryID then
-          MClientCountry = true
-        end
-      end
-      self:T( { "Evaluated Country", MClientCountry } )
-      MClientInclude = MClientInclude and MClientCountry
-    end
-  
-    if self.Filter.ClientPrefixes then
-      local MClientPrefix = false
-      for ClientPrefixId, ClientPrefix in pairs( self.Filter.ClientPrefixes ) do
-        self:T3( { "Prefix:", string.find( MClient.UnitName, ClientPrefix, 1 ), ClientPrefix } )
-        if string.find( MClient.UnitName, ClientPrefix, 1 ) then
-          MClientPrefix = true
-        end
-      end
-      self:T( { "Evaluated Prefix", MClientPrefix } )
-      MClientInclude = MClientInclude and MClientPrefix
-    end
-  end
-  
-  self:T2( MClientInclude )
-  return MClientInclude
-end
-
---- @type SET_AIRBASE
--- @extends Core.Set#SET_BASE
-
---- Mission designers can use the @{Core.Set#SET_AIRBASE} class to build sets of airbases optionally belonging to certain:
--- 
---  * Coalitions
---  
--- ## SET_AIRBASE constructor
--- 
--- Create a new SET_AIRBASE object with the @{#SET_AIRBASE.New} method:
--- 
---    * @{#SET_AIRBASE.New}: Creates a new SET_AIRBASE object.
---   
--- ## Add or Remove AIRBASEs from SET_AIRBASE 
--- 
--- AIRBASEs can be added and removed using the @{Core.Set#SET_AIRBASE.AddAirbasesByName} and @{Core.Set#SET_AIRBASE.RemoveAirbasesByName} respectively. 
--- These methods take a single AIRBASE name or an array of AIRBASE names to be added or removed from SET_AIRBASE.
--- 
--- ## SET_AIRBASE filter criteria 
--- 
--- You can set filter criteria to define the set of clients within the SET_AIRBASE.
--- Filter criteria are defined by:
--- 
---    * @{#SET_AIRBASE.FilterCoalitions}: Builds the SET_AIRBASE with the airbases belonging to the coalition(s).
---   
--- Once the filter criteria have been set for the SET_AIRBASE, you can start filtering using:
--- 
---   * @{#SET_AIRBASE.FilterStart}: Starts the filtering of the airbases within the SET_AIRBASE.
--- 
--- ## SET_AIRBASE iterators
--- 
--- Once the filters have been defined and the SET_AIRBASE has been built, you can iterate the SET_AIRBASE with the available iterator methods.
--- The iterator methods will walk the SET_AIRBASE set, and call for each airbase within the set a function that you provide.
--- The following iterator methods are currently available within the SET_AIRBASE:
--- 
---   * @{#SET_AIRBASE.ForEachAirbase}: Calls a function for each airbase it finds within the SET_AIRBASE.
--- 
--- ===
--- @field #SET_AIRBASE SET_AIRBASE
-SET_AIRBASE = {
-  ClassName = "SET_AIRBASE",
-  Airbases = {},
-  Filter = {
-    Coalitions = nil,
-  },
-  FilterMeta = {
-    Coalitions = {
-      red = coalition.side.RED,
-      blue = coalition.side.BLUE,
-      neutral = coalition.side.NEUTRAL,
-    },
-    Categories = {
-      airdrome = Airbase.Category.AIRDROME,
-      helipad = Airbase.Category.HELIPAD,
-      ship = Airbase.Category.SHIP,
-    },
-  },
-}
-
-
---- Creates a new SET_AIRBASE object, building a set of airbases belonging to a coalitions and categories.
--- @param #SET_AIRBASE self
--- @return #SET_AIRBASE self
--- @usage
--- -- Define a new SET_AIRBASE Object. The DatabaseSet will contain a reference to all Airbases.
--- DatabaseSet = SET_AIRBASE:New()
-function SET_AIRBASE:New()
-  -- Inherits from BASE
-  local self = BASE:Inherit( self, SET_BASE:New( _DATABASE.AIRBASES ) )
-
-  return self
-end
-
---- Add an AIRBASE object to SET_AIRBASE.
--- @param Core.Set#SET_AIRBASE self
--- @param Wrapper.Airbase#AIRBASE airbase Airbase that should be added to the set.
--- @return self
-function SET_AIRBASE:AddAirbase( airbase )
-
-  self:Add( airbase:GetName(), airbase )
-  
-  return self
-end
-
---- Add AIRBASEs to SET_AIRBASE.
--- @param Core.Set#SET_AIRBASE self
--- @param #string AddAirbaseNames A single name or an array of AIRBASE names.
--- @return self
-function SET_AIRBASE:AddAirbasesByName( AddAirbaseNames )
-
-  local AddAirbaseNamesArray = ( type( AddAirbaseNames ) == "table" ) and AddAirbaseNames or { AddAirbaseNames }
-  
-  for AddAirbaseID, AddAirbaseName in pairs( AddAirbaseNamesArray ) do
-    self:Add( AddAirbaseName, AIRBASE:FindByName( AddAirbaseName ) )
-  end
-    
-  return self
-end
-
---- Remove AIRBASEs from SET_AIRBASE.
--- @param Core.Set#SET_AIRBASE self
--- @param Wrapper.Airbase#AIRBASE RemoveAirbaseNames A single name or an array of AIRBASE names.
--- @return self
-function SET_AIRBASE:RemoveAirbasesByName( RemoveAirbaseNames )
-
-  local RemoveAirbaseNamesArray = ( type( RemoveAirbaseNames ) == "table" ) and RemoveAirbaseNames or { RemoveAirbaseNames }
-  
-  for RemoveAirbaseID, RemoveAirbaseName in pairs( RemoveAirbaseNamesArray ) do
-    self:Remove( RemoveAirbaseName )
-  end
-    
-  return self
-end
-
-
---- Finds a Airbase based on the Airbase Name.
--- @param #SET_AIRBASE self
--- @param #string AirbaseName
--- @return Wrapper.Airbase#AIRBASE The found Airbase.
-function SET_AIRBASE:FindAirbase( AirbaseName )
-
-  local AirbaseFound = self.Set[AirbaseName]
-  return AirbaseFound
-end
-
-
---- Finds an Airbase in range of a coordinate.
--- @param #SET_AIRBASE self
--- @param Core.Point#COORDINATE Coordinate
--- @param #number Range
--- @return Wrapper.Airbase#AIRBASE The found Airbase.
-function SET_AIRBASE:FindAirbaseInRange( Coordinate, Range )
-
-  local AirbaseFound = nil
-
-  for AirbaseName, AirbaseObject in pairs( self.Set ) do
-  
-    local AirbaseCoordinate = AirbaseObject:GetCoordinate()
-    local Distance = Coordinate:Get2DDistance( AirbaseCoordinate )
-    
-    self:F({Distance=Distance})
-  
-    if Distance <= Range then
-      AirbaseFound = AirbaseObject
-      break
+    for AddClientID, AddClientName in pairs( AddClientNamesArray ) do
+      self:Add( AddClientName, CLIENT:FindByName( AddClientName ) )
     end
       
+    return self
   end
-
-  return AirbaseFound
-end
-
-
---- Finds a random Airbase in the set.
--- @param #SET_AIRBASE self
--- @return Wrapper.Airbase#AIRBASE The found Airbase.
-function SET_AIRBASE:GetRandomAirbase()
-
-  local RandomAirbase = self:GetRandom()
-  self:F( { RandomAirbase = RandomAirbase:GetName() } )
-
-  return RandomAirbase
-end
-
-
-
---- Builds a set of airbases of coalitions.
--- Possible current coalitions are red, blue and neutral.
--- @param #SET_AIRBASE self
--- @param #string Coalitions Can take the following values: "red", "blue", "neutral".
--- @return #SET_AIRBASE self
-function SET_AIRBASE:FilterCoalitions( Coalitions )
-  if not self.Filter.Coalitions then
-    self.Filter.Coalitions = {}
-  end
-  if type( Coalitions ) ~= "table" then
-    Coalitions = { Coalitions }
-  end
-  for CoalitionID, Coalition in pairs( Coalitions ) do
-    self.Filter.Coalitions[Coalition] = Coalition
-  end
-  return self
-end
-
-
---- Builds a set of airbases out of categories.
--- Possible current categories are plane, helicopter, ground, ship.
--- @param #SET_AIRBASE self
--- @param #string Categories Can take the following values: "airdrome", "helipad", "ship".
--- @return #SET_AIRBASE self
-function SET_AIRBASE:FilterCategories( Categories )
-  if not self.Filter.Categories then
-    self.Filter.Categories = {}
-  end
-  if type( Categories ) ~= "table" then
-    Categories = { Categories }
-  end
-  for CategoryID, Category in pairs( Categories ) do
-    self.Filter.Categories[Category] = Category
-  end
-  return self
-end
-
---- Starts the filtering.
--- @param #SET_AIRBASE self
--- @return #SET_AIRBASE self
-function SET_AIRBASE:FilterStart()
-
-  if _DATABASE then
   
-    -- We use the BaseCaptured event, which is generated by DCS when a base got captured.
-    self:HandleEvent( EVENTS.BaseCaptured )
+  --- Remove CLIENT(s) from SET_CLIENT.
+  -- @param Core.Set#SET_CLIENT self
+  -- @param Wrapper.Client#CLIENT RemoveClientNames A single name or an array of CLIENT names.
+  -- @return self
+  function SET_CLIENT:RemoveClientsByName( RemoveClientNames )
+  
+    local RemoveClientNamesArray = ( type( RemoveClientNames ) == "table" ) and RemoveClientNames or { RemoveClientNames }
+    
+    for RemoveClientID, RemoveClientName in pairs( RemoveClientNamesArray ) do
+      self:Remove( RemoveClientName.ClientName )
+    end
+      
+    return self
+  end
+  
+  
+  --- Finds a Client based on the Client Name.
+  -- @param #SET_CLIENT self
+  -- @param #string ClientName
+  -- @return Wrapper.Client#CLIENT The found Client.
+  function SET_CLIENT:FindClient( ClientName )
+  
+    local ClientFound = self.Set[ClientName]
+    return ClientFound
+  end
+  
+  
+  
+  --- Builds a set of clients of coalitions.
+  -- Possible current coalitions are red, blue and neutral.
+  -- @param #SET_CLIENT self
+  -- @param #string Coalitions Can take the following values: "red", "blue", "neutral".
+  -- @return #SET_CLIENT self
+  function SET_CLIENT:FilterCoalitions( Coalitions )
+    if not self.Filter.Coalitions then
+      self.Filter.Coalitions = {}
+    end
+    if type( Coalitions ) ~= "table" then
+      Coalitions = { Coalitions }
+    end
+    for CoalitionID, Coalition in pairs( Coalitions ) do
+      self.Filter.Coalitions[Coalition] = Coalition
+    end
+    return self
+  end
+  
+  
+  --- Builds a set of clients out of categories.
+  -- Possible current categories are plane, helicopter, ground, ship.
+  -- @param #SET_CLIENT self
+  -- @param #string Categories Can take the following values: "plane", "helicopter", "ground", "ship".
+  -- @return #SET_CLIENT self
+  function SET_CLIENT:FilterCategories( Categories )
+    if not self.Filter.Categories then
+      self.Filter.Categories = {}
+    end
+    if type( Categories ) ~= "table" then
+      Categories = { Categories }
+    end
+    for CategoryID, Category in pairs( Categories ) do
+      self.Filter.Categories[Category] = Category
+    end
+    return self
+  end
+  
+  
+  --- Builds a set of clients of defined client types.
+  -- Possible current types are those types known within DCS world.
+  -- @param #SET_CLIENT self
+  -- @param #string Types Can take those type strings known within DCS world.
+  -- @return #SET_CLIENT self
+  function SET_CLIENT:FilterTypes( Types )
+    if not self.Filter.Types then
+      self.Filter.Types = {}
+    end
+    if type( Types ) ~= "table" then
+      Types = { Types }
+    end
+    for TypeID, Type in pairs( Types ) do
+      self.Filter.Types[Type] = Type
+    end
+    return self
+  end
+  
+  
+  --- Builds a set of clients of defined countries.
+  -- Possible current countries are those known within DCS world.
+  -- @param #SET_CLIENT self
+  -- @param #string Countries Can take those country strings known within DCS world.
+  -- @return #SET_CLIENT self
+  function SET_CLIENT:FilterCountries( Countries )
+    if not self.Filter.Countries then
+      self.Filter.Countries = {}
+    end
+    if type( Countries ) ~= "table" then
+      Countries = { Countries }
+    end
+    for CountryID, Country in pairs( Countries ) do
+      self.Filter.Countries[Country] = Country
+    end
+    return self
+  end
+  
+  
+  --- Builds a set of clients of defined client prefixes.
+  -- All the clients starting with the given prefixes will be included within the set.
+  -- @param #SET_CLIENT self
+  -- @param #string Prefixes The prefix of which the client name starts with.
+  -- @return #SET_CLIENT self
+  function SET_CLIENT:FilterPrefixes( Prefixes )
+    if not self.Filter.ClientPrefixes then
+      self.Filter.ClientPrefixes = {}
+    end
+    if type( Prefixes ) ~= "table" then
+      Prefixes = { Prefixes }
+    end
+    for PrefixID, Prefix in pairs( Prefixes ) do
+      self.Filter.ClientPrefixes[Prefix] = Prefix
+    end
+    return self
+  end
+  
+  --- Builds a set of clients that are only active.
+  -- Only the clients that are active will be included within the set.
+  -- @param #SET_CLIENT self
+  -- @param #boolean Active (optional) Include only active clients to the set.
+  -- Include inactive clients if you provide false.
+  -- @return #SET_CLIENT self
+  -- @usage
+  -- 
+  -- -- Include only active clients to the set.
+  -- ClientSet = SET_CLIENT:New():FilterActive():FilterStart()
+  -- 
+  -- -- Include only active clients to the set of the blue coalition, and filter one time.
+  -- ClientSet = SET_CLIENT:New():FilterActive():FilterCoalition( "blue" ):FilterOnce()
+  -- 
+  -- -- Include only active clients to the set of the blue coalition, and filter one time.
+  -- -- Later, reset to include back inactive clients to the set.
+  -- ClientSet = SET_CLIENT:New():FilterActive():FilterCoalition( "blue" ):FilterOnce()
+  -- ... logic ...
+  -- ClientSet = SET_CLIENT:New():FilterActive( false ):FilterCoalition( "blue" ):FilterOnce()
+  -- 
+  function SET_CLIENT:FilterActive( Active )
+    Active = Active or not ( Active == false )
+    self.Filter.Active = Active
+    return self
+  end
+  
+  
+  
+  --- Starts the filtering.
+  -- @param #SET_CLIENT self
+  -- @return #SET_CLIENT self
+  function SET_CLIENT:FilterStart()
+  
+    if _DATABASE then
+      self:_FilterStart()
+      self:HandleEvent( EVENTS.Birth, self._EventOnBirth )
+      self:HandleEvent( EVENTS.Dead, self._EventOnDeadOrCrash )
+      self:HandleEvent( EVENTS.Crash, self._EventOnDeadOrCrash )
+    end
+    
+    return self
+  end
+  
+  --- Handles the Database to check on an event (birth) that the Object was added in the Database.
+  -- This is required, because sometimes the _DATABASE birth event gets called later than the SET_BASE birth event!
+  -- @param #SET_CLIENT self
+  -- @param Core.Event#EVENTDATA Event
+  -- @return #string The name of the CLIENT
+  -- @return #table The CLIENT
+  function SET_CLIENT:AddInDatabase( Event )
+    self:F3( { Event } )
+  
+    return Event.IniDCSUnitName, self.Database[Event.IniDCSUnitName]
+  end
+  
+  --- Handles the Database to check on any event that Object exists in the Database.
+  -- This is required, because sometimes the _DATABASE event gets called later than the SET_BASE event or vise versa!
+  -- @param #SET_CLIENT self
+  -- @param Core.Event#EVENTDATA Event
+  -- @return #string The name of the CLIENT
+  -- @return #table The CLIENT
+  function SET_CLIENT:FindInDatabase( Event )
+    self:F3( { Event } )
+  
+    return Event.IniDCSUnitName, self.Database[Event.IniDCSUnitName]
+  end
+  
+  --- Iterate the SET_CLIENT and call an interator function for each **alive** CLIENT, providing the CLIENT and optional parameters.
+  -- @param #SET_CLIENT self
+  -- @param #function IteratorFunction The function that will be called when there is an alive CLIENT in the SET_CLIENT. The function needs to accept a CLIENT parameter.
+  -- @return #SET_CLIENT self
+  function SET_CLIENT:ForEachClient( IteratorFunction, ... )
+    self:F2( arg )
+    
+    self:ForEach( IteratorFunction, arg, self:GetSet() )
+  
+    return self
+  end
+  
+  --- Iterate the SET_CLIENT and call an iterator function for each **alive** CLIENT presence completely in a @{Zone}, providing the CLIENT and optional parameters to the called function.
+  -- @param #SET_CLIENT self
+  -- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
+  -- @param #function IteratorFunction The function that will be called when there is an alive CLIENT in the SET_CLIENT. The function needs to accept a CLIENT parameter.
+  -- @return #SET_CLIENT self
+  function SET_CLIENT:ForEachClientInZone( ZoneObject, IteratorFunction, ... )
+    self:F2( arg )
+    
+    self:ForEach( IteratorFunction, arg, self:GetSet(),
+      --- @param Core.Zone#ZONE_BASE ZoneObject
+      -- @param Wrapper.Client#CLIENT ClientObject
+      function( ZoneObject, ClientObject )
+        if ClientObject:IsInZone( ZoneObject ) then
+          return true
+        else
+          return false
+        end
+      end, { ZoneObject } )
+  
+    return self
+  end
+  
+  --- Iterate the SET_CLIENT and call an iterator function for each **alive** CLIENT presence not in a @{Zone}, providing the CLIENT and optional parameters to the called function.
+  -- @param #SET_CLIENT self
+  -- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
+  -- @param #function IteratorFunction The function that will be called when there is an alive CLIENT in the SET_CLIENT. The function needs to accept a CLIENT parameter.
+  -- @return #SET_CLIENT self
+  function SET_CLIENT:ForEachClientNotInZone( ZoneObject, IteratorFunction, ... )
+    self:F2( arg )
+    
+    self:ForEach( IteratorFunction, arg, self:GetSet(),
+      --- @param Core.Zone#ZONE_BASE ZoneObject
+      -- @param Wrapper.Client#CLIENT ClientObject
+      function( ZoneObject, ClientObject )
+        if ClientObject:IsNotInZone( ZoneObject ) then
+          return true
+        else
+          return false
+        end
+      end, { ZoneObject } )
+  
+    return self
+  end
+  
+  ---
+  -- @param #SET_CLIENT self
+  -- @param Wrapper.Client#CLIENT MClient
+  -- @return #SET_CLIENT self
+  function SET_CLIENT:IsIncludeObject( MClient )
+    self:F2( MClient )
+  
+    local MClientInclude = true
+  
+    if MClient then
+      local MClientName = MClient.UnitName
+    
+      if self.Filter.Active ~= nil then
+        local MClientActive = false
+        if self.Filter.Active == false or ( self.Filter.Active == true and MClient:IsActive() == true ) then
+          MClientActive = true
+        end
+        MClientInclude = MClientInclude and MClientActive
+      end
+    
+      if self.Filter.Coalitions then
+        local MClientCoalition = false
+        for CoalitionID, CoalitionName in pairs( self.Filter.Coalitions ) do
+          local ClientCoalitionID = _DATABASE:GetCoalitionFromClientTemplate( MClientName )
+          self:T3( { "Coalition:", ClientCoalitionID, self.FilterMeta.Coalitions[CoalitionName], CoalitionName } )
+          if self.FilterMeta.Coalitions[CoalitionName] and self.FilterMeta.Coalitions[CoalitionName] == ClientCoalitionID then
+            MClientCoalition = true
+          end
+        end
+        self:T( { "Evaluated Coalition", MClientCoalition } )
+        MClientInclude = MClientInclude and MClientCoalition
+      end
+      
+      if self.Filter.Categories then
+        local MClientCategory = false
+        for CategoryID, CategoryName in pairs( self.Filter.Categories ) do
+          local ClientCategoryID = _DATABASE:GetCategoryFromClientTemplate( MClientName )
+          self:T3( { "Category:", ClientCategoryID, self.FilterMeta.Categories[CategoryName], CategoryName } )
+          if self.FilterMeta.Categories[CategoryName] and self.FilterMeta.Categories[CategoryName] == ClientCategoryID then
+            MClientCategory = true
+          end
+        end
+        self:T( { "Evaluated Category", MClientCategory } )
+        MClientInclude = MClientInclude and MClientCategory
+      end
+      
+      if self.Filter.Types then
+        local MClientType = false
+        for TypeID, TypeName in pairs( self.Filter.Types ) do
+          self:T3( { "Type:", MClient:GetTypeName(), TypeName } )
+          if TypeName == MClient:GetTypeName() then
+            MClientType = true
+          end
+        end
+        self:T( { "Evaluated Type", MClientType } )
+        MClientInclude = MClientInclude and MClientType
+      end
+      
+      if self.Filter.Countries then
+        local MClientCountry = false
+        for CountryID, CountryName in pairs( self.Filter.Countries ) do
+          local ClientCountryID = _DATABASE:GetCountryFromClientTemplate(MClientName)
+          self:T3( { "Country:", ClientCountryID, country.id[CountryName], CountryName } )
+          if country.id[CountryName] and country.id[CountryName] == ClientCountryID then
+            MClientCountry = true
+          end
+        end
+        self:T( { "Evaluated Country", MClientCountry } )
+        MClientInclude = MClientInclude and MClientCountry
+      end
+    
+      if self.Filter.ClientPrefixes then
+        local MClientPrefix = false
+        for ClientPrefixId, ClientPrefix in pairs( self.Filter.ClientPrefixes ) do
+          self:T3( { "Prefix:", string.find( MClient.UnitName, ClientPrefix, 1 ), ClientPrefix } )
+          if string.find( MClient.UnitName, ClientPrefix, 1 ) then
+            MClientPrefix = true
+          end
+        end
+        self:T( { "Evaluated Prefix", MClientPrefix } )
+        MClientInclude = MClientInclude and MClientPrefix
+      end
+    end
+    
+    self:T2( MClientInclude )
+    return MClientInclude
+  end
 
-    -- We initialize the first set.
+end
+
+
+do -- SET_PLAYER
+
+  --- @type SET_PLAYER
+  -- @extends Core.Set#SET_BASE
+  
+  
+  
+  --- Mission designers can use the @{Core.Set#SET_PLAYER} class to build sets of units belonging to alive players:
+  -- 
+  -- ## SET_PLAYER constructor
+  -- 
+  -- Create a new SET_PLAYER object with the @{#SET_PLAYER.New} method:
+  -- 
+  --    * @{#SET_PLAYER.New}: Creates a new SET_PLAYER object.
+  --   
+  -- ## SET_PLAYER filter criteria
+  -- 
+  -- You can set filter criteria to define the set of clients within the SET_PLAYER.
+  -- Filter criteria are defined by:
+  -- 
+  --    * @{#SET_PLAYER.FilterCoalitions}: Builds the SET_PLAYER with the clients belonging to the coalition(s).
+  --    * @{#SET_PLAYER.FilterCategories}: Builds the SET_PLAYER with the clients belonging to the category(ies).
+  --    * @{#SET_PLAYER.FilterTypes}: Builds the SET_PLAYER with the clients belonging to the client type(s).
+  --    * @{#SET_PLAYER.FilterCountries}: Builds the SET_PLAYER with the clients belonging to the country(ies).
+  --    * @{#SET_PLAYER.FilterPrefixes}: Builds the SET_PLAYER with the clients starting with the same prefix string(s).
+  --   
+  -- Once the filter criteria have been set for the SET_PLAYER, you can start filtering using:
+  -- 
+  --   * @{#SET_PLAYER.FilterStart}: Starts the filtering of the clients within the SET_PLAYER.
+  -- 
+  -- Planned filter criteria within development are (so these are not yet available):
+  -- 
+  --    * @{#SET_PLAYER.FilterZones}: Builds the SET_PLAYER with the clients within a @{Core.Zone#ZONE}.
+  -- 
+  -- ## SET_PLAYER iterators
+  -- 
+  -- Once the filters have been defined and the SET_PLAYER has been built, you can iterate the SET_PLAYER with the available iterator methods.
+  -- The iterator methods will walk the SET_PLAYER set, and call for each element within the set a function that you provide.
+  -- The following iterator methods are currently available within the SET_PLAYER:
+  -- 
+  --   * @{#SET_PLAYER.ForEachClient}: Calls a function for each alive client it finds within the SET_PLAYER.
+  -- 
+  -- ===
+  -- @field #SET_PLAYER SET_PLAYER 
+  SET_PLAYER = {
+    ClassName = "SET_PLAYER",
+    Clients = {},
+    Filter = {
+      Coalitions = nil,
+      Categories = nil,
+      Types = nil,
+      Countries = nil,
+      ClientPrefixes = nil,
+    },
+    FilterMeta = {
+      Coalitions = {
+        red = coalition.side.RED,
+        blue = coalition.side.BLUE,
+        neutral = coalition.side.NEUTRAL,
+      },
+      Categories = {
+        plane = Unit.Category.AIRPLANE,
+        helicopter = Unit.Category.HELICOPTER,
+        ground = Unit.Category.GROUND_UNIT,
+        ship = Unit.Category.SHIP,
+        structure = Unit.Category.STRUCTURE,
+      },
+    },
+  }
+  
+  
+  --- Creates a new SET_PLAYER object, building a set of clients belonging to a coalitions, categories, countries, types or with defined prefix names.
+  -- @param #SET_PLAYER self
+  -- @return #SET_PLAYER
+  -- @usage
+  -- -- Define a new SET_PLAYER Object. This DBObject will contain a reference to all Clients.
+  -- DBObject = SET_PLAYER:New()
+  function SET_PLAYER:New()
+    -- Inherits from BASE
+    local self = BASE:Inherit( self, SET_BASE:New( _DATABASE.PLAYERS ) )
+  
+    return self
+  end
+  
+  --- Add CLIENT(s) to SET_PLAYER.
+  -- @param Core.Set#SET_PLAYER self
+  -- @param #string AddClientNames A single name or an array of CLIENT names.
+  -- @return self
+  function SET_PLAYER:AddClientsByName( AddClientNames )
+  
+    local AddClientNamesArray = ( type( AddClientNames ) == "table" ) and AddClientNames or { AddClientNames }
+    
+    for AddClientID, AddClientName in pairs( AddClientNamesArray ) do
+      self:Add( AddClientName, CLIENT:FindByName( AddClientName ) )
+    end
+      
+    return self
+  end
+  
+  --- Remove CLIENT(s) from SET_PLAYER.
+  -- @param Core.Set#SET_PLAYER self
+  -- @param Wrapper.Client#CLIENT RemoveClientNames A single name or an array of CLIENT names.
+  -- @return self
+  function SET_PLAYER:RemoveClientsByName( RemoveClientNames )
+  
+    local RemoveClientNamesArray = ( type( RemoveClientNames ) == "table" ) and RemoveClientNames or { RemoveClientNames }
+    
+    for RemoveClientID, RemoveClientName in pairs( RemoveClientNamesArray ) do
+      self:Remove( RemoveClientName.ClientName )
+    end
+      
+    return self
+  end
+  
+  
+  --- Finds a Client based on the Player Name.
+  -- @param #SET_PLAYER self
+  -- @param #string PlayerName
+  -- @return Wrapper.Client#CLIENT The found Client.
+  function SET_PLAYER:FindClient( PlayerName )
+  
+    local ClientFound = self.Set[PlayerName]
+    return ClientFound
+  end
+  
+  
+  
+  --- Builds a set of clients of coalitions joined by specific players.
+  -- Possible current coalitions are red, blue and neutral.
+  -- @param #SET_PLAYER self
+  -- @param #string Coalitions Can take the following values: "red", "blue", "neutral".
+  -- @return #SET_PLAYER self
+  function SET_PLAYER:FilterCoalitions( Coalitions )
+    if not self.Filter.Coalitions then
+      self.Filter.Coalitions = {}
+    end
+    if type( Coalitions ) ~= "table" then
+      Coalitions = { Coalitions }
+    end
+    for CoalitionID, Coalition in pairs( Coalitions ) do
+      self.Filter.Coalitions[Coalition] = Coalition
+    end
+    return self
+  end
+  
+  
+  --- Builds a set of clients out of categories joined by players.
+  -- Possible current categories are plane, helicopter, ground, ship.
+  -- @param #SET_PLAYER self
+  -- @param #string Categories Can take the following values: "plane", "helicopter", "ground", "ship".
+  -- @return #SET_PLAYER self
+  function SET_PLAYER:FilterCategories( Categories )
+    if not self.Filter.Categories then
+      self.Filter.Categories = {}
+    end
+    if type( Categories ) ~= "table" then
+      Categories = { Categories }
+    end
+    for CategoryID, Category in pairs( Categories ) do
+      self.Filter.Categories[Category] = Category
+    end
+    return self
+  end
+  
+  
+  --- Builds a set of clients of defined client types joined by players.
+  -- Possible current types are those types known within DCS world.
+  -- @param #SET_PLAYER self
+  -- @param #string Types Can take those type strings known within DCS world.
+  -- @return #SET_PLAYER self
+  function SET_PLAYER:FilterTypes( Types )
+    if not self.Filter.Types then
+      self.Filter.Types = {}
+    end
+    if type( Types ) ~= "table" then
+      Types = { Types }
+    end
+    for TypeID, Type in pairs( Types ) do
+      self.Filter.Types[Type] = Type
+    end
+    return self
+  end
+  
+  
+  --- Builds a set of clients of defined countries.
+  -- Possible current countries are those known within DCS world.
+  -- @param #SET_PLAYER self
+  -- @param #string Countries Can take those country strings known within DCS world.
+  -- @return #SET_PLAYER self
+  function SET_PLAYER:FilterCountries( Countries )
+    if not self.Filter.Countries then
+      self.Filter.Countries = {}
+    end
+    if type( Countries ) ~= "table" then
+      Countries = { Countries }
+    end
+    for CountryID, Country in pairs( Countries ) do
+      self.Filter.Countries[Country] = Country
+    end
+    return self
+  end
+  
+  
+  --- Builds a set of clients of defined client prefixes.
+  -- All the clients starting with the given prefixes will be included within the set.
+  -- @param #SET_PLAYER self
+  -- @param #string Prefixes The prefix of which the client name starts with.
+  -- @return #SET_PLAYER self
+  function SET_PLAYER:FilterPrefixes( Prefixes )
+    if not self.Filter.ClientPrefixes then
+      self.Filter.ClientPrefixes = {}
+    end
+    if type( Prefixes ) ~= "table" then
+      Prefixes = { Prefixes }
+    end
+    for PrefixID, Prefix in pairs( Prefixes ) do
+      self.Filter.ClientPrefixes[Prefix] = Prefix
+    end
+    return self
+  end
+  
+  
+  
+  
+  --- Starts the filtering.
+  -- @param #SET_PLAYER self
+  -- @return #SET_PLAYER self
+  function SET_PLAYER:FilterStart()
+  
+    if _DATABASE then
+      self:_FilterStart()
+      self:HandleEvent( EVENTS.Birth, self._EventOnBirth )
+      self:HandleEvent( EVENTS.Dead, self._EventOnDeadOrCrash )
+      self:HandleEvent( EVENTS.Crash, self._EventOnDeadOrCrash )
+    end
+    
+    return self
+  end
+  
+  --- Handles the Database to check on an event (birth) that the Object was added in the Database.
+  -- This is required, because sometimes the _DATABASE birth event gets called later than the SET_BASE birth event!
+  -- @param #SET_PLAYER self
+  -- @param Core.Event#EVENTDATA Event
+  -- @return #string The name of the CLIENT
+  -- @return #table The CLIENT
+  function SET_PLAYER:AddInDatabase( Event )
+    self:F3( { Event } )
+  
+    return Event.IniDCSUnitName, self.Database[Event.IniDCSUnitName]
+  end
+  
+  --- Handles the Database to check on any event that Object exists in the Database.
+  -- This is required, because sometimes the _DATABASE event gets called later than the SET_BASE event or vise versa!
+  -- @param #SET_PLAYER self
+  -- @param Core.Event#EVENTDATA Event
+  -- @return #string The name of the CLIENT
+  -- @return #table The CLIENT
+  function SET_PLAYER:FindInDatabase( Event )
+    self:F3( { Event } )
+  
+    return Event.IniDCSUnitName, self.Database[Event.IniDCSUnitName]
+  end
+  
+  --- Iterate the SET_PLAYER and call an interator function for each **alive** CLIENT, providing the CLIENT and optional parameters.
+  -- @param #SET_PLAYER self
+  -- @param #function IteratorFunction The function that will be called when there is an alive CLIENT in the SET_PLAYER. The function needs to accept a CLIENT parameter.
+  -- @return #SET_PLAYER self
+  function SET_PLAYER:ForEachPlayer( IteratorFunction, ... )
+    self:F2( arg )
+    
+    self:ForEach( IteratorFunction, arg, self:GetSet() )
+  
+    return self
+  end
+  
+  --- Iterate the SET_PLAYER and call an iterator function for each **alive** CLIENT presence completely in a @{Zone}, providing the CLIENT and optional parameters to the called function.
+  -- @param #SET_PLAYER self
+  -- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
+  -- @param #function IteratorFunction The function that will be called when there is an alive CLIENT in the SET_PLAYER. The function needs to accept a CLIENT parameter.
+  -- @return #SET_PLAYER self
+  function SET_PLAYER:ForEachPlayerInZone( ZoneObject, IteratorFunction, ... )
+    self:F2( arg )
+    
+    self:ForEach( IteratorFunction, arg, self:GetSet(),
+      --- @param Core.Zone#ZONE_BASE ZoneObject
+      -- @param Wrapper.Client#CLIENT ClientObject
+      function( ZoneObject, ClientObject )
+        if ClientObject:IsInZone( ZoneObject ) then
+          return true
+        else
+          return false
+        end
+      end, { ZoneObject } )
+  
+    return self
+  end
+  
+  --- Iterate the SET_PLAYER and call an iterator function for each **alive** CLIENT presence not in a @{Zone}, providing the CLIENT and optional parameters to the called function.
+  -- @param #SET_PLAYER self
+  -- @param Core.Zone#ZONE ZoneObject The Zone to be tested for.
+  -- @param #function IteratorFunction The function that will be called when there is an alive CLIENT in the SET_PLAYER. The function needs to accept a CLIENT parameter.
+  -- @return #SET_PLAYER self
+  function SET_PLAYER:ForEachPlayerNotInZone( ZoneObject, IteratorFunction, ... )
+    self:F2( arg )
+    
+    self:ForEach( IteratorFunction, arg, self:GetSet(),
+      --- @param Core.Zone#ZONE_BASE ZoneObject
+      -- @param Wrapper.Client#CLIENT ClientObject
+      function( ZoneObject, ClientObject )
+        if ClientObject:IsNotInZone( ZoneObject ) then
+          return true
+        else
+          return false
+        end
+      end, { ZoneObject } )
+  
+    return self
+  end
+  
+  ---
+  -- @param #SET_PLAYER self
+  -- @param Wrapper.Client#CLIENT MClient
+  -- @return #SET_PLAYER self
+  function SET_PLAYER:IsIncludeObject( MClient )
+    self:F2( MClient )
+  
+    local MClientInclude = true
+  
+    if MClient then
+      local MClientName = MClient.UnitName
+    
+      if self.Filter.Coalitions then
+        local MClientCoalition = false
+        for CoalitionID, CoalitionName in pairs( self.Filter.Coalitions ) do
+          local ClientCoalitionID = _DATABASE:GetCoalitionFromClientTemplate( MClientName )
+          self:T3( { "Coalition:", ClientCoalitionID, self.FilterMeta.Coalitions[CoalitionName], CoalitionName } )
+          if self.FilterMeta.Coalitions[CoalitionName] and self.FilterMeta.Coalitions[CoalitionName] == ClientCoalitionID then
+            MClientCoalition = true
+          end
+        end
+        self:T( { "Evaluated Coalition", MClientCoalition } )
+        MClientInclude = MClientInclude and MClientCoalition
+      end
+      
+      if self.Filter.Categories then
+        local MClientCategory = false
+        for CategoryID, CategoryName in pairs( self.Filter.Categories ) do
+          local ClientCategoryID = _DATABASE:GetCategoryFromClientTemplate( MClientName )
+          self:T3( { "Category:", ClientCategoryID, self.FilterMeta.Categories[CategoryName], CategoryName } )
+          if self.FilterMeta.Categories[CategoryName] and self.FilterMeta.Categories[CategoryName] == ClientCategoryID then
+            MClientCategory = true
+          end
+        end
+        self:T( { "Evaluated Category", MClientCategory } )
+        MClientInclude = MClientInclude and MClientCategory
+      end
+      
+      if self.Filter.Types then
+        local MClientType = false
+        for TypeID, TypeName in pairs( self.Filter.Types ) do
+          self:T3( { "Type:", MClient:GetTypeName(), TypeName } )
+          if TypeName == MClient:GetTypeName() then
+            MClientType = true
+          end
+        end
+        self:T( { "Evaluated Type", MClientType } )
+        MClientInclude = MClientInclude and MClientType
+      end
+      
+      if self.Filter.Countries then
+        local MClientCountry = false
+        for CountryID, CountryName in pairs( self.Filter.Countries ) do
+          local ClientCountryID = _DATABASE:GetCountryFromClientTemplate(MClientName)
+          self:T3( { "Country:", ClientCountryID, country.id[CountryName], CountryName } )
+          if country.id[CountryName] and country.id[CountryName] == ClientCountryID then
+            MClientCountry = true
+          end
+        end
+        self:T( { "Evaluated Country", MClientCountry } )
+        MClientInclude = MClientInclude and MClientCountry
+      end
+    
+      if self.Filter.ClientPrefixes then
+        local MClientPrefix = false
+        for ClientPrefixId, ClientPrefix in pairs( self.Filter.ClientPrefixes ) do
+          self:T3( { "Prefix:", string.find( MClient.UnitName, ClientPrefix, 1 ), ClientPrefix } )
+          if string.find( MClient.UnitName, ClientPrefix, 1 ) then
+            MClientPrefix = true
+          end
+        end
+        self:T( { "Evaluated Prefix", MClientPrefix } )
+        MClientInclude = MClientInclude and MClientPrefix
+      end
+    end
+    
+    self:T2( MClientInclude )
+    return MClientInclude
+  end
+
+end
+
+
+do -- SET_AIRBASE
+
+  --- @type SET_AIRBASE
+  -- @extends Core.Set#SET_BASE
+  
+  --- Mission designers can use the @{Core.Set#SET_AIRBASE} class to build sets of airbases optionally belonging to certain:
+  -- 
+  --  * Coalitions
+  --  
+  -- ## SET_AIRBASE constructor
+  -- 
+  -- Create a new SET_AIRBASE object with the @{#SET_AIRBASE.New} method:
+  -- 
+  --    * @{#SET_AIRBASE.New}: Creates a new SET_AIRBASE object.
+  --   
+  -- ## Add or Remove AIRBASEs from SET_AIRBASE 
+  -- 
+  -- AIRBASEs can be added and removed using the @{Core.Set#SET_AIRBASE.AddAirbasesByName} and @{Core.Set#SET_AIRBASE.RemoveAirbasesByName} respectively. 
+  -- These methods take a single AIRBASE name or an array of AIRBASE names to be added or removed from SET_AIRBASE.
+  -- 
+  -- ## SET_AIRBASE filter criteria 
+  -- 
+  -- You can set filter criteria to define the set of clients within the SET_AIRBASE.
+  -- Filter criteria are defined by:
+  -- 
+  --    * @{#SET_AIRBASE.FilterCoalitions}: Builds the SET_AIRBASE with the airbases belonging to the coalition(s).
+  --   
+  -- Once the filter criteria have been set for the SET_AIRBASE, you can start filtering using:
+  -- 
+  --   * @{#SET_AIRBASE.FilterStart}: Starts the filtering of the airbases within the SET_AIRBASE.
+  -- 
+  -- ## SET_AIRBASE iterators
+  -- 
+  -- Once the filters have been defined and the SET_AIRBASE has been built, you can iterate the SET_AIRBASE with the available iterator methods.
+  -- The iterator methods will walk the SET_AIRBASE set, and call for each airbase within the set a function that you provide.
+  -- The following iterator methods are currently available within the SET_AIRBASE:
+  -- 
+  --   * @{#SET_AIRBASE.ForEachAirbase}: Calls a function for each airbase it finds within the SET_AIRBASE.
+  -- 
+  -- ===
+  -- @field #SET_AIRBASE SET_AIRBASE
+  SET_AIRBASE = {
+    ClassName = "SET_AIRBASE",
+    Airbases = {},
+    Filter = {
+      Coalitions = nil,
+    },
+    FilterMeta = {
+      Coalitions = {
+        red = coalition.side.RED,
+        blue = coalition.side.BLUE,
+        neutral = coalition.side.NEUTRAL,
+      },
+      Categories = {
+        airdrome = Airbase.Category.AIRDROME,
+        helipad = Airbase.Category.HELIPAD,
+        ship = Airbase.Category.SHIP,
+      },
+    },
+  }
+  
+  
+  --- Creates a new SET_AIRBASE object, building a set of airbases belonging to a coalitions and categories.
+  -- @param #SET_AIRBASE self
+  -- @return #SET_AIRBASE self
+  -- @usage
+  -- -- Define a new SET_AIRBASE Object. The DatabaseSet will contain a reference to all Airbases.
+  -- DatabaseSet = SET_AIRBASE:New()
+  function SET_AIRBASE:New()
+    -- Inherits from BASE
+    local self = BASE:Inherit( self, SET_BASE:New( _DATABASE.AIRBASES ) )
+  
+    return self
+  end
+  
+  --- Add an AIRBASE object to SET_AIRBASE.
+  -- @param Core.Set#SET_AIRBASE self
+  -- @param Wrapper.Airbase#AIRBASE airbase Airbase that should be added to the set.
+  -- @return self
+  function SET_AIRBASE:AddAirbase( airbase )
+  
+    self:Add( airbase:GetName(), airbase )
+    
+    return self
+  end
+  
+  --- Add AIRBASEs to SET_AIRBASE.
+  -- @param Core.Set#SET_AIRBASE self
+  -- @param #string AddAirbaseNames A single name or an array of AIRBASE names.
+  -- @return self
+  function SET_AIRBASE:AddAirbasesByName( AddAirbaseNames )
+  
+    local AddAirbaseNamesArray = ( type( AddAirbaseNames ) == "table" ) and AddAirbaseNames or { AddAirbaseNames }
+    
+    for AddAirbaseID, AddAirbaseName in pairs( AddAirbaseNamesArray ) do
+      self:Add( AddAirbaseName, AIRBASE:FindByName( AddAirbaseName ) )
+    end
+      
+    return self
+  end
+  
+  --- Remove AIRBASEs from SET_AIRBASE.
+  -- @param Core.Set#SET_AIRBASE self
+  -- @param Wrapper.Airbase#AIRBASE RemoveAirbaseNames A single name or an array of AIRBASE names.
+  -- @return self
+  function SET_AIRBASE:RemoveAirbasesByName( RemoveAirbaseNames )
+  
+    local RemoveAirbaseNamesArray = ( type( RemoveAirbaseNames ) == "table" ) and RemoveAirbaseNames or { RemoveAirbaseNames }
+    
+    for RemoveAirbaseID, RemoveAirbaseName in pairs( RemoveAirbaseNamesArray ) do
+      self:Remove( RemoveAirbaseName )
+    end
+      
+    return self
+  end
+  
+  
+  --- Finds a Airbase based on the Airbase Name.
+  -- @param #SET_AIRBASE self
+  -- @param #string AirbaseName
+  -- @return Wrapper.Airbase#AIRBASE The found Airbase.
+  function SET_AIRBASE:FindAirbase( AirbaseName )
+  
+    local AirbaseFound = self.Set[AirbaseName]
+    return AirbaseFound
+  end
+  
+  
+  --- Finds an Airbase in range of a coordinate.
+  -- @param #SET_AIRBASE self
+  -- @param Core.Point#COORDINATE Coordinate
+  -- @param #number Range
+  -- @return Wrapper.Airbase#AIRBASE The found Airbase.
+  function SET_AIRBASE:FindAirbaseInRange( Coordinate, Range )
+  
+    local AirbaseFound = nil
+  
+    for AirbaseName, AirbaseObject in pairs( self.Set ) do
+    
+      local AirbaseCoordinate = AirbaseObject:GetCoordinate()
+      local Distance = Coordinate:Get2DDistance( AirbaseCoordinate )
+      
+      self:F({Distance=Distance})
+    
+      if Distance <= Range then
+        AirbaseFound = AirbaseObject
+        break
+      end
+        
+    end
+  
+    return AirbaseFound
+  end
+  
+  
+  --- Finds a random Airbase in the set.
+  -- @param #SET_AIRBASE self
+  -- @return Wrapper.Airbase#AIRBASE The found Airbase.
+  function SET_AIRBASE:GetRandomAirbase()
+  
+    local RandomAirbase = self:GetRandom()
+    self:F( { RandomAirbase = RandomAirbase:GetName() } )
+  
+    return RandomAirbase
+  end
+  
+  
+  
+  --- Builds a set of airbases of coalitions.
+  -- Possible current coalitions are red, blue and neutral.
+  -- @param #SET_AIRBASE self
+  -- @param #string Coalitions Can take the following values: "red", "blue", "neutral".
+  -- @return #SET_AIRBASE self
+  function SET_AIRBASE:FilterCoalitions( Coalitions )
+    if not self.Filter.Coalitions then
+      self.Filter.Coalitions = {}
+    end
+    if type( Coalitions ) ~= "table" then
+      Coalitions = { Coalitions }
+    end
+    for CoalitionID, Coalition in pairs( Coalitions ) do
+      self.Filter.Coalitions[Coalition] = Coalition
+    end
+    return self
+  end
+  
+  
+  --- Builds a set of airbases out of categories.
+  -- Possible current categories are plane, helicopter, ground, ship.
+  -- @param #SET_AIRBASE self
+  -- @param #string Categories Can take the following values: "airdrome", "helipad", "ship".
+  -- @return #SET_AIRBASE self
+  function SET_AIRBASE:FilterCategories( Categories )
+    if not self.Filter.Categories then
+      self.Filter.Categories = {}
+    end
+    if type( Categories ) ~= "table" then
+      Categories = { Categories }
+    end
+    for CategoryID, Category in pairs( Categories ) do
+      self.Filter.Categories[Category] = Category
+    end
+    return self
+  end
+  
+  --- Starts the filtering.
+  -- @param #SET_AIRBASE self
+  -- @return #SET_AIRBASE self
+  function SET_AIRBASE:FilterStart()
+  
+    if _DATABASE then
+    
+      -- We use the BaseCaptured event, which is generated by DCS when a base got captured.
+      self:HandleEvent( EVENTS.BaseCaptured )
+  
+      -- We initialize the first set.
+      for ObjectName, Object in pairs( self.Database ) do
+        if self:IsIncludeObject( Object ) then
+          self:Add( ObjectName, Object )
+        else
+          self:RemoveAirbasesByName( ObjectName )
+        end
+      end
+    end
+    
+    return self
+  end
+  
+  --- Starts the filtering.
+  -- @param #SET_AIRBASE self
+  -- @param Core.Event#EVENT EventData
+  -- @return #SET_AIRBASE self
+  function SET_AIRBASE:OnEventBaseCaptured(EventData)
+  
+    -- When a base got captured, we reevaluate the set.
     for ObjectName, Object in pairs( self.Database ) do
       if self:IsIncludeObject( Object ) then
+        -- We add captured bases on yet in the set.
         self:Add( ObjectName, Object )
       else
+        -- We remove captured bases that are not anymore part of the set.
         self:RemoveAirbasesByName( ObjectName )
       end
     end
+  
   end
   
-  return self
-end
-
---- Starts the filtering.
--- @param #SET_AIRBASE self
--- @param Core.Event#EVENT EventData
--- @return #SET_AIRBASE self
-function SET_AIRBASE:OnEventBaseCaptured(EventData)
-
-  -- When a base got captured, we reevaluate the set.
-  for ObjectName, Object in pairs( self.Database ) do
-    if self:IsIncludeObject( Object ) then
-      -- We add captured bases on yet in the set.
-      self:Add( ObjectName, Object )
-    else
-      -- We remove captured bases that are not anymore part of the set.
-      self:RemoveAirbasesByName( ObjectName )
-    end
+  --- Handles the Database to check on an event (birth) that the Object was added in the Database.
+  -- This is required, because sometimes the _DATABASE birth event gets called later than the SET_BASE birth event!
+  -- @param #SET_AIRBASE self
+  -- @param Core.Event#EVENTDATA Event
+  -- @return #string The name of the AIRBASE
+  -- @return #table The AIRBASE
+  function SET_AIRBASE:AddInDatabase( Event )
+    self:F3( { Event } )
+  
+    return Event.IniDCSUnitName, self.Database[Event.IniDCSUnitName]
   end
-
-end
-
---- Handles the Database to check on an event (birth) that the Object was added in the Database.
--- This is required, because sometimes the _DATABASE birth event gets called later than the SET_BASE birth event!
--- @param #SET_AIRBASE self
--- @param Core.Event#EVENTDATA Event
--- @return #string The name of the AIRBASE
--- @return #table The AIRBASE
-function SET_AIRBASE:AddInDatabase( Event )
-  self:F3( { Event } )
-
-  return Event.IniDCSUnitName, self.Database[Event.IniDCSUnitName]
-end
-
---- Handles the Database to check on any event that Object exists in the Database.
--- This is required, because sometimes the _DATABASE event gets called later than the SET_BASE event or vise versa!
--- @param #SET_AIRBASE self
--- @param Core.Event#EVENTDATA Event
--- @return #string The name of the AIRBASE
--- @return #table The AIRBASE
-function SET_AIRBASE:FindInDatabase( Event )
-  self:F3( { Event } )
-
-  return Event.IniDCSUnitName, self.Database[Event.IniDCSUnitName]
-end
-
---- Iterate the SET_AIRBASE and call an interator function for each AIRBASE, providing the AIRBASE and optional parameters.
--- @param #SET_AIRBASE self
--- @param #function IteratorFunction The function that will be called when there is an alive AIRBASE in the SET_AIRBASE. The function needs to accept a AIRBASE parameter.
--- @return #SET_AIRBASE self
-function SET_AIRBASE:ForEachAirbase( IteratorFunction, ... )
-  self:F2( arg )
   
-  self:ForEach( IteratorFunction, arg, self:GetSet() )
-
-  return self
-end
-
---- Iterate the SET_AIRBASE while identifying the nearest @{Wrapper.Airbase#AIRBASE} from a @{Core.Point#POINT_VEC2}.
--- @param #SET_AIRBASE self
--- @param Core.Point#POINT_VEC2 PointVec2 A @{Core.Point#POINT_VEC2} object from where to evaluate the closest @{Wrapper.Airbase#AIRBASE}.
--- @return Wrapper.Airbase#AIRBASE The closest @{Wrapper.Airbase#AIRBASE}.
-function SET_AIRBASE:FindNearestAirbaseFromPointVec2( PointVec2 )
-  self:F2( PointVec2 )
+  --- Handles the Database to check on any event that Object exists in the Database.
+  -- This is required, because sometimes the _DATABASE event gets called later than the SET_BASE event or vise versa!
+  -- @param #SET_AIRBASE self
+  -- @param Core.Event#EVENTDATA Event
+  -- @return #string The name of the AIRBASE
+  -- @return #table The AIRBASE
+  function SET_AIRBASE:FindInDatabase( Event )
+    self:F3( { Event } )
   
-  local NearestAirbase = self:FindNearestObjectFromPointVec2( PointVec2 )
-  return NearestAirbase
-end
-
-
-
----
--- @param #SET_AIRBASE self
--- @param Wrapper.Airbase#AIRBASE MAirbase
--- @return #SET_AIRBASE self
-function SET_AIRBASE:IsIncludeObject( MAirbase )
-  self:F2( MAirbase )
-
-  local MAirbaseInclude = true
-
-  if MAirbase then
-    local MAirbaseName = MAirbase:GetName()
+    return Event.IniDCSUnitName, self.Database[Event.IniDCSUnitName]
+  end
   
-    if self.Filter.Coalitions then
-      local MAirbaseCoalition = false
-      for CoalitionID, CoalitionName in pairs( self.Filter.Coalitions ) do
-        local AirbaseCoalitionID = _DATABASE:GetCoalitionFromAirbase( MAirbaseName )
-        self:T3( { "Coalition:", AirbaseCoalitionID, self.FilterMeta.Coalitions[CoalitionName], CoalitionName } )
-        if self.FilterMeta.Coalitions[CoalitionName] and self.FilterMeta.Coalitions[CoalitionName] == AirbaseCoalitionID then
-          MAirbaseCoalition = true
-        end
-      end
-      self:T( { "Evaluated Coalition", MAirbaseCoalition } )
-      MAirbaseInclude = MAirbaseInclude and MAirbaseCoalition
-    end
+  --- Iterate the SET_AIRBASE and call an interator function for each AIRBASE, providing the AIRBASE and optional parameters.
+  -- @param #SET_AIRBASE self
+  -- @param #function IteratorFunction The function that will be called when there is an alive AIRBASE in the SET_AIRBASE. The function needs to accept a AIRBASE parameter.
+  -- @return #SET_AIRBASE self
+  function SET_AIRBASE:ForEachAirbase( IteratorFunction, ... )
+    self:F2( arg )
     
-    if self.Filter.Categories then
-      local MAirbaseCategory = false
-      for CategoryID, CategoryName in pairs( self.Filter.Categories ) do
-        local AirbaseCategoryID = _DATABASE:GetCategoryFromAirbase( MAirbaseName )
-        self:T3( { "Category:", AirbaseCategoryID, self.FilterMeta.Categories[CategoryName], CategoryName } )
-        if self.FilterMeta.Categories[CategoryName] and self.FilterMeta.Categories[CategoryName] == AirbaseCategoryID then
-          MAirbaseCategory = true
-        end
-      end
-      self:T( { "Evaluated Category", MAirbaseCategory } )
-      MAirbaseInclude = MAirbaseInclude and MAirbaseCategory
-    end
+    self:ForEach( IteratorFunction, arg, self:GetSet() )
+  
+    return self
   end
-   
-  self:T2( MAirbaseInclude )
-  return MAirbaseInclude
+  
+  --- Iterate the SET_AIRBASE while identifying the nearest @{Wrapper.Airbase#AIRBASE} from a @{Core.Point#POINT_VEC2}.
+  -- @param #SET_AIRBASE self
+  -- @param Core.Point#POINT_VEC2 PointVec2 A @{Core.Point#POINT_VEC2} object from where to evaluate the closest @{Wrapper.Airbase#AIRBASE}.
+  -- @return Wrapper.Airbase#AIRBASE The closest @{Wrapper.Airbase#AIRBASE}.
+  function SET_AIRBASE:FindNearestAirbaseFromPointVec2( PointVec2 )
+    self:F2( PointVec2 )
+    
+    local NearestAirbase = self:FindNearestObjectFromPointVec2( PointVec2 )
+    return NearestAirbase
+  end
+  
+  
+  
+  ---
+  -- @param #SET_AIRBASE self
+  -- @param Wrapper.Airbase#AIRBASE MAirbase
+  -- @return #SET_AIRBASE self
+  function SET_AIRBASE:IsIncludeObject( MAirbase )
+    self:F2( MAirbase )
+  
+    local MAirbaseInclude = true
+  
+    if MAirbase then
+      local MAirbaseName = MAirbase:GetName()
+    
+      if self.Filter.Coalitions then
+        local MAirbaseCoalition = false
+        for CoalitionID, CoalitionName in pairs( self.Filter.Coalitions ) do
+          local AirbaseCoalitionID = _DATABASE:GetCoalitionFromAirbase( MAirbaseName )
+          self:T3( { "Coalition:", AirbaseCoalitionID, self.FilterMeta.Coalitions[CoalitionName], CoalitionName } )
+          if self.FilterMeta.Coalitions[CoalitionName] and self.FilterMeta.Coalitions[CoalitionName] == AirbaseCoalitionID then
+            MAirbaseCoalition = true
+          end
+        end
+        self:T( { "Evaluated Coalition", MAirbaseCoalition } )
+        MAirbaseInclude = MAirbaseInclude and MAirbaseCoalition
+      end
+      
+      if self.Filter.Categories then
+        local MAirbaseCategory = false
+        for CategoryID, CategoryName in pairs( self.Filter.Categories ) do
+          local AirbaseCategoryID = _DATABASE:GetCategoryFromAirbase( MAirbaseName )
+          self:T3( { "Category:", AirbaseCategoryID, self.FilterMeta.Categories[CategoryName], CategoryName } )
+          if self.FilterMeta.Categories[CategoryName] and self.FilterMeta.Categories[CategoryName] == AirbaseCategoryID then
+            MAirbaseCategory = true
+          end
+        end
+        self:T( { "Evaluated Category", MAirbaseCategory } )
+        MAirbaseInclude = MAirbaseInclude and MAirbaseCategory
+      end
+    end
+     
+    self:T2( MAirbaseInclude )
+    return MAirbaseInclude
+  end
+
 end
 
---- @type SET_CARGO
--- @extends Core.Set#SET_BASE
 
---- Mission designers can use the @{Core.Set#SET_CARGO} class to build sets of cargos optionally belonging to certain:
--- 
---  * Coalitions
---  * Types
---  * Name or Prefix
---  
--- ## SET_CARGO constructor
--- 
--- Create a new SET_CARGO object with the @{#SET_CARGO.New} method:
--- 
---    * @{#SET_CARGO.New}: Creates a new SET_CARGO object.
---   
--- ## Add or Remove CARGOs from SET_CARGO 
--- 
--- CARGOs can be added and removed using the @{Core.Set#SET_CARGO.AddCargosByName} and @{Core.Set#SET_CARGO.RemoveCargosByName} respectively. 
--- These methods take a single CARGO name or an array of CARGO names to be added or removed from SET_CARGO.
--- 
--- ## SET_CARGO filter criteria 
--- 
--- You can set filter criteria to automatically maintain the SET_CARGO contents.
--- Filter criteria are defined by:
--- 
---    * @{#SET_CARGO.FilterCoalitions}: Builds the SET_CARGO with the cargos belonging to the coalition(s).
---    * @{#SET_CARGO.FilterPrefixes}: Builds the SET_CARGO with the cargos containing the prefix string(s).
---    * @{#SET_CARGO.FilterTypes}: Builds the SET_CARGO with the cargos belonging to the cargo type(s).
---    * @{#SET_CARGO.FilterCountries}: Builds the SET_CARGO with the cargos belonging to the country(ies).
---   
--- Once the filter criteria have been set for the SET_CARGO, you can start filtering using:
--- 
---   * @{#SET_CARGO.FilterStart}: Starts the filtering of the cargos within the SET_CARGO.
--- 
--- ## SET_CARGO iterators
--- 
--- Once the filters have been defined and the SET_CARGO has been built, you can iterate the SET_CARGO with the available iterator methods.
--- The iterator methods will walk the SET_CARGO set, and call for each cargo within the set a function that you provide.
--- The following iterator methods are currently available within the SET_CARGO:
--- 
---   * @{#SET_CARGO.ForEachCargo}: Calls a function for each cargo it finds within the SET_CARGO.
--- 
--- @field #SET_CARGO SET_CARGO
--- 
-SET_CARGO = {
-  ClassName = "SET_CARGO",
-  Cargos = {},
-  Filter = {
-    Coalitions = nil,
-    Types = nil,
-    Countries = nil,
-    ClientPrefixes = nil,
-  },
-  FilterMeta = {
-    Coalitions = {
-      red = coalition.side.RED,
-      blue = coalition.side.BLUE,
-      neutral = coalition.side.NEUTRAL,
+do -- SET_CARGO
+
+  --- @type SET_CARGO
+  -- @extends Core.Set#SET_BASE
+  
+  --- Mission designers can use the @{Core.Set#SET_CARGO} class to build sets of cargos optionally belonging to certain:
+  -- 
+  --  * Coalitions
+  --  * Types
+  --  * Name or Prefix
+  --  
+  -- ## SET_CARGO constructor
+  -- 
+  -- Create a new SET_CARGO object with the @{#SET_CARGO.New} method:
+  -- 
+  --    * @{#SET_CARGO.New}: Creates a new SET_CARGO object.
+  --   
+  -- ## Add or Remove CARGOs from SET_CARGO 
+  -- 
+  -- CARGOs can be added and removed using the @{Core.Set#SET_CARGO.AddCargosByName} and @{Core.Set#SET_CARGO.RemoveCargosByName} respectively. 
+  -- These methods take a single CARGO name or an array of CARGO names to be added or removed from SET_CARGO.
+  -- 
+  -- ## SET_CARGO filter criteria 
+  -- 
+  -- You can set filter criteria to automatically maintain the SET_CARGO contents.
+  -- Filter criteria are defined by:
+  -- 
+  --    * @{#SET_CARGO.FilterCoalitions}: Builds the SET_CARGO with the cargos belonging to the coalition(s).
+  --    * @{#SET_CARGO.FilterPrefixes}: Builds the SET_CARGO with the cargos containing the prefix string(s).
+  --    * @{#SET_CARGO.FilterTypes}: Builds the SET_CARGO with the cargos belonging to the cargo type(s).
+  --    * @{#SET_CARGO.FilterCountries}: Builds the SET_CARGO with the cargos belonging to the country(ies).
+  --   
+  -- Once the filter criteria have been set for the SET_CARGO, you can start filtering using:
+  -- 
+  --   * @{#SET_CARGO.FilterStart}: Starts the filtering of the cargos within the SET_CARGO.
+  -- 
+  -- ## SET_CARGO iterators
+  -- 
+  -- Once the filters have been defined and the SET_CARGO has been built, you can iterate the SET_CARGO with the available iterator methods.
+  -- The iterator methods will walk the SET_CARGO set, and call for each cargo within the set a function that you provide.
+  -- The following iterator methods are currently available within the SET_CARGO:
+  -- 
+  --   * @{#SET_CARGO.ForEachCargo}: Calls a function for each cargo it finds within the SET_CARGO.
+  -- 
+  -- @field #SET_CARGO SET_CARGO
+  -- 
+  SET_CARGO = {
+    ClassName = "SET_CARGO",
+    Cargos = {},
+    Filter = {
+      Coalitions = nil,
+      Types = nil,
+      Countries = nil,
+      ClientPrefixes = nil,
     },
-  },
-}
-
-
---- Creates a new SET_CARGO object, building a set of cargos belonging to a coalitions and categories.
--- @param #SET_CARGO self
--- @return #SET_CARGO
--- @usage
--- -- Define a new SET_CARGO Object. The DatabaseSet will contain a reference to all Cargos.
--- DatabaseSet = SET_CARGO:New()
-function SET_CARGO:New() --R2.1
-  -- Inherits from BASE
-  local self = BASE:Inherit( self, SET_BASE:New( _DATABASE.CARGOS ) ) -- #SET_CARGO
-
-  return self
-end
-
-
---- (R2.1) Add CARGO to SET_CARGO.
--- @param Core.Set#SET_CARGO self
--- @param Cargo.Cargo#CARGO Cargo A single cargo.
--- @return self
-function SET_CARGO:AddCargo( Cargo ) --R2.4
-
-  self:Add( Cargo:GetName(), Cargo )
+    FilterMeta = {
+      Coalitions = {
+        red = coalition.side.RED,
+        blue = coalition.side.BLUE,
+        neutral = coalition.side.NEUTRAL,
+      },
+    },
+  }
+  
+  
+  --- Creates a new SET_CARGO object, building a set of cargos belonging to a coalitions and categories.
+  -- @param #SET_CARGO self
+  -- @return #SET_CARGO
+  -- @usage
+  -- -- Define a new SET_CARGO Object. The DatabaseSet will contain a reference to all Cargos.
+  -- DatabaseSet = SET_CARGO:New()
+  function SET_CARGO:New() --R2.1
+    -- Inherits from BASE
+    local self = BASE:Inherit( self, SET_BASE:New( _DATABASE.CARGOS ) ) -- #SET_CARGO
+  
+    return self
+  end
+  
+  
+  --- (R2.1) Add CARGO to SET_CARGO.
+  -- @param Core.Set#SET_CARGO self
+  -- @param Cargo.Cargo#CARGO Cargo A single cargo.
+  -- @return self
+  function SET_CARGO:AddCargo( Cargo ) --R2.4
+  
+    self:Add( Cargo:GetName(), Cargo )
+      
+    return self
+  end
+  
+  
+  --- (R2.1) Add CARGOs to SET_CARGO.
+  -- @param Core.Set#SET_CARGO self
+  -- @param #string AddCargoNames A single name or an array of CARGO names.
+  -- @return self
+  function SET_CARGO:AddCargosByName( AddCargoNames ) --R2.1
+  
+    local AddCargoNamesArray = ( type( AddCargoNames ) == "table" ) and AddCargoNames or { AddCargoNames }
     
-  return self
-end
-
-
---- (R2.1) Add CARGOs to SET_CARGO.
--- @param Core.Set#SET_CARGO self
--- @param #string AddCargoNames A single name or an array of CARGO names.
--- @return self
-function SET_CARGO:AddCargosByName( AddCargoNames ) --R2.1
-
-  local AddCargoNamesArray = ( type( AddCargoNames ) == "table" ) and AddCargoNames or { AddCargoNames }
-  
-  for AddCargoID, AddCargoName in pairs( AddCargoNamesArray ) do
-    self:Add( AddCargoName, CARGO:FindByName( AddCargoName ) )
+    for AddCargoID, AddCargoName in pairs( AddCargoNamesArray ) do
+      self:Add( AddCargoName, CARGO:FindByName( AddCargoName ) )
+    end
+      
+    return self
   end
+  
+  --- (R2.1) Remove CARGOs from SET_CARGO.
+  -- @param Core.Set#SET_CARGO self
+  -- @param Wrapper.Cargo#CARGO RemoveCargoNames A single name or an array of CARGO names.
+  -- @return self
+  function SET_CARGO:RemoveCargosByName( RemoveCargoNames ) --R2.1
+  
+    local RemoveCargoNamesArray = ( type( RemoveCargoNames ) == "table" ) and RemoveCargoNames or { RemoveCargoNames }
     
-  return self
-end
-
---- (R2.1) Remove CARGOs from SET_CARGO.
--- @param Core.Set#SET_CARGO self
--- @param Wrapper.Cargo#CARGO RemoveCargoNames A single name or an array of CARGO names.
--- @return self
-function SET_CARGO:RemoveCargosByName( RemoveCargoNames ) --R2.1
-
-  local RemoveCargoNamesArray = ( type( RemoveCargoNames ) == "table" ) and RemoveCargoNames or { RemoveCargoNames }
-  
-  for RemoveCargoID, RemoveCargoName in pairs( RemoveCargoNamesArray ) do
-    self:Remove( RemoveCargoName.CargoName )
+    for RemoveCargoID, RemoveCargoName in pairs( RemoveCargoNamesArray ) do
+      self:Remove( RemoveCargoName.CargoName )
+    end
+      
+    return self
   end
+  
+  
+  --- (R2.1) Finds a Cargo based on the Cargo Name.
+  -- @param #SET_CARGO self
+  -- @param #string CargoName
+  -- @return Wrapper.Cargo#CARGO The found Cargo.
+  function SET_CARGO:FindCargo( CargoName ) --R2.1
+  
+    local CargoFound = self.Set[CargoName]
+    return CargoFound
+  end
+  
+  
+  
+  --- (R2.1) Builds a set of cargos of coalitions.
+  -- Possible current coalitions are red, blue and neutral.
+  -- @param #SET_CARGO self
+  -- @param #string Coalitions Can take the following values: "red", "blue", "neutral".
+  -- @return #SET_CARGO self
+  function SET_CARGO:FilterCoalitions( Coalitions ) --R2.1
+    if not self.Filter.Coalitions then
+      self.Filter.Coalitions = {}
+    end
+    if type( Coalitions ) ~= "table" then
+      Coalitions = { Coalitions }
+    end
+    for CoalitionID, Coalition in pairs( Coalitions ) do
+      self.Filter.Coalitions[Coalition] = Coalition
+    end
+    return self
+  end
+  
+  --- (R2.1) Builds a set of cargos of defined cargo types.
+  -- Possible current types are those types known within DCS world.
+  -- @param #SET_CARGO self
+  -- @param #string Types Can take those type strings known within DCS world.
+  -- @return #SET_CARGO self
+  function SET_CARGO:FilterTypes( Types ) --R2.1
+    if not self.Filter.Types then
+      self.Filter.Types = {}
+    end
+    if type( Types ) ~= "table" then
+      Types = { Types }
+    end
+    for TypeID, Type in pairs( Types ) do
+      self.Filter.Types[Type] = Type
+    end
+    return self
+  end
+  
+  
+  --- (R2.1) Builds a set of cargos of defined countries.
+  -- Possible current countries are those known within DCS world.
+  -- @param #SET_CARGO self
+  -- @param #string Countries Can take those country strings known within DCS world.
+  -- @return #SET_CARGO self
+  function SET_CARGO:FilterCountries( Countries ) --R2.1
+    if not self.Filter.Countries then
+      self.Filter.Countries = {}
+    end
+    if type( Countries ) ~= "table" then
+      Countries = { Countries }
+    end
+    for CountryID, Country in pairs( Countries ) do
+      self.Filter.Countries[Country] = Country
+    end
+    return self
+  end
+  
+  
+  --- (R2.1) Builds a set of cargos of defined cargo prefixes.
+  -- All the cargos starting with the given prefixes will be included within the set.
+  -- @param #SET_CARGO self
+  -- @param #string Prefixes The prefix of which the cargo name starts with.
+  -- @return #SET_CARGO self
+  function SET_CARGO:FilterPrefixes( Prefixes ) --R2.1
+    if not self.Filter.CargoPrefixes then
+      self.Filter.CargoPrefixes = {}
+    end
+    if type( Prefixes ) ~= "table" then
+      Prefixes = { Prefixes }
+    end
+    for PrefixID, Prefix in pairs( Prefixes ) do
+      self.Filter.CargoPrefixes[Prefix] = Prefix
+    end
+    return self
+  end
+  
+  
+  
+  --- (R2.1) Starts the filtering.
+  -- @param #SET_CARGO self
+  -- @return #SET_CARGO self
+  function SET_CARGO:FilterStart() --R2.1
+  
+    if _DATABASE then
+      self:_FilterStart()
+      self:HandleEvent( EVENTS.NewCargo )
+      self:HandleEvent( EVENTS.DeleteCargo )
+    end
     
-  return self
-end
-
-
---- (R2.1) Finds a Cargo based on the Cargo Name.
--- @param #SET_CARGO self
--- @param #string CargoName
--- @return Wrapper.Cargo#CARGO The found Cargo.
-function SET_CARGO:FindCargo( CargoName ) --R2.1
-
-  local CargoFound = self.Set[CargoName]
-  return CargoFound
-end
-
-
-
---- (R2.1) Builds a set of cargos of coalitions.
--- Possible current coalitions are red, blue and neutral.
--- @param #SET_CARGO self
--- @param #string Coalitions Can take the following values: "red", "blue", "neutral".
--- @return #SET_CARGO self
-function SET_CARGO:FilterCoalitions( Coalitions ) --R2.1
-  if not self.Filter.Coalitions then
-    self.Filter.Coalitions = {}
-  end
-  if type( Coalitions ) ~= "table" then
-    Coalitions = { Coalitions }
-  end
-  for CoalitionID, Coalition in pairs( Coalitions ) do
-    self.Filter.Coalitions[Coalition] = Coalition
-  end
-  return self
-end
-
---- (R2.1) Builds a set of cargos of defined cargo types.
--- Possible current types are those types known within DCS world.
--- @param #SET_CARGO self
--- @param #string Types Can take those type strings known within DCS world.
--- @return #SET_CARGO self
-function SET_CARGO:FilterTypes( Types ) --R2.1
-  if not self.Filter.Types then
-    self.Filter.Types = {}
-  end
-  if type( Types ) ~= "table" then
-    Types = { Types }
-  end
-  for TypeID, Type in pairs( Types ) do
-    self.Filter.Types[Type] = Type
-  end
-  return self
-end
-
-
---- (R2.1) Builds a set of cargos of defined countries.
--- Possible current countries are those known within DCS world.
--- @param #SET_CARGO self
--- @param #string Countries Can take those country strings known within DCS world.
--- @return #SET_CARGO self
-function SET_CARGO:FilterCountries( Countries ) --R2.1
-  if not self.Filter.Countries then
-    self.Filter.Countries = {}
-  end
-  if type( Countries ) ~= "table" then
-    Countries = { Countries }
-  end
-  for CountryID, Country in pairs( Countries ) do
-    self.Filter.Countries[Country] = Country
-  end
-  return self
-end
-
-
---- (R2.1) Builds a set of cargos of defined cargo prefixes.
--- All the cargos starting with the given prefixes will be included within the set.
--- @param #SET_CARGO self
--- @param #string Prefixes The prefix of which the cargo name starts with.
--- @return #SET_CARGO self
-function SET_CARGO:FilterPrefixes( Prefixes ) --R2.1
-  if not self.Filter.CargoPrefixes then
-    self.Filter.CargoPrefixes = {}
-  end
-  if type( Prefixes ) ~= "table" then
-    Prefixes = { Prefixes }
-  end
-  for PrefixID, Prefix in pairs( Prefixes ) do
-    self.Filter.CargoPrefixes[Prefix] = Prefix
-  end
-  return self
-end
-
-
-
---- (R2.1) Starts the filtering.
--- @param #SET_CARGO self
--- @return #SET_CARGO self
-function SET_CARGO:FilterStart() --R2.1
-
-  if _DATABASE then
-    self:_FilterStart()
-    self:HandleEvent( EVENTS.NewCargo )
-    self:HandleEvent( EVENTS.DeleteCargo )
+    return self
   end
   
-  return self
-end
-
-
---- (R2.1) Handles the Database to check on an event (birth) that the Object was added in the Database.
--- This is required, because sometimes the _DATABASE birth event gets called later than the SET_BASE birth event!
--- @param #SET_CARGO self
--- @param Core.Event#EVENTDATA Event
--- @return #string The name of the CARGO
--- @return #table The CARGO
-function SET_CARGO:AddInDatabase( Event ) --R2.1
-  self:F3( { Event } )
-
-  return Event.IniDCSUnitName, self.Database[Event.IniDCSUnitName]
-end
-
---- (R2.1) Handles the Database to check on any event that Object exists in the Database.
--- This is required, because sometimes the _DATABASE event gets called later than the SET_BASE event or vise versa!
--- @param #SET_CARGO self
--- @param Core.Event#EVENTDATA Event
--- @return #string The name of the CARGO
--- @return #table The CARGO
-function SET_CARGO:FindInDatabase( Event ) --R2.1
-  self:F3( { Event } )
-
-  return Event.IniDCSUnitName, self.Database[Event.IniDCSUnitName]
-end
-
---- (R2.1) Iterate the SET_CARGO and call an interator function for each CARGO, providing the CARGO and optional parameters.
--- @param #SET_CARGO self
--- @param #function IteratorFunction The function that will be called when there is an alive CARGO in the SET_CARGO. The function needs to accept a CARGO parameter.
--- @return #SET_CARGO self
-function SET_CARGO:ForEachCargo( IteratorFunction, ... ) --R2.1
-  self:F2( arg )
+  --- Stops the filtering for the defined collection.
+  -- @param #SET_CARGO self
+  -- @return #SET_CARGO self
+  function SET_CARGO:FilterStop()
   
-  self:ForEach( IteratorFunction, arg, self:GetSet() )
-
-  return self
-end
-
---- (R2.1) Iterate the SET_CARGO while identifying the nearest @{Cargo.Cargo#CARGO} from a @{Core.Point#POINT_VEC2}.
--- @param #SET_CARGO self
--- @param Core.Point#POINT_VEC2 PointVec2 A @{Core.Point#POINT_VEC2} object from where to evaluate the closest @{Cargo.Cargo#CARGO}.
--- @return Wrapper.Cargo#CARGO The closest @{Cargo.Cargo#CARGO}.
-function SET_CARGO:FindNearestCargoFromPointVec2( PointVec2 ) --R2.1
-  self:F2( PointVec2 )
+    self:UnHandleEvent( EVENTS.NewCargo )
+    self:UnHandleEvent( EVENTS.DeleteCargo )
+    
+    return self
+  end
   
-  local NearestCargo = self:FindNearestObjectFromPointVec2( PointVec2 )
-  return NearestCargo
-end
-
-function SET_CARGO:FirstCargoWithState( State )
   
-  local FirstCargo = nil
+  --- (R2.1) Handles the Database to check on an event (birth) that the Object was added in the Database.
+  -- This is required, because sometimes the _DATABASE birth event gets called later than the SET_BASE birth event!
+  -- @param #SET_CARGO self
+  -- @param Core.Event#EVENTDATA Event
+  -- @return #string The name of the CARGO
+  -- @return #table The CARGO
+  function SET_CARGO:AddInDatabase( Event ) --R2.1
+    self:F3( { Event } )
   
-  for CargoName, Cargo in pairs( self.Set ) do
-    if Cargo:Is( State ) then
-      FirstCargo = Cargo
-      break
+    return Event.IniDCSUnitName, self.Database[Event.IniDCSUnitName]
+  end
+  
+  --- (R2.1) Handles the Database to check on any event that Object exists in the Database.
+  -- This is required, because sometimes the _DATABASE event gets called later than the SET_BASE event or vise versa!
+  -- @param #SET_CARGO self
+  -- @param Core.Event#EVENTDATA Event
+  -- @return #string The name of the CARGO
+  -- @return #table The CARGO
+  function SET_CARGO:FindInDatabase( Event ) --R2.1
+    self:F3( { Event } )
+  
+    return Event.IniDCSUnitName, self.Database[Event.IniDCSUnitName]
+  end
+  
+  --- (R2.1) Iterate the SET_CARGO and call an interator function for each CARGO, providing the CARGO and optional parameters.
+  -- @param #SET_CARGO self
+  -- @param #function IteratorFunction The function that will be called when there is an alive CARGO in the SET_CARGO. The function needs to accept a CARGO parameter.
+  -- @return #SET_CARGO self
+  function SET_CARGO:ForEachCargo( IteratorFunction, ... ) --R2.1
+    self:F2( arg )
+    
+    self:ForEach( IteratorFunction, arg, self:GetSet() )
+  
+    return self
+  end
+  
+  --- (R2.1) Iterate the SET_CARGO while identifying the nearest @{Cargo.Cargo#CARGO} from a @{Core.Point#POINT_VEC2}.
+  -- @param #SET_CARGO self
+  -- @param Core.Point#POINT_VEC2 PointVec2 A @{Core.Point#POINT_VEC2} object from where to evaluate the closest @{Cargo.Cargo#CARGO}.
+  -- @return Wrapper.Cargo#CARGO The closest @{Cargo.Cargo#CARGO}.
+  function SET_CARGO:FindNearestCargoFromPointVec2( PointVec2 ) --R2.1
+    self:F2( PointVec2 )
+    
+    local NearestCargo = self:FindNearestObjectFromPointVec2( PointVec2 )
+    return NearestCargo
+  end
+  
+  function SET_CARGO:FirstCargoWithState( State )
+    
+    local FirstCargo = nil
+    
+    for CargoName, Cargo in pairs( self.Set ) do
+      if Cargo:Is( State ) then
+        FirstCargo = Cargo
+        break
+      end
+    end
+    
+    return FirstCargo
+  end
+  
+  function SET_CARGO:FirstCargoWithStateAndNotDeployed( State )
+    
+    local FirstCargo = nil
+    
+    for CargoName, Cargo in pairs( self.Set ) do
+      if Cargo:Is( State ) and not Cargo:IsDeployed() then
+        FirstCargo = Cargo
+        break
+      end
+    end
+    
+    return FirstCargo
+  end
+  
+  
+  --- Iterate the SET_CARGO while identifying the first @{Cargo.Cargo#CARGO} that is UnLoaded.
+  -- @param #SET_CARGO self
+  -- @return Cargo.Cargo#CARGO The first @{Cargo.Cargo#CARGO}.
+  function SET_CARGO:FirstCargoUnLoaded()
+    local FirstCargo = self:FirstCargoWithState( "UnLoaded" )
+    return FirstCargo
+  end
+  
+  
+  --- Iterate the SET_CARGO while identifying the first @{Cargo.Cargo#CARGO} that is UnLoaded and not Deployed.
+  -- @param #SET_CARGO self
+  -- @return Cargo.Cargo#CARGO The first @{Cargo.Cargo#CARGO}.
+  function SET_CARGO:FirstCargoUnLoadedAndNotDeployed()
+    local FirstCargo = self:FirstCargoWithStateAndNotDeployed( "UnLoaded" )
+    return FirstCargo
+  end
+  
+  
+  --- Iterate the SET_CARGO while identifying the first @{Cargo.Cargo#CARGO} that is Loaded.
+  -- @param #SET_CARGO self
+  -- @return Cargo.Cargo#CARGO The first @{Cargo.Cargo#CARGO}.
+  function SET_CARGO:FirstCargoLoaded()
+    local FirstCargo = self:FirstCargoWithState( "Loaded" )
+    return FirstCargo
+  end
+  
+  
+  --- Iterate the SET_CARGO while identifying the first @{Cargo.Cargo#CARGO} that is Deployed.
+  -- @param #SET_CARGO self
+  -- @return Cargo.Cargo#CARGO The first @{Cargo.Cargo#CARGO}.
+  function SET_CARGO:FirstCargoDeployed()
+    local FirstCargo = self:FirstCargoWithState( "Deployed" )
+    return FirstCargo
+  end
+  
+  
+  
+  
+  --- (R2.1) 
+  -- @param #SET_CARGO self
+  -- @param AI.AI_Cargo#AI_CARGO MCargo
+  -- @return #SET_CARGO self
+  function SET_CARGO:IsIncludeObject( MCargo ) --R2.1
+    self:F2( MCargo )
+  
+    local MCargoInclude = true
+  
+    if MCargo then
+      local MCargoName = MCargo:GetName()
+    
+      if self.Filter.Coalitions then
+        local MCargoCoalition = false
+        for CoalitionID, CoalitionName in pairs( self.Filter.Coalitions ) do
+          local CargoCoalitionID = MCargo:GetCoalition()
+          self:T3( { "Coalition:", CargoCoalitionID, self.FilterMeta.Coalitions[CoalitionName], CoalitionName } )
+          if self.FilterMeta.Coalitions[CoalitionName] and self.FilterMeta.Coalitions[CoalitionName] == CargoCoalitionID then
+            MCargoCoalition = true
+          end
+        end
+        self:F( { "Evaluated Coalition", MCargoCoalition } )
+        MCargoInclude = MCargoInclude and MCargoCoalition
+      end
+  
+      if self.Filter.Types then
+        local MCargoType = false
+        for TypeID, TypeName in pairs( self.Filter.Types ) do
+          self:T3( { "Type:", MCargo:GetType(), TypeName } )
+          if TypeName == MCargo:GetType() then
+            MCargoType = true
+          end
+        end
+        self:F( { "Evaluated Type", MCargoType } )
+        MCargoInclude = MCargoInclude and MCargoType
+      end
+      
+      if self.Filter.CargoPrefixes then
+        local MCargoPrefix = false
+        for CargoPrefixId, CargoPrefix in pairs( self.Filter.CargoPrefixes ) do
+          self:T3( { "Prefix:", string.find( MCargo.Name, CargoPrefix, 1 ), CargoPrefix } )
+          if string.find( MCargo.Name, CargoPrefix, 1 ) then
+            MCargoPrefix = true
+          end
+        end
+        self:F( { "Evaluated Prefix", MCargoPrefix } )
+        MCargoInclude = MCargoInclude and MCargoPrefix
+      end
+    end
+      
+    self:T2( MCargoInclude )
+    return MCargoInclude
+  end
+  
+  --- (R2.1) Handles the OnEventNewCargo event for the Set.
+  -- @param #SET_CARGO self
+  -- @param Core.Event#EVENTDATA EventData
+  function SET_CARGO:OnEventNewCargo( EventData ) --R2.1
+  
+    self:F( { "New Cargo", EventData } )
+  
+    if EventData.Cargo then
+      if EventData.Cargo and self:IsIncludeObject( EventData.Cargo ) then
+        self:Add( EventData.Cargo.Name , EventData.Cargo  )
+      end
     end
   end
   
-  return FirstCargo
-end
-
-function SET_CARGO:FirstCargoWithStateAndNotDeployed( State )
+  --- (R2.1) Handles the OnDead or OnCrash event for alive units set.
+  -- @param #SET_CARGO self
+  -- @param Core.Event#EVENTDATA EventData
+  function SET_CARGO:OnEventDeleteCargo( EventData ) --R2.1
+    self:F3( { EventData } )
   
-  local FirstCargo = nil
+    if EventData.Cargo then
+      local Cargo = _DATABASE:FindCargo( EventData.Cargo.Name )
+      if Cargo and Cargo.Name then
   
-  for CargoName, Cargo in pairs( self.Set ) do
-    if Cargo:Is( State ) and not Cargo:IsDeployed() then
-      FirstCargo = Cargo
-      break
-    end
-  end
-  
-  return FirstCargo
-end
-
-
---- Iterate the SET_CARGO while identifying the first @{Cargo.Cargo#CARGO} that is UnLoaded.
--- @param #SET_CARGO self
--- @return Cargo.Cargo#CARGO The first @{Cargo.Cargo#CARGO}.
-function SET_CARGO:FirstCargoUnLoaded()
-  local FirstCargo = self:FirstCargoWithState( "UnLoaded" )
-  return FirstCargo
-end
-
-
---- Iterate the SET_CARGO while identifying the first @{Cargo.Cargo#CARGO} that is UnLoaded and not Deployed.
--- @param #SET_CARGO self
--- @return Cargo.Cargo#CARGO The first @{Cargo.Cargo#CARGO}.
-function SET_CARGO:FirstCargoUnLoadedAndNotDeployed()
-  local FirstCargo = self:FirstCargoWithStateAndNotDeployed( "UnLoaded" )
-  return FirstCargo
-end
-
-
---- Iterate the SET_CARGO while identifying the first @{Cargo.Cargo#CARGO} that is Loaded.
--- @param #SET_CARGO self
--- @return Cargo.Cargo#CARGO The first @{Cargo.Cargo#CARGO}.
-function SET_CARGO:FirstCargoLoaded()
-  local FirstCargo = self:FirstCargoWithState( "Loaded" )
-  return FirstCargo
-end
-
-
---- Iterate the SET_CARGO while identifying the first @{Cargo.Cargo#CARGO} that is Deployed.
--- @param #SET_CARGO self
--- @return Cargo.Cargo#CARGO The first @{Cargo.Cargo#CARGO}.
-function SET_CARGO:FirstCargoDeployed()
-  local FirstCargo = self:FirstCargoWithState( "Deployed" )
-  return FirstCargo
-end
-
-
-
-
---- (R2.1) 
--- @param #SET_CARGO self
--- @param AI.AI_Cargo#AI_CARGO MCargo
--- @return #SET_CARGO self
-function SET_CARGO:IsIncludeObject( MCargo ) --R2.1
-  self:F2( MCargo )
-
-  local MCargoInclude = true
-
-  if MCargo then
-    local MCargoName = MCargo:GetName()
-  
-    if self.Filter.Coalitions then
-      local MCargoCoalition = false
-      for CoalitionID, CoalitionName in pairs( self.Filter.Coalitions ) do
-        local CargoCoalitionID = MCargo:GetCoalition()
-        self:T3( { "Coalition:", CargoCoalitionID, self.FilterMeta.Coalitions[CoalitionName], CoalitionName } )
-        if self.FilterMeta.Coalitions[CoalitionName] and self.FilterMeta.Coalitions[CoalitionName] == CargoCoalitionID then
-          MCargoCoalition = true
+      -- When cargo was deleted, it may probably be because of an S_EVENT_DEAD.
+      -- However, in the loading logic, an S_EVENT_DEAD is also generated after a Destroy() call.
+      -- And this is a problem because it will remove all entries from the SET_CARGOs.
+      -- To prevent this from happening, the Cargo object has a flag NoDestroy.
+      -- When true, the SET_CARGO won't Remove the Cargo object from the set.
+      -- This flag is switched off after the event handlers have been called in the EVENT class.
+        self:F( { CargoNoDestroy=Cargo.NoDestroy } )
+        if Cargo.NoDestroy then
+        else
+          self:Remove( Cargo.Name )
         end
       end
-      self:F( { "Evaluated Coalition", MCargoCoalition } )
-      MCargoInclude = MCargoInclude and MCargoCoalition
-    end
-
-    if self.Filter.Types then
-      local MCargoType = false
-      for TypeID, TypeName in pairs( self.Filter.Types ) do
-        self:T3( { "Type:", MCargo:GetType(), TypeName } )
-        if TypeName == MCargo:GetType() then
-          MCargoType = true
-        end
-      end
-      self:F( { "Evaluated Type", MCargoType } )
-      MCargoInclude = MCargoInclude and MCargoType
-    end
-    
-    if self.Filter.CargoPrefixes then
-      local MCargoPrefix = false
-      for CargoPrefixId, CargoPrefix in pairs( self.Filter.CargoPrefixes ) do
-        self:T3( { "Prefix:", string.find( MCargo.Name, CargoPrefix, 1 ), CargoPrefix } )
-        if string.find( MCargo.Name, CargoPrefix, 1 ) then
-          MCargoPrefix = true
-        end
-      end
-      self:F( { "Evaluated Prefix", MCargoPrefix } )
-      MCargoInclude = MCargoInclude and MCargoPrefix
     end
   end
-    
-  self:T2( MCargoInclude )
-  return MCargoInclude
-end
 
---- (R2.1) Handles the OnEventNewCargo event for the Set.
--- @param #SET_CARGO self
--- @param Core.Event#EVENTDATA EventData
-function SET_CARGO:OnEventNewCargo( EventData ) --R2.1
-
-  self:F( { "New Cargo", EventData } )
-
-  if EventData.Cargo then
-    if EventData.Cargo and self:IsIncludeObject( EventData.Cargo ) then
-      self:Add( EventData.Cargo.Name , EventData.Cargo  )
-    end
-  end
-end
-
---- (R2.1) Handles the OnDead or OnCrash event for alive units set.
--- @param #SET_CARGO self
--- @param Core.Event#EVENTDATA EventData
-function SET_CARGO:OnEventDeleteCargo( EventData ) --R2.1
-  self:F3( { EventData } )
-
-  if EventData.Cargo then
-    local Cargo = _DATABASE:FindCargo( EventData.Cargo.Name )
-    if Cargo and Cargo.Name then
-
-    -- When cargo was deleted, it may probably be because of an S_EVENT_DEAD.
-    -- However, in the loading logic, an S_EVENT_DEAD is also generated after a Destroy() call.
-    -- And this is a problem because it will remove all entries from the SET_CARGOs.
-    -- To prevent this from happening, the Cargo object has a flag NoDestroy.
-    -- When true, the SET_CARGO won't Remove the Cargo object from the set.
-    -- This flag is switched off after the event handlers have been called in the EVENT class.
-      self:F( { CargoNoDestroy=Cargo.NoDestroy } )
-      if Cargo.NoDestroy then
-      else
-        self:Remove( Cargo.Name )
-      end
-    end
-  end
 end
 
 
+do -- SET_ZONE
 
---- @type SET_ZONE
--- @extends Core.Set#SET_BASE
-
---- Mission designers can use the @{Core.Set#SET_ZONE} class to build sets of zones of various types.
--- 
--- ## SET_ZONE constructor
--- 
--- Create a new SET_ZONE object with the @{#SET_ZONE.New} method:
--- 
---    * @{#SET_ZONE.New}: Creates a new SET_ZONE object.
---   
--- ## Add or Remove ZONEs from SET_ZONE 
--- 
--- ZONEs can be added and removed using the @{Core.Set#SET_ZONE.AddZonesByName} and @{Core.Set#SET_ZONE.RemoveZonesByName} respectively. 
--- These methods take a single ZONE name or an array of ZONE names to be added or removed from SET_ZONE.
--- 
--- ## SET_ZONE filter criteria 
--- 
--- You can set filter criteria to build the collection of zones in SET_ZONE.
--- Filter criteria are defined by:
--- 
---    * @{#SET_ZONE.FilterPrefixes}: Builds the SET_ZONE with the zones having a certain text pattern of prefix.
---   
--- Once the filter criteria have been set for the SET_ZONE, you can start filtering using:
--- 
---   * @{#SET_ZONE.FilterStart}: Starts the filtering of the zones within the SET_ZONE.
--- 
--- ## SET_ZONE iterators
--- 
--- Once the filters have been defined and the SET_ZONE has been built, you can iterate the SET_ZONE with the available iterator methods.
--- The iterator methods will walk the SET_ZONE set, and call for each airbase within the set a function that you provide.
--- The following iterator methods are currently available within the SET_ZONE:
--- 
---   * @{#SET_ZONE.ForEachZone}: Calls a function for each zone it finds within the SET_ZONE.
--- 
--- ===
--- @field #SET_ZONE SET_ZONE
-SET_ZONE = {
-  ClassName = "SET_ZONE",
-  Zones = {},
-  Filter = {
-    Prefixes = nil,
-  },
-  FilterMeta = {
-  },
-}
-
-
---- Creates a new SET_ZONE object, building a set of zones.
--- @param #SET_ZONE self
--- @return #SET_ZONE self
--- @usage
--- -- Define a new SET_ZONE Object. The DatabaseSet will contain a reference to all Zones.
--- DatabaseSet = SET_ZONE:New()
-function SET_ZONE:New()
-  -- Inherits from BASE
-  local self = BASE:Inherit( self, SET_BASE:New( _DATABASE.ZONES ) )
-
-  return self
-end
-
---- Add ZONEs by a search name to SET_ZONE.
--- @param Core.Set#SET_ZONE self
--- @param #string AddZoneNames A single name or an array of ZONE_BASE names.
--- @return self
-function SET_ZONE:AddZonesByName( AddZoneNames )
-
-  local AddZoneNamesArray = ( type( AddZoneNames ) == "table" ) and AddZoneNames or { AddZoneNames }
+  --- @type SET_ZONE
+  -- @extends Core.Set#SET_BASE
   
-  for AddAirbaseID, AddZoneName in pairs( AddZoneNamesArray ) do
-    self:Add( AddZoneName, ZONE:FindByName( AddZoneName ) )
-  end
-    
-  return self
-end
-
---- Add ZONEs to SET_ZONE.
--- @param Core.Set#SET_ZONE self
--- @param Core.Zone#ZONE_BASE Zone A ZONE_BASE object.
--- @return self
-function SET_ZONE:AddZone( Zone )
-
-  self:Add( Zone:GetName(), Zone )
-    
-  return self
-end
-
-
---- Remove ZONEs from SET_ZONE.
--- @param Core.Set#SET_ZONE self
--- @param Core.Zone#ZONE_BASE RemoveZoneNames A single name or an array of ZONE_BASE names.
--- @return self
-function SET_ZONE:RemoveZonesByName( RemoveZoneNames )
-
-  local RemoveZoneNamesArray = ( type( RemoveZoneNames ) == "table" ) and RemoveZoneNames or { RemoveZoneNames }
+  --- Mission designers can use the @{Core.Set#SET_ZONE} class to build sets of zones of various types.
+  -- 
+  -- ## SET_ZONE constructor
+  -- 
+  -- Create a new SET_ZONE object with the @{#SET_ZONE.New} method:
+  -- 
+  --    * @{#SET_ZONE.New}: Creates a new SET_ZONE object.
+  --   
+  -- ## Add or Remove ZONEs from SET_ZONE 
+  -- 
+  -- ZONEs can be added and removed using the @{Core.Set#SET_ZONE.AddZonesByName} and @{Core.Set#SET_ZONE.RemoveZonesByName} respectively. 
+  -- These methods take a single ZONE name or an array of ZONE names to be added or removed from SET_ZONE.
+  -- 
+  -- ## SET_ZONE filter criteria 
+  -- 
+  -- You can set filter criteria to build the collection of zones in SET_ZONE.
+  -- Filter criteria are defined by:
+  -- 
+  --    * @{#SET_ZONE.FilterPrefixes}: Builds the SET_ZONE with the zones having a certain text pattern of prefix.
+  --   
+  -- Once the filter criteria have been set for the SET_ZONE, you can start filtering using:
+  -- 
+  --   * @{#SET_ZONE.FilterStart}: Starts the filtering of the zones within the SET_ZONE.
+  -- 
+  -- ## SET_ZONE iterators
+  -- 
+  -- Once the filters have been defined and the SET_ZONE has been built, you can iterate the SET_ZONE with the available iterator methods.
+  -- The iterator methods will walk the SET_ZONE set, and call for each airbase within the set a function that you provide.
+  -- The following iterator methods are currently available within the SET_ZONE:
+  -- 
+  --   * @{#SET_ZONE.ForEachZone}: Calls a function for each zone it finds within the SET_ZONE.
+  -- 
+  -- ===
+  -- @field #SET_ZONE SET_ZONE
+  SET_ZONE = {
+    ClassName = "SET_ZONE",
+    Zones = {},
+    Filter = {
+      Prefixes = nil,
+    },
+    FilterMeta = {
+    },
+  }
   
-  for RemoveZoneID, RemoveZoneName in pairs( RemoveZoneNamesArray ) do
-    self:Remove( RemoveZoneName )
+  
+  --- Creates a new SET_ZONE object, building a set of zones.
+  -- @param #SET_ZONE self
+  -- @return #SET_ZONE self
+  -- @usage
+  -- -- Define a new SET_ZONE Object. The DatabaseSet will contain a reference to all Zones.
+  -- DatabaseSet = SET_ZONE:New()
+  function SET_ZONE:New()
+    -- Inherits from BASE
+    local self = BASE:Inherit( self, SET_BASE:New( _DATABASE.ZONES ) )
+  
+    return self
   end
+  
+  --- Add ZONEs by a search name to SET_ZONE.
+  -- @param Core.Set#SET_ZONE self
+  -- @param #string AddZoneNames A single name or an array of ZONE_BASE names.
+  -- @return self
+  function SET_ZONE:AddZonesByName( AddZoneNames )
+  
+    local AddZoneNamesArray = ( type( AddZoneNames ) == "table" ) and AddZoneNames or { AddZoneNames }
     
-  return self
-end
-
-
---- Finds a Zone based on the Zone Name.
--- @param #SET_ZONE self
--- @param #string ZoneName
--- @return Core.Zone#ZONE_BASE The found Zone.
-function SET_ZONE:FindZone( ZoneName )
-
-  local ZoneFound = self.Set[ZoneName]
-  return ZoneFound
-end
-
-
---- Get a random zone from the set.
--- @param #SET_ZONE self
--- @return Core.Zone#ZONE_BASE The random Zone.
--- @return #nil if no zone in the collection.
-function SET_ZONE:GetRandomZone()
-
-  if self:Count() ~= 0 then
-
-    local Index = self.Index
-    local ZoneFound = nil -- Core.Zone#ZONE_BASE
-
-    -- Loop until a zone has been found.
-    -- The :GetZoneMaybe() call will evaluate the probability for the zone to be selected.
-    -- If the zone is not selected, then nil is returned by :GetZoneMaybe() and the loop continues!  
-    while not ZoneFound do
-      local ZoneRandom = math.random( 1, #Index )
-      ZoneFound = self.Set[Index[ZoneRandom]]:GetZoneMaybe() 
+    for AddAirbaseID, AddZoneName in pairs( AddZoneNamesArray ) do
+      self:Add( AddZoneName, ZONE:FindByName( AddZoneName ) )
     end
+      
+    return self
+  end
   
+  --- Add ZONEs to SET_ZONE.
+  -- @param Core.Set#SET_ZONE self
+  -- @param Core.Zone#ZONE_BASE Zone A ZONE_BASE object.
+  -- @return self
+  function SET_ZONE:AddZone( Zone )
+  
+    self:Add( Zone:GetName(), Zone )
+      
+    return self
+  end
+  
+  
+  --- Remove ZONEs from SET_ZONE.
+  -- @param Core.Set#SET_ZONE self
+  -- @param Core.Zone#ZONE_BASE RemoveZoneNames A single name or an array of ZONE_BASE names.
+  -- @return self
+  function SET_ZONE:RemoveZonesByName( RemoveZoneNames )
+  
+    local RemoveZoneNamesArray = ( type( RemoveZoneNames ) == "table" ) and RemoveZoneNames or { RemoveZoneNames }
+    
+    for RemoveZoneID, RemoveZoneName in pairs( RemoveZoneNamesArray ) do
+      self:Remove( RemoveZoneName )
+    end
+      
+    return self
+  end
+  
+  
+  --- Finds a Zone based on the Zone Name.
+  -- @param #SET_ZONE self
+  -- @param #string ZoneName
+  -- @return Core.Zone#ZONE_BASE The found Zone.
+  function SET_ZONE:FindZone( ZoneName )
+  
+    local ZoneFound = self.Set[ZoneName]
     return ZoneFound
   end
   
-  return nil
-end
-
-
---- Set a zone probability.
--- @param #SET_ZONE self
--- @param #string ZoneName The name of the zone.
-function SET_ZONE:SetZoneProbability( ZoneName, ZoneProbability )
-  local Zone = self:FindZone( ZoneName )
-  Zone:SetZoneProbability( ZoneProbability )
-end
-
-
-
-
---- Builds a set of zones of defined zone prefixes.
--- All the zones starting with the given prefixes will be included within the set.
--- @param #SET_ZONE self
--- @param #string Prefixes The prefix of which the zone name starts with.
--- @return #SET_ZONE self
-function SET_ZONE:FilterPrefixes( Prefixes )
-  if not self.Filter.Prefixes then
-    self.Filter.Prefixes = {}
-  end
-  if type( Prefixes ) ~= "table" then
-    Prefixes = { Prefixes }
-  end
-  for PrefixID, Prefix in pairs( Prefixes ) do
-    self.Filter.Prefixes[Prefix] = Prefix
-  end
-  return self
-end
-
-
---- Starts the filtering.
--- @param #SET_ZONE self
--- @return #SET_ZONE self
-function SET_ZONE:FilterStart()
-
-  if _DATABASE then
   
-    -- We initialize the first set.
-    for ObjectName, Object in pairs( self.Database ) do
-      if self:IsIncludeObject( Object ) then
-        self:Add( ObjectName, Object )
-      else
-        self:RemoveZonesByName( ObjectName )
+  --- Get a random zone from the set.
+  -- @param #SET_ZONE self
+  -- @return Core.Zone#ZONE_BASE The random Zone.
+  -- @return #nil if no zone in the collection.
+  function SET_ZONE:GetRandomZone()
+  
+    if self:Count() ~= 0 then
+  
+      local Index = self.Index
+      local ZoneFound = nil -- Core.Zone#ZONE_BASE
+  
+      -- Loop until a zone has been found.
+      -- The :GetZoneMaybe() call will evaluate the probability for the zone to be selected.
+      -- If the zone is not selected, then nil is returned by :GetZoneMaybe() and the loop continues!  
+      while not ZoneFound do
+        local ZoneRandom = math.random( 1, #Index )
+        ZoneFound = self.Set[Index[ZoneRandom]]:GetZoneMaybe() 
       end
+    
+      return ZoneFound
     end
+    
+    return nil
   end
-
-  self:HandleEvent( EVENTS.NewZone )
-  self:HandleEvent( EVENTS.DeleteZone )
   
-  return self
-end
-
---- Handles the Database to check on an event (birth) that the Object was added in the Database.
--- This is required, because sometimes the _DATABASE birth event gets called later than the SET_BASE birth event!
--- @param #SET_ZONE self
--- @param Core.Event#EVENTDATA Event
--- @return #string The name of the AIRBASE
--- @return #table The AIRBASE
-function SET_ZONE:AddInDatabase( Event )
-  self:F3( { Event } )
-
-  return Event.IniDCSUnitName, self.Database[Event.IniDCSUnitName]
-end
-
---- Handles the Database to check on any event that Object exists in the Database.
--- This is required, because sometimes the _DATABASE event gets called later than the SET_BASE event or vise versa!
--- @param #SET_ZONE self
--- @param Core.Event#EVENTDATA Event
--- @return #string The name of the AIRBASE
--- @return #table The AIRBASE
-function SET_ZONE:FindInDatabase( Event )
-  self:F3( { Event } )
-
-  return Event.IniDCSUnitName, self.Database[Event.IniDCSUnitName]
-end
-
---- Iterate the SET_ZONE and call an interator function for each ZONE, providing the ZONE and optional parameters.
--- @param #SET_ZONE self
--- @param #function IteratorFunction The function that will be called when there is an alive ZONE in the SET_ZONE. The function needs to accept a AIRBASE parameter.
--- @return #SET_ZONE self
-function SET_ZONE:ForEachZone( IteratorFunction, ... )
-  self:F2( arg )
   
-  self:ForEach( IteratorFunction, arg, self:GetSet() )
-
-  return self
-end
-
-
----
--- @param #SET_ZONE self
--- @param Core.Zone#ZONE_BASE MZone
--- @return #SET_ZONE self
-function SET_ZONE:IsIncludeObject( MZone )
-  self:F2( MZone )
-
-  local MZoneInclude = true
-
-  if MZone then
-    local MZoneName = MZone:GetName()
+  --- Set a zone probability.
+  -- @param #SET_ZONE self
+  -- @param #string ZoneName The name of the zone.
+  function SET_ZONE:SetZoneProbability( ZoneName, ZoneProbability )
+    local Zone = self:FindZone( ZoneName )
+    Zone:SetZoneProbability( ZoneProbability )
+  end
   
-    if self.Filter.Prefixes then
-      local MZonePrefix = false
-      for ZonePrefixId, ZonePrefix in pairs( self.Filter.Prefixes ) do
-        self:T3( { "Prefix:", string.find( MZoneName, ZonePrefix, 1 ), ZonePrefix } )
-        if string.find( MZoneName, ZonePrefix, 1 ) then
-          MZonePrefix = true
+  
+  
+  
+  --- Builds a set of zones of defined zone prefixes.
+  -- All the zones starting with the given prefixes will be included within the set.
+  -- @param #SET_ZONE self
+  -- @param #string Prefixes The prefix of which the zone name starts with.
+  -- @return #SET_ZONE self
+  function SET_ZONE:FilterPrefixes( Prefixes )
+    if not self.Filter.Prefixes then
+      self.Filter.Prefixes = {}
+    end
+    if type( Prefixes ) ~= "table" then
+      Prefixes = { Prefixes }
+    end
+    for PrefixID, Prefix in pairs( Prefixes ) do
+      self.Filter.Prefixes[Prefix] = Prefix
+    end
+    return self
+  end
+  
+  
+  --- Starts the filtering.
+  -- @param #SET_ZONE self
+  -- @return #SET_ZONE self
+  function SET_ZONE:FilterStart()
+  
+    if _DATABASE then
+    
+      -- We initialize the first set.
+      for ObjectName, Object in pairs( self.Database ) do
+        if self:IsIncludeObject( Object ) then
+          self:Add( ObjectName, Object )
+        else
+          self:RemoveZonesByName( ObjectName )
         end
       end
-      self:T( { "Evaluated Prefix", MZonePrefix } )
-      MZoneInclude = MZoneInclude and MZonePrefix
     end
+  
+    self:HandleEvent( EVENTS.NewZone )
+    self:HandleEvent( EVENTS.DeleteZone )
+    
+    return self
   end
-   
-  self:T2( MZoneInclude )
-  return MZoneInclude
-end
-
---- Handles the OnEventNewZone event for the Set.
--- @param #SET_ZONE self
--- @param Core.Event#EVENTDATA EventData
-function SET_ZONE:OnEventNewZone( EventData ) --R2.1
-
-  self:F( { "New Zone", EventData } )
-
-  if EventData.Zone then
-    if EventData.Zone and self:IsIncludeObject( EventData.Zone ) then
-      self:Add( EventData.Zone.ZoneName , EventData.Zone  )
+  
+  --- Stops the filtering for the defined collection.
+  -- @param #SET_ZONE self
+  -- @return #SET_ZONE self
+  function SET_ZONE:FilterStop()
+  
+    self:UnHandleEvent( EVENTS.NewZone )
+    self:UnHandleEvent( EVENTS.DeleteZone )
+    
+    return self
+  end
+  
+  --- Handles the Database to check on an event (birth) that the Object was added in the Database.
+  -- This is required, because sometimes the _DATABASE birth event gets called later than the SET_BASE birth event!
+  -- @param #SET_ZONE self
+  -- @param Core.Event#EVENTDATA Event
+  -- @return #string The name of the AIRBASE
+  -- @return #table The AIRBASE
+  function SET_ZONE:AddInDatabase( Event )
+    self:F3( { Event } )
+  
+    return Event.IniDCSUnitName, self.Database[Event.IniDCSUnitName]
+  end
+  
+  --- Handles the Database to check on any event that Object exists in the Database.
+  -- This is required, because sometimes the _DATABASE event gets called later than the SET_BASE event or vise versa!
+  -- @param #SET_ZONE self
+  -- @param Core.Event#EVENTDATA Event
+  -- @return #string The name of the AIRBASE
+  -- @return #table The AIRBASE
+  function SET_ZONE:FindInDatabase( Event )
+    self:F3( { Event } )
+  
+    return Event.IniDCSUnitName, self.Database[Event.IniDCSUnitName]
+  end
+  
+  --- Iterate the SET_ZONE and call an interator function for each ZONE, providing the ZONE and optional parameters.
+  -- @param #SET_ZONE self
+  -- @param #function IteratorFunction The function that will be called when there is an alive ZONE in the SET_ZONE. The function needs to accept a AIRBASE parameter.
+  -- @return #SET_ZONE self
+  function SET_ZONE:ForEachZone( IteratorFunction, ... )
+    self:F2( arg )
+    
+    self:ForEach( IteratorFunction, arg, self:GetSet() )
+  
+    return self
+  end
+  
+  
+  ---
+  -- @param #SET_ZONE self
+  -- @param Core.Zone#ZONE_BASE MZone
+  -- @return #SET_ZONE self
+  function SET_ZONE:IsIncludeObject( MZone )
+    self:F2( MZone )
+  
+    local MZoneInclude = true
+  
+    if MZone then
+      local MZoneName = MZone:GetName()
+    
+      if self.Filter.Prefixes then
+        local MZonePrefix = false
+        for ZonePrefixId, ZonePrefix in pairs( self.Filter.Prefixes ) do
+          self:T3( { "Prefix:", string.find( MZoneName, ZonePrefix, 1 ), ZonePrefix } )
+          if string.find( MZoneName, ZonePrefix, 1 ) then
+            MZonePrefix = true
+          end
+        end
+        self:T( { "Evaluated Prefix", MZonePrefix } )
+        MZoneInclude = MZoneInclude and MZonePrefix
+      end
     end
+     
+    self:T2( MZoneInclude )
+    return MZoneInclude
   end
-end
-
---- Handles the OnDead or OnCrash event for alive units set.
--- @param #SET_ZONE self
--- @param Core.Event#EVENTDATA EventData
-function SET_ZONE:OnEventDeleteZone( EventData ) --R2.1
-  self:F3( { EventData } )
-
-  if EventData.Zone then
-    local Zone = _DATABASE:FindZone( EventData.Zone.ZoneName )
-    if Zone and Zone.ZoneName then
-
-    -- When cargo was deleted, it may probably be because of an S_EVENT_DEAD.
-    -- However, in the loading logic, an S_EVENT_DEAD is also generated after a Destroy() call.
-    -- And this is a problem because it will remove all entries from the SET_ZONEs.
-    -- To prevent this from happening, the Zone object has a flag NoDestroy.
-    -- When true, the SET_ZONE won't Remove the Zone object from the set.
-    -- This flag is switched off after the event handlers have been called in the EVENT class.
-      self:F( { ZoneNoDestroy=Zone.NoDestroy } )
-      if Zone.NoDestroy then
-      else
-        self:Remove( Zone.ZoneName )
+  
+  --- Handles the OnEventNewZone event for the Set.
+  -- @param #SET_ZONE self
+  -- @param Core.Event#EVENTDATA EventData
+  function SET_ZONE:OnEventNewZone( EventData ) --R2.1
+  
+    self:F( { "New Zone", EventData } )
+  
+    if EventData.Zone then
+      if EventData.Zone and self:IsIncludeObject( EventData.Zone ) then
+        self:Add( EventData.Zone.ZoneName , EventData.Zone  )
       end
     end
   end
-end
-
---- Validate if a coordinate is in one of the zones in the set.
--- Returns the ZONE object where the coordiante is located.
--- If zones overlap, the first zone that validates the test is returned.
--- @param #SET_ZONE self
--- @param Core.Point#COORDINATE Coordinate The coordinate to be searched.
--- @return Core.Zone#ZONE_BASE The zone that validates the coordinate location.
--- @return #nil No zone has been found.
-function SET_ZONE:IsCoordinateInZone( Coordinate )
-
-  for _, Zone in pairs( self:GetSet() ) do
-    local Zone = Zone -- Core.Zone#ZONE_BASE
-    if Zone:IsCoordinateInZone( Coordinate ) then
-      return Zone
+  
+  --- Handles the OnDead or OnCrash event for alive units set.
+  -- @param #SET_ZONE self
+  -- @param Core.Event#EVENTDATA EventData
+  function SET_ZONE:OnEventDeleteZone( EventData ) --R2.1
+    self:F3( { EventData } )
+  
+    if EventData.Zone then
+      local Zone = _DATABASE:FindZone( EventData.Zone.ZoneName )
+      if Zone and Zone.ZoneName then
+  
+      -- When cargo was deleted, it may probably be because of an S_EVENT_DEAD.
+      -- However, in the loading logic, an S_EVENT_DEAD is also generated after a Destroy() call.
+      -- And this is a problem because it will remove all entries from the SET_ZONEs.
+      -- To prevent this from happening, the Zone object has a flag NoDestroy.
+      -- When true, the SET_ZONE won't Remove the Zone object from the set.
+      -- This flag is switched off after the event handlers have been called in the EVENT class.
+        self:F( { ZoneNoDestroy=Zone.NoDestroy } )
+        if Zone.NoDestroy then
+        else
+          self:Remove( Zone.ZoneName )
+        end
+      end
     end
   end
+  
+  --- Validate if a coordinate is in one of the zones in the set.
+  -- Returns the ZONE object where the coordiante is located.
+  -- If zones overlap, the first zone that validates the test is returned.
+  -- @param #SET_ZONE self
+  -- @param Core.Point#COORDINATE Coordinate The coordinate to be searched.
+  -- @return Core.Zone#ZONE_BASE The zone that validates the coordinate location.
+  -- @return #nil No zone has been found.
+  function SET_ZONE:IsCoordinateInZone( Coordinate )
+  
+    for _, Zone in pairs( self:GetSet() ) do
+      local Zone = Zone -- Core.Zone#ZONE_BASE
+      if Zone:IsCoordinateInZone( Coordinate ) then
+        return Zone
+      end
+    end
+  
+    return nil
+  end
 
-  return nil
-end
---- **Core** -- Defines an **extensive API** to **manage 3D points** in the DCS World 3D simulation space.
+end--- **Core** -- Defines an **extensive API** to **manage 3D points** in the DCS World 3D simulation space.
 --
 -- **Features:**
 -- 
@@ -16997,7 +17137,7 @@ do -- COORDINATE
     local gotunits=false
     local gotscenery=false
     
-    local function EvaluateZone( ZoneObject )
+    local function EvaluateZone(ZoneObject)
     
       if ZoneObject then
       
@@ -17008,7 +17148,7 @@ do -- COORDINATE
         --if (ObjectCategory == Object.Category.UNIT and ZoneObject:isExist() and ZoneObject:isActive()) then
         if (ObjectCategory == Object.Category.UNIT and ZoneObject:isExist()) then
         
-          table.insert(Units, ZoneObject)
+          table.insert(Units, UNIT:Find(ZoneObject))
           gotunits=true
           
         elseif (ObjectCategory == Object.Category.STATIC and ZoneObject:isExist()) then
@@ -17032,7 +17172,7 @@ do -- COORDINATE
     world.searchObjects(scanobjects, SphereSearch, EvaluateZone)
     
     for _,unit in pairs(Units) do
-      self:T(string.format("Scan found unit %s", unit:getName()))
+      self:T(string.format("Scan found unit %s", unit:GetName()))
     end
     for _,static in pairs(Statics) do
       self:T(string.format("Scan found static %s", static:getName()))
@@ -17329,6 +17469,20 @@ do -- COORDINATE
     return nil
   end
   
+  --- Returns the heading from this to another coordinate.
+  -- @param #COORDINATE self
+  -- @param #COORDINATE ToCoordinate
+  -- @return #number Heading in degrees. 
+  function COORDINATE:HeadingTo(ToCoordinate)
+    local dz=ToCoordinate.z-self.z
+    local dx=ToCoordinate.x-self.x
+    local heading=math.deg(math.atan2(dz, dx))
+    if heading < 0 then
+      heading = 360 + heading
+    end
+    return heading
+  end
+  
   --- Returns the wind direction (from) and strength.
   -- @param #COORDINATE self
   -- @param height (Optional) parameter specifying the height ASL. The minimum height will be always be the land height since the wind is zero below the ground.
@@ -17549,21 +17703,53 @@ do -- COORDINATE
   -- @param #COORDINATE.WaypointAction Action The route point action.
   -- @param DCS#Speed Speed Airspeed in km/h. Default is 500 km/h.
   -- @param #boolean SpeedLocked true means the speed is locked.
+  -- @param Wrapper.Airbase#AIRBASE airbase The airbase for takeoff and landing points.
+  -- @param #table DCSTasks A table of @{DCS#Task} items which are executed at the waypoint.
+  -- @param #string description A text description of the waypoint, which will be shown on the F10 map.
   -- @return #table The route point.
-  function COORDINATE:WaypointAir( AltType, Type, Action, Speed, SpeedLocked )
+  function COORDINATE:WaypointAir( AltType, Type, Action, Speed, SpeedLocked, airbase, DCSTasks, description )
     self:F2( { AltType, Type, Action, Speed, SpeedLocked } )
-
+    
+    -- Defaults
+    AltType=AltType or "RADIO"
+    if SpeedLocked==nil then
+      SpeedLocked=true
+    end
+    Speed=Speed or 500
+    
+    -- Waypoint array.
     local RoutePoint = {}
+    
+    -- Coordinates.
     RoutePoint.x = self.x
     RoutePoint.y = self.z
+    -- Altitude.
     RoutePoint.alt = self.y
-    RoutePoint.alt_type = AltType or "RADIO"
-
+    RoutePoint.alt_type = AltType
+    -- Waypoint type.
     RoutePoint.type = Type or nil
     RoutePoint.action = Action or nil
-
-    RoutePoint.speed = ( Speed and Speed / 3.6 ) or ( 500 / 3.6 )
-    RoutePoint.speed_locked = true
+    -- Set speed/ETA.
+    RoutePoint.speed = Speed/3.6
+    RoutePoint.speed_locked = SpeedLocked
+    RoutePoint.ETA=nil
+    RoutePoint.ETA_locked = false    
+    -- Waypoint description.
+    RoutePoint.name=description
+    -- Airbase parameters for takeoff and landing points.
+    if airbase then
+      local AirbaseID = airbase:GetID()
+      local AirbaseCategory = airbase:GetDesc().category
+      if AirbaseCategory == Airbase.Category.SHIP or AirbaseCategory == Airbase.Category.HELIPAD then
+        RoutePoint.linkUnit = AirbaseID
+        RoutePoint.helipadId = AirbaseID
+      elseif AirbaseCategory == Airbase.Category.AIRDROME then
+        RoutePoint.airdromeId = AirbaseID       
+      else
+        self:T("ERROR: Unknown airbase category in COORDINATE:WaypointAir()!")
+      end  
+    end        
+    
 
     --  ["task"] =
     --  {
@@ -17576,13 +17762,13 @@ do -- COORDINATE
     --      }, -- end of ["params"]
     --  }, -- end of ["task"]
 
-
+    -- Waypoint tasks.
     RoutePoint.task = {}
     RoutePoint.task.id = "ComboTask"
     RoutePoint.task.params = {}
-    RoutePoint.task.params.tasks = {}
+    RoutePoint.task.params.tasks = DCSTasks or {}
 
-
+    self:T({RoutePoint=RoutePoint})
     return RoutePoint
   end
 
@@ -17591,9 +17777,11 @@ do -- COORDINATE
   -- @param #COORDINATE self
   -- @param #COORDINATE.WaypointAltType AltType The altitude type.
   -- @param DCS#Speed Speed Airspeed in km/h.
+  -- @param #table DCSTasks (Optional) A table of @{DCS#Task} items which are executed at the waypoint.
+  -- @param #string description (Optional) A text description of the waypoint, which will be shown on the F10 map.
   -- @return #table The route point.
-  function COORDINATE:WaypointAirTurningPoint( AltType, Speed )
-    return self:WaypointAir( AltType, COORDINATE.WaypointType.TurningPoint, COORDINATE.WaypointAction.TurningPoint, Speed )
+  function COORDINATE:WaypointAirTurningPoint( AltType, Speed, DCSTasks, description )
+    return self:WaypointAir( AltType, COORDINATE.WaypointType.TurningPoint, COORDINATE.WaypointAction.TurningPoint, Speed, true, nil, DCSTasks, description )
   end
 
   
@@ -17698,11 +17886,14 @@ do -- COORDINATE
 
   --- Gets the nearest airbase with respect to the current coordinates.
   -- @param #COORDINATE self
-  -- @param #number AirbaseCategory Category of the airbase.
+  -- @param #number Category (Optional) Category of the airbase. Enumerator of @{Wrapper.Airbase#AIRBASE.Category}.
+  -- @param #number Coalition (Optional) Coalition of the airbase.
   -- @return Wrapper.Airbase#AIRBASE Closest Airbase to the given coordinate.
   -- @return #number Distance to the closest airbase in meters.
-  function COORDINATE:GetClosestAirbase(AirbaseCategory)
-    local airbases=AIRBASE.GetAllAirbases()
+  function COORDINATE:GetClosestAirbase(Category, Coalition)
+  
+    -- Get all airbases of the map.
+    local airbases=AIRBASE.GetAllAirbases(Coalition)
     
     local closest=nil
     local distmin=nil
@@ -17710,7 +17901,7 @@ do -- COORDINATE
     for _,_airbase in pairs(airbases) do
       local airbase=_airbase --Wrapper.Airbase#AIRBASE
       local category=airbase:GetDesc().category
-      if AirbaseCategory and AirbaseCategory==category or AirbaseCategory==nil then
+      if Category and Category==category or Category==nil then
         local dist=self:Get2DDistance(airbase:GetCoordinate())
         if closest==nil then
           distmin=dist
@@ -17805,13 +17996,18 @@ do -- COORDINATE
     return self:GetClosestParkingSpot(airbase, terminaltype, false)
   end
     
-  --- Gets the nearest coordinate to a road.
+  --- Gets the nearest coordinate to a road (or railroad).
   -- @param #COORDINATE self
+  -- @param #boolean Railroad (Optional) If true, closest point to railroad is returned rather than closest point to conventional road. Default false. 
   -- @return #COORDINATE Coordinate of the nearest road.
-  function COORDINATE:GetClosestPointToRoad()
-   local x,y = land.getClosestPointOnRoads("roads", self.x, self.z)
-   local vec2={ x = x, y = y }
-   return COORDINATE:NewFromVec2(vec2)
+  function COORDINATE:GetClosestPointToRoad(Railroad)
+    local roadtype="roads"
+    if Railroad==true then
+      roadtype="railroads"
+    end
+    local x,y = land.getClosestPointOnRoads(roadtype, self.x, self.z)
+    local vec2={ x = x, y = y }
+    return COORDINATE:NewFromVec2(vec2)
   end
   
 
@@ -17822,9 +18018,12 @@ do -- COORDINATE
   -- @param #COORDINATE ToCoord Coordinate of destination.
   -- @param #boolean IncludeEndpoints (Optional) Include the coordinate itself and the ToCoordinate in the path.
   -- @param #boolean Railroad (Optional) If true, path on railroad is returned. Default false.
+  -- @param #boolean MarkPath (Optional) If true, place markers on F10 map along the path.
+  -- @param #boolean SmokePath (Optional) If true, put (green) smoke along the  
   -- @return #table Table of coordinates on road. If no path on road can be found, nil is returned or just the endpoints.
-  -- @return #number The length of the total path.
-  function COORDINATE:GetPathOnRoad(ToCoord, IncludeEndpoints, Railroad)
+  -- @return #number Tonal length of path.
+  -- @return #boolean If true a valid path on road/rail was found. If false, only the direct way is possible. 
+  function COORDINATE:GetPathOnRoad(ToCoord, IncludeEndpoints, Railroad, MarkPath, SmokePath)
   
     -- Set road type.
     local RoadType="roads"
@@ -17843,18 +18042,43 @@ do -- COORDINATE
     if IncludeEndpoints then
       Path[1]=self
     end
+    
+    -- Assume we could get a valid path.
+    local GotPath=true
         
     -- Check that DCS routine actually returned a path. There are situations where this is not the case.
     if path then
     
       -- Include all points on road.      
-      for _,_vec2 in ipairs(path) do
-        Path[#Path+1]=COORDINATE:NewFromVec2(_vec2)
-        --COORDINATE:NewFromVec2(_vec2):SmokeGreen()
+      for _i,_vec2 in ipairs(path) do
+      
+        local coord=COORDINATE:NewFromVec2(_vec2)
+        
+        Path[#Path+1]=coord
+        
+        if MarkPath then
+          coord:MarkToAll(string.format("Path segment %d.", _i))
+        end
+        if SmokePath then
+          coord:SmokeGreen()
+        end
+      end
+            
+      -- Mark/smoke endpoints
+      if IncludeEndpoints then
+        if MarkPath then
+          COORDINATE:NewFromVec2(path[1]):MarkToAll("Path Initinal Point")
+          COORDINATE:NewFromVec2(path[1]):MarkToAll("Path Final Point")        
+        end
+        if SmokePath then
+          COORDINATE:NewFromVec2(path[1]):SmokeBlue()
+          COORDINATE:NewFromVec2(path[#path]):SmokeBlue()
+        end
       end
             
     else
       self:E("Path is nil. No valid path on road could be found.")
+      GotPath=false
     end
  
     -- Include end point, which might not be on road.
@@ -17872,7 +18096,7 @@ do -- COORDINATE
       return nil,nil
     end 
         
-    return Path, Way
+    return Path, Way, GotPath
   end
 
   --- Gets the surface type at the coordinate.
@@ -18029,7 +18253,7 @@ do -- COORDINATE
   --- Flares the point in a color.
   -- @param #COORDINATE self
   -- @param Utilities.Utils#FLARECOLOR FlareColor
-  -- @param DCS#Azimuth (optional) Azimuth The azimuth of the flare direction. The default azimuth is 0.
+  -- @param DCS#Azimuth Azimuth (optional) The azimuth of the flare direction. The default azimuth is 0.
   function COORDINATE:Flare( FlareColor, Azimuth )
     self:F2( { FlareColor } )
     trigger.action.signalFlare( self:GetVec3(), FlareColor, Azimuth and Azimuth or 0 )
@@ -18037,7 +18261,7 @@ do -- COORDINATE
 
   --- Flare the COORDINATE White.
   -- @param #COORDINATE self
-  -- @param DCS#Azimuth (optional) Azimuth The azimuth of the flare direction. The default azimuth is 0.
+  -- @param DCS#Azimuth Azimuth (optional) The azimuth of the flare direction. The default azimuth is 0.
   function COORDINATE:FlareWhite( Azimuth )
     self:F2( Azimuth )
     self:Flare( FLARECOLOR.White, Azimuth )
@@ -18045,7 +18269,7 @@ do -- COORDINATE
 
   --- Flare the COORDINATE Yellow.
   -- @param #COORDINATE self
-  -- @param DCS#Azimuth (optional) Azimuth The azimuth of the flare direction. The default azimuth is 0.
+  -- @param DCS#Azimuth Azimuth (optional) The azimuth of the flare direction. The default azimuth is 0.
   function COORDINATE:FlareYellow( Azimuth )
     self:F2( Azimuth )
     self:Flare( FLARECOLOR.Yellow, Azimuth )
@@ -18053,7 +18277,7 @@ do -- COORDINATE
 
   --- Flare the COORDINATE Green.
   -- @param #COORDINATE self
-  -- @param DCS#Azimuth (optional) Azimuth The azimuth of the flare direction. The default azimuth is 0.
+  -- @param DCS#Azimuth Azimuth (optional) The azimuth of the flare direction. The default azimuth is 0.
   function COORDINATE:FlareGreen( Azimuth )
     self:F2( Azimuth )
     self:Flare( FLARECOLOR.Green, Azimuth )
@@ -18534,7 +18758,7 @@ do -- POINT_VEC3
   -- @field #POINT_VEC3.RoutePointAltType RoutePointAltType
   -- @field #POINT_VEC3.RoutePointType RoutePointType
   -- @field #POINT_VEC3.RoutePointAction RoutePointAction
-  -- @extends Core.Point#COORDINATE
+  -- @extends #COORDINATE
   
   
   --- Defines a 3D point in the simulator and with its methods, you can use or manipulate the point in 3D space.
@@ -19440,8 +19664,9 @@ end
 
 --- Sends a MESSAGE to a Coalition if the given Condition is true. 
 -- @param #MESSAGE self
--- @param CoalitionSide needs to be filled out by the defined structure of the standard scripting engine @{coalition.side}. 
--- @return #MESSAGE
+-- @param CoalitionSide needs to be filled out by the defined structure of the standard scripting engine @{coalition.side}.
+-- @param #boolean Condition Sends the message only if the condition is true. 
+-- @return #MESSAGE self
 function MESSAGE:ToCoalitionIf( CoalitionSide, Condition )
   self:F( CoalitionSide )
 
@@ -19820,7 +20045,7 @@ do -- FSM
   --
   -- ===
   -- 
-  -- @field #FSM FSM
+  -- @field #FSM
   -- 
   FSM = {
     ClassName = "FSM",
@@ -20300,8 +20525,7 @@ do -- FSM_CONTROLLABLE
   -- 
   -- ===
   -- 
-  -- @field #FSM_CONTROLLABLE FSM_CONTROLLABLE
-  -- 
+  -- @field #FSM_CONTROLLABLE
   FSM_CONTROLLABLE = {
     ClassName = "FSM_CONTROLLABLE",
   }
@@ -21372,7 +21596,7 @@ function BEACON:StopRadioBeacon()
   self:F()
   -- The unique name of the transmission is the class ID
   trigger.action.stopRadioTransmission(tostring(self.ID))
-end--- **Core** -- SPAWN class dynamically spawns new groups of units in your missions.
+end--- **Core** --Spawn dynamically new GROUPs of UNITs in your missions.
 --  
 -- ===
 -- 
@@ -21870,7 +22094,7 @@ end
 
 --- Sets the coalition of the spawned group. Note that it might be necessary to also set the country explicitly!
 -- @param #SPAWN self 
--- @param #DCS.coalition Coaliton Coaliton of the group as number of enumerator, i.e. 0=coaliton.side.NEUTRAL, 1=coaliton.side.RED, 2=coalition.side.BLUE.
+-- @param DCS#coalition.side Coalition Coalition of the group as number of enumerator, i.e. 0=coaliton.side.NEUTRAL, 1=coaliton.side.RED, 2=coalition.side.BLUE.
 -- @return #SPAWN self
 function SPAWN:InitCoalition( Coalition )
   self:F({coalition=Coalition})
@@ -22675,6 +22899,7 @@ end
 -- @param #number TakeoffAltitude (optional) The altitude above the ground.
 -- @param Wrapper.Airbase#AIRBASE.TerminalType TerminalType (optional) The terminal type the aircraft should be spawned at. See @{Wrapper.Airbase#AIRBASE.TerminalType}.
 -- @param #boolean EmergencyAirSpawn (optional) If true (default), groups are spawned in air if there is no parking spot at the airbase. If false, nothing is spawned if no parking spot is available.
+-- @param #table Parkingdata (optional) Table holding the coordinates and terminal ids for all units of the group. Spawning will be forced to happen at exactily these spots!
 -- @return Wrapper.Group#GROUP that was spawned or nil when nothing was spawned.
 -- @usage
 --   Spawn_Plane = SPAWN:New( "Plane" )
@@ -22695,7 +22920,7 @@ end
 --   
 --   Spawn_Plane:SpawnAtAirbase( AIRBASE:FindByName( AIRBASE.Caucasus.Krymsk ), SPAWN.Takeoff.Cold, nil, AIRBASE.TerminalType.OpenBig )
 -- 
-function SPAWN:SpawnAtAirbase( SpawnAirbase, Takeoff, TakeoffAltitude, TerminalType, EmergencyAirSpawn ) -- R2.2, R2.4
+function SPAWN:SpawnAtAirbase( SpawnAirbase, Takeoff, TakeoffAltitude, TerminalType, EmergencyAirSpawn, Parkingdata ) -- R2.2, R2.4
   self:F( { self.SpawnTemplatePrefix, SpawnAirbase, Takeoff, TakeoffAltitude, TerminalType } )
 
   -- Get position of airbase.
@@ -22810,6 +23035,10 @@ function SPAWN:SpawnAtAirbase( SpawnAirbase, Takeoff, TakeoffAltitude, TerminalT
           self:T(string.format("Group %s is spawned on farp/ship/runway %s.", self.SpawnTemplatePrefix, SpawnAirbase:GetName()))
           nfree=SpawnAirbase:GetFreeParkingSpotsNumber(termtype, true)
           spots=SpawnAirbase:GetFreeParkingSpotsTable(termtype, true)
+        elseif Parkingdata~=nil then
+          -- Parking data explicitly set by user as input parameter.
+          nfree=#Parkingdata
+          spots=Parkingdata
         else
           if ishelo then
             if termtype==nil then
@@ -22887,7 +23116,7 @@ function SPAWN:SpawnAtAirbase( SpawnAirbase, Takeoff, TakeoffAltitude, TerminalT
             PointVec3=spots[1].Coordinate
             
           else
-            -- If there is absolutely not spot ==> air start!
+            -- If there is absolutely no spot ==> air start!
             _notenough=true
           end
         
@@ -22991,6 +23220,7 @@ function SPAWN:SpawnAtAirbase( SpawnAirbase, Takeoff, TakeoffAltitude, TerminalT
             SpawnTemplate.units[UnitID].y   = parkingspots[UnitID].z
             SpawnTemplate.units[UnitID].alt = parkingspots[UnitID].y
             
+            --parkingspots[UnitID]:MarkToAll(string.format("Group %s spawning at airbase %s on parking spot id %d", self.SpawnTemplatePrefix, SpawnAirbase:GetName(), parkingindex[UnitID]))
           end
                  
         else
@@ -24127,20 +24357,22 @@ SPAWNSTATIC = {
 --- Creates the main object to spawn a @{Static} defined in the ME.
 -- @param #SPAWNSTATIC self
 -- @param #string SpawnTemplatePrefix is the name of the Group in the ME that defines the Template.  Each new group will have the name starting with SpawnTemplatePrefix.
+-- @param DCS#country.id SpawnCountryID The ID of the country.
+-- @param DCS#coalition.side SpawnCoalitionID The ID of the coalition.
 -- @return #SPAWNSTATIC
-function SPAWNSTATIC:NewFromStatic( SpawnTemplatePrefix, SpawnCountryID ) --R2.1
+function SPAWNSTATIC:NewFromStatic( SpawnTemplatePrefix, SpawnCountryID, SpawnCoalitionID )
 	local self = BASE:Inherit( self, BASE:New() ) -- #SPAWNSTATIC
 	self:F( { SpawnTemplatePrefix } )
   
-	local TemplateStatic, CoalitionID, CategoryID, CountryID = _DATABASE:GetStaticUnitTemplate( SpawnTemplatePrefix )
+	local TemplateStatic, CoalitionID, CategoryID, CountryID = _DATABASE:GetStaticGroupTemplate( SpawnTemplatePrefix )
 	if TemplateStatic then
 		self.SpawnTemplatePrefix = SpawnTemplatePrefix
 		self.CountryID = SpawnCountryID or CountryID
 		self.CategoryID = CategoryID
-		self.CoalitionID = CoalitionID
+		self.CoalitionID = SpawnCoalitionID or CoalitionID
 		self.SpawnIndex = 0
 	else
-		error( "SPAWNSTATIC:New: There is no group declared in the mission editor with SpawnTemplatePrefix = '" .. SpawnTemplatePrefix .. "'" )
+		error( "SPAWNSTATIC:New: There is no static declared in the mission editor with SpawnTemplatePrefix = '" .. SpawnTemplatePrefix .. "'" )
 	end
 
   self:SetEventPriority( 5 )
@@ -24152,12 +24384,13 @@ end
 -- @param #SPAWNSTATIC self
 -- @param #string SpawnTypeName is the name of the type.
 -- @return #SPAWNSTATIC
-function SPAWNSTATIC:NewFromType( SpawnTypeName, SpawnShapeName, SpawnCategory, CountryID ) --R2.1
+function SPAWNSTATIC:NewFromType( SpawnTypeName, SpawnShapeName, SpawnCategory, SpawnCountryID, SpawnCoalitionID ) 
   local self = BASE:Inherit( self, BASE:New() ) -- #SPAWNSTATIC
   self:F( { SpawnTypeName } )
   
   self.SpawnTypeName = SpawnTypeName
-  self.CountryID = CountryID
+  self.CountryID = SpawnCountryID
+  self.CoalitionID = SpawnCoalitionID
   self.SpawnIndex = 0
 
   self:SetEventPriority( 5 )
@@ -24174,30 +24407,26 @@ end
 function SPAWNSTATIC:Spawn( Heading, NewName ) --R2.3
   self:F( { Heading, NewName  } )
   
-  local StaticTemplate = _DATABASE:GetStaticUnitTemplate( self.SpawnTemplatePrefix )
+  local StaticTemplate, CoalitionID, CategoryID, CountryID = _DATABASE:GetStaticGroupTemplate( self.SpawnTemplatePrefix )
   
   if StaticTemplate then
   
-    local CountryID = self.CountryID
-    local CountryName = _DATABASE.COUNTRY_NAME[CountryID]
+    local StaticUnitTemplate = StaticTemplate.units[1]
   
     StaticTemplate.name = NewName or string.format("%s#%05d", self.SpawnTemplatePrefix, self.SpawnIndex )
     StaticTemplate.heading = ( Heading / 180 ) * math.pi
     
-    StaticTemplate.CountryID = nil
-    StaticTemplate.CoalitionID = nil
-    StaticTemplate.CategoryID = nil
-    
-    local Static = coalition.addStaticObject( CountryID, StaticTemplate )
+    _DATABASE:_RegisterStaticTemplate( StaticTemplate, CoalitionID, CategoryID, CountryID )
+
+    local Static = coalition.addStaticObject( self.CountryID or CountryID, StaticTemplate.units[1] )
     
     self.SpawnIndex = self.SpawnIndex + 1
   
-    return Static
+    return _DATABASE:FindStatic(Static:getName())
   end
   
   return nil
 end
-
 
 
 --- Creates a new @{Static} from a POINT_VEC2.
@@ -24209,64 +24438,53 @@ end
 function SPAWNSTATIC:SpawnFromPointVec2( PointVec2, Heading, NewName ) --R2.1
   self:F( { PointVec2, Heading, NewName  } )
   
-  local StaticTemplate = _DATABASE:GetStaticUnitTemplate( self.SpawnTemplatePrefix )
+  local StaticTemplate, CoalitionID, CategoryID, CountryID = _DATABASE:GetStaticGroupTemplate( self.SpawnTemplatePrefix )
   
   if StaticTemplate then
-
-    local CountryID = self.CountryID
-    local CountryName = _DATABASE.COUNTRY_NAME[CountryID]
-    
-    StaticTemplate.x = PointVec2.x
-    StaticTemplate.y = PointVec2.z
   
-    StaticTemplate.units = nil
+    local StaticUnitTemplate = StaticTemplate.units[1]
+  
+    StaticUnitTemplate.x = PointVec2.x
+    StaticUnitTemplate.y = PointVec2.z
+  
     StaticTemplate.route = nil
     StaticTemplate.groupId = nil
     
     StaticTemplate.name = NewName or string.format("%s#%05d", self.SpawnTemplatePrefix, self.SpawnIndex )
-    StaticTemplate.heading = ( Heading / 180 ) * math.pi
+    StaticUnitTemplate.name = StaticTemplate.name
+    StaticUnitTemplate.heading = ( Heading / 180 ) * math.pi
     
-    StaticTemplate.CountryID = nil
-    StaticTemplate.CoalitionID = nil
-    StaticTemplate.CategoryID = nil
+    _DATABASE:_RegisterStaticTemplate( StaticTemplate, CoalitionID, CategoryID, CountryID)
     
-    local Static = coalition.addStaticObject( CountryID, StaticTemplate )
+    self:F({StaticTemplate = StaticTemplate})
+
+    local Static = coalition.addStaticObject( self.CountryID or CountryID, StaticTemplate.units[1] )
     
     self.SpawnIndex = self.SpawnIndex + 1
     
-    return _DATABASE:AddStatic(Static:getName())
+    return _DATABASE:FindStatic(Static:getName())
   end
   
   return nil
 end
 
 
---- Creates the original @{Static} at a POINT_VEC2.
+--- Respawns the original @{Static}.
 -- @param #SPAWNSTATIC self
--- @param Core.Point#POINT_VEC2 PointVec2 The 2D coordinate where to spawn the static.
--- @param #number Heading The heading of the static, which is a number in degrees from 0 to 360.
--- @param #string (optional) The name of the new static.
 -- @return #SPAWNSTATIC
 function SPAWNSTATIC:ReSpawn()
   
-  local StaticTemplate = _DATABASE:GetStaticUnitTemplate( self.SpawnTemplatePrefix )
+  local StaticTemplate, CoalitionID, CategoryID, CountryID = _DATABASE:GetStaticGroupTemplate( self.SpawnTemplatePrefix )
   
   if StaticTemplate then
 
-    local CountryID = self.CountryID
-    local CountryName = _DATABASE.COUNTRY_NAME[CountryID]
-    
-    StaticTemplate.units = nil
+    local StaticUnitTemplate = StaticTemplate.units[1]
     StaticTemplate.route = nil
     StaticTemplate.groupId = nil
     
-    StaticTemplate.CountryID = nil
-    StaticTemplate.CoalitionID = nil
-    StaticTemplate.CategoryID = nil
+    local Static = coalition.addStaticObject( self.CountryID or CountryID, StaticTemplate.units[1] )
     
-    local Static = coalition.addStaticObject( CountryID, StaticTemplate )
-    
-    return _DATABASE:AddStatic(Static:getName())
+    return _DATABASE:FindStatic(Static:getName())
   end
   
   return nil
@@ -24280,24 +24498,20 @@ end
 -- @return #SPAWNSTATIC
 function SPAWNSTATIC:ReSpawnAt( Coordinate, Heading )
   
-  local StaticTemplate = _DATABASE:GetStaticUnitTemplate( self.SpawnTemplatePrefix )
+  local StaticTemplate, CoalitionID, CategoryID, CountryID = _DATABASE:GetStaticGroupTemplate( self.SpawnTemplatePrefix )
   
   if StaticTemplate then
 
-    local CountryID = self.CountryID
-    
-    StaticTemplate.x = Coordinate.x
-    StaticTemplate.y = Coordinate.z
+    local StaticUnitTemplate = StaticTemplate.units[1]
+  
+    StaticUnitTemplate.x = Coordinate.x
+    StaticUnitTemplate.y = Coordinate.z
 
-    StaticTemplate.heading = Heading and ( ( Heading / 180 ) * math.pi ) or StaticTemplate.heading
-
-    StaticTemplate.CountryID = nil
-    StaticTemplate.CoalitionID = nil
-    StaticTemplate.CategoryID = nil
+    StaticUnitTemplate.heading = Heading and ( ( Heading / 180 ) * math.pi ) or StaticTemplate.heading
     
-    local Static = coalition.addStaticObject( CountryID, StaticTemplate )
+    local Static = coalition.addStaticObject( self.CountryID or CountryID, StaticTemplate.units[1] )
     
-    return _DATABASE:AddStatic(Static:getName())
+    return _DATABASE:FindStatic(Static:getName())
   end
   
   return nil
@@ -24315,7 +24529,7 @@ function SPAWNSTATIC:SpawnFromZone( Zone, Heading, NewName ) --R2.1
 
   local Static = self:SpawnFromPointVec2( Zone:GetPointVec2(), Heading, NewName )
   
-  return _DATABASE:AddStatic(Static:getName())
+  return Static
 end
 
 --- **Core (WIP)** -- Base class to allow the modeling of processes to achieve Goals.
@@ -24805,8 +25019,7 @@ end
 
 --- Returns the unit's unique identifier.
 -- @param Wrapper.Object#OBJECT self
--- @return DCS#Object.ID ObjectID
--- @return #nil The DCS Object is not existing or alive.  
+-- @return DCS#Object.ID ObjectID or #nil if the DCS Object is not existing or alive. Note that the ID is passed as a string and not a number. 
 function OBJECT:GetID()
 
   local DCSObject = self:GetDCSObject()
@@ -25053,8 +25266,19 @@ function IDENTIFIABLE:GetCountry()
   self:F( self.ClassName .. " " .. self.IdentifiableName .. " not found!" )
   return nil
 end
- 
 
+--- Returns country name of the Identifiable.
+-- @param #IDENTIFIABLE self
+-- @return #string Name of the country.  
+function IDENTIFIABLE:GetCountryName()
+  self:F2( self.IdentifiableName ) 
+  local countryid=self:GetCountry()
+  for name,id in pairs(country.id) do
+    if countryid==id then
+      return name
+    end
+  end
+end
 
 --- Returns Identifiable descriptor. Descriptor type depends on Identifiable category.
 -- @param #IDENTIFIABLE self
@@ -26102,7 +26326,8 @@ do -- Cargo
 --    end
 --    return self.__.CargoBayVolumeLimit - CargoVolume
 --  end
---  
+-- 
+ 
   --- Get Cargo Bay Free Weight in kg.
   -- @param #POSITIONABLE self
   -- @return #number CargoBayFreeWeight
@@ -26127,12 +26352,13 @@ do -- Cargo
 --    self.__.CargoBayVolumeLimit = VolumeLimit
 --  end
 
-  --- Get Cargo Bay Weight Limit in kg.
+  --- Set Cargo Bay Weight Limit in kg.
   -- @param #POSITIONABLE self
   -- @param #number WeightLimit
   function POSITIONABLE:SetCargoBayWeightLimit( WeightLimit )
+    
     if WeightLimit then
-      self.__.CargoBayWeightLimit = WeightLimit
+      self.__.CargoBayWeightLimit = self.__.CargoBayWeightLimit or WeightLimit
     else
       -- If weightlimit is not provided, we will calculate it depending on the type of unit.
       
@@ -26140,7 +26366,13 @@ do -- Cargo
       if self:IsAir() then
         local Desc = self:GetDesc()
         self:F({Desc=Desc})
-        self.__.CargoBayWeightLimit = Desc.massMax - ( Desc.massEmpty + Desc.fuelMassMax )
+
+        local Weights = { 
+          ["C-17A"] = 35000,   --77519 cannot be used, because it loads way too much apcs and infantry.,
+          ["C-130"] = 22000    --The real value cannot be used, because it loads way too much apcs and infantry.,
+        } 
+
+        self.__.CargoBayWeightLimit = Weights[Desc.typeName] or ( Desc.massMax - ( Desc.massEmpty + Desc.fuelMassMax ) )
       else
         local Desc = self:GetDesc()
 
@@ -26298,9 +26530,9 @@ end
 
 
 --- @type CONTROLLABLE
--- @extends Wrapper.Positionable#POSITIONABLE
 -- @field DCS#Controllable DCSControllable The DCS controllable class.
 -- @field #string ControllableName The name of the controllable.
+-- @extends Wrapper.Positionable#POSITIONABLE
 
 
 
@@ -26311,13 +26543,13 @@ end
 --  * Handle local Controllable Controller.
 --  * Manage the "state" of the DCS Controllable.
 --
--- ## CONTROLLABLE constructor
+-- # 1) CONTROLLABLE constructor
 -- 
 -- The CONTROLLABLE class provides the following functions to construct a CONTROLLABLE instance:
 --
 --  * @{#CONTROLLABLE.New}(): Create a CONTROLLABLE instance.
 --
--- ## CONTROLLABLE Task methods
+-- # 2) CONTROLLABLE Task methods
 -- 
 -- Several controllable task methods are available that help you to prepare tasks. 
 -- These methods return a string consisting of the task description, which can then be given to either a @{Wrapper.Controllable#CONTROLLABLE.PushTask} or @{Wrapper.Controllable#SetTask} method to assign the task to the CONTROLLABLE.
@@ -26325,7 +26557,7 @@ end
 -- Each task description where applicable indicates for which controllable category the task is valid.
 -- There are 2 main subdivisions of tasks: Assigned tasks and EnRoute tasks.
 -- 
--- ### Task assignment
+-- ## 2.1) Task assignment
 -- 
 -- Assigned task methods make the controllable execute the task where the location of the (possible) targets of the task are known before being detected.
 -- This is different from the EnRoute tasks, where the targets of the task need to be detected before the task can be executed.
@@ -26356,7 +26588,7 @@ end
 --   * @{#CONTROLLABLE.TaskRouteToZone}: (AIR + GROUND) Route the controllable to a given zone.
 --   * @{#CONTROLLABLE.TaskReturnToBase}: (AIR) Route the controllable to an airbase.
 --
--- ### EnRoute assignment
+-- ## 2.2) EnRoute assignment
 -- 
 -- EnRoute tasks require the targets of the task need to be detected by the controllable (using its sensors) before the task can be executed:
 -- 
@@ -26369,7 +26601,7 @@ end
 --   * @{#CONTROLLABLE.EnRouteTaskFAC_EngageControllable}: (AIR + GROUND) The task makes the controllable/unit a FAC and lets the FAC to choose the target (enemy ground controllable) as well as other assigned targets.
 --   * @{#CONTROLLABLE.EnRouteTaskTanker}: (AIR) Aircraft will act as a tanker for friendly units. No parameters.
 -- 
--- ### Task preparation
+-- ## 2.3) Task preparation
 -- 
 -- There are certain task methods that allow to tailor the task behaviour:
 --
@@ -26378,7 +26610,7 @@ end
 --   * @{#CONTROLLABLE.TaskCondition}: Return a condition section for a controlled task.
 --   * @{#CONTROLLABLE.TaskControlled}: Return a Controlled Task taking a Task and a TaskCondition.
 -- 
--- ### Call a function as a Task
+-- ## 2.4) Call a function as a Task
 -- 
 -- A function can be called which is part of a Task. The method @{#CONTROLLABLE.TaskFunction}() prepares
 -- a Task that can call a GLOBAL function from within the Controller execution.
@@ -26387,27 +26619,27 @@ end
 -- 
 -- Demonstration Mission: [GRP-502 - Route at waypoint to random point](https://github.com/FlightControl-Master/MOOSE_MISSIONS/tree/release-2-2-pre/GRP - Group Commands/GRP-502 - Route at waypoint to random point)
 -- 
--- ### Tasks at Waypoints
+-- ## 2.5) Tasks at Waypoints
 -- 
 -- Special Task methods are available to set tasks at certain waypoints.
 -- The method @{#CONTROLLABLE.SetTaskWaypoint}() helps preparing a Route, embedding a Task at the Waypoint of the Route.
 -- 
 -- This creates a Task element, with an action to call a function as part of a Wrapped Task.
 -- 
--- ### Obtain the mission from controllable templates
+-- ## 2.6) Obtain the mission from controllable templates
 -- 
 -- Controllable templates contain complete mission descriptions. Sometimes you want to copy a complete mission from a controllable and assign it to another:
 -- 
 --   * @{#CONTROLLABLE.TaskMission}: (AIR + GROUND) Return a mission task from a mission template.
 --
--- ## CONTROLLABLE Command methods
+-- # 3) Command methods
 -- 
 -- Controllable **command methods** prepare the execution of commands using the @{#CONTROLLABLE.SetCommand} method:
 -- 
 --   * @{#CONTROLLABLE.CommandDoScript}: Do Script command.
 --   * @{#CONTROLLABLE.CommandSwitchWayPoint}: Perform a switch waypoint command.
 -- 
--- ## Routing of Controllables
+-- # 4) Routing of Controllables
 -- 
 -- Different routing methods exist to route GROUPs and UNITs to different locations:
 --   
@@ -26415,11 +26647,11 @@ end
 --   * @{#CONTROLLABLE.RouteGroundTo}(): Make the GROUND Controllable to drive towards a specific coordinate.
 --   * @{#CONTROLLABLE.RouteAirTo}(): Make the AIR Controllable to fly towards a specific coordinate. 
 -- 
--- ## Option methods
+-- # 5) Option methods
 -- 
 -- Controllable **Option methods** change the behaviour of the Controllable while being alive.
 -- 
--- ### Rule of Engagement:
+-- ## 5.1) Rule of Engagement:
 -- 
 --   * @{#CONTROLLABLE.OptionROEWeaponFree} 
 --   * @{#CONTROLLABLE.OptionROEOpenFire}
@@ -26433,7 +26665,7 @@ end
 --   * @{#CONTROLLABLE.OptionROEReturnFirePossible}
 --   * @{#CONTROLLABLE.OptionROEEvadeFirePossible}
 -- 
--- ### Rule on thread:
+-- ## 5.2) Rule on thread:
 -- 
 --   * @{#CONTROLLABLE.OptionROTNoReaction}
 --   * @{#CONTROLLABLE.OptionROTPassiveDefense}
@@ -26446,6 +26678,12 @@ end
 --   * @{#CONTROLLABLE.OptionROTPassiveDefensePossible}
 --   * @{#CONTROLLABLE.OptionROTEvadeFirePossible}
 --   * @{#CONTROLLABLE.OptionROTVerticalPossible}
+-- 
+-- ## 5.3) Alarm state:
+-- 
+--   * @{#CONTROLLABLE.OptionAlarmStateAuto}
+--   * @{#CONTROLLABLE.OptionAlarmStateGreen}
+--   * @{#CONTROLLABLE.OptionAlarmStateRed}
 -- 
 -- @field #CONTROLLABLE
 CONTROLLABLE = {
@@ -26896,6 +27134,14 @@ function CONTROLLABLE:CommandStopRoute( StopRoute )
 end
 
 
+--- Give an uncontrolled air controllable the start command.
+-- @param #CONTROLLABLE self
+-- @return #CONTROLLABLE self
+function CONTROLLABLE:StartUncontrolled()
+  self:SetCommand({id='Start', params={}})
+  return self
+end
+
 -- TASKS FOR AIR CONTROLLABLES
 
 
@@ -27003,28 +27249,56 @@ end
 -- @param DCS#Azimuth Direction (optional) Desired ingress direction from the target to the attacking aircraft. Controllable/aircraft will make its attacks from the direction. Of course if there is no way to attack from the direction due the terrain controllable/aircraft will choose another direction.
 -- @param #number Altitude (optional) The altitude from where to attack.
 -- @param #number WeaponType (optional) The WeaponType.
+-- @param #boolean Divebomb (optional) Perform dive bombing. Default false.
 -- @return DCS#Task The DCS task structure.
-function CONTROLLABLE:TaskBombing( Vec2, GroupAttack, WeaponExpend, AttackQty, Direction, Altitude, WeaponType )
-  self:F2( { self.ControllableName, Vec2, GroupAttack, WeaponExpend, AttackQty, Direction, Altitude, WeaponType } )
+function CONTROLLABLE:TaskBombing( Vec2, GroupAttack, WeaponExpend, AttackQty, Direction, Altitude, WeaponType, Divebomb )
+  self:E( { self.ControllableName, Vec2, GroupAttack, WeaponExpend, AttackQty, Direction, Altitude, WeaponType, Divebomb } )
+  
+  local _groupattack=false
+  if GroupAttack then
+    _groupattack=GroupAttack
+  end
+  
+  local _direction=0
+  local _directionenabled=false
+  if Direction then
+    _direction=math.rad(Direction)
+    _directionenabled=true
+  end
+  
+  local _altitude=5000
+  local _altitudeenabled=false
+  if Altitude then
+    _altitude=Altitude
+    _altitudeenabled=true
+  end
+  
+  local _attacktype=nil
+  if Divebomb then
+    _attacktype="Dive"
+  end
+  
 
   local DCSTask
   DCSTask = { 
     id = 'Bombing',
     params = {
-      point = Vec2,
-      groupAttack = GroupAttack or false,
+      x = Vec2.x,
+      y = Vec2.y,
+      groupAttack = _groupattack,
       expend = WeaponExpend or "Auto",
-      attackQtyLimit = AttackQty and true or false,
-      attackQty = AttackQty, 
-      directionEnabled = Direction and true or false,
-      direction = Direction, 
-      altitudeEnabled = Altitude and true or false,
-      altitude = Altitude or 30,
+      attackQtyLimit = false, --AttackQty and true or false,
+      attackQty = AttackQty or 1,
+      directionEnabled = _directionenabled,
+      direction = _direction, 
+      altitudeEnabled = _altitudeenabled,
+      altitude = _altitude,
       weaponType = WeaponType, 
+      --attackType=_attacktype,
       },
-  },
+  }
 
-  self:T3( { DCSTask } )
+  self:E( { TaskBombing=DCSTask } )
   return DCSTask
 end
 
@@ -27890,7 +28164,7 @@ end
 --    RouteToZone( GroundGroup, ZoneList[1] )
 -- 
 function CONTROLLABLE:TaskFunction( FunctionString, ... )
-  self:F2( { FunctionString, arg } )
+  self:E({TaskFunction=FunctionString, arguments=arg})
 
   local DCSTask
 
@@ -27901,17 +28175,12 @@ function CONTROLLABLE:TaskFunction( FunctionString, ... )
     local ArgumentKey = '_' .. tostring( arg ):match("table: (.*)")
     self:SetState( self, ArgumentKey, arg )
     DCSScript[#DCSScript+1] = "local Arguments = MissionControllable:GetState( MissionControllable, '" .. ArgumentKey .. "' ) "
-    --DCSScript[#DCSScript+1] = "MissionControllable:ClearState( MissionControllable, '" .. ArgumentKey .. "' ) "
     DCSScript[#DCSScript+1] = FunctionString .. "( MissionControllable, unpack( Arguments ) )"
   else
     DCSScript[#DCSScript+1] = FunctionString .. "( MissionControllable )"
   end
 
-  DCSTask = self:TaskWrappedAction(
-    self:CommandDoScript(
-      table.concat( DCSScript )
-    )
-  )
+  DCSTask = self:TaskWrappedAction(self:CommandDoScript(table.concat( DCSScript )))
 
   self:T( DCSTask )
 
@@ -28222,7 +28491,7 @@ do -- Route methods
   -- @param #CONTROLLABLE self
   -- @return #CONTROLLABLE
   function CONTROLLABLE:RouteStop()
-    self:F(self:GetName() .. "RouteStop")
+    self:F(self:GetName() .. " RouteStop")
     
     local CommandStop = self:CommandStopRoute( true )
     self:SetCommand( CommandStop )
@@ -28281,6 +28550,28 @@ do -- Route methods
   
     return self
   end
+  
+  --- Make the TRAIN Controllable to drive towards a specific point using railroads.
+  -- @param #CONTROLLABLE self
+  -- @param Core.Point#COORDINATE ToCoordinate A Coordinate to drive to.
+  -- @param #number Speed (Optional) Speed in km/h. The default speed is 20 km/h.
+  -- @param #number DelaySeconds (Optional) Wait for the specified seconds before executing the Route. Default is one second.
+  -- @return #CONTROLLABLE The CONTROLLABLE.
+  function CONTROLLABLE:RouteGroundOnRailRoads( ToCoordinate, Speed, DelaySeconds)
+  
+    -- Defaults.
+    Speed=Speed or 20
+    DelaySeconds=DelaySeconds or 1
+  
+    -- Get the route task.
+    local route=self:TaskGroundOnRailRoads(ToCoordinate, Speed)
+    
+    -- Route controllable to destination.
+    self:Route( route, DelaySeconds )
+  
+    return self
+  end  
+  
 
   
   --- Make a task for a GROUND Controllable to drive towards a specific point using (mostly) roads.
@@ -28289,16 +28580,18 @@ do -- Route methods
   -- @param #number Speed (Optional) Speed in km/h. The default speed is 20 km/h.
   -- @param #string OffRoadFormation (Optional) The formation at initial and final waypoint. Default is "Off Road".
   -- @param #boolean Shortcut (Optional) If true, controllable will take the direct route if the path on road is 10x longer or path on road is less than 5% of total path.
-  -- @return Task
-  function CONTROLLABLE:TaskGroundOnRoad( ToCoordinate, Speed, OffRoadFormation, Shortcut )
+  -- @param Core.Point#COORDINATE FromCoordinate (Optional) Explicit initial coordinate. Default is the position of the controllable.
+  -- @return DCS#Task Task.
+  -- @return #boolean If true, path on road is possible. If false, task will route the group directly to its destination.
+  function CONTROLLABLE:TaskGroundOnRoad( ToCoordinate, Speed, OffRoadFormation, Shortcut, FromCoordinate )
     self:F2({ToCoordinate=ToCoordinate, Speed=Speed, OffRoadFormation=OffRoadFormation})
     
     -- Defaults.
     Speed=Speed or 20
     OffRoadFormation=OffRoadFormation or "Off Road"
   
-    -- Current coordinate.
-    local FromCoordinate = self:GetCoordinate()
+    -- Initial (current) coordinate.
+    FromCoordinate = FromCoordinate or self:GetCoordinate()
     
     -- Get path and path length on road including the end points (From and To).
     local PathOnRoad, LengthOnRoad=FromCoordinate:GetPathOnRoad(ToCoordinate, true)
@@ -28307,28 +28600,36 @@ do -- Route methods
     local _,LengthRoad=FromCoordinate:GetPathOnRoad(ToCoordinate, false)
 
     -- Off road part of the rout: Total=OffRoad+OnRoad.    
-    local LengthOffRoad=LengthOnRoad-LengthRoad
+    local LengthOffRoad
+    local LongRoad
     
     -- Calculate the direct distance between the initial and final points.
     local LengthDirect=FromCoordinate:Get2DDistance(ToCoordinate)
     
-    -- Debug info.
-    self:T(string.format("Length on road   = %.3f km", LengthOnRoad/1000))
-    self:T(string.format("Length directly  = %.3f km", LengthDirect/1000))
-    self:T(string.format("Length fraction  = %.3f km", LengthOnRoad/LengthDirect))
-    self:T(string.format("Length only road = %.3f km", LengthRoad/1000))
-    self:T(string.format("Length off road  = %.3f km", LengthOffRoad/1000))
-    self:T(string.format("Percent on road  = %.1f", LengthRoad/LengthOnRoad*100))
+    if PathOnRoad then
     
+      -- Off road part of the rout: Total=OffRoad+OnRoad.
+      LengthOffRoad=LengthOnRoad-LengthRoad
+
+      -- Length on road is 10 times longer than direct route or path on road is very short (<5% of total path).
+      LongRoad=LengthOnRoad and ((LengthOnRoad > LengthDirect*10) or (LengthRoad/LengthOnRoad*100<5))
+    
+      -- Debug info.
+      self:T(string.format("Length on road   = %.3f km", LengthOnRoad/1000))
+      self:T(string.format("Length directly  = %.3f km", LengthDirect/1000))
+      self:T(string.format("Length fraction  = %.3f km", LengthOnRoad/LengthDirect))
+      self:T(string.format("Length only road = %.3f km", LengthRoad/1000))
+      self:T(string.format("Length off road  = %.3f km", LengthOffRoad/1000))
+      self:T(string.format("Percent on road  = %.1f", LengthRoad/LengthOnRoad*100))
+      
+    end
+        
     -- Route, ground waypoints along road.
     local route={}
-        
-    -- Length on road is 10 times longer than direct route or path on road is very short (<5% of total path).
-    local LongRoad=LengthOnRoad and ((LengthOnRoad > LengthDirect*10) or (LengthRoad/LengthOnRoad*100<5))
-    
+    local canroad=false
+                
     -- Check if a valid path on road could be found.
     if PathOnRoad then
-
       -- Check whether the road is very long compared to direct path.
       if LongRoad and Shortcut then
 
@@ -28353,6 +28654,7 @@ do -- Route methods
         
       end
       
+      canroad=true
     else
     
       -- No path on road could be found (can happen!) ==> Route group directly from A to B.
@@ -28361,10 +28663,43 @@ do -- Route methods
             
     end
 
+    return route, canroad
+  end
+
+  --- Make a task for a TRAIN Controllable to drive towards a specific point using railroad.
+  -- @param #CONTROLLABLE self
+  -- @param Core.Point#COORDINATE ToCoordinate A Coordinate to drive to.
+  -- @param #number Speed (Optional) Speed in km/h. The default speed is 20 km/h.
+  -- @return Task
+  function CONTROLLABLE:TaskGroundOnRailRoads(ToCoordinate, Speed)
+    self:F2({ToCoordinate=ToCoordinate, Speed=Speed})
+    
+    -- Defaults.
+    Speed=Speed or 20
+  
+    -- Current coordinate.
+    local FromCoordinate = self:GetCoordinate()
+    
+    -- Get path and path length on railroad.
+    local PathOnRail, LengthOnRail=FromCoordinate:GetPathOnRoad(ToCoordinate, false, true)
+        
+    -- Debug info.
+    self:T(string.format("Length on railroad = %.3f km", LengthOnRail/1000))
+    
+    -- Route, ground waypoints along road.
+    local route={}
+            
+    -- Check if a valid path on railroad could be found.
+    if PathOnRail then
+
+      table.insert(route, PathOnRail[1]:WaypointGround(Speed, "On Railroad"))
+      table.insert(route, PathOnRail[2]:WaypointGround(Speed, "On Railroad"))
+                        
+    end
+
     return route 
   end
 
-  
   --- Make the AIR Controllable fly towards a specific point.
   -- @param #CONTROLLABLE self
   -- @param Core.Point#COORDINATE ToCoordinate A Coordinate to drive to.
@@ -28757,6 +29092,7 @@ function CONTROLLABLE:OptionROEOpenFirePossible()
 
   return nil
 end
+
 function CONTROLLABLE:OptionDisperseOff()
   self:F2( { self.ControllableName } )
 
@@ -29646,6 +29982,38 @@ function GROUP:GetSpeedMax()
   return nil
 end
 
+--- Returns the maximum range of the group.
+-- If the group is heterogenious and consists of different units, the smallest range of all units is returned.
+-- @param #GROUP self
+-- @return #number Range in meters.
+function GROUP:GetRange()
+  self:F2( self.GroupName )
+
+  local DCSGroup = self:GetDCSObject()
+  if DCSGroup then
+  
+    local Units=self:GetUnits()
+    
+    local Rangemin=nil
+    
+    for _,unit in pairs(Units) do
+      local unit=unit --Wrapper.Unit#UNIT
+      local range=unit:GetRange()
+      if range then
+        if Rangemin==nil then
+          Rangemin=range
+        elseif range<Rangemin then
+          Rangemin=range
+        end
+      end
+    end
+    
+    return Rangemin
+  end
+  
+  return nil
+end
+
 
 --- Returns a list of @{Wrapper.Unit} objects of the @{Wrapper.Group}.
 -- @param #GROUP self
@@ -29860,8 +30228,9 @@ function GROUP:GetDCSUnits()
 end
 
 
---- Activates a GROUP.
+--- Activates a late activated GROUP.
 -- @param #GROUP self
+-- @return #GROUP self
 function GROUP:Activate()
   self:F2( { self.GroupName } )
   trigger.action.activateGroup( self:GetDCSObject() )
@@ -30654,16 +31023,18 @@ function GROUP:RespawnAtCurrentAirbase(SpawnTemplate, Takeoff, Uncontrolled) -- 
       SpawnPoint.airdromeId = AirbaseID
     end
 
-    SpawnPoint.alt    = AirbaseCoord:GetLandHeight()           
+    
     SpawnPoint.type   = GROUPTEMPLATE.Takeoff[Takeoff][1] -- type
     SpawnPoint.action = GROUPTEMPLATE.Takeoff[Takeoff][2] -- action
     
     -- Get the units of the group.
     local units=self:GetUnits()
 
-    for UnitID,_unit in pairs(units) do
+    local x
+    local y
+    for UnitID=1,#units do
         
-      local unit=_unit --Wrapper.Unit#UNIT
+      local unit=units[UnitID] --Wrapper.Unit#UNIT
 
       -- Get closest parking spot of current unit. Note that we look for occupied spots since the unit is currently sitting on it!
       local Parkingspot, TermialID, Distance=unit:GetCoordinate():GetClosestParkingSpot(airbase)
@@ -30673,26 +31044,33 @@ function GROUP:RespawnAtCurrentAirbase(SpawnTemplate, Takeoff, Uncontrolled) -- 
 
       -- Get unit coordinates for respawning position.
       local uc=unit:GetCoordinate()
-      SpawnTemplate.units[UnitID].x   = Parkingspot.x
-      SpawnTemplate.units[UnitID].y   = Parkingspot.z
-      SpawnTemplate.units[UnitID].alt = Parkingspot.y
+      --uc:MarkToAll(string.format("re-spawnplace %s terminal %d", unit:GetName(), TermialID))
+      
+      SpawnTemplate.units[UnitID].x   = uc.x --Parkingspot.x
+      SpawnTemplate.units[UnitID].y   = uc.z --Parkingspot.z
+      SpawnTemplate.units[UnitID].alt = uc.y --Parkingspot.y
 
       SpawnTemplate.units[UnitID].parking    = TermialID
       SpawnTemplate.units[UnitID].parking_id = nil
-                  
+      
+      --SpawnTemplate.units[UnitID].unitId=nil
     end
     
-    SpawnPoint.x = AirbaseCoord.x
-    SpawnPoint.y = AirbaseCoord.z
+    --SpawnTemplate.groupId=nil
     
-    SpawnTemplate.x = AirbaseCoord.x
-    SpawnTemplate.y = AirbaseCoord.z
+    SpawnPoint.x   = SpawnTemplate.units[1].x   --x --AirbaseCoord.x
+    SpawnPoint.y   = SpawnTemplate.units[1].y   --y --AirbaseCoord.z
+    SpawnPoint.alt = SpawnTemplate.units[1].alt --AirbaseCoord:GetLandHeight()
+               
+    SpawnTemplate.x = SpawnTemplate.units[1].x  --x --AirbaseCoord.x
+    SpawnTemplate.y = SpawnTemplate.units[1].y  --y --AirbaseCoord.z
     
     -- Set uncontrolled state.
     SpawnTemplate.uncontrolled=Uncontrolled
+
+    -- Destroy old group.
+    self:Destroy(false)
     
-    -- Destroy and respawn.
-    self:Destroy( false )
     _DATABASE:Spawn( SpawnTemplate )
   
     -- Reset events.
@@ -30793,8 +31171,7 @@ end
 
 --- Returns true if the first unit of the GROUP is in the air.
 -- @param Wrapper.Group#GROUP self
--- @return #boolean true if in the first unit of the group is in the air.
--- @return #nil The GROUP is not existing or not alive.  
+-- @return #boolean true if in the first unit of the group is in the air or #nil if the GROUP is not existing or not alive.   
 function GROUP:InAir()
   self:F2( self.GroupName )
 
@@ -30807,6 +31184,23 @@ function GROUP:InAir()
       self:T3( GroupInAir )
       return GroupInAir
     end
+  end
+  
+  return nil
+end
+
+--- Returns the DCS descriptor table of the nth unit of the group.
+-- @param #GROUP self
+-- @param #number n (Optional) The number of the unit for which the dscriptor is returned.
+-- @return DCS#Object.Desc The descriptor of the first unit of the group or #nil if the group does not exist any more.   
+function GROUP:GetDCSDesc(n)
+  -- Default.
+  n=n or 1
+  
+  local unit=self:GetUnit(n)
+  if unit and unit:IsAlive()~=nil then
+    local desc=unit:GetDesc()
+    return desc
   end
   
   return nil
@@ -31190,10 +31584,12 @@ end
 -- @param DCS#Unit DCSUnit An existing DCS Unit object reference.
 -- @return #UNIT self
 function UNIT:Find( DCSUnit )
-
-  local UnitName = DCSUnit:getName()
-  local UnitFound = _DATABASE:FindUnit( UnitName )
-  return UnitFound
+  if DCSUnit then
+    local UnitName = DCSUnit:getName()
+    local UnitFound = _DATABASE:FindUnit( UnitName )
+    return UnitFound
+  end
+  return nil
 end
 
 --- Find a UNIT in the _DATABASE using the name of an existing DCS Unit.
@@ -31454,6 +31850,28 @@ function UNIT:GetSpeedMax()
   if Desc then
     local SpeedMax = Desc.speedMax
     return SpeedMax*3.6
+  end
+
+  return nil
+end
+
+--- Returns the unit's max range in meters derived from the DCS descriptors.
+-- For ground units it will return a range of 10,000 km as they have no real range.
+-- @param #UNIT self
+-- @return #number Range in meters.
+function UNIT:GetRange()
+  self:F2( self.UnitName )
+
+  local Desc = self:GetDesc()
+  
+  if Desc then
+    local Range = Desc.range --This is in nautical miles for some reason. But should check again!
+    if Range then
+      Range=UTILS.NMToMeters(Range)
+    else
+      Range=10000000 --10.000 km if no range
+    end
+    return Range
   end
 
   return nil
@@ -32400,8 +32818,8 @@ end
 -- @param #CLIENT self
 -- @return Wrapper.Unit#UNIT
 function CLIENT:GetClientGroupUnit()
-	self:F2()
-
+  self:F2()
+  
 	local ClientDCSUnit = Unit.getByName( self.ClientName )
 
   self:T( self.ClientDCSUnit )
@@ -32457,11 +32875,7 @@ function CLIENT:ShowCargo()
 
 end
 
--- TODO (1) I urgently need to revise this.
---- A local function called by the DCS World Menu system to switch off messages.
-function CLIENT.SwitchMessages( PrmTable )
-	PrmTable[1].MessageSwitch = PrmTable[2]
-end
+
 
 --- The main message driver for the CLIENT.
 -- This function displays various messages to the Player logged into the CLIENT through the DCS World Messaging system.
@@ -32599,6 +33013,59 @@ function STATIC:FindByName( StaticName, RaiseError )
   return nil
 end
 
+--- Destroys the STATIC.
+-- @param #STATIC self
+-- @param #boolean GenerateEvent (Optional) true if you want to generate a crash or dead event for the static.
+-- @return #nil The DCS StaticObject is not existing or alive.  
+-- @usage
+-- -- Air static example: destroy the static Helicopter and generate a S_EVENT_CRASH.
+-- Helicopter = STATIC:FindByName( "Helicopter" )
+-- Helicopter:Destroy( true )
+-- 
+-- @usage
+-- -- Ground static example: destroy the static Tank and generate a S_EVENT_DEAD.
+-- Tanks = UNIT:FindByName( "Tank" )
+-- Tanks:Destroy( true )
+-- 
+-- @usage
+-- -- Ship static example: destroy the Ship silently.
+-- Ship = STATIC:FindByName( "Ship" )
+-- Ship:Destroy()
+-- 
+-- @usage
+-- -- Destroy without event generation example.
+-- Ship = STATIC:FindByName( "Boat" )
+-- Ship:Destroy( false ) -- Don't generate an event upon destruction.
+-- 
+function STATIC:Destroy( GenerateEvent )
+  self:F2( self.ObjectName )
+
+  local DCSObject = self:GetDCSObject()
+  
+  if DCSObject then
+  
+    local StaticName = DCSObject:getName()
+    self:F( { StaticName = StaticName } )
+    
+    if GenerateEvent and GenerateEvent == true then
+      if self:IsAir() then
+        self:CreateEventCrash( timer.getTime(), DCSObject )
+      else
+        self:CreateEventDead( timer.getTime(), DCSObject )
+      end
+    elseif GenerateEvent == false then
+      -- Do nothing!
+    else
+      self:CreateEventRemoveUnit( timer.getTime(), DCSObject )
+    end
+    
+    DCSObject:destroy()
+  end
+
+  return nil
+end
+
+
 
 function STATIC:GetDCSObject()
   local DCSStatic = StaticObject.getByName( self.StaticName )
@@ -32651,9 +33118,10 @@ end
 --- Respawn the @{Wrapper.Unit} at the same location with the same properties.
 -- This is useful to respawn a cargo after it has been destroyed.
 -- @param #STATIC self
-function STATIC:ReSpawn()
+-- @param DCS#country.id countryid The country ID used for spawning the new static.
+function STATIC:ReSpawn(countryid)
 
-  local SpawnStatic = SPAWNSTATIC:NewFromStatic( self.StaticName )
+  local SpawnStatic = SPAWNSTATIC:NewFromStatic( self.StaticName, countryid )
   
   SpawnStatic:ReSpawn()
 end
@@ -32675,7 +33143,7 @@ end
 -- 
 -- ### Author: **FlightControl**
 -- 
--- ### Contributions: 
+-- ### Contributions: **funkyfranky**
 -- 
 -- ===
 -- 
@@ -32931,6 +33399,16 @@ AIRBASE.PersianGulf = {
   ["Shiraz_International_Airport"] = "Shiraz International Airport",
   ["Kerman_Airport"] = "Kerman Airport",
   }
+  
+--- AIRBASE.ParkingSpot ".Coordinate, ".TerminalID", ".TerminalType", ".TOAC", ".Free", ".TerminalID0", ".DistToRwy".
+-- @type AIRBASE.ParkingSpot
+-- @field Core.Point#COORDINATE Coordinate Coordinate of the parking spot.
+-- @field #number TerminalID Terminal ID of the spot. Generally, this is not the same number as displayed in the mission editor.
+-- @field #AIRBASE.TerminalType TerminalType Type of the spot, i.e. for which type of aircraft it can be used.
+-- @field #boolean TOAC Takeoff or landing aircarft. I.e. this stop is occupied currently by an aircraft until it took of or until it landed.
+-- @field #boolean Free This spot is currently free, i.e. there is no alive aircraft on it at the present moment.
+-- @field #number TerminalID0 Unknown what this means. If you know, please tell us!
+-- @field #number DistToRwy Distance to runway in meters. Currently bugged and giving the same number as the TerminalID.
  
 --- Terminal Types of parking spots. See also https://wiki.hoggitworld.com/view/DCS_func_getParking
 -- 
@@ -32944,7 +33422,16 @@ AIRBASE.PersianGulf = {
 -- * AIRBASE.TerminalType.OpenMedOrBig = 176: Combines OpenMed and OpenBig spots.
 -- * AIRBASE.TerminalType.HelicopterUnsable = 216: Combines HelicopterOnly, OpenMed and OpenBig.
 -- * AIRBASE.TerminalType.FighterAircraft = 244: Combines Shelter. OpenMed and OpenBig spots. So effectively all spots usable by fixed wing aircraft.
--- @field TerminalType
+-- 
+-- @type AIRBASE.TerminalType
+-- @field #number Runway 16: Valid spawn points on runway.
+-- @field #number HelicopterOnly 40: Special spots for Helicopers.
+-- @field #number Shelter 68: Hardened Air Shelter. Currently only on Caucaus map.
+-- @field #number OpenMed 72: Open/Shelter air airplane only.
+-- @field #number OpenBig 104: Open air spawn points. Generally larger but does not guarantee large aircraft are capable of spawning there.
+-- @field #number OpenMedOrBig 176: Combines OpenMed and OpenBig spots.
+-- @field #number HelicopterUnsable 216: Combines HelicopterOnly, OpenMed and OpenBig.
+-- @field #number FighterAircraft 244: Combines Shelter. OpenMed and OpenBig spots. So effectively all spots usable by fixed wing aircraft.
 AIRBASE.TerminalType = {
   Runway=16,
   HelicopterOnly=40,
@@ -33265,8 +33752,9 @@ end
 -- @param #boolean scanscenery (Optional) Scan for scenery as obstacles. Default false. Can cause problems with e.g. shelters.
 -- @param #boolean verysafe (Optional) If true, wait until an aircraft has taken off until the parking spot is considered to be free. Defaul false.
 -- @param #number nspots (Optional) Number of freeparking spots requested. Default is the number of aircraft in the group. 
+-- @param #table parkingdata (Optional) Parking spots data table. If not given it is automatically derived from the GetParkingSpotsTable() function.
 -- @return #table Table of coordinates and terminal IDs of free parking spots. Each table entry has the elements .Coordinate and .TerminalID.
-function AIRBASE:FindFreeParkingSpotForAircraft(group, terminaltype, scanradius, scanunits, scanstatics, scanscenery, verysafe, nspots)
+function AIRBASE:FindFreeParkingSpotForAircraft(group, terminaltype, scanradius, scanunits, scanstatics, scanscenery, verysafe, nspots, parkingdata)
 
   -- Init default
   scanradius=scanradius or 50
@@ -33318,7 +33806,7 @@ function AIRBASE:FindFreeParkingSpotForAircraft(group, terminaltype, scanradius,
   -- 1. A spot is considered as NOT free until an aircraft that is present has finally taken off. This might be a bit long especiall at smaller airports.
   -- 2. A "free" spot does not take the aircraft size into accound. So if two big aircraft are spawned on spots next to each other, they might overlap and get destroyed.
   -- 3. The routine return a free spot, if there a static objects placed on the spot.
-  local parkingdata=self:GetParkingSpotsTable(terminaltype)
+  parkingdata=parkingdata or self:GetParkingSpotsTable(terminaltype)
   
   -- Get the aircraft size, i.e. it's longest side of x,z.
   local aircraft=group:GetUnit(1)
@@ -33350,99 +33838,102 @@ function AIRBASE:FindFreeParkingSpotForAircraft(group, terminaltype, scanradius,
     local _spot=parkingspot.Coordinate   -- Core.Point#COORDINATE
     local _termid=parkingspot.TerminalID
     
-    -- Very safe uses the DCS getParking() info to check if a spot is free. Unfortunately, the function returns free=false until the aircraft has actually taken-off.
-    if verysafe and (parkingspot.Free==false or parkingspot.TOAC==true) then
-        
-      -- DCS getParking() routine returned that spot is not free.
-      self:E(string.format("%s: Parking spot id %d NOT free (or aircraft has not taken off yet). Free=%s, TOAC=%s.", airport, parkingspot.TerminalID, tostring(parkingspot.Free), tostring(parkingspot.TOAC)))
-  
-    else
+    if AIRBASE._CheckTerminalType(parkingspot.TerminalType, terminaltype) then
+    
+      -- Very safe uses the DCS getParking() info to check if a spot is free. Unfortunately, the function returns free=false until the aircraft has actually taken-off.
+      if verysafe and (parkingspot.Free==false or parkingspot.TOAC==true) then
           
-      -- Scan a radius of 50 meters around the spot.
-      local _,_,_,_units,_statics,_sceneries=_spot:ScanObjects(scanradius, scanunits, scanstatics, scanscenery)
+        -- DCS getParking() routine returned that spot is not free.
+        self:E(string.format("%s: Parking spot id %d NOT free (or aircraft has not taken off yet). Free=%s, TOAC=%s.", airport, parkingspot.TerminalID, tostring(parkingspot.Free), tostring(parkingspot.TOAC)))
     
-      -- Loop over objects within scan radius.
-      local occupied=false
-  
-      -- Check all units.    
-      for _,unit in pairs(_units) do
-      
-        local _vec3=unit:getPoint()
-        local _coord=COORDINATE:NewFromVec3(_vec3)
-        local _dist=_coord:Get2DDistance(_spot)      
-        local _safe=_overlap(aircraft, true, unit, false,_dist)
-        
-        if markobstacles then
-          local l,x,y,z=_GetObjectSize(unit)      
-          _coord:MarkToAll(string.format("Unit %s\nx=%.1f y=%.1f z=%.1f\nl=%.1f d=%.1f\nspot %d safe=%s", unit:getName(),x,y,z,l,_dist, _termid, tostring(_safe)))
-        end
-        
-        if scanunits and not _safe then
-          occupied=true
-        end      
-      end
-    
-      -- Check all statics.
-      for _,static in pairs(_statics) do
-        local _vec3=static:getPoint()
-        local _coord=COORDINATE:NewFromVec3(_vec3)
-        local _dist=_coord:Get2DDistance(_spot)      
-        local _safe=_overlap(aircraft, true, static, false,_dist)
-        
-        if markobstacles then
-          local l,x,y,z=_GetObjectSize(static)
-          _coord:MarkToAll(string.format("Static %s\nx=%.1f y=%.1f z=%.1f\nl=%.1f d=%.1f\nspot %d safe=%s", static:getName(),x,y,z,l,_dist, _termid, tostring(_safe)))
-        end
-        
-        if scanstatics and not _safe then
-          occupied=true
-        end            
-      end
-      
-      -- Check all scenery.
-      for _,scenery in pairs(_sceneries) do
-        local _vec3=scenery:getPoint()
-        local _coord=COORDINATE:NewFromVec3(_vec3)
-        local _dist=_coord:Get2DDistance(_spot)
-        local _safe=_overlap(aircraft, true, scenery, false,_dist)
-        
-        if markobstacles then
-          local l,x,y,z=_GetObjectSize(scenery)
-          _coord:MarkToAll(string.format("Scenery %s\nx=%.1f y=%.1f z=%.1f\nl=%.1f d=%.1f\nspot %d safe=%s", scenery:getTypeName(),x,y,z,l,_dist, _termid, tostring(_safe)))
-        end
-        
-        if scanscenery and not _safe then
-          occupied=true
-        end                  
-      end
-      
-      -- Now check the already given spots so that we do not put a large aircraft next to one we already assigned a nearby spot.
-      for _,_takenspot in pairs(validspots) do
-        local _dist=_takenspot.Coordinate:Get2DDistance(_spot)
-        local _safe=_overlap(aircraft, true, aircraft, true,_dist)
-        if not _safe then
-          occupied=true
-        end
-      end
-            
-      --_spot:MarkToAll(string.format("Parking spot %d free=%s", parkingspot.TerminalID, tostring(not occupied)))
-      if occupied then
-        self:T(string.format("%s: Parking spot id %d occupied.", airport, _termid))
       else
-        self:E(string.format("%s: Parking spot id %d free.", airport, _termid))      
-        if nvalid<_nspots then
-          table.insert(validspots, {Coordinate=_spot, TerminalID=_termid})
-        end
-        nvalid=nvalid+1
-      end
+            
+        -- Scan a radius of 50 meters around the spot.
+        local _,_,_,_units,_statics,_sceneries=_spot:ScanObjects(scanradius, scanunits, scanstatics, scanscenery)
       
-    end -- loop over units
-       
-    -- We found enough spots.
-    if nvalid>=_nspots then
-      return validspots
-    end
+        -- Loop over objects within scan radius.
+        local occupied=false
     
+        -- Check all units.    
+        for _,unit in pairs(_units) do
+          -- Unis are now returned as MOOSE units not DCS units!
+          --local _vec3=unit:getPoint()
+          --local _coord=COORDINATE:NewFromVec3(_vec3)
+          local _coord=unit:GetCoordinate()
+          local _dist=_coord:Get2DDistance(_spot)      
+          local _safe=_overlap(aircraft, true, unit, true,_dist)
+          
+          if markobstacles then
+            local l,x,y,z=_GetObjectSize(unit)      
+            _coord:MarkToAll(string.format("Unit %s\nx=%.1f y=%.1f z=%.1f\nl=%.1f d=%.1f\nspot %d safe=%s", unit:getName(),x,y,z,l,_dist, _termid, tostring(_safe)))
+          end
+          
+          if scanunits and not _safe then
+            occupied=true
+          end      
+        end
+      
+        -- Check all statics.
+        for _,static in pairs(_statics) do
+          local _vec3=static:getPoint()
+          local _coord=COORDINATE:NewFromVec3(_vec3)
+          local _dist=_coord:Get2DDistance(_spot)      
+          local _safe=_overlap(aircraft, true, static, false,_dist)
+          
+          if markobstacles then
+            local l,x,y,z=_GetObjectSize(static)
+            _coord:MarkToAll(string.format("Static %s\nx=%.1f y=%.1f z=%.1f\nl=%.1f d=%.1f\nspot %d safe=%s", static:getName(),x,y,z,l,_dist, _termid, tostring(_safe)))
+          end
+          
+          if scanstatics and not _safe then
+            occupied=true
+          end            
+        end
+        
+        -- Check all scenery.
+        for _,scenery in pairs(_sceneries) do
+          local _vec3=scenery:getPoint()
+          local _coord=COORDINATE:NewFromVec3(_vec3)
+          local _dist=_coord:Get2DDistance(_spot)
+          local _safe=_overlap(aircraft, true, scenery, false,_dist)
+          
+          if markobstacles then
+            local l,x,y,z=_GetObjectSize(scenery)
+            _coord:MarkToAll(string.format("Scenery %s\nx=%.1f y=%.1f z=%.1f\nl=%.1f d=%.1f\nspot %d safe=%s", scenery:getTypeName(),x,y,z,l,_dist, _termid, tostring(_safe)))
+          end
+          
+          if scanscenery and not _safe then
+            occupied=true
+          end                  
+        end
+        
+        -- Now check the already given spots so that we do not put a large aircraft next to one we already assigned a nearby spot.
+        for _,_takenspot in pairs(validspots) do
+          local _dist=_takenspot.Coordinate:Get2DDistance(_spot)
+          local _safe=_overlap(aircraft, true, aircraft, true,_dist)
+          if not _safe then
+            occupied=true
+          end
+        end
+              
+        --_spot:MarkToAll(string.format("Parking spot %d free=%s", parkingspot.TerminalID, tostring(not occupied)))
+        if occupied then
+          self:T(string.format("%s: Parking spot id %d occupied.", airport, _termid))
+        else
+          self:E(string.format("%s: Parking spot id %d free.", airport, _termid))      
+          if nvalid<_nspots then
+            table.insert(validspots, {Coordinate=_spot, TerminalID=_termid})
+          end
+          nvalid=nvalid+1
+        end
+        
+      end -- loop over units
+         
+      -- We found enough spots.
+      if nvalid>=_nspots then
+        return validspots
+      end
+    end -- check terminal type
   end  
     
   -- Retrun spots we found, even if there were not enough.
@@ -33742,7 +34233,7 @@ end
 -- 
 -- The cargo sets are extremely important for the AI cargo transportation dispatchers and the cargo transporation tasking.
 -- 
--- # 5) Declare MOOSE cargo within the mission editor!!!
+-- # 5) Declare cargo directly in the mission editor!
 -- 
 -- But I am not finished! There is something more, that is even more great!
 -- Imagine the mission designers having to code all these lines every time it wants to embed cargo within a mission.
@@ -33757,10 +34248,11 @@ end
 -- This would be extremely tiring and a huge overload.
 -- However, the MOOSE framework allows to declare MOOSE cargo objects within the mission editor!!!
 -- 
--- So, at mission startup, MOOSE will search for objects following a special naming convention, and will create for you dynamically
--- cargo objects at mission start!!!
--- These cargo objects can then be automatically incorporated within cargo set(s)!!!
--- In other words, your mission would be reduced to about a few lines of code, providing you with a full dynamic cargo handling mission!
+-- So, at mission startup, MOOSE will search for objects following a special naming convention, and will **create** for you **dynamically
+-- cargo objects** at **mission start**!!! -- These cargo objects can then be automatically incorporated within cargo set(s)!!!
+-- In other words, your mission will be reduced to about a few lines of code, providing you with a full dynamic cargo handling mission!
+-- 
+-- ## 5.1) Use \#CARGO tags in the mission editor:
 -- 
 -- MOOSE can create automatically cargo objects, if the name of the cargo contains the **\#CARGO** tag.
 -- When a mission starts, MOOSE will scan all group and static objects it found for the presence of the \#CARGO tag.
@@ -33798,11 +34290,16 @@ end
 -- And there is NO cargo object actually declared within the script! However, if you would open the mission, there would be hundreds of cargo objects...
 -- 
 -- The \#CARGO tag even allows for several options to be specified, which are important to learn.
--- For example, the following #CARGO naming in the group name of the object, will create a group cargo object for MOOSE.
 -- 
---   `Infantry #CARGO(T=Workmaterials,RR=500,NR=25)�
+-- ## 5.2) The \#CARGO tag to create CARGO_GROUP objects:
 -- 
--- This will create a cargo object:
+-- You can also use the \#CARGO tag on **group** objects of the mission editor.
+-- 
+-- For example, the following #CARGO naming in the **group name** of the object, will create a CARGO_GROUP object when the mission starts.
+-- 
+--   `Infantry #CARGO(T=Workmaterials,RR=500,NR=25)`
+-- 
+-- This will create a CARGO_GROUP object:
 -- 
 --    * with the group name `Infantry #CARGO`
 --    * is of type `Workmaterials`
@@ -33813,6 +34310,32 @@ end
 -- So the overall syntax of the #CARGO naming tag and arguments are:
 -- 
 --   `GroupName #CARGO(T=CargoTypeName,RR=Range,NR=Range)`
+-- 
+--    * **T=** Provide a text that contains the type name of the cargo object. This type name can be used to filter cargo within a SET_CARGO object.
+--    * **RR=** Provide the minimal range in meters when the report to the carrier, and board to the carrier.
+--      Note that this option is optional, so can be omitted. The default value of the RR is 250 meters.
+--    * **NR=** Provide the maximum range in meters when the cargo units will be boarded within the carrier during boarding.
+--      Note that this option is optional, so can be omitted. The default value of the RR is 10 meters.
+-- 
+-- ## 5.2) The \#CARGO tag to create CARGO_CRATE objects:
+-- 
+-- You can also use the \#CARGO tag on **static** objects, including **static cargo** objects of the mission editor.
+-- 
+-- For example, the following #CARGO naming in the **static name** of the object, will create a CARGO_CRATE object when the mission starts.
+-- 
+--   `Static #CARGO(T=Workmaterials,RR=500,NR=25)`
+-- 
+-- This will create a CARGO_CRATE object:
+-- 
+--    * with the group name `Static #CARGO`
+--    * is of type `Workmaterials`
+--    * will report when a carrier is within 500 meters
+--    * will board to carriers when the carrier is within 500 meters from the cargo object
+--    * will dissapear when the cargo is within 25 meters from the carrier during boarding
+-- 
+-- So the overall syntax of the #CARGO naming tag and arguments are:
+-- 
+--   `StaticName #CARGO(T=CargoTypeName,RR=Range,NR=Range)`
 -- 
 --    * **T=** Provide a text that contains the type name of the cargo object. This type name can be used to filter cargo within a SET_CARGO object.
 --    * **RR=** Provide the minimal range in meters when the report to the carrier, and board to the carrier.
@@ -34059,7 +34582,7 @@ do -- CARGO
     self.CargoLimit = 0
     
     self.LoadRadius = LoadRadius or 500
-    self.NearRadius = NearRadius or 25
+    --self.NearRadius = NearRadius or 25
     
     self:SetDeployed( false )
   
@@ -35083,8 +35606,6 @@ do -- CARGO_UNIT
   function CARGO_UNIT:onenterUnBoarding( From, Event, To, ToPointVec2, NearRadius )
     self:F( { From, Event, To, ToPointVec2, NearRadius } )
   
-    NearRadius = NearRadius or 25
-  
     local Angle = 180
     local Speed = 60
     local DeployDistance = 9
@@ -35153,8 +35674,6 @@ do -- CARGO_UNIT
   function CARGO_UNIT:onleaveUnBoarding( From, Event, To, ToPointVec2, NearRadius )
     self:F( { From, Event, To, ToPointVec2, NearRadius } )
   
-    NearRadius = NearRadius or 100
-  
     local Angle = 180
     local Speed = 10
     local Distance = 5
@@ -35180,8 +35699,6 @@ do -- CARGO_UNIT
   -- @param #number NearRadius (optional) Defaut 100 m.
   function CARGO_UNIT:onafterUnBoarding( From, Event, To, ToPointVec2, NearRadius )
     self:F( { From, Event, To, ToPointVec2, NearRadius } )
-  
-    NearRadius = NearRadius or 100
   
     self.CargoInAir = self.CargoObject:InAir()
   
@@ -35241,7 +35758,7 @@ do -- CARGO_UNIT
   -- @param #string From
   -- @param #string To
   function CARGO_UNIT:onafterBoard( From, Event, To, CargoCarrier, NearRadius, ... )
-    self:F( { From, Event, To, CargoCarrier, NearRadius } )
+    self:F( { From, Event, To, CargoCarrier, NearRadius = NearRadius } )
   
     self.CargoInAir = self.CargoObject:InAir()
     
@@ -35256,7 +35773,7 @@ do -- CARGO_UNIT
     if not self.CargoInAir then
       -- If NearRadius is given, then use the given NearRadius, otherwise calculate the NearRadius 
       -- based upon the Carrier bounding radius, which is calculated from the bounding rectangle on the Y axis.
-      local NearRadius = CargoCarrier:GetBoundingRadius( NearRadius ) + 5
+      local NearRadius = NearRadius or CargoCarrier:GetBoundingRadius( NearRadius ) + 5
       if self:IsNear( CargoCarrier:GetPointVec2(), NearRadius ) then
         self:Load( CargoCarrier, NearRadius, ... )
       else
@@ -35285,7 +35802,7 @@ do -- CARGO_UNIT
           
           local TaskRoute = self.CargoObject:TaskRoute( Points )
           self.CargoObject:SetTask( TaskRoute, 2 )
-          self:__Boarding( -1, CargoCarrier, NearRadius )
+          self:__Boarding( -5, CargoCarrier, NearRadius, ... )
           self.RunCount = 0
         end
       end
@@ -35302,17 +35819,22 @@ do -- CARGO_UNIT
   -- @param Wrapper.Client#CLIENT CargoCarrier
   -- @param #number NearRadius Default 25 m.
   function CARGO_UNIT:onafterBoarding( From, Event, To, CargoCarrier, NearRadius, ... )
-    self:F( { From, Event, To, CargoCarrier:GetName() } )
+    self:F( { From, Event, To, CargoCarrier:GetName(), NearRadius = NearRadius } )
     
     
     if CargoCarrier and CargoCarrier:IsAlive() and self.CargoObject and self.CargoObject:IsAlive() then 
       if (CargoCarrier:IsAir() and not CargoCarrier:InAir()) or true then
-        local NearRadius = CargoCarrier:GetBoundingRadius( NearRadius ) + 5
+        local NearRadius = NearRadius or CargoCarrier:GetBoundingRadius( NearRadius ) + 5
         if self:IsNear( CargoCarrier:GetPointVec2(), NearRadius ) then
           self:__Load( 1, CargoCarrier, ... )
         else
-          self:__Boarding( -1, CargoCarrier, NearRadius, ... )
-          self.RunCount = self.RunCount + 1
+          if self:IsNear( CargoCarrier:GetPointVec2(), 20 ) then
+            self:__Boarding( -1, CargoCarrier, NearRadius, ... )
+            self.RunCount = self.RunCount + 1
+          else
+            self:__Boarding( -5, CargoCarrier, NearRadius, ... )
+            self.RunCount = self.RunCount + 5
+          end
           if self.RunCount >= 40 then
             self.RunCount = 0
             local Speed = 90
@@ -35470,6 +35992,8 @@ do -- CARGO_SLINGLOAD
     self:HandleEvent( EVENTS.PlayerLeaveUnit, self.OnEventCargoDead )
     
     self:SetEventPriority( 4 )
+    
+    self.NearRadius = NearRadius or 25
   
     return self
   end
@@ -35745,6 +36269,8 @@ do -- CARGO_CRATE
     self:HandleEvent( EVENTS.PlayerLeaveUnit, self.OnEventCargoDead )
     
     self:SetEventPriority( 4 )
+    
+    self.NearRadius = NearRadius or 25
   
     return self
   end
@@ -35832,7 +36358,7 @@ do -- CARGO_CRATE
     if self.CargoObject then
       self:T("Destroying")
       self.NoDestroy = true
-      self.CargoObject:Destroy()
+      self.CargoObject:Destroy( false ) -- Do not generate a remove unit event, because we want to keep the template for later respawn in the database.
       --local Coordinate = self.CargoObject:GetCoordinate():GetRandomCoordinateInRadius( 50, 20 )
       --self.CargoObject:ReSpawnAt( Coordinate, 0 )
     end
@@ -36072,6 +36598,8 @@ do -- CARGO_GROUP
     self.Grouped = true
     self.CargoUnitTemplate = {}
     
+    self.NearRadius = NearRadius
+    
     self:SetDeployed( false )
     
     local WeightGroup = 0
@@ -36305,9 +36833,9 @@ do -- CARGO_GROUP
   -- @param Wrapper.Unit#UNIT CargoCarrier
   -- @param #number NearRadius If distance is smaller than this number, cargo is loaded into the carrier.
   function CARGO_GROUP:onenterBoarding( From, Event, To, CargoCarrier, NearRadius, ... )
-    --self:F( { CargoCarrier.UnitName, From, Event, To } )
+    self:F( { CargoCarrier.UnitName, From, Event, To, NearRadius = NearRadius } )
     
-    local NearRadius = NearRadius or 25
+    NearRadius = NearRadius or self.NearRadius
     
     if From == "UnLoaded" then
   
@@ -36354,8 +36882,6 @@ do -- CARGO_GROUP
   -- @param #number NearRadius If distance is smaller than this number, cargo is loaded into the carrier.
   function CARGO_GROUP:onafterBoarding( From, Event, To, CargoCarrier, NearRadius, ... )
     --self:F( { CargoCarrier.UnitName, From, Event, To } )
-  
-    local NearRadius = NearRadius or 100
   
     local Boarded = true
     local Cancelled = false
@@ -36671,12 +37197,13 @@ do -- CARGO_GROUP
       else
         CargoCoordinate = Cargo.CargoObject:GetCoordinate()
       end
-      
---      if CargoCoordinate then
+
+      -- FF check if coordinate could be obtained. This was commented out for some (unknown) reason. But the check seems valid!      
+      if CargoCoordinate then
         Distance = Coordinate:Get2DDistance( CargoCoordinate )
---      else
---        return false
---      end
+      else
+        return false
+      end
       
       self:F( { Distance = Distance, LoadRadius = self.LoadRadius } )
       if Distance <= self.LoadRadius then
@@ -38844,7 +39371,7 @@ function CLEANUP_AIRBASE.__:DestroyUnit( CleanUpUnit )
 	if CleanUpUnit then
 	  local CleanUpUnitName = CleanUpUnit:GetName()
 		local CleanUpGroup = CleanUpUnit:GetGroup()
-    -- TODO Client bug in 1.5.3
+    -- TODO DCS BUG - Client bug in 1.5.3
 		if CleanUpGroup:IsAlive() then
 			local CleanUpGroupUnits = CleanUpGroup:GetUnits()
 			if #CleanUpGroupUnits == 1 then
@@ -38893,7 +39420,7 @@ end
 function CLEANUP_AIRBASE.__:OnEventCrash( Event )
 	self:F( { Event } )
 
-  --TODO: This stuff is not working due to a DCS bug. Burning units cannot be destroyed.
+  --TODO: DCS BUG - This stuff is not working due to a DCS bug. Burning units cannot be destroyed.
 	-- self:T("before getGroup")
 	-- local _grp = Unit.getGroup(event.initiator)-- Identify the group that fired 
 	-- self:T("after getGroup")
@@ -45609,14 +46136,16 @@ end
 
 do -- DETECTION_UNITS
 
+  --- @type DETECTION_UNITS
+  -- @field DCS#Distance DetectionRange The range till which targets are detected.
+  -- @extends Functional.Detection#DETECTION_BASE
+
   --- Will detect units within the battle zone.
   -- 
   -- It will build a DetectedItems list filled with DetectedItems. Each DetectedItem will contain a field Set, which contains a @{Core.Set#SET_UNIT} containing ONE @{UNIT} object reference.
   -- Beware that when the amount of units detected is large, the DetectedItems list will be large also. 
   -- 
-  -- @type DETECTION_UNITS
-  -- @field DCS#Distance DetectionRange The range till which targets are detected.
-  -- @extends #DETECTION_BASE
+  -- @field #DETECTION_UNITS
   DETECTION_UNITS = {
     ClassName = "DETECTION_UNITS",
     DetectionRange = nil,
@@ -45862,13 +46391,15 @@ end
 
 do -- DETECTION_TYPES
 
+  --- @type DETECTION_TYPES
+  -- @extends Functional.Detection#DETECTION_BASE
+
   --- Will detect units within the battle zone.
   -- It will build a DetectedItems[] list filled with DetectedItems, grouped by the type of units detected. 
   -- Each DetectedItem will contain a field Set, which contains a @{Core.Set#SET_UNIT} containing ONE @{UNIT} object reference.
   -- Beware that when the amount of different types detected is large, the DetectedItems[] list will be large also. 
   -- 
-  -- @type DETECTION_TYPES
-  -- @extends #DETECTION_BASE
+  -- @field #DETECTION_TYPES
   DETECTION_TYPES = {
     ClassName = "DETECTION_TYPES",
     DetectionRange = nil,
@@ -46069,6 +46600,11 @@ end
 
 do -- DETECTION_AREAS
 
+  --- @type DETECTION_AREAS
+  -- @field DCS#Distance DetectionZoneRange The range till which targets are grouped upon the first detected target.
+  -- @field #DETECTION_BASE.DetectedItems DetectedItems A list of areas containing the set of @{Wrapper.Unit}s, @{Zone}s, the center @{Wrapper.Unit} within the zone, and ID of each area that was detected within a DetectionZoneRange.
+  -- @extends Functional.Detection#DETECTION_BASE
+
   --- Detect units within the battle zone for a list of @{Wrapper.Group}s detecting targets following (a) detection method(s), 
   -- and will build a list (table) of @{Core.Set#SET_UNIT}s containing the @{Wrapper.Unit#UNIT}s detected.
   -- The class is group the detected units within zones given a DetectedZoneRange parameter.
@@ -46099,10 +46635,7 @@ do -- DETECTION_AREAS
   --   
   -- the detected zones when a new detection has taken place.
   -- 
-  -- @type DETECTION_AREAS
-  -- @field DCS#Distance DetectionZoneRange The range till which targets are grouped upon the first detected target.
-  -- @field #DETECTION_BASE.DetectedItems DetectedItems A list of areas containing the set of @{Wrapper.Unit}s, @{Zone}s, the center @{Wrapper.Unit} within the zone, and ID of each area that was detected within a DetectionZoneRange.
-  -- @extends #DETECTION_BASE
+  -- @field #DETECTION_AREAS
   DETECTION_AREAS = {
     ClassName = "DETECTION_AREAS",
     DetectionZoneRange = nil,
@@ -48556,7 +49089,7 @@ RAT.id="RAT | "
 --- RAT version.
 -- @list version
 RAT.version={
-  version = "2.3.3",
+  version = "2.3.4",
   print = true,
 }
 
@@ -50071,8 +50604,9 @@ end
 -- @param #table _waypoint First waypoint to be used (for continue journey, commute, etc).
 -- @param Core.Point#COORDINATE _lastpos (Optional) Position where the aircraft will be spawned.
 -- @param #number _nrespawn Number of already performed respawn attempts (e.g. spawning on runway bug).
+-- @param #table parkingdata Explicitly specify the parking spots when spawning at an airport.
 -- @return #number Spawn index.
-function RAT:_SpawnWithRoute(_departure, _destination, _takeoff, _landing, _livery, _waypoint, _lastpos, _nrespawn)
+function RAT:_SpawnWithRoute(_departure, _destination, _takeoff, _landing, _livery, _waypoint, _lastpos, _nrespawn, parkingdata)
   self:F({rat=RAT.id, departure=_departure, destination=_destination, takeoff=_takeoff, landing=_landing, livery=_livery, waypoint=_waypoint, lastpos=_lastpos, nrespawn=_nrespawn})
 
   -- Set takeoff type.
@@ -50122,7 +50656,7 @@ function RAT:_SpawnWithRoute(_departure, _destination, _takeoff, _landing, _live
   end
   
   -- Modify the spawn template to follow the flight plan.
-  local successful=self:_ModifySpawnTemplate(waypoints, livery, _lastpos, departure, takeoff)
+  local successful=self:_ModifySpawnTemplate(waypoints, livery, _lastpos, departure, takeoff, parkingdata)
   if not successful then
     return nil
   end
@@ -50465,7 +50999,7 @@ function RAT:_SetRoute(takeoff, landing, _departure, _destination, _waypoint)
   local VxCruiseMin = math.min(VxCruiseMax*0.70, 166)
   
   -- Cruise speed (randomized). Expectation value at midpoint between min and max.
-  local VxCruise = self:_Random_Gaussian((VxCruiseMax-VxCruiseMin)/2+VxCruiseMin, (VxCruiseMax-VxCruiseMax)/4, VxCruiseMin, VxCruiseMax)
+  local VxCruise = UTILS.RandomGaussian((VxCruiseMax-VxCruiseMin)/2+VxCruiseMin, (VxCruiseMax-VxCruiseMax)/4, VxCruiseMin, VxCruiseMax)
   
   -- Climb speed 90% ov Vmax but max 720 km/h.
   local VxClimb = math.min(self.aircraft.Vmax*0.90, 200)
@@ -50823,7 +51357,7 @@ function RAT:_SetRoute(takeoff, landing, _departure, _destination, _waypoint)
   end
     
   -- Set cruise altitude. Selected from Gaussian distribution but limited to FLmin and FLmax.
-  local FLcruise=self:_Random_Gaussian(FLcruise_expect, math.abs(FLmax-FLmin)/4, FLmin, FLmax)
+  local FLcruise=UTILS.RandomGaussian(FLcruise_expect, math.abs(FLmax-FLmin)/4, FLmin, FLmax)
     
   -- Overrule setting if user specified a flight level explicitly.
   if self.FLuser then
@@ -53020,38 +53554,6 @@ function RAT:_Randomize(value, fac, lower, upper)
   return r
 end
 
---- Generate Gaussian pseudo-random numbers.
--- @param #number x0 Expectation value of distribution.
--- @param #number sigma (Optional) Standard deviation. Default 10.
--- @param #number xmin (Optional) Lower cut-off value.
--- @param #number xmax (Optional) Upper cut-off value.
--- @return #number Gaussian random number.
-function RAT:_Random_Gaussian(x0, sigma, xmin, xmax)
-
-  -- Standard deviation. Default 10 if not given.
-  sigma=sigma or 10
-    
-  local r
-  local gotit=false
-  local i=0
-  while not gotit do
-  
-    -- Uniform numbers in [0,1). We need two.
-    local x1=math.random()
-    local x2=math.random()
-  
-    -- Transform to Gaussian exp(-(x-x0)²/(2*sigma²).
-    r = math.sqrt(-2*sigma*sigma * math.log(x1)) * math.cos(2*math.pi * x2) + x0
-    
-    i=i+1
-    if (r>=xmin and r<=xmax) or i>100 then
-      gotit=true
-    end
-  end
-  
-  return r
-
-end
 
 --- Place markers of the waypoints. Note we assume a very specific number and type of waypoints here.
 -- @param #RAT self
@@ -53110,9 +53612,10 @@ end
 -- @param Core.Point#COORDINATE spawnplace (Optional) Place where spawning should happen. If not present, first waypoint is taken.
 -- @param Wrapper.Airbase#AIRBASE departure Departure airbase or zone.
 -- @param #number takeoff Takeoff type.
+-- @param #table parkingdata Parking data, i.e. parking spot coordinates and terminal ids for all units of the group.
 -- @return #boolean True if modification was successful or nil if not, e.g. when no parking space was found and spawn in air is disabled.
-function RAT:_ModifySpawnTemplate(waypoints, livery, spawnplace, departure, takeoff)
-  self:F2({waypoints=waypoints, livery=livery, spawnplace=spawnplace, departure=departure, takeoff=takeoff})
+function RAT:_ModifySpawnTemplate(waypoints, livery, spawnplace, departure, takeoff, parkingdata)
+  self:F2({waypoints=waypoints, livery=livery, spawnplace=spawnplace, departure=departure, takeoff=takeoff, parking=parkingdata})
 
   -- The 3D vector of the first waypoint, i.e. where we actually spawn the template group.
   local PointVec3 = COORDINATE:New(waypoints[1].x, waypoints[1].alt, waypoints[1].y)
@@ -53200,6 +53703,10 @@ function RAT:_ModifySpawnTemplate(waypoints, livery, spawnplace, departure, take
           self:T(RAT.id..string.format("Group %s is spawned on farp/ship/runway %s.", self.alias, departure:GetName()))
           nfree=departure:GetFreeParkingSpotsNumber(termtype, true)
           spots=departure:GetFreeParkingSpotsTable(termtype, true)
+        elseif parkingdata~=nil then
+          -- Parking data explicitly set by user as input parameter.
+          nfree=#parkingdata
+          spots=parkingdata
         else
           -- Helo is spawned.
           if self.category==RAT.cat.heli then
@@ -65493,220 +66000,1491 @@ function PSEUDOATC:_myname(unitname)
   return string.format("%s (%s)", csign, pname)
 end
 
---- **Functional** - (R2.4) - Manages assets of an airbase and transportation to other airbases upon request.
---
+--- **Functional** - (R2.5) - Simulation of logistic operations.
+-- 
+-- The MOOSE warehouse concept simulates the organization and implementation of complex operations regarding the flow of assets between the point of origin and the point of consumption 
+-- in order to meet requirements of a potential conflict. In particular, this class is concerned with maintaining army supply lines while disrupting those of the enemy, since an armed 
+-- force without resources and transportation is defenseless.
 --
 -- Features:
 --
---    * Holds (virtual) assests such as intrantry groups in stock.
---    * Manages requests of assets from other airbases or warehouses.
---    * Take care of transportation to other airbases.
---    * Different means of automatic transportation (planes, helicopters, selfpropelled).
+--    * Holds (virtual) assests in stock.
+--    * Manages requests of assets from other warehouses.
+--    * Realistic transportation of assets between warehouses.
+--    * Different means of automatic transportation (planes, helicopters, APCs, self propelled).
+--    * Strategic components such as capturing, defending and destroying warehouses and their associated infrastructure.
+--    * Can be easily interfaced to other MOOSE classes.
 --
--- # QUICK START GUIDE
+-- Please not that his class is work in progress and in an **alpha** stage.
 --
 -- ===
 --
--- ### Authors: **funkyfranky**
+-- ### Authors: **funkyfranky**, FlightControl (cargo dispatcher classes)
 --
 -- @module Functional.Warehouse
--- @image Warehouse.JPG
+-- @image MOOSE.JPG
 
 --- WAREHOUSE class.
 -- @type WAREHOUSE
 -- @field #string ClassName Name of the class.
 -- @field #boolean Debug If true, send debug messages to all.
 -- @field #boolean Report If true, send status messages to coalition.
--- @field DCS#Coalition coalition Coalition the warehouse belongs to.
--- @field Wrapper.Airbase#AIRBASE homebase Airbase the warehouse belongs to.
--- @field DCS#Airbase.Category category Category of the home airbase, i.e. airdrome, helipad/farp or ship.
--- @field Core.Point#COORDINATE coordinate Coordinate of the warehouse.
+-- @field Wrapper.Static#STATIC warehouse The phyical warehouse structure. 
+-- @field #string alias Alias of the warehouse. Name its called when sending messages.
+-- @field Core.Zone#ZONE zone Zone around the warehouse. If this zone is captured, the warehouse and all its assets goes to the capturing coaliton.
+-- @field Wrapper.Airbase#AIRBASE airbase Airbase the warehouse belongs to.
+-- @field #string airbasename Name of the airbase associated to the warehouse.
+-- @field Core.Point#COORDINATE road Closest point to warehouse on road.
+-- @field Core.Point#COORDINATE rail Closest point to warehouse on rail.
 -- @field Core.Zone#ZONE spawnzone Zone in which assets are spawned.
 -- @field #string wid Identifier of the warehouse printed before other output to DCS.log file.
+-- @field #number uid Unit identifier of the warehouse. Derived from the associated airbase.
 -- @field #number markerid ID of the warehouse marker at the airbase.
--- @field #number assetid Unique id of asset items in stock. Essentially a running number starting at one and incremented when a new asset is added.
--- @field #table stock Table holding all assets in stock. Table entries are of type @{#WAREHOUSE.Stockitem}.
+-- @field #number dTstatus Time interval in seconds of updating the warehouse status and processing new events. Default 30 seconds.
+-- @field #number queueid Unit id of each request in the queue. Essentially a running number starting at one and incremented when a new request is added.
+-- @field #table stock Table holding all assets in stock. Table entries are of type @{#WAREHOUSE.Assetitem}.
 -- @field #table queue Table holding all queued requests. Table entries are of type @{#WAREHOUSE.Queueitem}.
+-- @field #table pending Table holding all pending requests, i.e. those that are currently in progress. Table elements are of type @{#WAREHOUSE.Pendingitem}.
+-- @field #table transporting Table holding assets currently transporting cargo assets.
+-- @field #table delivered Table holding all delivered requests. Table elements are #boolean. If true, all cargo has been delivered.
+-- @field #table defending Table holding all defending requests, i.e. self requests that were if the warehouse is under attack. Table elements are of type @{#WAREHOUSE.Pendingitem}.
+-- @field Core.Zone#ZONE portzone Zone defining the port of a warehouse. This is where naval assets are spawned.
+-- @field #table shippinglanes Table holding the user defined shipping between warehouses.
+-- @field #table offroadpaths Table holding user defined paths from one warehouse to another. 
+-- @field #boolean autodefence When the warehouse is under attack, automatically spawn assets to defend the warehouse.
 -- @extends Core.Fsm#FSM
 
---- Manages ground assets of an airbase and offers the possibility to transport them to another airbase or warehouse.
+--- Have your assets at the right place at the right time - or not!
 --
 -- ===
 --
--- # Demo Missions
+-- ![Banner Image](..\Presentations\WAREHOUSE\Warehouse_Main.png)
 --
--- ### None.
---
--- ===
---
--- # YouTube Channel
---
--- ### None.
---
--- ===
---
--- ![Banner Image](..\Presentations\WAREHOUSE\Warehouse_Main.JPG)
---
--- # What is a warehouse?
--- A warehouse is an abstract object that can hold virtual assets in stock. It is usually associated with a particular airbase.
--- If another airbase or warehouse requests assets, the corresponding troops are spawned at the warehouse and being transported to the requestor.
---
+-- # The Warehouse Concept
+-- 
+-- The MOOSE warehouse adds a new logistic component to the DCS World. *Assets*, i.e. ground, airborne and naval units, can be transferred from one place
+-- to another in a realistic and highly automatic fashion. In contrast to a "DCS warehouse" these assets have a physical representation in game. In particular,
+-- this means they can be destroyed during the transport and add more life to the DCS world.
+-- 
+-- This comes along with some additional interesting stategic aspects since capturing/defending and destroying/protecting an enemy or your
+-- own warehous becomes of critical importance for the development of a conflict.
+-- 
+-- In essence, creating an efficient network of warehouses is vital for the success of a battle or even the whole war. Likewise, of course, cutting off the enemy
+-- of important supply lines by capturing or destroying warehouses or their associated infrastructure is equally important. 
+-- 
+-- ## What is a warehouse?
+-- 
+-- A warehouse is an abstract object represented by a physical (static) building that can hold virtual assets in stock.
+-- It can (but it must not) be associated with a particular airbase. The associated airbase can be an airdrome, a Helipad/FARP or a ship.
+-- 
+-- If another warehouse requests assets, the corresponding troops are spawned at the warehouse and being transported to the requestor or go their
+-- by themselfs. Once arrived at the requesting warehouse, the assets go into the stock of the requestor and can be activated/deployed when necessary.
+-- 
 -- ## What assets can be stored?
--- Any kind of ground or airborn asset can be stored. Ships not supported at the moment due to the fact that airbases are bound to airbases which are
--- normally not located near the sea.
+-- 
+-- Any kind of ground, airborne or naval asset can be stored and are spawned upon request.
+-- The fact that the assets live only virtually in stock and are put into the game only when needed has a positive impact on the game performance.
+-- It also alliviates the problem of limited parking spots at smaller air bases 
+-- 
+-- ## What means of transportation are available?
+-- Firstly, all mobile assets can be send from warehouse to another on their own.
+-- 
+-- * Ground vehicles will use the road infrastructure. So a good road connection for both warehouses is important but also off road connections can be added if necessary.
+-- * Airborne units get a flightplan from the airbase of the sending warehouse to the airbase of the receiving warehouse. This already implies that for airborne
+-- assets both warehouses need an airbase. If either one of the warehouses does not have an associated airbase, direct transportation of airborne assest is not possible.
+-- * Naval units can be exchanged between warehouses which possess a port, which can be defined by the user. Also shipping lanes must be specified manually but the user since DCS does not provide these.
+-- * Trains (would) use the available railroad infrastructure and both warehouses must have a connection to the railroad. Unfortunately, however, trains are not yet implemented to 
+-- a reasonable degree in DCS at the moment and hence cannot be used yet.
+-- 
+-- Furthermore, ground assets can be transferred between warehouses by transport units. These are APCs, helicopters and airplanes. The transportation process is modelled
+-- in a realistic way by using the corresponding cargo dispatcher classes, i.e.
+-- 
+-- * @{AI.AI_Cargo_Dispatcher_APC#AI_DISPATCHER_APC}
+-- * @{AI.AI_Cargo_Dispatcher_Helicopter#AI_DISPATCHER_HELICOPTER} 
+-- * @{AI.AI_Cargo_Dispatcher_Airplane#AI_DISPATCHER_AIRPLANE}
+-- 
+-- Depending on which cargo dispatcher is used (ground or airbore), similar considerations like in the self propelled case are necessary. Howver, note that
+-- the dispatchers as of yet cannot use user defined off road paths for example since they are classes of their own and use a different routing logic.
+-- 
+-- ===
+-- 
+-- # Creating a Warehouse
+-- 
+-- A MOOSE warehouse must be represented in game by a phyical *static* object. For example, the mission editor already has warehouse as static object available.
+-- This would be a good first choice but any static object will do.
+-- 
+-- ![Banner Image](..\Presentations\WAREHOUSE\Warehouse_Static.png)
+-- 
+-- The positioning of the warehouse static object is very important for a couple of reasons. Firstly, a warehouse needs a good infrastructure so that spawned assets
+-- have a proper road connection or can reach the associated airbase easily.
+-- 
+-- ## Constructor and Start
+-- 
+-- Once the static warehouse object is placed in the mission editor it can be used as a MOOSE warehouse by the @{#WAREHOUSE.New}(*warehousestatic*, *alias*) constructor,
+-- like for example:
+-- 
+--     warehouse=WAREHOUSE:New(STATIC:FindByName("Warehouse Static Batumi"), "My Warehouse Alias")
+--     warehouse:Start()
+-- 
+-- The first parameter *warehousestatic* is the static MOOSE object. By default, the name of the warehouse will be the same as the name given to the static object.
+-- The second parameter *alias* can be used to choose a more convenient name if desired. This will be the name the warehouse calls itself when reporting messages. 
+-- 
+-- Note that a warehouse also needs to be started in order to be in service. This is done with the @{#WAREHOUSE.Start}() or @{#WAREHOUSE.__Start}(*delay*) functions.
+-- The warehouse is now fully operational and requests are being processed.
+-- 
+-- # Adding Assets
+-- 
+-- Assets can be added to the warehouse stock by using the @{#WAREHOUSE.AddAsset}(*group*, *ngroups*, *forceattribute*, *forcecargobay*, *forceweight*) function. The parameter *group* has to be a MOOSE @{Wrapper.Group#GROUP}.
+-- The parameter *ngroups* specifies how many clones of this group are added to the stock.
+-- 
+-- 
+--     infrantry=GROUP:FindByName("Some Infantry Group")
+--     warehouse:AddAsset(infantry, 5)
+-- 
+-- This will add five infantry groups to the warehouse stock. Note that the group will normally be a late activated template group, 
+-- which was defined in the mission editor. But you can also add other groups which are already spawned and present in the mission.
+-- 
+-- You can add assets with a delay by using the @{#WAREHOUSE.__AddAsset}(*delay*, *group*, *ngroups*, *foceattribute*, *forcecargobay*, *forceweight*), where *delay* 
+-- is the delay in seconds before the asset is added.
+-- 
+-- In game, the warehouse will get a mark which is regularly updated and showing the currently available assets in stock.
+-- 
+-- ![Banner Image](..\Presentations\WAREHOUSE\Warehouse_Stock-Marker.png)
+-- 
+-- ## Options for Fine Tuning
+-- 
+-- By default, the generalized attribute of the asset is determined automatically from the DCS descriptor attributes. However, this might not always result in the desired outcome.
+-- Therefore, it is possible, to force a generalized attribute for the asset with the third optional parameter *forceattribute*, which is of type @{#WAREHOUSE.Attribute}.
+-- 
+-- ### Setting the Generalized Attibute
+-- For example, a UH-1H Huey has in DCS the attibute of an attack helicopter. But of course, it can also transport cargo. If you want to use it for transportation, you can specify this
+-- manually when the asset is added
+-- 
+--     warehouse.Batumi:AddAsset("Huey", 5, WAREHOUSE.Attribute.AIR_TRANSPORTHELO)
+-- 
+-- ### Setting the Cargo Bay Weight Limit    
+-- You can also ajust the cargo bay weight limit, in case it is not calculated correctly automatically. For example, the cargo bay of a C-17A is much smaller in DCS than that of a C-130, which is
+-- unrealistic. This can be corrected by the *forcecargobay* parmeter which is here set to 77,000 kg
+-- 
+--     warehouse.Batumi:AddAsset("C-17A", nil, 77000)
+--     
+-- ### Setting the Weight
+-- In the current version of DCS a mortar unit has a weight of 5 tons. This confuses the transporter logic, because it appears to be too have for, e.g. all APCs. You can manually adjust the weight
+-- by the *forceweight* parameter and set it to 210 kg for each unit in the group
+-- 
+--     warehouse.Batumi:AddAsset("Mortar Alpha", nil, nil, nil, 210)
+-- 
+-- ===
 --
+-- # Requesting Assets
+-- 
+-- Assets of the warehouse can be requested by other MOOSE warehouses. A request will first be scrutinized to check if can be fulfilled at all. If the request is valid, it is
+-- put into the warehouse queue and processed as soon as possible.
+-- 
+-- A request can be added by the @{#WAREHOUSE.AddRequest}(*warehouse*, *AssetDescriptor*, *AssetDescriptorValue*, *nAsset*, *TransportType*, *nTransport*, *Prio*, *Assignment*) function.
+-- The parameters are
+-- 
+-- * *warehouse*: The requesting MOOSE @{#WAREHOUSE}. Assets will be delivered there.
+-- * *AssetDescriptor*: The descriptor to describe the asset "type". See the @{#WAREHOUSE.Descriptor} enumerator. For example, assets requested by their generalized attibute. 
+-- * *AssetDescriptorValue*: The value of the asset descriptor.
+-- * *nAsset*: (Optional) Number of asset group requested. Default is one group.
+-- * *TransportType*: (Optional) The transport method used to deliver the assets to the requestor. Default is that assets go to the requesting warehouse on their own.
+-- * *nTransport*: (Optional) Number of asset groups used to transport the cargo assets from A to B. Default is one group.
+-- * *Prio*: (Optional) A number between 1 (high) and 100 (low) describing the priority of the request. Request with high priority are processed first. Default is 50, i.e. medium priority.
+-- * *Assignment*: (Optional) A free to choose string describing the assignment. For self requests, this can be used to assign the spawned groups to specific tasks. 
+-- 
+-- ## Requesting by Generalized Attribute
+-- 
+-- For example:
+--  
+--     warehouse.Batumi:AddRequest(warehouse.Kobuleti, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_INFANTRY, 5, WAREHOUSE.TransportType.APC, 2)
 --
+-- Here, warehouse Kobuleti requests 5 infantry groups from warehouse Batumi. These "cargo" assets should be transported from Batumi to Kobuleti by 2 APCS.
+-- Note that the warehouse at Batumi needs to have at least five infantry groups and two APC groups in their stock if the request can be processed.
+-- If either to few infantry or APC groups are available when the request is made, the request is held in the warehouse queue until enough cargo and
+-- transport assets are available.
+-- 
+-- Also note that the above request is for five infantry groups. So any group in stock that has the generalized attribute "INFANTRY" can be selected.
+--  
+-- 
+-- ## Requesting a Specific Unit Type
+-- 
+-- A more specific request could look like:
+-- 
+--     warehouse.Batumi:AddRequest(warehouse.Kobuleti, WAREHOUSE.Descriptor.UNITTYPE, "A-10C", 2)
+--      
+-- Here, Kobuleti requests a specific unit type, in particular two groups of A-10Cs. Note that the spelling is important as it must exacly be the same as
+-- what one get's when using the DCS unit type.
+-- 
+-- ## Requesting a Specific Group
+-- 
+-- An even more specific request would be:
+-- 
+--     warehouse.Batumi:AddRequest(warehouse.Kobuleti, WAREHOUSE.Descriptor.TEMPLATENAME, "Group Name as in ME", 3)
+--      
+-- In this case three groups named "Group Name as in ME" are requested. This explicitly request the groups named like that in the Mission Editor.
+-- 
+-- ## Requesting a General Category
+-- 
+-- On the other hand, very general unspecifc requests can be made as
+-- 
+--     warehouse.Batumi:AddRequest(warehouse.Kobuleti, WAREHOUSE.Descriptor.CATEGORY, Group.Category.Ground, 10)
+--      
+-- Here, Kubuleti requests 10 ground groups and does not care which ones. This could be a mix of infantry, APCs, trucks etc.
+-- 
+-- **Note** that these general requests should be made with *great care* due to the fact, that depending on what a warehouse has in stock a lot of different unit types can be spawned.
+-- 
+-- # Employing Assets
+-- 
+-- Assets in the warehouse' stock can used for user defined tasks realtively easily. They can be spawned into the game by a "*self request*", i.e. the warehouse
+-- requests the assets from itself:
+-- 
+--     warehouse.Batumi:AddRequest(warehouse.Batumi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_INFANTRY, 5)
+--      
+-- This would simply spawn five infantry groups in the spawn zone of the Batumi warehouse if/when they are available.
+-- 
+-- ## Accessing the Assets
+-- 
+-- If a warehouse requests assets from itself, it triggers the event **SelfReqeuest**. The mission designer can capture this event with the associated 
+-- @{#WAREHOUSE.OnAfterSelfRequest}(*From*, *Event*, *To*, *groupset*, *request*) function.
+-- 
+--     --- OnAfterSelfRequest user function. Access groups spawned from the warehouse for further tasking.
+--     -- @param #WAREHOUSE self
+--     -- @param #string From From state.
+--     -- @param #string Event Event.
+--     -- @param #string To To state.
+--     -- @param Core.Set#SET_GROUP groupset The set of cargo groups that was delivered to the warehouse itself.
+--     -- @param #WAREHOUSE.Pendingitem request Pending self request.
+--     function WAREHOUSE:OnAfterSelfRequest(From, Event, To, groupset, request)
+--     
+--       for _,group in pairs(groupset:GetSetObjects()) do
+--         local group=group --Wrapper.Group#GROUP
+--         group:SmokeGreen()
+--       end
+--     
+--     end
+--       
+-- The variable *groupset* is a @{Core.Set#SET_GROUP} object and holds all asset groups from the request. The code above shows, how the mission designer can access the groups
+-- for further tasking. Here, the groups are only smoked but, of course, you can use them for whatever task you fancy.
+-- 
+-- Note that airborne groups are spawned in uncontrolled state and need to be activated first before they can start their assigned mission.
+-- This can be done with the @{Wrapper.Controllable#CONTROLLABLE.StartUncontrolled} function.
+-- 
+-- ===
+-- 
+-- # Infrastructure
+-- 
+-- A good infrastructure is important for a warehouse to be efficient. Therefore, the location of a warehouse should be chosen with care.
+-- This can also help to avoid many DCS related issues such as units getting stuck in buildings, blocking taxi ways etc.
+-- 
+-- ## Spawn Zone
+-- 
+-- By default, the zone were ground assets are spawned is a circular zone around the physical location of the warehouse with a radius of 200 meters. However, the location of the
+-- spawn zone can be set by the @{#WAREHOUSE.SetSpawnZone}(*zone*) functions. It is advisable to choose a zone which is clear of obstacles.
+-- 
+-- ![Banner Image](..\Presentations\WAREHOUSE\Warehouse_Batumi.png)
+-- 
+-- The parameter *zone* is a MOOSE @{Core.Zone#ZONE} object. So one can, e.g., use trigger zones defined in the mission editor. If a cicular zone is not desired, one
+-- can use a polygon zone (see @{Core.Zone#ZONE_POLYGON}).
+-- 
+-- ![Banner Image](..\Presentations\WAREHOUSE\Warehouse_SpawnPolygon.png)
+-- 
+-- ## Road Connections
+-- 
+-- Ground assets will use a road connection to travel from one warehouse to another. Therefore, a proper road connection is necessary.
+-- 
+-- By default, the closest point on road to the center of the spawn zone is choses as road connection automatically. But only, if distance between the spawn zone
+-- and the road connection is less than 3 km.
+-- 
+-- The user can set the road connection manually with the @{#WAREHOUSE.SetRoadConnection} function. This is only functional for self propelled assets at the moment
+-- and not if using the AI dispatcher classes since these have a different logic to find the route.
+-- 
+-- ## Off Road Connections
+-- 
+-- For ground troops it is also possible to define off road paths from between warehouses if no proper road connection is available or should not be used.
+-- 
+-- An off road path can be defined via the @{#WAREHOUSE.AddOffRoadPath}(*remotewarehouse*, *group*, *oneway*) function, where
+-- *remotewarehouse* is the warehouse to which the path leads.
+-- The parameter *group* is a late activated template group. The waypoints of this group are used to define the path between the two warehouses.
+-- By default, the reverse paths is automatically added to get *from* the remote warehouse to this warehouse unless the parameter *oneway* is set to *true*.
+-- 
+-- ![Banner Image](..\Presentations\WAREHOUSE\Warehouse_Off-RoadPaths.png)
+-- 
+-- **Note** that if an off road connection is defined between two warehouses this becomes the default path, i.e. even if there is a path *on road* possible
+-- this will not be used.
+-- 
+-- Also note that you can define multiple off road connections between two warehouses. If there are multiple paths defined, the connection is chosen randomly.
+-- It is also possible to add the same path multiple times. By this you can influence the probability of the chosen path. For example Path_1(A->B) has been
+-- added two times while Path_2(A->B) was added only once. Hence, the group will choose Path_1 with a probability of 66.6 % while  Path_2 is only chosen with
+-- a probability of 33.3 %. 
+-- 
+-- ## Rail Connections
+-- 
+-- A rail connection is automatically defined as the closest point on a railway measured from the center of the spawn zone. But only, if the distance is less than 3 km.
+-- 
+-- The mission designer can manually specify a rail connection with the @{#WAREHOUSE.SetRailConnection} function.
+-- 
+-- **NOTE** however, that trains in DCS are currently not implemented in a way so that they can be used.
+-- 
+-- ## Air Connections
+-- 
+-- In order to use airborne assets, a warehouse needs to have an associated airbase. This can be an airdrome, a FARP/HELOPAD or a ship.
+-- 
+-- If there is an airbase within 3 km range of the warehouse it is automatically set as the associated airbase. A user can set an airbase manually
+-- with the @{#WAREHOUSE.SetAirbase} function. Keep in mind that sometimes ground units need to walk/drive from the spawn zone to the airport
+-- to get to their transport carriers.
+-- 
+-- ## Naval Connections
+-- 
+-- Natively, DCS does not have the concept of a port/habour or shipping lanes. So in order to have a meaningful transfer of naval units between warehouses, these have to be
+-- defined by the mission designer.
+-- 
+-- ### Defining a Port
+-- 
+-- A port in this context is the zone where all naval assets are spawned. This zone can be defined with the function @{#WAREHOUSE.SetPortZone}(*zone*), where the parameter
+-- *zone* is a MOOSE zone. So again, this can be create from a trigger zone defined in the mission editor or if a general shape is desired by a @{Core.Zone#ZONE_POLYGON}.
+-- 
+-- ![Banner Image](..\Presentations\WAREHOUSE\Warehouse_PortZone.png)
+-- 
+-- ### Defining Shipping Lanes
+-- 
+-- A shipping lane between to warehouses can be defined by the @{#WAREHOUSE.AddShippingLane}(*remotewarehouse*, *group*, *oneway*) function. The first parameter *remotewarehouse*
+-- is the warehouse which should be connected to the present warehouse.
+-- 
+-- The parameter *group* should be a late activated group defined in the mission editor. The waypoints of this group are used as waypoints of the shipping lane.
+-- 
+-- By default, the reverse lane is automatically added to the remote warehouse. This can be disabled by setting the *oneway* parameter to *true*.
+-- 
+-- Similar to off road connections, you can also define multiple shipping lanes between two warehouse ports. If there are multiple lanes defined, one is chosen randomly.
+-- It is possible to add the same lane multiple times. By this you can influence the probability of the chosen lane. For example Lane_1(A->B) has been
+-- added two times while Lane_2(A->B) was added only once. Therefore, the ships will choose Lane_1 with a probability of 66.6 % while Path_2 is only chosen with
+-- a probability of 33.3 %. 
+-- 
+-- ![Banner Image](..\Presentations\WAREHOUSE\Warehouse_ShippingLane.png) 
+-- 
+-- ===
+--
+-- # Why is my request not processed?
+--
+-- For each request, the warehouse class logic does a lot of consistancy and validation checks under the hood.
+-- This means that sometimes a request is deemed to be *invalid* in which case they are deleted from the queue or considered to be valid but cannot be executed at this very moment.
+-- 
+-- ## Invalid Requests
+-- 
+-- Invalid request are requests which can **never** be processes because there is some logical or physical argument against it. Or simply because that feature was not implemented (yet).
+-- 
+-- * All airborne assets need an associated airbase of any kind on the sending *and* receiving warhouse.
+-- * Airplanes need an airdrome at the sending and receiving warehouses.
+-- * Not enough parking spots of the right terminal type at the sending warehouse.
+-- * No parking spots of the right terminal type at the receiving warehouse. 
+-- * Ground assets need a road connection between both warehouses. 
+-- * Ground assets cannot be send directly to ships, i.e. warehouses on ships.
+-- * Naval units need a user defined shipping lane between both warehouses.
+-- * Warehouses need a user defined port zone to spawn naval assets.
+-- * If transport by airplane, both warehouses must have and airdrome.
+-- * If transport by APC, both warehouses must have a road connection.
+-- * If transport by helicopter, the sending airbase must have an associated airbase.
+-- 
+-- All invalid requests are removed from the warehouse queue!
+--   
+-- ## Temporarily Unprocessable Requests
+-- 
+-- Temporarily unprocessable requests are possible in priciple, but cannot be processed at the given time the warehouse checks its queue.
+-- 
+-- * No enough parking spaces are available for the requests assets but the airbase has enough parking spots in total so that this request is possible once other aircraft have taken off.
+-- * Requesting warehouse is not in state "Running" (could be stopped, not yet started or under attack).
+-- * Not enough cargo assets available at this moment.
+-- * Not enough free parking spots for all cargo or transport airborne assets at the moment.
+-- * Not enough transport assets to carry all cargo assets.
+-- 
+-- Temporarily unprocessable requests are held in the queue. If at some point in time, the situation changes so that these requests can be processed, they are executed.
+-- 
+-- ## Processing Speed
+-- 
+-- A warehouse has a limited speed to process requests. Each time the status of the warehouse is updated only one requests is processed.
+-- The time interval between status updates is 30 seconds by default and can be adjusted via the @{#WAREHOUSE.SetStatusUpdate}(*interval*) function.
+-- However, the status is also updated on other occasions, e.g. when a new request was added.
+-- 
+-- ===
+-- 
+-- # Strategic Considerations
+-- 
+-- Due to the fact that a warehouse holds (or can hold) a lot of valuable assets, it makes a (potentially) juicy target for enemy attacks.
+-- There are several interesting situations, which can occurr.
+-- 
+-- ## Capturing a Warehouses Airbase
+-- 
+-- If a warehouse has an associated airbase, it can be captured by the enemy. In this case, the warehouse looses its ability so employ all airborne assets and is also cut-off
+-- from supply by airplanes. Supply of ground troops via helicopters is still possible, because they deliver the troops into the spawn zone.
+-- 
+-- Technically, the capturing of the airbase is triggered by the DCS [S\_EVENT\_BASE\_CAPTURED](https://wiki.hoggitworld.com/view/DCS_event_base_captured) event. 
+-- So the capturing takes place when only enemy ground units are in the airbase zone whilst no ground units of the present airbase owner are in that zone.
+-- 
+-- The warehouse will also create an event **AirbaseCaptured**, which can be captured by the @{#WAREHOUSE.OnAfterAirbaseCaptured} function. So the warehouse chief can react on
+-- this attack and for example deploy ground groups to re-capture its airbase.
+-- 
+-- When an airbase is re-captured the event **AirbaseRecaptured** is triggered and can be captured by the @{#WAREHOUSE.OnAfterAirbaseRecaptured} function.
+-- This can be used to put the defending assets back into the warehouse stock.
+-- 
+-- ## Capturing the Warehouse
+-- 
+-- A warehouse can be captured by the enemy coalition. If enemy ground troops enter the warehouse zone the event **Attacked** is triggered which can be captured by the
+-- @{#WAREHOUSE.OnAfterAttacked} event. By default the warehouse zone circular zone with a radius of 500 meters located at the center of the physical warehouse.
+-- The warehouse zone can be set via the @{#WAREHOUSE.SetWarehouseZone}(*zone*) function. The parameter *zone* must also be a cirular zone. 
+-- 
+-- The @{#WAREHOUSE.OnAfterAttacked} function can be used by the mission designer to react to the enemy attack. For example by deploying some or all ground troops
+-- currently in stock to defend the warehouse. Note that the warehouse also has a self defence option which can be enabled by the @{#WAREHOUSE.SetAutoDefenceOn}()
+-- function. In this case, the warehouse will automatically spawn all ground troops. If the spawn zone is further away from the warehouse zone, all mobile troops
+-- are routed to the warehouse zone.
+-- 
+-- If only ground troops of the enemy coalition are present in the warehouse zone, the warehouse and all its assets falls into the hands of the enemy.
+-- In this case the event **Captured** is triggered which can be captured by the @{#WAREHOUSE.OnAfterCaptured} function.
+-- 
+-- The warehouse turns to the capturing coalition, i.e. its physical representation, and all assets as well. In paticular, all requests to the warehouse will
+-- spawn assets beloning to the new owner.
+-- 
+-- If the enemy troops could be defeated, i.e. no more troops of the opposite coalition are in the warehouse zone, the event **Defeated** is triggered and 
+-- the @{#WAREHOUSE.OnAfterDefeated} function can be used to adapt to the new situation. For example putting back all spawned defender troops back into
+-- the warehouse stock. Note that if the automatic defence is enabled, all defenders are automatically put back into the warehouse on the **Defeated** event.
+-- 
+-- ## Destroying a Warehouse
+-- 
+-- If an enemy destroy the physical warehouse structure, the warehouse will of course stop all its services. In priciple, all assets contained in the warehouse are
+-- gone as well. So a warehouse should be properly defended.
+-- 
+-- Upon destruction of the warehouse, the event **Destroyed** is triggered, which can be captured by the @{#WAREHOUSE.OnAfterDestroyed} function.
+-- So the mission designer can intervene at this point and for example choose to spawn all or paricular types of assets before the warehouse is gone for good.
 --
 -- ===
 --
--- # USAGE GUIDE
+-- # Examples
+-- 
+-- This section shows some examples how the WAREHOUSE class is used in practice. This is one of the best ways to explain things, in my opinion.
+-- 
+-- But first, let me introduce a convenient way to define several warehouses in a table. This is absolutely *not necessary* but quite handy if you have
+-- multiple WAREHOUSE objects in your mission.
+-- 
+-- ## Example 0: Setting up a Warehouse Array
+-- 
+-- If you have multiple warehouses, you can put them in a table. This makes it easier to access them or to loop over them.
+-- 
+--     -- Define Warehouses.
+--     local warehouse={}
+--     -- Blue warehouses
+--     warehouse.Senaki   = WAREHOUSE:New(STATIC:FindByName("Warehouse Senaki"),   "Senaki")   --Functional.Warehouse#WAREHOUSE
+--     warehouse.Batumi   = WAREHOUSE:New(STATIC:FindByName("Warehouse Batumi"),   "Batumi")   --Functional.Warehouse#WAREHOUSE
+--     warehouse.Kobuleti = WAREHOUSE:New(STATIC:FindByName("Warehouse Kobuleti"), "Kobuleti") --Functional.Warehouse#WAREHOUSE
+--     warehouse.Kutaisi  = WAREHOUSE:New(STATIC:FindByName("Warehouse Kutaisi"),  "Kutaisi")  --Functional.Warehouse#WAREHOUSE
+--     warehouse.Berlin   = WAREHOUSE:New(STATIC:FindByName("Warehouse Berlin"),   "Berlin")   --Functional.Warehouse#WAREHOUSE
+--     warehouse.London   = WAREHOUSE:New(STATIC:FindByName("Warehouse London"),   "London")   --Functional.Warehouse#WAREHOUSE
+--     warehouse.Stennis  = WAREHOUSE:New(STATIC:FindByName("Warehouse Stennis"),  "Stennis")  --Functional.Warehouse#WAREHOUSE
+--     warehouse.Pampa    = WAREHOUSE:New(STATIC:FindByName("Warehouse Pampa"),    "Pampa")    --Functional.Warehouse#WAREHOUSE
+--     -- Red warehouses
+--     warehouse.Sukhumi  = WAREHOUSE:New(STATIC:FindByName("Warehouse Sukhumi"),  "Sukhumi")  --Functional.Warehouse#WAREHOUSE
+--     warehouse.Gudauta  = WAREHOUSE:New(STATIC:FindByName("Warehouse Gudauta"),  "Gudauta")  --Functional.Warehouse#WAREHOUSE
+--     warehouse.Sochi    = WAREHOUSE:New(STATIC:FindByName("Warehouse Sochi"),    "Sochi")    --Functional.Warehouse#WAREHOUSE
 --
+-- Remarks:
+-- 
+-- * I defined the array as local, i.e. local warehouse={}. This is personal preference and sometimes causes trouble with the lua garbage collection. You can also define it as a global array/table!
+-- * The "--Functional.Warehouse#WAREHOUSE" at the end is only to have the LDT intellisense working correctly. If you don't use LDT (which you should!), it can be omitted.
+--
+-- **NOTE** that all examples below need this bit or code at the beginning - or at least the warehouses which are used.
+-- 
+-- The example mission is based on the same template mission, which has defined a lot of airborne, ground and naval assets as templates. Only few of those are used here.
+-- 
+-- ![Banner Image](..\Presentations\WAREHOUSE\Warehouse_Assets.png)
+-- 
+-- ## Example 1: Self Request
+-- 
+-- Ground troops are taken from the Batumi warehouse stock and spawned in its spawn zone. After a short delay, they are added back to the warehouse stock.
+-- Also a new request is made. Hence, the groups will be spawned, added back to the warehouse, spawned again and so on and so forth...
+--      
+--     -- Start warehouse Batumi.
+--     warehouse.Batumi:Start()
+--     
+--     -- Add five groups of infantry as assets.
+--     warehouse.Batumi:AddAsset(GROUP:FindByName("Infantry Platoon Alpha"), 5)
+--     
+--     -- Add self request for three infantry at Batumi.
+--     warehouse.Batumi:AddRequest(warehouse.Batumi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_INFANTRY, 3)
+--     
+--     
+--     --- Self request event. Triggered once the assets are spawned in the spawn zone or at the airbase.
+--     function warehouse.Batumi:OnAfterSelfRequest(From, Event, To, groupset, request)
+--       local mygroupset=groupset --Core.Set#SET_GROUP
+--       
+--       -- Loop over all groups spawned from that request.
+--       for _,group in pairs(mygroupset:GetSetObjects()) do
+--         local group=group --Wrapper.Group#GROUP
+--         
+--         -- Gree smoke on spawned group.
+--         group:SmokeGreen()
+--            
+--         -- Put asset back to stock after 10 seconds.
+--         warehouse.Batumi:__AddAsset(10, group)      
+--       end
+--       
+--       -- Add new self request after 20 seconds.
+--       warehouse.Batumi:__AddRequest(20, warehouse.Batumi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_INFANTRY, 3)
+--          
+--     end
+--
+-- ## Example 2: Self propelled Ground Troops
+-- 
+-- Warehouse Berlin, which is a FARP near Batumi, requests infantry and troop transports from the warehouse at Batumi.
+-- The groups are spawned at Batumi and move by themselfs from Batumi to Berlin using the roads.
+-- Once the troops have arrived at Berlin, the troops are automatically added to the warehouse stock of Berlin.
+-- While on the road, Batumi has requested back two APCs from Berlin. Since Berlin does not have the assets in stock,
+-- the request is queued. After the troops have arrived, Berlin is sending back the APCs to Batumi.
+-- 
+--     -- Start Warehouse at Batumi.
+--     warehouse.Batumi:Start()
+--     
+--     -- Add 20 infantry groups and ten APCs as assets at Batumi.
+--     warehouse.Batumi:AddAsset("Infantry Platoon Alpha", 20)
+--     warehouse.Batumi:AddAsset("TPz Fuchs", 10)
+--   
+--     -- Start Warehouse Berlin. 
+--     warehouse.Berlin:Start()
+--   
+--     -- Warehouse Berlin requests 10 infantry groups and 5 APCs from warehouse Batumi.
+--     warehouse.Batumi:AddRequest(warehouse.Berlin, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_INFANTRY, 10)
+--     warehouse.Batumi:AddRequest(warehouse.Berlin, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 5)
+--     
+--     -- Request from Batumi for 2 APCs. Initially these are not in stock. When they become available, the request is executed.
+--     warehouse.Berlin:AddRequest(warehouse.Batumi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 2)  
+--
+-- ## Example 3: Self Propelled Airborne Assets
+-- 
+-- Warehouse Senaki receives a high priority request from Kutaisi for one Yak-52s. At the same time, Kobuleti requests half of
+-- all available Yak-52s. Request from Kutaisi is first executed and then Kobuleti gets half of the remaining assets.
+-- Additionally, London requests one third of all available UH-1H Hueys from Senaki.
+-- Once the units have arrived they are added to the stock of the receiving warehouses and can be used for further assignments. 
+-- 
+--     -- Start warehouses
+--     warehouse.Senaki:Start()
+--     warehouse.Kutaisi:Start()
+--     warehouse.Kobuleti:Start()
+--     warehouse.London:Start()
+--     
+--     -- Add assets to Senaki warehouse.
+--     warehouse.Senaki:AddAsset("Yak-52", 10)
+--     warehouse.Senaki:AddAsset("Huey", 6)
+--     
+--     -- Kusaisi requests 3 Yak-52 form Senaki while Kobuleti wants all the rest.
+--     warehouse.Senaki:AddRequest(warehouse.Kutaisi,  WAREHOUSE.Descriptor.TEMPLATENAME, "Yak-52", 1, nil, nil, 10)
+--     warehouse.Senaki:AddRequest(warehouse.Kobuleti, WAREHOUSE.Descriptor.TEMPLATENAME, "Yak-52", WAREHOUSE.Quantity.HALF,  nil, nil, 70)
+--     
+--     -- FARP London wants 1/3 of the six available Hueys.
+--     warehouse.Senaki:AddRequest(warehouse.London,  WAREHOUSE.Descriptor.TEMPLATENAME, "Huey", WAREHOUSE.Quantity.THIRD)
+--
+-- ## Example 4: Transport of Assets by APCs
+-- 
+-- Warehouse at FARP Berlin requests five infantry groups from Batumi. These assets shall be transported using two APC groups.
+-- Infantry and APC are spawned in the spawn zone at Batumi. The APCs have a cargo bay large enough to pick up four of the 
+-- five infantry groups in the first run and will bring them to Berlin. There, they unboard and walk to the warehouse where they will be added to the stock.
+-- Meanwhile the APCs go back to Batumi and one will pick up the last remaining soldiers.
+-- Once the APCs have completed their mission, they return to Batumi and are added back to stock. 
+-- 
+--     -- Start Warehouse at Batumi.
+--     warehouse.Batumi:Start()
+--   
+--     -- Start Warehouse Berlin. 
+--     warehouse.Berlin:Start()
+--   
+--     -- Add 20 infantry groups and five APCs as assets at Batumi.
+--     warehouse.Batumi:AddAsset("Infantry Platoon Alpha", 20)
+--     warehouse.Batumi:AddAsset("TPz Fuchs", 5)
+--   
+--     -- Warehouse Berlin requests 5 infantry groups from warehouse Batumi using 2 APCs for transport.
+--     warehouse.Batumi:AddRequest(warehouse.Berlin, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_INFANTRY, 5, WAREHOUSE.TransportType.APC, 2)
+--
+--## Example 5: Transport of Assets by Helicopters
+--
+--  Warehouse at FARP Berlin requests five infantry groups from Batumi. They shall be transported by all available transport helicopters.
+--  Note that the UH-1H Huey in DCS is an attack and not a transport helo. So the warehouse logic would be default also
+--  register it as an @{#WAREHOUSE.Attribute.AIR_ATTACKHELICOPTER}. In order to use it as a transport we need to force
+--  it to be added as transport helo.
+--  Also note that even though all (here five) helos are requested, only two of them are employed because this number is sufficient to
+--  transport all requested assets in one go.
+--
+--     -- Start Warehouses.
+--     warehouse.Batumi:Start()
+--     warehouse.Berlin:Start()
+--   
+--     -- Add 20 infantry groups as assets at Batumi.
+--     warehouse.Batumi:AddAsset("Infantry Platoon Alpha", 20)
+--     
+--     -- Add five Hueys for transport. Note that a Huey in DCS is an attack and not a transport helo. So we force this attribute!
+--     warehouse.Batumi:AddAsset("Huey", 5, WAREHOUSE.Attribute.AIR_TRANSPORTHELO)
+--   
+--     -- Warehouse Berlin requests 5 infantry groups from warehouse Batumi using all available helos for transport.
+--     warehouse.Batumi:AddRequest(warehouse.Berlin, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_INFANTRY, 5, WAREHOUSE.TransportType.HELICOPTER, WAREHOUSE.Quantity.ALL)
+--
+--## Example 6: Transport of Assets by Airplanes
+--
+-- Warehoues Kobuleti requests all (three) APCs from Batumi using one airplane for transport.
+-- The available C-130 is able to carry one APC at a time. So it has to commute three times between Batumi and Kobuleti to deliver all requested cargo assets.
+-- Once the cargo is delivered, the C-130 transport returns to Batumi and is added back to stock.
+--
+--     -- Start warehouses.
+--     warehouse.Batumi:Start()
+--     warehouse.Kobuleti:Start()
+--     
+--     -- Add assets to Batumi warehouse.
+--     warehouse.Batumi:AddAsset("C-130", 1)
+--     warehouse.Batumi:AddAsset("TPz Fuchs", 3)
+--       
+--     warehouse.Batumi:AddRequest(warehouse.Kobuleti, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, WAREHOUSE.Quantity.ALL, WAREHOUSE.TransportType.AIRPLANE)
+--
+-- ## Example 7: Capturing Airbase and Warehouse
+-- 
+-- A red BMP has made it through our defence lines and drives towards our unprotected airbase at Senaki.
+-- Once the BMP captures the airbase (DCS S\_EVENT_\BASE_\CAPTURED is evaluated) the warehouse at Senaki lost its air infrastructure and it is not
+-- possible any more to spawn airborne units. All requests for airborne units are rejected and cancelled in this case.
+-- 
+-- The red BMP then drives further to the warehouse. Once it enters the warehouse zone (500 m radius around the warehouse building), the warehouse is
+-- considered to be under attack. This triggers the event **Attacked**. The @{#WAREHOUSE.OnAfterAttacked} function can be used to react to this situation.
+-- Here, we only broadcast a distress call and launch a flare. However, it would also be reasonable to spawn all or selected ground troops in order to defend
+-- the warehouse. Note, that the warehouse has a self defence option which can be activated via the @{#WAREHOUSE.SetAutoDefenceOn}() function. If activated,
+-- *all* ground assets are automatically spawned and assigned to defend the warehouse. Once/if the attack is defeated, these assets go automatically back
+-- into the warehouse stock.
+-- 
+-- If the red coalition manages to capture our warehouse, all assets go into their possession. Now red tries to steal three F/A-18 flights and send them to 
+-- Sukhumi. These aircraft will be spawned and begin to taxi. However, ...
+-- 
+-- A blue Bradley is in the area and will attemt to recapture the warehouse. It might also catch the red F/A-18s before they take off. 
+-- 
+--     -- Start warehouses.  
+--     warehouse.Senaki:Start()
+--     warehouse.Sukhumi:Start()
+--     
+--     -- Add some assets.
+--     warehouse.Senaki:AddAsset("TPz Fuchs", 5)
+--     warehouse.Senaki:AddAsset("Infantry Platoon Alpha", 10)
+--     warehouse.Senaki:AddAsset("F/A-18C 2ship", 10)
+--     
+--     -- Enable auto defence, i.e. spawn all group troups into the spawn zone.
+--     --warehouse.Senaki:SetAutoDefenceOn()
+--     
+--     -- Activate Red BMP trying to capture the airfield and the warehouse.
+--     local red1=GROUP:FindByName("Red BMP-80 Senaki"):Activate()
+--     
+--     -- The red BMP first drives to the airbase which gets captured and changes from blue to red.
+--     -- This triggers the "AirbaseCaptured" event where you can hook in and do things.   
+--     function warehouse.Senaki:OnAfterAirbaseCaptured(From, Event, To, Coalition)
+--       -- This request cannot be processed since the warehouse has lost its airbase. In fact it is deleted from the queue.
+--       warehouse.Senaki:AddRequest(warehouse.Senaki,WAREHOUSE.Descriptor.CATEGORY, Group.Category.AIRPLANE, 1)
+--     end
+--     
+--     -- Now the red BMP also captures the warehouse. This triggers the "Captured" event where you can hook in.
+--     -- So now the warehouse and the airbase are both red and aircraft can be spawned again.
+--     function warehouse.Senaki:OnAfterCaptured(From, Event, To, Coalition, Country)
+--       -- These units will be spawned as red units because the warehouse has just been captured.
+--       if Coalition==coalition.side.RED then
+--         -- Sukhumi tries to "steals" three F/A-18 from Senaki and brings them to Sukhumi.
+--         -- Well, actually the aircraft wont make it because blue1 will kill it on the taxi way leaving a blood bath. But that's life!
+--         warehouse.Senaki:AddRequest(warehouse.Sukhumi, WAREHOUSE.Descriptor.CATEGORY, Group.Category.AIRPLANE, 3)
+--         warehouse.Senaki.warehouse:SmokeRed()
+--       elseif Coalition==coalition.side.BLUE then
+--         warehouse.Senaki.warehouse:SmokeBlue()
+--       end
+--       
+--       -- Activate a blue vehicle to re-capture the warehouse. It will drive to the warehouse zone and kill the red intruder.
+--       local blue1=GROUP:FindByName("blue1"):Activate()
+--     end
+--
+-- ## Example 8: Destroying a Warehouse
+-- 
+-- FARP Berlin requests a Huey from Batumi warehouse. This helo is deployed and will be delivered.
+-- After 30 seconds into the mission we create and (artificial) big explosion - or a terrorist attack if you like - which completely destroys the
+-- the warehouse at Batumi. All assets are gone and requests cannot be processed anymore.
+-- 
+--     -- Start Batumi and Berlin warehouses.
+--     warehouse.Batumi:Start()
+--     warehouse.Berlin:Start()
+--     
+--     -- Add some assets.
+--     warehouse.Batumi:AddAsset("Huey", 5, WAREHOUSE.Attribute.AIR_TRANSPORTHELO)
+--     warehouse.Berlin:AddAsset("Huey", 5, WAREHOUSE.Attribute.AIR_TRANSPORTHELO)
+--     
+--     -- Big explosion at the warehose. It has a very nice damage model by the way :)
+--     local function DestroyWarehouse()
+--       warehouse.Batumi.warehouse:GetCoordinate():Explosion(999)
+--     end
+--     SCHEDULER:New(nil, DestroyWarehouse, {}, 30)
+--     
+--     -- First request is okay since warehouse is still alive.
+--     warehouse.Batumi:AddRequest(warehouse.Berlin, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_TRANSPORTHELO, 1)
+--     
+--     -- These requests should both not be processed any more since the warehouse at Batumi is destroyed.  
+--     warehouse.Batumi:__AddRequest(35, warehouse.Berlin, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_TRANSPORTHELO, 1)
+--     warehouse.Berlin:__AddRequest(40, warehouse.Batumi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_TRANSPORTHELO, 1)
+--
+-- ## Example 9: Self Propelled Naval Assets
+-- 
+-- Kobuleti requests all naval assets from Batumi.
+-- However, before naval assets can be exchanged, both warehouses need a port and at least one shipping lane defined by the user.
+-- See the @{#WAREHOUSE.SetPortZone}() and @{#WAREHOUSE.AddShippingLane}() functions.
+-- We do not want to spawn them all at once, because this will probably be a disaster
+-- in the port zone. Therefore, each ship is spawned with a delay of five minutes.
+--  
+-- Batumi has quite a selection of different ships (for testing).
+-- 
+-- ![Banner Image](..\Presentations\WAREHOUSE\Warehouse_Naval_Assets.png)
+-- 
+--     -- Start warehouses.
+--     warehouse.Batumi:Start()
+--     warehouse.Kobuleti:Start()
+--     
+--     -- Define ports. These are polygon zones created by the waypoints of late activated units.
+--     warehouse.Batumi:SetPortZone(ZONE_POLYGON:NewFromGroupName("Warehouse Batumi Port Zone", "Warehouse Batumi Port Zone"))
+--     warehouse.Kobuleti:SetPortZone(ZONE_POLYGON:NewFromGroupName("Warehouse Kobuleti Port Zone", "Warehouse Kobuleti Port Zone"))
+--     
+--     -- Shipping lane. Again, the waypoints of late activated units are taken as points defining the shipping lane.
+--     -- Some units will take lane 1 while others will take lane two. But both lead from Batumi to Kobuleti port.
+--     warehouse.Batumi:AddShippingLane(warehouse.Kobuleti, GROUP:FindByName("Warehouse Batumi-Kobuleti Shipping Lane 1"))
+--     warehouse.Batumi:AddShippingLane(warehouse.Kobuleti, GROUP:FindByName("Warehouse Batumi-Kobuleti Shipping Lane 2"))
+--     
+--     -- Large selection of available naval units in DCS.
+--     warehouse.Batumi:AddAsset("Speedboat")
+--     warehouse.Batumi:AddAsset("Perry")
+--     warehouse.Batumi:AddAsset("Normandy")
+--     warehouse.Batumi:AddAsset("Stennis")
+--     warehouse.Batumi:AddAsset("Carl Vinson")
+--     warehouse.Batumi:AddAsset("Tarawa")
+--     warehouse.Batumi:AddAsset("SSK 877")
+--     warehouse.Batumi:AddAsset("SSK 641B")
+--     warehouse.Batumi:AddAsset("Grisha")
+--     warehouse.Batumi:AddAsset("Molniya")
+--     warehouse.Batumi:AddAsset("Neustrashimy")
+--     warehouse.Batumi:AddAsset("Rezky")
+--     warehouse.Batumi:AddAsset("Moskva")
+--     warehouse.Batumi:AddAsset("Pyotr Velikiy")
+--     warehouse.Batumi:AddAsset("Kuznetsov")
+--     warehouse.Batumi:AddAsset("Zvezdny")
+--     warehouse.Batumi:AddAsset("Yakushev")
+--     warehouse.Batumi:AddAsset("Elnya")
+--     warehouse.Batumi:AddAsset("Ivanov")
+--     warehouse.Batumi:AddAsset("Yantai")
+--     warehouse.Batumi:AddAsset("Type 052C")
+--     warehouse.Batumi:AddAsset("Guangzhou")  
+--     
+--     -- Get Number of ships at Batumi.
+--     local nships=warehouse.Batumi:GetNumberOfAssets(WAREHOUSE.Descriptor.CATEGORY, Group.Category.SHIP)
+--     
+--     -- Send one ship every 5 minutes.
+--     for i=1, nships do
+--       warehouse.Batumi:__AddRequest(300*(i-1)+10, warehouse.Kobuleti, WAREHOUSE.Descriptor.CATEGORY, Group.Category.SHIP, 1)
+--     end
+--
+-- ## Example 10: Warehouse on Aircraft Carrier
+--
+-- This example shows how to spawn assets from a warehouse located on an aircraft carrier. The warehouse must still be represented by a 
+-- physical static object. However, on a carrier space is limit so we take a smaller static. In priciple one could also take something 
+-- like a windsock.
+-- 
+-- ![Banner Image](..\Presentations\WAREHOUSE\Warehouse_Carrier.png)
+-- 
+-- USS Stennis requests F/A-18s from Batumi. At the same time Kobuleti requests F/A-18s from the Stennis which currently does not have any.
+-- So first, Batumi delivers the fighters to the Stennis. After they arrived they are deployed again and send to Kobuleti.
+-- 
+--     -- Start warehouses.
+--     warehouse.Batumi:Start()  
+--     warehouse.Stennis:Start()
+--     warehouse.Kobuleti:Start()
+--     
+--     -- Add F/A-18 2-ship flight to Batmi.
+--     warehouse.Batumi:AddAsset("F/A-18C 2ship", 1)
+--     
+--     -- USS Stennis requests F/A-18 from Batumi.
+--     warehouse.Batumi:AddRequest(warehouse.Stennis, WAREHOUSE.Descriptor.TEMPLATENAME, "F/A-18C 2ship")
+--     
+--     -- Kobuleti requests F/A-18 from USS Stennis.
+--     warehouse.Stennis:AddRequest(warehouse.Kobuleti, WAREHOUSE.Descriptor.TEMPLATENAME, "F/A-18C 2ship")
+--
+-- ## Example 11: Aircraft Carrier - Rescue Helo and Escort
+-- 
+-- After 10 seconds we make a self request for a rescue helicopter. Note, that the @{#WAREHOUSE.AddRequest} function has a parameter which lets you
+-- specify an "Assignment". This can be later used to identify the request and take the right actions.
+-- 
+-- Once the request is processed, the @{#WAREHOUSE.OnAfterSelfRequest} function is called. This is where we hook in and postprocess the spawned assets.
+-- In particular, we use the @{AI.AI_Formation#AI_FORMATION} class to make some nice escorts for our carrier.
+-- 
+-- When the resue helo is spawned, we can check that this is the correct asset and make the helo go into formation with the carrier.
+-- Once the helo runs out of fuel, it will automatically return to the ship and land. For the warehouse, this means that the "cargo", i.e. the helicopter
+-- has been delivered - assets can be delivered to other warehouses and to the same warehouse - hence a *self* request.
+-- When that happens, the **Delivered** event is triggered and the @{#WAREHOUSE.OnAfterDelivered} function called. This can now be used to spawn
+-- a fresh helo. Effectively, there we created an infinite, never ending loop. So a rescue helo will be up at all times.
+-- 
+-- After 30 and 45 seconds requests for five groups of armed speedboats are made. These will be spawned in the port zone right behind the carrier.
+-- The first five groups will go port of the carrier an form a left wing formation. The seconds groups will to the analogue on the starboard side.
+-- **Note** that in order to spawn naval assets a warehouse needs a port (zone). Since the carrier and hence the warehouse is mobile, we define a moving
+-- zone as @{Core.Zone#ZONE_UNIT} with the carrier as reference unit. The "port" of the Stennis at its stern so all naval assets are spawned behing the carrier.
+-- 
+--     -- Start warehouse on USS Stennis.
+--     warehouse.Stennis:Start()
+--     
+--     -- Aircraft carrier gets a moving zone right behind it as port.
+--     warehouse.Stennis:SetPortZone(ZONE_UNIT:New("Warehouse Stennis Port Zone", UNIT:FindByName("USS Stennis"), 100, {rho=250, theta=180, relative_to_unit=true}))
+--     
+--     -- Add speedboat assets.
+--     warehouse.Stennis:AddAsset("Speedboat", 10)
+--     warehouse.Stennis:AddAsset("CH-53E", 1)
+--     
+--     -- Self request of speed boats.
+--     warehouse.Stennis:__AddRequest(10, warehouse.Stennis, WAREHOUSE.Descriptor.TEMPLATENAME, "CH-53E", 1, nil, nil, nil, "Rescue Helo")
+--     warehouse.Stennis:__AddRequest(30, warehouse.Stennis, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.NAVAL_ARMEDSHIP, 5, nil, nil, nil, "Speedboats Left")
+--     warehouse.Stennis:__AddRequest(45, warehouse.Stennis, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.NAVAL_ARMEDSHIP, 5, nil, nil, nil, "Speedboats Right")
+--     
+--     --- Function called after self request
+--     function warehouse.Stennis:OnAfterSelfRequest(From, Event, To,_groupset, request)
+--     
+--       local groupset=_groupset --Core.Set#SET_GROUP
+--       local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+--       
+--       -- USS Stennis is the mother ship.
+--       local Mother=UNIT:FindByName("USS Stennis")
+--       
+--       -- Get assignment of the request.
+--       local assignment=warehouse.Stennis:GetAssignment(request)
+--       
+--       if assignment=="Speedboats Left" then
+--         
+--         -- Define AI Formation object.
+--         -- Note that this has to be a global variable or the garbage collector will remove it for some reason!
+--         CarrierFormationLeft = AI_FORMATION:New(Mother, groupset, "Left Formation with Carrier", "Escort Carrier.")
+--     
+--         -- Formation parameters.
+--         CarrierFormationLeft:FormationLeftWing(200 ,50, 0, 0, 500, 50)      
+--         CarrierFormationLeft:__Start(2)
+--     
+--         for _,group in pairs(groupset:GetSetObjects()) do
+--           local group=group --Wrapper.Group#GROUP
+--           group:FlareRed()        
+--         end    
+--         
+--       elseif assignment=="Speedboats Right" then
+--       
+--         -- Define AI Formation object.
+--         -- Note that this has to be a global variable or the garbage collector will remove it for some reason!
+--         CarrierFormationRight = AI_FORMATION:New(Mother, groupset, "Right Formation with Carrier", "Escort Carrier.")
+--     
+--         -- Formation parameters.
+--         CarrierFormationRight:FormationRightWing(200 ,50, 0, 0, 500, 50)      
+--         CarrierFormationRight:__Start(2)
+--         
+--         for _,group in pairs(groupset:GetSetObjects()) do
+--           local group=group --Wrapper.Group#GROUP
+--           group:FlareGreen()        
+--         end    
+--         
+--       elseif assignment=="Rescue Helo" then
+--       
+--         -- Start uncontrolled helo.
+--         local group=groupset:GetFirst() --Wrapper.Group#GROUP
+--         group:StartUncontrolled()
+--     
+--         -- Define AI Formation object.
+--         CarrierFormationHelo = AI_FORMATION:New(Mother, groupset, "Helo Formation with Carrier", "Fly Formation.")
+--     
+--         -- Formation parameters.
+--         CarrierFormationHelo:FormationCenterWing(-150, 50, 20, 50, 100, 50)
+--         CarrierFormationHelo:__Start(2)
+--         
+--       end
+--       
+--       --- When the helo is out of fuel, it will return to the carrier and should be delivered.
+--       function warehouse.Stennis:OnAfterDelivered(From,Event,To,request)
+--         local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+--         
+--         -- So we start another request.
+--         if request.assignment=="Rescue Helo" then
+--           warehouse.Stennis:__AddRequest(10, warehouse.Stennis, WAREHOUSE.Descriptor.TEMPLATENAME, "CH-53E", 1, nil, nil, nil, "Rescue Helo")
+--         end
+--       end
+--       
+--     end
+--
+-- ## Example 12: Pause and Unpause a Warehouse
+--
+-- This example shows how to pause a warehouse. In paused state, no requests will be processed but assets can be added or be requests made.
+--
+--    * Warehouse Batumi is paused after 10 seconds.
+--    * Request from Berlin after 15 which will not be processed.
+--    * New tank assets for Batumi after 20 seconds. This is possible also in paused state.
+--    * Batumi unpaused after 30 seconds. Queued request from Berlin can be processed.
+--    * Berlin is paused after 60 seconds.
+--    * Berlin requests tanks from Batumi after 90 seconds. Request is not processed because Berlin is paused and not running.
+--    * Berlin is unpaused after 120 seconds. Queued request for tanks from Batumi can not be processed.
+--
+-- Here is the code:
+--
+--     -- Start Warehouse at Batumi.
+--     warehouse.Batumi:Start()
+--     
+--     -- Start Warehouse Berlin. 
+--     warehouse.Berlin:Start()
+--     
+--     -- Add 20 infantry groups and 5 tank platoons as assets at Batumi.
+--     warehouse.Batumi:AddAsset("Infantry Platoon Alpha", 20)
+--     
+--     -- Pause the warehouse after 10 seconds
+--     warehouse.Batumi:__Pause(10)
+--     
+--     -- Add a request from Berlin after 15 seconds. A request can be added but not be processed while warehouse is paused.
+--     warehouse.Batumi:__AddRequest(15, warehouse.Berlin, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_INFANTRY, 1)
+--     
+--     -- New asset added after 20 seconds. This is possible even if the warehouse is paused.
+--     warehouse.Batumi:__AddAsset(20, "Abrams", 5)
+--     
+--     -- Unpause warehouse after 30 seconds. Now the request from Berlin can be processed.
+--     warehouse.Batumi:__Unpause(30)
+--     
+--     -- Pause warehouse Berlin
+--     warehouse.Berlin:__Pause(60)
+--     
+--     -- After 90 seconds request from Berlin for tanks.
+--     warehouse.Batumi:__AddRequest(90, warehouse.Berlin, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_TANK, 1)
+--     
+--     -- After 120 seconds unpause Berlin.
+--     warehouse.Berlin:__Unpause(120)
+--
+-- ## Example 13: Battlefield Air Interdiction
+-- 
+-- This example show how to couple the WAREHOUSE class with the @{AI.AI_BAI} class.
+-- Four enemy targets have been located at the famous Kobuleti X. Three Viggen 2-ship flights are assigned to kill at least one of the BMPs to complete their mission. 
+--
+--     -- Start Warehouse at Kobuleti.
+--     warehouse.Kobuleti:Start()
+--     
+--     -- Add three 2-ship groups of Viggens.
+--     warehouse.Kobuleti:AddAsset("Viggen 2ship", 3)
+--     
+--     -- Self request for all Viggen assets.
+--     warehouse.Kobuleti:AddRequest(warehouse.Kobuleti, WAREHOUSE.Descriptor.TEMPLATENAME, "Viggen 2ship", WAREHOUSE.Quantity.ALL, nil, nil, nil, "BAI")
+--     
+--     -- Red targets at Kobuleti X (late activated).
+--     local RedTargets=GROUP:FindByName("Red IVF Alpha")
+--     
+--     -- Activate the targets.
+--     RedTargets:Activate()
+--     
+--     -- Do something with the spawned aircraft.
+--     function warehouse.Kobuleti:OnAfterSelfRequest(From,Event,To,groupset,request)
+--       local groupset=groupset --Core.Set#SET_GROUP
+--       local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+--     
+--       if request.assignment=="BAI" then
+--       
+--         for _,group in pairs(groupset:GetSetObjects()) do
+--           local group=group --Wrapper.Group#GROUP
+--           
+--           -- Start uncontrolled aircraft.
+--           group:StartUncontrolled()
+--           
+--           local BAI=AI_BAI_ZONE:New(ZONE:New("Patrol Zone Kobuleti"), 500, 1000, 500, 600, ZONE:New("Patrol Zone Kobuleti"))
+--     
+--           -- Tell the program to use the object (in this case called BAIPlane) as the group to use in the BAI function
+--           BAI:SetControllable(group)
+--           
+--           -- Function checking if targets are still alive
+--           local function CheckTargets()
+--             local nTargets=RedTargets:GetSize()
+--             local nInitial=RedTargets:GetInitialSize()
+--             local nDead=nInitial-nTargets
+--             local nRequired=1  -- Let's make this easy.
+--             if RedTargets:IsAlive() and nDead < nRequired then
+--               MESSAGE:New(string.format("BAI Mission: %d of %d red targets still alive. At least %d targets need to be eliminated.", nTargets, nInitial, nRequired), 5):ToAll()
+--             else
+--               MESSAGE:New("BAI Mission: The required red targets are destroyed.", 30):ToAll()
+--               BAI:__Accomplish(1) -- Now they should fly back to the patrolzone and patrol.
+--             end          
+--           end
+--           
+--           -- Start scheduler to monitor number of targets.
+--           local Check, CheckScheduleID = SCHEDULER:New(nil, CheckTargets, {}, 60, 60)
+--           
+--           -- When the targets in the zone are destroyed, (see scheduled function), the planes will return home ...
+--           function BAI:OnAfterAccomplish( Controllable, From, Event, To )
+--             MESSAGE:New( "BAI Mission: Sending the Viggens back to base.", 30):ToAll()
+--             Check:Stop(CheckScheduleID)
+--             BAI:__RTB(1)
+--           end
+--           
+--           -- Start BAI
+--           BAI:Start()
+--           
+--           -- Engage after 5 minutes.
+--           BAI:__Engage(300)
+--           
+--           -- RTB after 30 min max.
+--           BAI:__RTB(-30*60)
+--           
+--         end
+--       end
+--     
+--     end
+--
+-- ## Example 14: Strategic Bombing
+-- 
+-- This example shows how to employ stategic bombers in a mission. Three B-52s are lauched at Kobuleti with the assignment to wipe out the enemy warehouse at Sukhumi.
+-- The bombers will get a flight path and make their approach from the South at an altitude of 5000 m ASL. After their bombing run, they will return to Kobuleti and
+-- added back to stock.
+-- 
+--     -- Start warehouses
+--     warehouse.Kobuleti:Start()  
+--     warehouse.Sukhumi:Start()
+--     
+--     -- Add a strategic bomber assets
+--     warehouse.Kobuleti:AddAsset("B-52H", 3)
+--     
+--     -- Request bombers for specific task of bombing Sukhumi warehouse.  
+--     warehouse.Kobuleti:AddRequest(warehouse.Kobuleti, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, WAREHOUSE.Quantity.ALL, nil, nil, nil, "Bomb Sukhumi")
+--     
+--     -- Specify assignment after bombers have been spawned.  
+--     function warehouse.Kobuleti:OnAfterSelfRequest(From, Event, To, groupset, request)
+--       local groupset=groupset --Core.Set#SET_GROUP
+--       
+--       -- Get assignment of this request.
+--       local assignment=warehouse.Kobuleti:GetAssignment(request)
+--       
+--       if assignment=="Bomb Sukhumi" then
+--       
+--         for _,_group in pairs(groupset:GetSet()) do
+--           local group=_group --Wrapper.Group#GROUP
+--           
+--           group:StartUncontrolled()
+--           group:SmokeBlue()
+--           
+--           -- Target coordinate!
+--           local ToCoord=warehouse.Sukhumi:GetCoordinate()
+--           ToCoord.y=5000  -- Adjust altitude
+--           
+--           local FoCoord=warehouse.Kobuleti:GetCoordinate()
+--           FoCoord.y=3000  -- Ajust altitude.
+--           
+--           -- Task bomb Sukhumi warehouse using all bombs (2032) from direction 180 at altitude 5000 m.
+--           local task=group:TaskBombing(warehouse.Sukhumi:GetCoordinate():GetVec2(), false, "All", nil , 180, 5000, 2032)
+--           
+--           -- Define waypoints.        
+--           local WayPoints={}
+--           
+--           -- Take off position.
+--           WayPoints[1]=warehouse.Kobuleti:GetCoordinate():WaypointAirTakeOffParking()
+--           -- Begin bombing run 20 km south of target.
+--           WayPoints[2]=ToCoord:Translate(20*1000, 180):WaypointAirTurningPoint(nil, 600, {task}, "Bombing Run")
+--           -- Return to base.
+--           WayPoints[3]=FoCoord:WaypointAirTurningPoint()
+--           -- Land at homebase. Bombers are added back to stock and can be employed in later assignments.
+--           WayPoints[4]=warehouse.Kobuleti:GetCoordinate():WaypointAirLanding()
+--           
+--           -- Route bombers.
+--           group:Route(WayPoints)
+--         end
+--         
+--       end
+--     end
+--
+-- ## Example 15: Defining Off-Road Paths
+-- 
+-- For self propelled assets it is possible to define custom off-road paths from one warehouse to another via the @{#WAREHOUSE.AddOffRoadPath} function.
+-- The waypoints of a path are taken from late activated units. In this example, two paths have been defined between the warehouses Kobuleti and FARP London.
+-- Trucks are spawned at each warehouse and are guided along the paths to the other warehouse.
+-- Note that if more than one path was defined, each asset group will randomly select its route.
+--
+--     -- Start warehouses
+--     warehouse.Kobuleti:Start()
+--     warehouse.London:Start()
+--     
+--     -- Define a polygon zone as spawn zone at Kobuleti.
+--     warehouse.Kobuleti:SetSpawnZone(ZONE_POLYGON:New("Warehouse Kobuleti Spawn Zone", GROUP:FindByName("Warehouse Kobuleti Spawn Zone")))
+--     
+--     warehouse.Kobuleti:AddAsset("M978", 20)
+--     warehouse.London:AddAsset("M818", 20)
+--     
+--     -- Off two road paths from Kobuleti to London. The reverse path from London to Kobuleti is added automatically.
+--     warehouse.Kobuleti:AddOffRoadPath(warehouse.London, GROUP:FindByName("Warehouse Kobuleti-London OffRoad Path 1"))
+--     warehouse.Kobuleti:AddOffRoadPath(warehouse.London, GROUP:FindByName("Warehouse Kobuleti-London OffRoad Path 2"))
+--     
+--     -- London requests all available trucks from Kobuleti. 
+--     warehouse.Kobuleti:AddRequest(warehouse.London, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_TRUCK, WAREHOUSE.Quantity.ALL)
+--     
+--     -- Kobuleti requests all available trucks from London.
+--     warehouse.London:AddRequest(warehouse.Kobuleti, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_TRUCK, WAREHOUSE.Quantity.HALF)
 --
 --
 -- @field #WAREHOUSE
 WAREHOUSE = {
-  ClassName  = "WAREHOUSE",
-  Debug      = false,
-  Report     = true,
-  coalition  = nil,
-  homebase   = nil,
-  category   = nil,
-  coordinate = nil,
-  spawnzone  = nil,
-  wid        = nil,
-  markerid   = nil,
-  assetid    = 0,
-  queueid    = 0,
-  stock      = {},
-  queue      = {},
+  ClassName     = "WAREHOUSE",
+  Debug         = false,
+  Report        =  true,
+  warehouse     =   nil,
+  alias         =   nil,
+  zone          =   nil,
+  airbase       =   nil,
+  airbasename   =   nil,
+  road          =   nil,
+  rail          =   nil,
+  spawnzone     =   nil,
+  wid           =   nil,
+  uid           =   nil,
+  markerid      =   nil,
+  dTstatus      =    30,
+  queueid       =     0,
+  stock         =    {},
+  queue         =    {},
+  pending       =    {},
+  transporting  =    {},
+  delivered     =    {},
+  defending     =    {},
+  portzone      =   nil,
+  shippinglanes =    {},
+  offroadpaths  =    {},
+  autodefence   = false,  
 }
 
 --- Item of the warehouse stock table.
--- @type WAREHOUSE.Stockitem
--- @field #number id Unique id of the asset.
+-- @type WAREHOUSE.Assetitem
+-- @field #number uid Unique id of the asset.
 -- @field #string templatename Name of the template group.
+-- @field #table template The spawn template of the group.
 -- @field DCS#Group.Category category Category of the group.
 -- @field #string unittype Type of the first unit of the group as obtained by the Object.getTypeName() DCS API function.
+-- @field #number nunits Number of units in the group.
+-- @field #number range Range of the unit in meters.
+-- @field #number speedmax Maximum speed in km/h the group can do.
+-- @field #number size Maximum size in length and with of the asset in meters.
+-- @field #number weight The weight of the whole asset group in kilo gramms.
+-- @field DCS#Object.Desc DCSdesc All DCS descriptors.
 -- @field #WAREHOUSE.Attribute attribute Generalized attribute of the group.
+-- @field #boolean transporter If true, the asset is able to transport troops.
+-- @field #table cargobay Array of cargo bays of all units in an asset group.
+-- @field #number cargobaytot Total weight in kg that fits in the cargo bay of all asset group units.
+-- @field #number cargobaymax Largest cargo bay of all units in the group.
 
 --- Item of the warehouse queue table.
--- queueitem={uid=self.qid, prio=Prio, airbase=Airbase, assetdesc=AssetDescriptor, assetdescval=AssetDescriptorValue, nasset=nAsset, transporttype=TransportType, ntransport=nTransport}
 -- @type WAREHOUSE.Queueitem
 -- @field #number uid Unique id of the queue item.
--- @field #number prio Priority of the request.
--- @field Wrapper.Airbase#AIRBASE airbase Requesting airbase.
--- @field DCS#Airbase.Category category Category of the requesting airbase, i.e. airdrome, helipad/farp or ship.
--- @field #WAREHOUSE.Descriptor assetdesc Descriptor of the requested asset.
--- @field assetdescval Value of the asset descriptor. Type depends on descriptor.
+-- @field #WAREHOUSE warehouse Requesting warehouse.
+-- @field #WAREHOUSE.Descriptor assetdesc Descriptor of the requested asset. Enumerator of type @{#WAREHOUSE.Descriptor}.
+-- @field assetdescval Value of the asset descriptor. Type depends on "assetdesc" descriptor.
 -- @field #number nasset Number of asset groups requested.
 -- @field #WAREHOUSE.TransportType transporttype Transport unit type.
--- @field #number ntransport Number of transport units requested.
+-- @field #number ntransport Max. number of transport units requested.
+-- @field #string assignment A keyword or text that later be used to identify this request and postprocess the assets.
+-- @field #number prio Priority of the request. Number between 1 (high) and 100 (low).
+-- @field Wrapper.Airbase#AIRBASE airbase The airbase beloning to requesting warehouse if any.
+-- @field DCS#Airbase.Category category Category of the requesting airbase, i.e. airdrome, helipad/farp or ship.
+-- @field #boolean toself Self request, i.e. warehouse requests assets from itself.
+-- @field #table assets Table of self propelled (or cargo) and transport assets. Each element of the table is a @{#WAREHOUSE.Assetitem} and can be accessed by their asset ID.
+-- @field #table cargoassets Table of cargo (or self propelled) assets. Each element of the table is a @{#WAREHOUSE.Assetitem}.
+-- @field #number cargoattribute Attribute of cargo assets of type @{#WAREHOUSE.Attribute}.
+-- @field #number cargocategory Category of cargo assets of type @{#WAREHOUSE.Category}.
+-- @field #table transportassets Table of transport carrier assets. Each element of the table is a @{#WAREHOUSE.Assetitem}.
+-- @field #number transportattribute Attribute of transport assets of type @{#WAREHOUSE.Attribute}.
+-- @field #number transportcategory Category of transport assets of type @{#WAREHOUSE.Category}.
 
---- Descriptors enumerator describing the type of the asset in stock.
+--- Item of the warehouse pending queue table.
+-- @type WAREHOUSE.Pendingitem
+-- @field #number timestamp Absolute mission time in seconds when the request was processed.
+-- @field Core.Set#SET_GROUP cargogroupset Set of cargo groups do be delivered.
+-- @field #number ndelivered Number of groups delivered to destination.
+-- @field Core.Set#SET_GROUP transportgroupset Set of cargo transport carrier groups.
+-- @field Core.Set#SET_CARGO transportcargoset Set of cargo objects.
+-- @field #table carriercargo Table holding the cargo groups of each carrier unit.
+-- @field #number ntransporthome Number of transports back home.
+-- @extends #WAREHOUSE.Queueitem
+
+--- Descriptors enumerator describing the type of the asset.
 -- @type WAREHOUSE.Descriptor
+-- @field #string TEMPLATENAME Name of the asset template.
+-- @field #string UNITTYPE Typename of the DCS unit, e.g. "A-10C".
+-- @field #string ATTRIBUTE Generalized attribute @{#WAREHOUSE.Attribute}.
+-- @field #string CATEGORY Asset category of type DCS#Group.Category, i.e. GROUND, AIRPLANE, HELICOPTER, SHIP, TRAIN.
 WAREHOUSE.Descriptor = {
-  ID="id",
   TEMPLATENAME="templatename",
-  CATEGORY="category",
   UNITTYPE="unittype",
   ATTRIBUTE="attribute",
+  CATEGORY="category",
 }
 
---- Warehouse unit categories. These are used for
+--- Generalized asset attributes. Can be used to request assets with certain general characteristics. See [DCS attributes](https://wiki.hoggitworld.com/view/DCS_enum_attributes) on hoggit.
 -- @type WAREHOUSE.Attribute
+-- @field #string AIR_TRANSPORTPLANE Airplane with transport capability. This can be used to transport other assets.
+-- @field #string AIR_AWACS Airborne Early Warning and Control System.
+-- @field #string AIR_FIGHTER Fighter, interceptor, ... airplane.
+-- @field #string AIR_BOMBER Aircraft which can be used for strategic bombing.
+-- @field #string AIR_TANKER Airplane which can refuel other aircraft.
+-- @field #string AIR_TRANSPORTHELO Helicopter with transport capability. This can be used to transport other assets.
+-- @field #string AIR_ATTACKHELO Attack helicopter.
+-- @field #string AIR_UAV Unpiloted Aerial Vehicle, e.g. drones.
+-- @field #string AIR_OTHER Any airborne unit that does not fall into any other airborne category.
+-- @field #string GROUND_APC Infantry carriers, in particular Amoured Personell Carrier. This can be used to transport other assets.
+-- @field #string GROUND_TRUCK Unarmed ground vehicles, which has the DCS "Truck" attribute.
+-- @field #string GROUND_INFANTRY Ground infantry assets.
+-- @field #string GROUND_ARTILLERY Artillery assets.
+-- @field #string GROUND_TANK Tanks (modern or old).
+-- @field #string GROUND_TRAIN Trains. Not that trains are **not** yet properly implemented in DCS and cannot be used currently.
+-- @field #string GROUND_EWR Early Warning Radar.
+-- @field #string GROUND_AAA Anti-Aircraft Artillery.
+-- @field #string GROUND_SAM Surface-to-Air Missile system or components.
+-- @field #string GROUND_OTHER Any ground unit that does not fall into any other ground category.
+-- @field #string NAVAL_AIRCRAFTCARRIER Aircraft carrier.
+-- @field #string NAVAL_WARSHIP War ship, i.e. cruisers, destroyers, firgates and corvettes.
+-- @field #string NAVAL_ARMEDSHIP Any armed ship that is not an aircraft carrier, a cruiser, destroyer, firgatte or corvette.
+-- @field #string NAVAL_UNARMEDSHIP Any unarmed naval vessel.
+-- @field #string NAVAL_OTHER Any naval unit that does not fall into any other naval category.
+-- @field #string OTHER_UNKNOWN Anything that does not fall into any other category.
 WAREHOUSE.Attribute = {
-  TRANSPORT_PLANE="Transport_Plane",
-  TRANSPORT_HELO="Transport_Helo",
-  TRANSPORT_APC="Transport_APC",
-  FIGHTER="Fighter",
-  TANKER="Tanker",
-  AWACS="AWACS",
-  ARTILLERY="Artillery",
-  ATTACKHELICOPTER="Attackhelicopter",
-  INFANTRY="Infantry",
-  BOMBER="Bomber",
-  TANK="Tank",
-  TRUCK="Truck",
-  SHIP="Ship",
-  OTHER="Other",
+  AIR_TRANSPORTPLANE="Air_TransportPlane",
+  AIR_AWACS="Air_AWACS",
+  AIR_FIGHTER="Air_Fighter",
+  AIR_BOMBER="Air_Bomber",
+  AIR_TANKER="Air_Tanker",
+  AIR_TRANSPORTHELO="Air_TransportHelo",
+  AIR_ATTACKHELO="Air_AttackHelo",
+  AIR_UAV="Air_UAV",
+  AIR_OTHER="Air_OtherAir",
+  GROUND_APC="Ground_APC",
+  GROUND_TRUCK="Ground_Truck",
+  GROUND_INFANTRY="Ground_Infantry",
+  GROUND_ARTILLERY="Ground_Artillery",
+  GROUND_TANK="Ground_Tank",
+  GROUND_TRAIN="Ground_Train",
+  GROUND_EWR="Ground_EWR",
+  GROUND_AAA="Ground_AAA",
+  GROUND_SAM="Ground_SAM",
+  GROUND_OTHER="Ground_OtherGround",
+  NAVAL_AIRCRAFTCARRIER="Naval_AircraftCarrier",
+  NAVAL_WARSHIP="Naval_WarShip",
+  NAVAL_ARMEDSHIP="Naval_ArmedShip",
+  NAVAL_UNARMEDSHIP="Naval_UnarmedShip",
+  NAVAL_OTHER="Naval_OtherNaval",
+  OTHER_UNKNOWN="Other_Unknown",
 }
 
---- Cargo transport type.
+--- Cargo transport type. Defines how assets are transported to their destination.
 -- @type WAREHOUSE.TransportType
+-- @field #string AIRPLANE Transports are carried out by airplanes.
+-- @field #string HELICOPTER Transports are carried out by helicopters.
+-- @field #string APC Transports are conducted by APCs.
+-- @field #string SHIP Transports are conducted by ships. Not implemented yet.
+-- @field #string TRAIN Transports are conducted by trains. Not implemented yet. Also trains are buggy in DCS.
+-- @field #string SELFPROPELLED Assets go to their destination by themselves. No transport carrier needed.
 WAREHOUSE.TransportType = {
-  AIRPLANE      = "Transport_Plane",
-  HELICOPTER    = "Transport_Helo",
-  APC           = "Transport_APC",
-  SHIP          = "Ship",
-  TRAIN         = "Train",
-  SELFPROPELLED = "Selfporpelled",
+  AIRPLANE      = "Air_TransportPlane",
+  HELICOPTER    = "Air_TransportHelo",
+  APC           = "Ground_APC",
+  TRAIN         = "Ground_Train",
+  SHIP          = "Naval_UnarmedShip",
+  SELFPROPELLED = "Selfpropelled",
+}
+
+--- Warehouse quantity enumerator for selecting number of assets, e.g. all, half etc. of what is in stock rather than an absolute number.
+-- @type WAREHOUSE.Quantity
+-- @field #string ALL All "all" assets currently in stock.
+-- @field #string THREEQUARTERS Three quarters "3/4" of assets in stock. 
+-- @field #string HALF Half "1/2" of assets in stock.
+-- @field #string THIRD One third "1/3" of assets in stock.
+-- @field #string QUARTER One quarter "1/4" of assets in stock.
+WAREHOUSE.Quantity = {
+  ALL           = "all",
+  THREEQUARTERS = "3/4",
+  HALF          = "1/2",
+  THIRD         = "1/3",
+  QUARTER       = "1/4",
+}
+
+--- Warehouse database. Note that this is a global array to have easier exchange between warehouses.
+-- @type WAREHOUSE.db
+-- @field #number AssetID Unique ID of each asset. This is a running number, which is increased each time a new asset is added.
+-- @field #table Assets Table holding registered assets, which are of type @{Functional.Warehouse#WAREHOUSE.Assetitem}.
+-- @field #table Warehouses Table holding all defined @{#WAREHOUSE} objects by their unique ids.
+WAREHOUSE.db = {
+  AssetID    = 0,
+  Assets     = {},
+  Warehouses = {}
 }
 
 --- Warehouse class version.
 -- @field #string version
-WAREHOUSE.version="0.1.0"
+WAREHOUSE.version="0.5.1"
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- TODO: Warehuse todo list.
+-- TODO: Warehouse todo list.
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
--- TODO: Add event handlers.
--- TODO: Add AI_APC
--- TODO: Add AI_HELICOPTER
--- TODO: Write documentation.
--- TODO: Put active groups into the warehouse.
--- TODO: Spawn warehouse assets as uncontrolled or AI off and activate them when requested.
--- TODO: Handle cases with immobile units.
--- TODO: Add queue.
--- TODO: How to handle multiple units in a transport group?
--- TODO: Switch to AI_XXX_DISPATCHER
+-- TODO: Spawn assets only virtually, i.e. remove requested assets from stock but do NOT spawn them ==> Interface to A2A dispatcher! Maybe do a negative sign on asset number?
+-- TODO: Test capturing a neutral warehouse.
+-- TODO: Make more examples: ARTY, CAP, ...
+-- TODO: Check also general requests like all ground. Is this a problem for self propelled if immobile units are among the assets? Check if transport.
+-- TODO: Handle the case when units of a group die during the transfer.
+-- TODO: Added habours as interface for transport to from warehouses?
+-- TODO: Add save/load capability of warehouse <==> percistance after mission restart. Difficult in lua!
+-- DONE: Get cargo bay and weight from CARGO_GROUP and GROUP. No necessary any more!
+-- DONE: Add possibility to set weight and cargo bay manually in AddAsset function as optional parameters.
+-- DONE: Check overlapping aircraft sometimes.
+-- DONE: Case when all transports are killed and there is still cargo to be delivered. Put cargo back into warehouse. Should be done now!
+-- DONE: Add transport units from dispatchers back to warehouse stock once they completed their mission.
+-- DONE: Write documentation.
+-- DONE: Add AAA, SAMs and UAVs to generalized attributes.
+-- DONE: Add warehouse quantity enumerator.
+-- DONE: Test mortars. Immobile units need a transport.
+-- DONE: Set ROE for spawned groups.
+-- DONE: Add offroad lanes between warehouses if road connection is not available.
+-- DONE: Add possibility to add active groups. Need to create a pseudo template before destroy. <== Does not seem to be necessary any more.
+-- DONE: Add a time stamp when an asset is added to the stock and for requests.
+-- DONE: How to get a specific request once the cargo is delivered? Make addrequest addasset non FSM function? Callback for requests like in SPAWN?
+-- DONE: Add autoselfdefence switch and user function. Default should be off.
+-- DONE: Warehouse re-capturing not working?!
+-- DONE: Naval assets dont go back into stock once arrived.
+-- DONE: Take cargo weight into consideration, when selecting transport assets.
+-- DONE: Add ports for spawning naval assets. 
+-- DONE: Add shipping lanes between warehouses.
+-- DONE: Handle cases with immobile units <== should be handled by dispatcher classes.
+-- DONE: Handle cases for aircraft carriers and other ships. Place warehouse on carrier possible? On others probably not - exclude them?
+-- DONE: Add general message function for sending to coaliton or debug.
+-- DONE: Fine tune event handlers.
+-- DONE: Improve generalized attributes.
+-- DONE: If warehouse is destroyed, all asssets are gone.
+-- DONE: Add event handlers.
+-- DONE: Add AI_CARGO_AIRPLANE
+-- DONE: Add AI_CARGO_APC
+-- DONE: Add AI_CARGO_HELICOPTER
+-- DONE: Switch to AI_CARGO_XXX_DISPATCHER
+-- DONE: Add queue.
+-- DONE: Put active groups into the warehouse, e.g. when they were transported to this warehouse.
+-- NOGO: Spawn warehouse assets as uncontrolled or AI off and activate them when requested.
+-- DONE: How to handle multiple units in a transport group? <== Cargo dispatchers.
+-- DONE: Add phyical object.
+-- DONE: If warehosue is captured, change warehouse and assets to other coalition.
+-- NOGO: Use RAT for routing air units. Should be possible but might need some modifications of RAT, e.g. explit spawn place. But flight plan should be better.
+-- DONE: Can I make a request with specific assets? E.g., once delivered, make a request for exactly those assests that were in the original request.
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Constructor(s)
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
---- WAREHOUSE constructor. Creates a new WAREHOUSE object accociated with an airbase.
+--- The WAREHOUSE constructor. Creates a new WAREHOUSE object from a static object. Parameters like the coalition and country are taken from the static object structure.
 -- @param #WAREHOUSE self
--- @param Wrapper.Airbase#AIRBASE airbase The airbase at which the warehouse is constructed.
+-- @param Wrapper.Static#STATIC warehouse The physical structure of the warehouse.
+-- @param #string alias (Optional) Alias of the warehouse, i.e. the name it will be called when sending messages etc. Default is the name of the static  
 -- @return #WAREHOUSE self
-function WAREHOUSE:NewAirbase(airbase)
-  BASE:E({airbase=airbase})
+function WAREHOUSE:New(warehouse, alias)
+  BASE:T({warehouse=warehouse})
+  
+  -- Check if just a string was given and convert to static.
+  if type(warehouse)=="string" then
+    warehouse=STATIC:FindByName(warehouse, true)
+  end
+  
+  -- Nil check.
+  if warehouse==nil then
+    BASE:E("ERROR: Warehouse does not exist!")
+    return nil
+  end
+  
+  -- Set alias.
+  self.alias=alias or warehouse:GetName()
 
   -- Print version.
-  env.info(string.format("Adding warehouse v%s for airbase %s", WAREHOUSE.version, airbase:GetName()))
+  env.info(string.format("Adding warehouse v%s for structure %s with alias %s", WAREHOUSE.version, warehouse:GetName(), self.alias))
 
   -- Inherit everthing from FSM class.
-  local self = BASE:Inherit( self, FSM:New() ) -- #WAREHOUSE
+  local self = BASE:Inherit(self, FSM:New()) -- #WAREHOUSE
 
   -- Set some string id for output to DCS.log file.
-  self.wid=string.format("WAREHOUSE %s | ", airbase:GetName())
+  self.wid=string.format("WAREHOUSE %s | ", self.alias)
 
   -- Set some variables.
-  self.homebase=airbase
-  self.coordinate=airbase:GetCoordinate()
-  self.coalition=airbase:GetCoalition()
-  self.category=airbase:GetDesc().category
+  self.warehouse=warehouse
+  self.uid=tonumber(warehouse:GetID())
 
-  -- Get the closest point on road.
-  local _road=self.coordinate:GetClosestPointToRoad():GetVec2()
-
-  -- Define the default spawn zone.
-  self.spawnzone=ZONE_RADIUS:New("Spawnzone",_road, 200)
-  self.spawnzone:BoundZone(60,country.id.GERMANY)
-  self.spawnzone:GetCoordinate():MarkToAll("Spawnzone")
+  -- Closest of the same coalition but within a certain range.
+  local _airbase=self:GetCoordinate():GetClosestAirbase(nil, self:GetCoalition())
+  if _airbase and _airbase:GetCoordinate():Get2DDistance(self:GetCoordinate()) < 3000 then
+    self:SetAirbase(_airbase)
+  end
+      
+  -- Define warehouse and default spawn zone.
+  self.zone=ZONE_RADIUS:New(string.format("Warehouse zone %s", self.warehouse:GetName()), warehouse:GetVec2(), 500)
+  self.spawnzone=ZONE_RADIUS:New(string.format("Warehouse %s spawn zone", self.warehouse:GetName()), warehouse:GetVec2(), 250)
+  
+  -- Add warehouse to database.
+  WAREHOUSE.db.Warehouses[self.uid]=self
+  
+  -----------------------
+  --- FSM Transitions ---
+  -----------------------
+  
+  -- Start State.
+  self:SetStartState("NotReadyYet")
 
   -- Add FSM transitions.
-  self:AddTransition("*", "Start",     "Running")
-  self:AddTransition("*", "Status",    "*")
-  self:AddTransition("*", "Request",   "*")
-  self:AddTransition("*", "Delivered", "*")
-
-  --- Triggers the FSM event "Start". Starts the warehouse.
+  --                 From State   -->   Event        -->     To State
+  self:AddTransition("NotReadyYet",     "Load",              "Loaded")      -- TODO Load the warehouse state. No sure if it should be in stopped state.
+  self:AddTransition("NotReadyYet",     "Start",             "Running")     -- Start the warehouse from scratch.
+  self:AddTransition("Loaded",          "Start",             "Running")     -- TODO Start the warehouse when loaded from disk.  
+  self:AddTransition("*",               "Status",            "*")           -- Status update.
+  self:AddTransition("*",               "AddAsset",          "*")           -- Add asset to warehouse stock.
+  self:AddTransition("*",               "AddRequest",        "*")           -- New request from other warehouse.
+  self:AddTransition("Running",         "Request",           "*")           -- Process a request. Only in running mode.
+  self:AddTransition("Attacked",        "Request",           "*")           -- Process a request. Only in running mode.
+  self:AddTransition("*",               "Unloaded",          "*")           -- Cargo has been unloaded from the carrier (unused ==> unnecessary?).
+  self:AddTransition("*",               "Arrived",           "*")           -- Cargo or transport group has arrived.
+  self:AddTransition("*",               "Delivered",         "*")           -- All cargo groups of a request have been delivered to the requesting warehouse.
+  self:AddTransition("Running",         "SelfRequest",       "*")           -- Request to warehouse itself. Requested assets are only spawned but not delivered anywhere.
+  self:AddTransition("Attacked",        "SelfRequest",       "*")           -- Request to warehouse itself. Also possible when warehouse is under attack!
+  self:AddTransition("Running",         "Pause",             "Paused")      -- Pause the processing of new requests. Still possible to add assets and requests. 
+  self:AddTransition("Paused",          "Unpause",           "Running")     -- Unpause the warehouse. Queued requests are processed again. 
+  self:AddTransition("*",               "Stop",              "Stopped")     -- Stop the warehouse.
+  self:AddTransition("*",               "Save",              "*")           -- TODO Save the warehouse state to disk.
+  self:AddTransition("*",               "Attacked",          "Attacked")    -- Warehouse is under attack by enemy coalition.
+  self:AddTransition("Attacked",        "Defeated",          "Running")     -- Attack by other coalition was defeated!
+  self:AddTransition("Attacked",        "Captured",          "Running")     -- Warehouse was captured by another coalition. It must have been attacked first.
+  self:AddTransition("*",               "AirbaseCaptured",   "*")           -- Airbase was captured by other coalition.
+  self:AddTransition("*",               "AirbaseRecaptured", "*")           -- Airbase was re-captured from other coalition. 
+  self:AddTransition("*",               "Destroyed",         "Destroyed")   -- Warehouse was destroyed. All assets in stock are gone and warehouse is stopped.
+  
+  ------------------------
+  --- Pseudo Functions ---
+  ------------------------
+  
+  --- Triggers the FSM event "Start". Starts the warehouse. Initializes parameters and starts event handlers.
   -- @function [parent=#WAREHOUSE] Start
   -- @param #WAREHOUSE self
 
-  --- Triggers the FSM event "Start" after a delay. Starts the warehouse.
+  --- Triggers the FSM event "Start" after a delay. Starts the warehouse. Initializes parameters and starts event handlers.
   -- @function [parent=#WAREHOUSE] __Start
+  -- @param #WAREHOUSE self
+  -- @param #number delay Delay in seconds.
+
+  --- Triggers the FSM event "Stop". Stops the warehouse and all its event handlers.
+  -- @function [parent=#WAREHOUSE] Stop
+  -- @param #WAREHOUSE self
+
+  --- Triggers the FSM event "Stop" after a delay. Stops the warehouse and all its event handlers.
+  -- @function [parent=#WAREHOUSE] __Stop
+  -- @param #WAREHOUSE self
+  -- @param #number delay Delay in seconds.
+
+  --- Triggers the FSM event "Pause". Pauses the warehouse. Assets can still be added and requests be made. However, requests are not processed.
+  -- @function [parent=#WAREHOUSE] Pause
+  -- @param #WAREHOUSE self
+
+  --- Triggers the FSM event "Pause" after a delay. Pauses the warehouse. Assets can still be added and requests be made. However, requests are not processed.
+  -- @function [parent=#WAREHOUSE] __Pause
+  -- @param #WAREHOUSE self
+  -- @param #number delay Delay in seconds.
+
+  --- Triggers the FSM event "Unpause". Unpauses the warehouse. Processing of queued requests is resumed.
+  -- @function [parent=#WAREHOUSE] UnPause
+  -- @param #WAREHOUSE self
+
+  --- Triggers the FSM event "Unpause" after a delay. Unpauses the warehouse. Processing of queued requests is resumed.
+  -- @function [parent=#WAREHOUSE] __Unpause
   -- @param #WAREHOUSE self
   -- @param #number delay Delay in seconds.
 
@@ -65721,29 +67499,322 @@ function WAREHOUSE:NewAirbase(airbase)
   -- @param #number delay Delay in seconds.
 
 
-  --- Triggers the FSM event "Request". Executes a request if possible.
+  --- Trigger the FSM event "AddAsset". Add a group to the warehouse stock.
+  -- @function [parent=#WAREHOUSE] AddAsset
+  -- @param #WAREHOUSE self
+  -- @param Wrapper.Group#GROUP group Group to be added as new asset.
+  -- @param #number ngroups Number of groups to add to the warehouse stock. Default is 1.
+  -- @param #WAREHOUSE.Attribute forceattribute (Optional) Explicitly force a generalized attribute for the asset. This has to be an @{#WAREHOUSE.Attribute}.
+  -- @param #number forcecargobay (Optional) Explicitly force cargobay weight limit in kg for cargo carriers. This is for each *unit* of the group.
+  -- @param #number forceweight (Optional) Explicitly force weight in kg of each unit in the group.
+
+  --- Trigger the FSM event "AddAsset" with a delay. Add a group to the warehouse stock.
+  -- @function [parent=#WAREHOUSE] __AddAsset
+  -- @param #WAREHOUSE self
+  -- @param #number delay Delay in seconds.
+  -- @param Wrapper.Group#GROUP group Group to be added as new asset.
+  -- @param #number ngroups Number of groups to add to the warehouse stock. Default is 1.
+  -- @param #WAREHOUSE.Attribute forceattribute (Optional) Explicitly force a generalized attribute for the asset. This has to be an @{#WAREHOUSE.Attribute}.
+  -- @param #number forcecargobay (Optional) Explicitly force cargobay weight limit in kg for cargo carriers. This is for each *unit* of the group.
+  -- @param #number forceweight (Optional) Explicitly force weight in kg of each unit in the group.
+
+
+  --- Triggers the FSM event "AddRequest". Add a request to the warehouse queue, which is processed when possible.
+  -- @function [parent=#WAREHOUSE] AddRequest
+  -- @param #WAREHOUSE self
+  -- @param #WAREHOUSE warehouse The warehouse requesting supply.
+  -- @param #WAREHOUSE.Descriptor AssetDescriptor Descriptor describing the asset that is requested.
+  -- @param AssetDescriptorValue Value of the asset descriptor. Type depends on descriptor, i.e. could be a string, etc.
+  -- @param #number nAsset Number of groups requested that match the asset specification.
+  -- @param #WAREHOUSE.TransportType TransportType Type of transport.
+  -- @param #number nTransport Number of transport units requested.
+  -- @param #number Prio Priority of the request. Number ranging from 1=high to 100=low.
+  -- @param #string Assignment A keyword or text that later be used to identify this request and postprocess the assets.
+
+  --- Triggers the FSM event "AddRequest" with a delay. Add a request to the warehouse queue, which is processed when possible.
+  -- @function [parent=#WAREHOUSE] __AddRequest
+  -- @param #WAREHOUSE self
+  -- @param #number delay Delay in seconds.
+  -- @param #WAREHOUSE warehouse The warehouse requesting supply.
+  -- @param #WAREHOUSE.Descriptor AssetDescriptor Descriptor describing the asset that is requested.
+  -- @param AssetDescriptorValue Value of the asset descriptor. Type depends on descriptor, i.e. could be a string, etc.
+  -- @param #number nAsset Number of groups requested that match the asset specification.
+  -- @param #WAREHOUSE.TransportType TransportType Type of transport.
+  -- @param #number nTransport Number of transport units requested.
+  -- @param #number Prio Priority of the request. Number ranging from 1=high to 100=low.
+  -- @param #string Assignment A keyword or text that later be used to identify this request and postprocess the assets.
+
+
+  --- Triggers the FSM event "Request". Executes a request from the queue if possible.
   -- @function [parent=#WAREHOUSE] Request
   -- @param #WAREHOUSE self
   -- @param #WAREHOUSE.Queueitem Request Information table of the request.
  
-  --- Triggers the FSM event "Request" after a delay. Executes a request if possible.
+  --- Triggers the FSM event "Request" after a delay. Executes a request from the queue if possible.
   -- @function [parent=#WAREHOUSE] __Request
   -- @param #WAREHOUSE self
   -- @param #number Delay Delay in seconds.
   -- @param #WAREHOUSE.Queueitem Request Information table of the request.
 
 
-  --- Triggers the FSM event "Delivered". A group has been delivered from the warehouse to another airbase or warehouse.
+  --- Triggers the FSM event "Arrived" when a group has arrived at the destination warehouse.
+  -- This function should always be called from the sending and not the receiving warehouse.
+  -- If the group is a cargo asset, it is added to the receiving warehouse. If the group is a transporter it
+  -- is added to the sending warehouse since carriers are supposed to return to their home warehouse once 
+  -- all cargo was delivered.  
+  -- @function [parent=#WAREHOUSE] Arrived
+  -- @param #WAREHOUSE self
+  -- @param Wrapper.Group#GROUP group Group that has arrived.
+
+  --- Triggers the FSM event "Arrived" after a delay when a group has arrived at the destination.
+  -- This function should always be called from the sending and not the receiving warehouse.
+  -- If the group is a cargo asset, it is added to the receiving warehouse. If the group is a transporter it
+  -- is added to the sending warehouse since carriers are supposed to return to their home warehouse once 
+  -- @function [parent=#WAREHOUSE] __Arrived
+  -- @param #WAREHOUSE self
+  -- @param #number delay Delay in seconds.
+  -- @param Wrapper.Group#GROUP group Group that has arrived.
+
+  --- On after "Arrived" event user function. Called when a group has arrived at its destination.
+  -- @function [parent=#WAREHOUSE] OnAfterArrived
+  -- @param #WAREHOUSE self
+  -- @param #string From From state.
+  -- @param #string Event Event.
+  -- @param #string To To state.
+  -- @param Wrapper.Group#GROUP group Group that has arrived.
+
+
+  --- Triggers the FSM event "Delivered". All (cargo) assets of a request have been delivered to the receiving warehouse.
   -- @function [parent=#WAREHOUSE] Delivered
   -- @param #WAREHOUSE self
-  -- @param Wrapper.Group#GROUP group Group that was delivered.
+  -- @param #WAREHOUSE.Pendingitem request Pending request that was now delivered.
 
-  --- Triggers the FSM event "Delivered" after a delay. A group has been delivered from the warehouse to another airbase or warehouse.
+  --- Triggers the FSM event "Delivered" after a delay. A group has been delivered from the warehouse to another warehouse.
   -- @function [parent=#WAREHOUSE] __Delivered
   -- @param #WAREHOUSE self
   -- @param #number delay Delay in seconds.
-  -- @param Wrapper.Group#GROUP group Group that was delivered.
+  -- @param #WAREHOUSE.Pendingitem request Pending request that was now delivered.
 
+  --- On after "Delivered" event user function. Called when a group has been delivered from the warehouse to another warehouse.
+  -- @function [parent=#WAREHOUSE] OnAfterDelivered
+  -- @param #WAREHOUSE self
+  -- @param #string From From state.
+  -- @param #string Event Event.
+  -- @param #string To To state.
+  -- @param #WAREHOUSE.Pendingitem request Pending request that was now delivered.
+
+
+  --- Triggers the FSM event "SelfRequest". Request was initiated from the warehouse to itself. Groups are just spawned at the warehouse or the associated airbase.
+  -- If the warehouse is currently under attack when the self request is made, the self request is added to the defending table. One the attack is defeated,
+  -- this request is used to put the groups back into the warehouse stock.
+  -- @function [parent=#WAREHOUSE] SelfRequest
+  -- @param #WAREHOUSE self
+  -- @param Core.Set#SET_GROUP groupset The set of cargo groups that was delivered to the warehouse itself.
+  -- @param #WAREHOUSE.Pendingitem request Pending self request.
+
+  --- Triggers the FSM event "SelfRequest" with a delay. Request was initiated from the warehouse to itself. Groups are just spawned at the warehouse or the associated airbase.
+  -- If the warehouse is currently under attack when the self request is made, the self request is added to the defending table. One the attack is defeated,
+  -- this request is used to put the groups back into the warehouse stock.
+  -- @function [parent=#WAREHOUSE] __SelfRequest
+  -- @param #WAREHOUSE self
+  -- @param #number delay Delay in seconds.
+  -- @param Core.Set#SET_GROUP groupset The set of cargo groups that was delivered to the warehouse itself.
+  -- @param #WAREHOUSE.Pendingitem request Pending self request.
+
+  --- On after "SelfRequest" event. Request was initiated from the warehouse to itself. Groups are simply spawned at the warehouse or the associated airbase.
+  -- All requested assets are passed as a @{Core.Set#SET_GROUP} and can be used for further tasks or in other MOOSE classes.
+  -- Note that airborne assets are spawned in uncontrolled state so they do not simply "fly away" after spawning.
+  -- 
+  -- @usage
+  -- --- Self request event. Triggered once the assets are spawned in the spawn zone or at the airbase.
+  -- function mywarehouse:OnAfterSelfRequest(From, Event, To, groupset, request)
+  --   local groupset=groupset --Core.Set#SET_GROUP
+  --  
+  --   -- Loop over all groups spawned from that request.
+  --   for _,group in pairs(groupset:GetSetObjects()) do
+  --     local group=group --Wrapper.Group#GROUP
+  --    
+  --     -- Gree smoke on spawned group.
+  --     group:SmokeGreen()
+  --    
+  --     -- Activate uncontrolled airborne group if necessary.
+  --     group:StartUncontrolled()
+  --   end
+  -- end 
+  --  
+  -- @function [parent=#WAREHOUSE] OnAfterSelfRequest
+  -- @param #WAREHOUSE self
+  -- @param #string From From state.
+  -- @param #string Event Event.
+  -- @param #string To To state.
+  -- @param Core.Set#SET_GROUP groupset The set of (cargo) groups that was delivered to the warehouse itself.
+  -- @param #WAREHOUSE.Pendingitem request Pending self request.
+
+
+  --- Triggers the FSM event "Attacked" when a warehouse is under attack by an another coalition.
+  -- @param #WAREHOUSE self
+  -- @function [parent=#WAREHOUSE] Attacked
+  -- @param DCS#coalition.side Coalition Coalition side which is attacking the warehouse, i.e. a number of @{DCS#coalition.side} enumerator.
+  -- @param DCS#country.id Country Country ID, which is attacking the warehouse, i.e. a number @{DCS#country.id} enumerator.
+
+  --- Triggers the FSM event "Attacked" with a delay when a warehouse is under attack by an another coalition.
+  -- @param #WAREHOUSE self
+  -- @function [parent=#WAREHOUSE] __Attacked
+  -- @param #number delay Delay in seconds.
+  -- @param DCS#coalition.side Coalition Coalition side which is attacking the warehouse, i.e. a number of @{DCS#coalition.side} enumerator.
+  -- @param DCS#country.id Country Country ID, which is attacking the warehouse, i.e. a number @{DCS#country.id} enumerator.
+
+  --- On after "Attacked" event user function. Called when a warehouse (zone) is under attack by an enemy.
+  -- @param #WAREHOUSE self
+  -- @function [parent=#WAREHOUSE] OnAfterAttacked
+  -- @param #string From From state.
+  -- @param #string Event Event.
+  -- @param #string To To state.
+  -- @param DCS#coalition.side Coalition Coalition side which is attacking the warehouse, i.e. a number of @{DCS#coalition.side} enumerator.
+  -- @param DCS#country.id Country Country ID, which is attacking the warehouse, i.e. a number @{DCS#country.id} enumerator.
+
+
+  --- Triggers the FSM event "Defeated" when an attack from an enemy was defeated.
+  -- @param #WAREHOUSE self
+  -- @function [parent=#WAREHOUSE] Defeated
+
+  --- Triggers the FSM event "Defeated" with a delay when an attack from an enemy was defeated.
+  -- @param #WAREHOUSE self
+  -- @function [parent=#WAREHOUSE] __Defeated
+  -- @param #number delay Delay in seconds.
+
+  --- On after "Defeated" event user function. Called when an enemy attack was defeated.
+  -- @param #WAREHOUSE self
+  -- @function [parent=#WAREHOUSE] OnAfterDefeated
+  -- @param #string From From state.
+  -- @param #string Event Event.
+  -- @param #string To To state.
+
+
+  --- Triggers the FSM event "Captured" when a warehouse has been captured by another coalition.
+  -- @param #WAREHOUSE self
+  -- @function [parent=#WAREHOUSE] Captured
+  -- @param DCS#coalition.side Coalition which captured the warehouse.
+  -- @param DCS#country.id Country which has captured the warehouse.
+  
+  --- Triggers the FSM event "Captured" with a delay when a warehouse has been captured by another coalition.
+  -- @param #WAREHOUSE self
+  -- @function [parent=#WAREHOUSE] __Captured
+  -- @param #number delay Delay in seconds.
+  -- @param DCS#coalition.side Coalition which captured the warehouse.
+  -- @param DCS#country.id Country which has captured the warehouse.
+
+  --- On after "Captured" event user function. Called when the warehouse has been captured by an enemy coalition.
+  -- @param #WAREHOUSE self
+  -- @function [parent=#WAREHOUSE] OnAfterCaptured
+  -- @param #string From From state.
+  -- @param #string Event Event.
+  -- @param #string To To state.
+  -- @param DCS#coalition.side Coalition Coalition side which captured the warehouse, i.e. a number of @{DCS#coalition.side} enumerator.
+  -- @param DCS#country.id Country Country id which has captured the warehouse, i.e. a number @{DCS#country.id} enumerator.
+  -- 
+
+  --- Triggers the FSM event "AirbaseCaptured" when the airbase of the warehouse has been captured by another coalition.
+  -- @param #WAREHOUSE self
+  -- @function [parent=#WAREHOUSE] AirbaseCaptured
+  -- @param DCS#coalition.side Coalition Coalition side which captured the airbase, i.e. a number of @{DCS#coalition.side} enumerator.
+  
+  --- Triggers the FSM event "AirbaseCaptured" with a delay when the airbase of the warehouse has been captured by another coalition.
+  -- @param #WAREHOUSE self
+  -- @function [parent=#WAREHOUSE] __AirbaseCaptured
+  -- @param #number delay Delay in seconds.
+  -- @param DCS#coalition.side Coalition Coalition side which captured the airbase, i.e. a number of @{DCS#coalition.side} enumerator.
+
+  --- On after "AirbaseCaptured" even user function. Called when the airbase of the warehouse has been captured by another coalition.
+  -- @param #WAREHOUSE self
+  -- @function [parent=#WAREHOUSE] OnAfterAirbaseCaptured
+  -- @param #string From From state.
+  -- @param #string Event Event.
+  -- @param #string To To state.
+  -- @param DCS#coalition.side Coalition Coalition side which captured the airbase, i.e. a number of @{DCS#coalition.side} enumerator.
+
+
+  --- Triggers the FSM event "AirbaseRecaptured" when the airbase of the warehouse has been re-captured from the other coalition.
+  -- @param #WAREHOUSE self
+  -- @function [parent=#WAREHOUSE] AirbaseRecaptured
+  -- @param DCS#coalition.side Coalition Coalition which re-captured the airbase, i.e. the same as the current warehouse owner coalition.
+  
+  --- Triggers the FSM event "AirbaseRecaptured" with a delay when the airbase of the warehouse has been re-captured from the other coalition.
+  -- @param #WAREHOUSE self
+  -- @function [parent=#WAREHOUSE] __AirbaseRecaptured
+  -- @param #number delay Delay in seconds.
+  -- @param DCS#coalition.side Coalition Coalition which re-captured the airbase, i.e. the same as the current warehouse owner coalition.
+
+  --- On after "AirbaseRecaptured" event user function. Called when the airbase of the warehouse has been re-captured from the other coalition.
+  -- @param #WAREHOUSE self
+  -- @function [parent=#WAREHOUSE] OnAfterAirbaseRecaptured
+  -- @param #string From From state.
+  -- @param #string Event Event.
+  -- @param #string To To state.
+  -- @param DCS#coalition.side Coalition Coalition which re-captured the airbase, i.e. the same as the current warehouse owner coalition.
+
+
+  --- Triggers the FSM event "Destroyed" when the warehouse was destroyed. Services are stopped.
+  -- @param #WAREHOUSE self
+  -- @function [parent=#WAREHOUSE] Destroyed
+  
+  --- Triggers the FSM event "Destroyed" with a delay when the warehouse was destroyed. Services are stopped.
+  -- @param #WAREHOUSE self
+  -- @function [parent=#WAREHOUSE] Destroyed
+  -- @param #number delay Delay in seconds.
+
+  --- On after "Destroyed" event user function. Called when the warehouse was destroyed. Services are stopped.
+  -- @param #WAREHOUSE self
+  -- @function [parent=#WAREHOUSE] OnAfterDestroyed
+  -- @param #string From From state.
+  -- @param #string Event Event.
+  -- @param #string To To state.
+
+  return self
+end
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- User functions
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--- Set debug mode on. Error messages will be displayed on screen, units will be smoked at some events.
+-- @param #WAREHOUSE self
+-- @return #WAREHOUSE self
+function WAREHOUSE:SetDebugOn()
+  self.Debug=true
+  return self
+end
+
+--- Set debug mode off. This is the default
+-- @param #WAREHOUSE self
+-- @return #WAREHOUSE self
+function WAREHOUSE:SetDebugOff()
+  self.Debug=false
+  return self
+end
+
+--- Set report on. Messages at events will be displayed on screen to the coalition owning the warehouse.
+-- @param #WAREHOUSE self
+-- @return #WAREHOUSE self
+function WAREHOUSE:SetReportOn()
+  self.Report=true
+  return self
+end
+
+--- Set report off. Warehouse does not report about its status and at certain events.
+-- @param #WAREHOUSE self
+-- @return #WAREHOUSE self
+function WAREHOUSE:SetReportOff()
+  self.Report=false
+  return self
+end
+
+--- Set interval of status updates. Note that normally only one request can be processed per time interval.
+-- @param #WAREHOUSE self
+-- @param #number timeinterval Time interval in seconds.
+-- @return #WAREHOUSE self
+function WAREHOUSE:SetStatusUpdate(timeinterval)
+  self.dTstatus=timeinterval
   return self
 end
 
@@ -65756,163 +67827,1277 @@ function WAREHOUSE:SetSpawnZone(zone)
   return self
 end
 
+--- Set a warehouse zone. If this zone is captured, the warehouse and all its assets fall into the hands of the enemy.
+-- @param #WAREHOUSE self
+-- @param Core.Zone#ZONE zone The warehouse zone. Note that this **cannot** be a polygon zone!
+-- @return #WAREHOUSE self
+function WAREHOUSE:SetWarehouseZone(zone)
+  self.zone=zone
+  return self
+end
+
+--- Set auto defence on. When the warehouse is under attack, all ground assets are spawned automatically and will defend the warehouse zone. 
+-- @param #WAREHOUSE self
+-- @return #WAREHOUSE self
+function WAREHOUSE:SetAutoDefenceOn()
+  self.autodefence=true
+  return self
+end
+
+--- Set auto defence off. This is the default. 
+-- @param #WAREHOUSE self
+-- @return #WAREHOUSE self
+function WAREHOUSE:SetAutoDefenceOff()
+  self.autodefence=false
+  return self
+end
+
+
+--- Set the airbase belonging to this warehouse.
+-- Note that it has to be of the same coalition as the warehouse.
+-- Also, be reasonable and do not put it too far from the phyiscal warehouse structure because you troops might have a long way to get to their transports.
+-- @param #WAREHOUSE self
+-- @param Wrapper.Airbase#AIRBASE airbase The airbase object associated to this warehouse.
+-- @return #WAREHOUSE self
+function WAREHOUSE:SetAirbase(airbase)
+  self.airbase=airbase
+  if airbase~=nil then
+    self.airbasename=airbase:GetName()
+  else
+    self.airbasename=nil
+  end
+  return self
+end
+
+--- Set the connection of the warehouse to the road.
+-- Ground assets spawned in the warehouse spawn zone will first go to this point and from there travel on road to the requesting warehouse.
+-- Note that by default the road connection is set to the closest point on road from the center of the spawn zone if it is withing 3000 meters.
+-- Also note, that if the parameter "coordinate" is passed as nil, any road connection is disabled and ground assets cannot travel of be transportet on the ground.  
+-- @param #WAREHOUSE self
+-- @param Core.Point#COORDINATE coordinate The road connection. Technically, the closest point on road from this coordinate is determined by DCS API function. So this point must not be exactly on the road.
+-- @return #WAREHOUSE self
+function WAREHOUSE:SetRoadConnection(coordinate)
+  if coordinate then
+    self.road=coordinate:GetClosestPointToRoad()
+  else
+    self.road=false
+  end
+  return self
+end
+
+--- Set the connection of the warehouse to the railroad.
+-- This is the place where train assets or transports will be spawned.
+-- @param #WAREHOUSE self
+-- @param Core.Point#COORDINATE coordinate The railroad connection. Technically, the closest point on rails from this coordinate is determined by DCS API function. So this point must not be exactly on the a railroad connection.
+-- @return #WAREHOUSE self
+function WAREHOUSE:SetRailConnection(coordinate)
+  if coordinate then
+    self.rail=coordinate:GetClosestPointToRoad(true)
+  else
+    self.rail=false
+  end
+  return self
+end
+
+--- Set the port zone for this warehouse.
+-- The port zone is the zone, where all naval assets of the warehouse are spawned. 
+-- @param #WAREHOUSE self
+-- @param Core.Zone#ZONE zone The zone defining the naval port of the warehouse.
+-- @return #WAREHOUSE self
+function WAREHOUSE:SetPortZone(zone)
+  self.portzone=zone
+  return self
+end
+
+--- Add a shipping lane from this warehouse to another remote warehouse.
+-- Note that both warehouses must have a port zone defined before a shipping lane can be added!
+-- Shipping lane is taken from the waypoints of a (late activated) template group. So set up a group, e.g. a ship or a helicopter, and place its
+-- waypoints along the shipping lane you want to add.
+-- @param #WAREHOUSE self
+-- @param #WAREHOUSE remotewarehouse The remote warehouse to where the shipping lane is added
+-- @param Wrapper.Group#GROUP group Waypoints of this group will define the shipping lane between to warehouses.
+-- @param #boolean oneway (Optional) If true, the lane can only be used from this warehouse to the other but not other way around. Default false.
+-- @return #WAREHOUSE self
+function WAREHOUSE:AddShippingLane(remotewarehouse, group, oneway)
+
+  -- Check that port zones are defined.
+  if self.portzone==nil or remotewarehouse.portzone==nil then
+    local text=string.format("ERROR: Sending or receiving warehouse does not have a port zone defined. Adding shipping lane not possible!")
+    self:_ErrorMessage(text, 5)
+    return self
+  end
+
+  -- Initial and final coordinates are random points within the port zones.
+  local startcoord=self.portzone:GetRandomCoordinate()
+  local finalcoord=remotewarehouse.portzone:GetRandomCoordinate()
+  
+  -- Create new lane from waypoints of the template group.
+  local lane=self:_NewLane(group, startcoord, finalcoord)
+  
+  -- Debug info. Marks along shipping lane.
+  if self.Debug then
+    for i=1,#lane do
+      local coord=lane[i] --Core.Point#COORDINATE
+      local text=string.format("Shipping lane %s to %s. Point %d.", self.alias, remotewarehouse.alias, i)
+      coord:MarkToCoalition(text, self:GetCoalition())
+    end
+  end
+  
+  -- Name of the remote warehouse.
+  local remotename=remotewarehouse.warehouse:GetName()
+    
+  -- Create new table if no shipping lane exists yet.
+  if self.shippinglanes[remotename]==nil then
+    self.shippinglanes[remotename]={}
+  end  
+  
+  -- Add shipping lane.
+  table.insert(self.shippinglanes[remotename], lane)
+  
+  -- Add shipping lane in the opposite direction.
+  if not oneway then
+    remotewarehouse:AddShippingLane(self, group, true)
+  end
+  
+  return self
+end
+
+
+--- Add an off-road path from this warehouse to another and back.
+-- The start and end points are automatically set to one random point in the respective spawn zones of the two warehouses. 
+-- By default, the reverse path is also added as path from the remote warehouse to this warehouse.
+-- @param #WAREHOUSE self
+-- @param #WAREHOUSE remotewarehouse The remote warehouse to which the path leads.
+-- @param Wrapper.Group#GROUP group Waypoints of this group will define the path between to warehouses.
+-- @param #boolean oneway (Optional) If true, the path can only be used from this warehouse to the other but not other way around. Default false.
+-- @return #WAREHOUSE self
+function WAREHOUSE:AddOffRoadPath(remotewarehouse, group, oneway)
+
+  -- Initial and final points are random points within the spawn zone.
+  local startcoord=self.spawnzone:GetRandomCoordinate()
+  local finalcoord=remotewarehouse.spawnzone:GetRandomCoordinate()
+  
+  -- Create new path from template group waypoints.
+  local path=self:_NewLane(group, startcoord, finalcoord)
+  
+  if path==nil then
+    self:E(self.wid.."ERROR: Offroad path could not be added. Group present in ME?")
+    return
+  end
+  
+  -- Debug info. Marks along path.
+  if path and self.Debug then
+    for i=1,#path do
+      local coord=path[i] --Core.Point#COORDINATE
+      local text=string.format("Off road path from %s to %s. Point %d.", self.alias, remotewarehouse.alias, i)
+      coord:MarkToCoalition(text, self:GetCoalition())
+    end
+  end
+  
+  -- Name of the remote warehouse.
+  local remotename=remotewarehouse.warehouse:GetName()
+    
+  -- Create new table if no shipping lane exists yet.
+  if self.offroadpaths[remotename]==nil then
+    self.offroadpaths[remotename]={}
+  end  
+  
+  -- Add off road path.
+  table.insert(self.offroadpaths[remotename], path)
+  
+  -- Add off road path in the opposite direction (if not forbidden). 
+  if not oneway then
+    remotewarehouse:AddOffRoadPath(self, group, true)
+  end
+  
+  return self
+end
+
+--- Create a new path from a template group.
+-- @param #WAREHOUSE self
+-- @param Wrapper.Group#GROUP group Group used for extracting the waypoints.
+-- @param Core.Point#COORDINATE startcoord First coordinate.
+-- @param Core.Point#COORDINATE finalcoord Final coordinate.
+-- @return #table Table with route points.
+function WAREHOUSE:_NewLane(group, startcoord, finalcoord)
+
+  local lane=nil
+
+  if group then
+
+    -- Get route from template.
+    local lanepoints=group:GetTemplateRoutePoints()
+    
+    -- First and last waypoints
+    local laneF=lanepoints[1]
+    local laneL=lanepoints[#lanepoints]
+    
+    -- Get corresponding coordinates.
+    local coordF=COORDINATE:New(laneF.x, 0, laneF.y)
+    local coordL=COORDINATE:New(laneL.x, 0, laneL.y)
+    
+    -- Figure out which point is closer to the port of this warehouse.
+    local distF=startcoord:Get2DDistance(coordF)
+    local distL=startcoord:Get2DDistance(coordL)
+    
+    -- Add the lane. Need to take care of the wrong "direction".
+    lane={}
+    if distF<distL then
+      for i=1,#lanepoints do
+        local point=lanepoints[i]
+        local coord=COORDINATE:New(point.x,0, point.y)
+        table.insert(lane, coord)
+      end
+    else
+      for i=#lanepoints,1,-1 do
+        local point=lanepoints[i]
+        local coord=COORDINATE:New(point.x,0, point.y)
+        table.insert(lane, coord)
+      end     
+    end
+    
+    -- Automatically add end point which is a random point inside the final port zone.
+    table.insert(lane, #lane, finalcoord)
+
+  end
+  
+  return lane
+end
+
+
+--- Check if the warehouse has not been started yet, i.e. is in the state "NotReadyYet".
+-- @param #WAREHOUSE self
+-- @return #boolean If true, the warehouse object has been created but the warehouse has not been started yet.
+function WAREHOUSE:IsNotReadyYet()
+  return self:is("NotReadyYet")
+end
+
+--- Check if the warehouse has been loaded from disk via the "Load" event. 
+-- @param #WAREHOUSE self
+-- @return #boolean If true, the warehouse was loaded from disk.
+function WAREHOUSE:IsLoaded()
+  return self:is("Loaded")
+end
+
+--- Check if the warehouse is running.
+-- @param #WAREHOUSE self
+-- @return #boolean If true, the warehouse is running and requests are processed.
+function WAREHOUSE:IsRunning()
+  return self:is("Running")
+end
+
+--- Check if the warehouse is paused. In this state, requests are not processed.
+-- @param #WAREHOUSE self
+-- @return #boolean If true, the warehouse is paused.
+function WAREHOUSE:IsPaused()
+  return self:is("Paused")
+end
+
+--- Check if the warehouse is under attack by another coalition.
+-- @param #WAREHOUSE self
+-- @return #boolean If true, the warehouse is attacked.
+function WAREHOUSE:IsAttacked()
+  return self:is("Attacked")
+end
+
+--- Check if the warehouse has been destroyed.
+-- @param #WAREHOUSE self
+-- @return #boolean If true, the warehouse had been destroyed.
+function WAREHOUSE:IsDestroyed()
+  return self:is("Destroyed")
+end
+
+--- Check if the warehouse is stopped.
+-- @param #WAREHOUSE self
+-- @return #boolean If true, the warehouse is stopped.
+function WAREHOUSE:IsStopped()
+  return self:is("Stopped")
+end
+
+--- Check if the warehouse has a road connection to another warehouse. Both warehouses need to be started!
+-- @param #WAREHOUSE self
+-- @param #WAREHOUSE warehouse The remote warehouse to where the connection is checked.
+-- @param #boolean markpath If true, place markers of path segments on the F10 map.
+-- @param #boolean smokepath If true, put green smoke on path segments.
+-- @return #boolean If true, the two warehouses are connected by road.
+-- @return #number Path length in meters. Negative distance -1 meter indicates no connection.
+function WAREHOUSE:HasConnectionRoad(warehouse, markpath, smokepath)
+  if warehouse then
+    if self.road and warehouse.road then
+      local _,length,gotpath=self.road:GetPathOnRoad(warehouse.road, false, false, markpath, smokepath)
+      return gotpath, length or -1
+    else
+      -- At least one of the warehouses has no road connection.
+      return false, -1
+    end
+  end
+  return nil, -1
+end
+
+--- Check if the warehouse has a railroad connection to another warehouse. Both warehouses need to be started!
+-- @param #WAREHOUSE self
+-- @param #WAREHOUSE warehouse The remote warehouse to where the connection is checked.
+-- @param #boolean markpath If true, place markers of path segments on the F10 map.
+-- @param #boolean smokepath If true, put green smoke on path segments.
+-- @return #boolean If true, the two warehouses are connected by road.
+-- @return #number Path length in meters. Negative distance -1 meter indicates no connection.
+function WAREHOUSE:HasConnectionRail(warehouse, markpath, smokepath)
+  if warehouse then
+    if self.rail and warehouse.rail then
+      local _,length,gotpath=self.road:GetPathOnRoad(warehouse.road, false, true, markpath, smokepath)
+      return gotpath, length or -1
+    else
+      -- At least one of the warehouses has no rail connection.
+      return false, -1
+    end
+  end
+  return nil, -1
+end
+
+--- Check if the warehouse has a shipping lane defined to another warehouse.
+-- @param #WAREHOUSE self
+-- @param #WAREHOUSE warehouse The remote warehouse to where the connection is checked.
+-- @param #boolean markpath If true, place markers of path segments on the F10 map.
+-- @param #boolean smokepath If true, put green smoke on path segments.
+-- @return #boolean If true, the two warehouses are connected by road.
+-- @return #number Path length in meters. Negative distance -1 meter indicates no connection.
+function WAREHOUSE:HasConnectionNaval(warehouse, markpath, smokepath)
+
+  if warehouse then
+  
+    -- Self request
+    if warehouse.warehouse:GetName()==self.warehouse:GetName() then
+      return true,1
+    end
+    
+    -- Get shipping lane.
+    local shippinglane=self.shippinglanes[warehouse.warehouse:GetName()]
+    
+    if shippinglane then
+      return true,1
+    else
+      self:T2(string.format("No shipping lane defined between warehouse %s and %s!", self.alias, warehouse.alias))
+    end
+  
+  end
+  
+  return nil, -1
+end
+
+--- Check if the warehouse has an off road path defined to another warehouse.
+-- @param #WAREHOUSE self
+-- @param #WAREHOUSE warehouse The remote warehouse to where the connection is checked.
+-- @param #boolean markpath If true, place markers of path segments on the F10 map.
+-- @param #boolean smokepath If true, put green smoke on path segments.
+-- @return #boolean If true, the two warehouses are connected by road.
+-- @return #number Path length in meters. Negative distance -1 meter indicates no connection.
+function WAREHOUSE:HasConnectionOffRoad(warehouse, markpath, smokepath)
+
+  if warehouse then
+  
+    -- Self request
+    if warehouse.warehouse:GetName()==self.warehouse:GetName() then
+      return true,1
+    end
+    
+    -- Get shipping lane.
+    local offroadpath=self.offroadpaths[warehouse.warehouse:GetName()]
+    
+    if offroadpath~=nil then
+      return true,1
+    else
+      self:T2(string.format("No off-road path defined between warehouse %s and %s!", self.alias, warehouse.alias))
+    end
+  
+  end
+  
+  return nil, -1
+end
+
+
+--- Get number of assets in warehouse stock.
+-- @param #WAREHOUSE self
+-- @param #string Descriptor (Optional) Descriptor return the number of a specifc asset type. See @{#WAREHOUSE.Descriptor} for possible values.
+-- @param DescriptorValue (Optional) Descriptor value selecting the type of assets.
+-- @return #number Number of assets in stock.
+function WAREHOUSE:GetNumberOfAssets(Descriptor, DescriptorValue)
+
+  if Descriptor==nil or DescriptorValue==nil then
+    -- Selected assets.
+    local _stock,_nstock=self:_FilterStock(self.stock, Descriptor, DescriptorValue)
+    return _nstock
+  else
+    -- All assets.
+    return #self.stock
+  end
+
+end
+
+--- Get coordinate of warehouse static.
+-- @param #WAREHOUSE self
+-- @return Core.Point#COORDINATE The coordinate of the warehouse.  
+function WAREHOUSE:GetCoordinate()
+  return self.warehouse:GetCoordinate()
+end
+
+--- Get coalition side of warehouse static.
+-- @param #WAREHOUSE self
+-- @return #number Coalition side, i.e. number of @{DCS#coalition.side}.  
+function WAREHOUSE:GetCoalition()
+  return self.warehouse:GetCoalition()
+end
+
+--- Get coalition name of warehouse static.
+-- @param #WAREHOUSE self
+-- @return #number Coalition side, i.e. number of @{DCS#coalition.side}.  
+function WAREHOUSE:GetCoalitionName()
+  return self.warehouse:GetCoalitionName()
+end
+
+--- Get country id of warehouse static.
+-- @param #WAREHOUSE self
+-- @return #number Country id, i.e. number of @{DCS#country.id}.  
+function WAREHOUSE:GetCountry()
+  return self.warehouse:GetCountry()
+end
+
+--- Get country name of warehouse static.
+-- @param #WAREHOUSE self
+-- @return #number Country id, i.e. number of @{DCS#coalition.side}.  
+function WAREHOUSE:GetCountryName()
+  return self.warehouse:GetCountryName()
+end
+
+--- Get airbase associated to the warehouse.
+-- @param #WAREHOUSE self
+-- @return Wrapper.Airbase#AIRBASE Airbase object or nil if warehouse has no airbase connection.  
+function WAREHOUSE:GetAirbase()
+  return self.airbase
+end
+
+--- Get name airbase associated to the warehouse.
+-- @param #WAREHOUSE self
+-- @return #string name of the airbase assosicated to the warehouse or "none" if the airbase has not airbase connection currently.  
+function WAREHOUSE:GetAirbaseName()
+  local name="none"
+  if self.airbase then
+    name=self.airbase:GetName()
+  end
+  return name
+end
+
+--- Get category of airbase associated to the warehouse.
+-- @param #WAREHOUSE self
+-- @return #number Category of airbase or -1 if warehouse has (currently) no airbase.
+function WAREHOUSE:GetAirbaseCategory()
+  local category=-1
+  if self.airbase then
+    category=self.airbase:GetDesc().category
+  end
+  return category
+end
+
+--- Get assignment of a request.
+-- @param #WAREHOUSE self
+-- @param #WAREHOUSE.Pendingitem request The request from which the assignment is extracted.
+-- @return #string The assignment text. 
+function WAREHOUSE:GetAssignment(request)
+  return tostring(request.assignment)
+end
+
+--- Get warehouse unique ID from static warehouse object. This is the ID under which you find the @{#WAREHOUSE} object in the global data base.
+-- @param #WAREHOUSE self
+-- @param #string staticname Name of the warehouse static object.
+-- @return #number Warehouse unique ID.  
+function WAREHOUSE:GetWarehouseID(staticname)
+  local warehouse=STATIC:FindByName(staticname, true)
+  local uid=tonumber(warehouse:GetID())
+  return uid
+end
+
+--- Find a warehouse in the global warehouse data base.
+-- @param #WAREHOUSE self
+-- @param #number uid The unique ID of the warehouse.
+-- @return #WAREHOUSE The warehouse object or nil if no warehouse exists.
+function WAREHOUSE:FindWarehouseInDB(uid)
+  return WAREHOUSE.db.Warehouses[uid]
+end
+
+--- Find an asset in the the global warehouse data base. Parameter is the MOOSE group object.
+-- Note that the group name must contain they "AID" keyword. 
+-- @param #WAREHOUSE self
+-- @param Wrapper.Group#GROUP group The group from which it is assumed that it has a registered asset.
+-- @return #WAREHOUSE.Assetitem The asset from the data base or nil if it could not be found.
+function WAREHOUSE:FindAssetInDB(group)
+
+  -- Get unique ids from group name.
+  local wid,aid,rid=self:_GetIDsFromGroup(group)
+  
+  if aid~=nil then
+  
+    local asset=WAREHOUSE.db.Assets[aid]
+    self:E({asset=asset})
+    if asset==nil then
+      self:_ErrorMessage(string.format("ERROR: Asset for group %s not found in the data base!", group:GetName()), 0)
+    end
+    return asset
+  end
+  
+  self:_ErrorMessage(string.format("ERROR: Group %s does not contain an asset ID in its name!", group:GetName()), 0)
+  return nil  
+end
+
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- FSM states
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
---- Warehouse
+--- On after Start event. Starts the warehouse. Addes event handlers and schedules status updates of reqests and queue.
 -- @param #WAREHOUSE self
 -- @param #string From From state.
 -- @param #string Event Event.
 -- @param #string To To state.
 function WAREHOUSE:onafterStart(From, Event, To)
-  self:E(self.wid..string.format("Starting warehouse at airbase %s, category %d, coalition %d.", self.homebase:GetName(), self.category, self.coalition))
 
-  -- handle events
-  -- event takeoff
-  -- event landing
-  -- event crash/dead
-  -- event base captured ==> change coalition ==> add assets to other coalition
+  -- Short info.  
+  local text=string.format("Starting warehouse %s alias %s:\n",self.warehouse:GetName(), self.alias)
+  text=text..string.format("Coaliton = %s\n", self:GetCoalitionName())
+  text=text..string.format("Country  = %s\n", self:GetCountryName())
+  text=text..string.format("Airbase  = %s (category=%d)\n", self:GetAirbaseName(), self:GetAirbaseCategory())
+  env.info(text)
+
+  -- Save self in static object. Easier to retrieve later.
+  self.warehouse:SetState(self.warehouse, "WAREHOUSE", self)
+
+  -- THIS! caused aircraft to be spawned and started but they would never begin their route!
+  -- VERY strange. Need to test more.
+  --[[  
+  -- Debug mark warehouse & spawn zone.
+  self.zone:BoundZone(30, self.country)
+  self.spawnzone:BoundZone(30, self.country)
+  ]]
   
-  self:__Status(5)
+  -- Get the closest point on road wrt spawnzone of ground assets.
+  local _road=self.spawnzone:GetCoordinate():GetClosestPointToRoad()
+  if _road and self.road==nil then
+    -- Set connection to road if distance is less than 3 km.
+    local _Droad=_road:Get2DDistance(self.spawnzone:GetCoordinate())      
+    if _Droad < 3000 then
+      self.road=_road
+    end
+  end
+  -- Mark point at road connection.
+  if self.road then
+    self.road:MarkToAll(string.format("%s road connection.", self.alias), true)
+  end
+  
+  -- Get the closest point on railroad wrt spawnzone of ground assets.
+  local _rail=self.spawnzone:GetCoordinate():GetClosestPointToRoad(true)
+  if _rail and self.rail==nil then
+    -- Set rail conection if it is less than 3 km away. 
+    local _Drail=_rail:Get2DDistance(self.spawnzone:GetCoordinate())
+    if _Drail < 3000 then
+      self.rail=_rail
+    end
+  end
+  -- Mark point at rail connection.
+  if self.rail then
+    self.rail:MarkToAll(string.format("%s rail connection.", self.alias), true)
+  end 
+
+  -- Handle events:
+  self:HandleEvent(EVENTS.Birth,          self._OnEventBirth)
+  self:HandleEvent(EVENTS.EngineStartup,  self._OnEventEngineStartup)
+  self:HandleEvent(EVENTS.Takeoff,        self._OnEventTakeOff)
+  self:HandleEvent(EVENTS.Land,           self._OnEventLanding)
+  self:HandleEvent(EVENTS.EngineShutdown, self._OnEventEngineShutdown)
+  self:HandleEvent(EVENTS.Crash,          self._OnEventCrashOrDead)
+  self:HandleEvent(EVENTS.Dead,           self._OnEventCrashOrDead)
+  self:HandleEvent(EVENTS.BaseCaptured,   self._OnEventBaseCaptured)
+  
+  -- This event triggers the arrived event for air assets.
+  -- TODO Might need to make this landing or optional!
+  -- In fact, it would be better if the type could be defined for only for the warehouse which receives stuff,
+  -- since there will be warehouses with small airbases and little space or other problems!
+  self:HandleEvent(EVENTS.EngineShutdown, self._OnEventArrived)
+  
+  -- Start the status monitoring.
+  self:__Status(-1)
+
+end
+
+--- On after "Stop" event. Stops the warehouse, unhandles all events.
+-- @param #WAREHOUSE self
+-- @param #string From From state.
+-- @param #string Event Event.
+-- @param #string To To state.
+function WAREHOUSE:onafterStop(From, Event, To)
+  self:_InfoMessage(string.format("Warehouse %s stopped!", self.alias))
+  
+  -- Unhandle event.
+  self:UnHandleEvent(EVENTS.Birth)
+  self:UnHandleEvent(EVENTS.EngineStartup)
+  self:UnHandleEvent(EVENTS.Takeoff)
+  self:UnHandleEvent(EVENTS.Land)
+  self:UnHandleEvent(EVENTS.EngineShutdown)
+  self:UnHandleEvent(EVENTS.Crash)
+  self:UnHandleEvent(EVENTS.Dead)
+  self:UnHandleEvent(EVENTS.BaseCaptured)
+  
+  self.pending=nil
+  self.pending={}
+  
+  self.queue=nil
+  self.queue={}
+  
+  self.stock=nil
+  self.stock={}
+  
+  -- Clear all pending schedules.
+  self.CallScheduler:Clear()  
+end
+
+--- On after "Pause" event. Pauses the warehouse, i.e. no requests are processed. However, new requests and new assets can be added in this state.
+-- @param #WAREHOUSE self
+-- @param #string From From state.
+-- @param #string Event Event.
+-- @param #string To To state.
+function WAREHOUSE:onafterPause(From, Event, To)
+  self:I(self.wid..string.format("Warehouse %s paused! Queued requests are not processed in this state.", self.alias))
+end
+
+--- On after "Unpause" event. Unpauses the warehouse, i.e. requests in queue are processed again.
+-- @param #WAREHOUSE self
+-- @param #string From From state.
+-- @param #string Event Event.
+-- @param #string To To state.
+function WAREHOUSE:onafterUnpause(From, Event, To)
+  self:I(self.wid..string.format("Warehouse %s unpaused! Processing of requests is resumed.", self.alias))
 end
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
---- Warehouse
+--- On after Status event. Checks the queue and handles requests.
 -- @param #WAREHOUSE self
 -- @param #string From From state.
 -- @param #string Event Event.
 -- @param #string To To state.
 function WAREHOUSE:onafterStatus(From, Event, To)
-  self:E(self.wid..string.format("Checking warehouse status of airbase %s", self.homebase:GetName()))
+  self:I(self.wid..string.format("Checking status of warehouse %s. Current FSM state %s. Global warehouse assets = %d.", self.alias, self:GetState(), #WAREHOUSE.db.Assets))
+  
+  -- Check if any pending jobs are done and can be deleted from the 
+  self:_JobDone()
+ 
+  -- Print status.
+  self:_DisplayStatus()
+    
+  -- Check if warehouse is being attacked or has even been captured.
+  self:_CheckConquered()
+  
+  -- Check if requests are valid and remove invalid one.
+  self:_CheckRequestConsistancy(self.queue)
+    
+  -- If warehouse is running than requests can be processed.
+  if self:IsRunning() or self:IsAttacked() then
+  
+    -- Check queue and handle requests if possible.
+    local request=self:_CheckQueue()
 
-  -- Create a mark with the current assets in stock.
-  if self.markerid~=nil then
-    trigger.action.removeMark(self.markerid)
+    -- Execute the request. If the request is really executed, it is also deleted from the queue.
+    if request then
+      self:Request(request)
+    end
+        
   end
-  local marktext="Warehouse stock:\n"
-  local text="Warehouse stock:\n"
 
-  local _data=self:GetStockInfo(self.stock)
-  for _attribute,_count in pairs(_data) do
-    marktext=marktext..string.format("%s=%d, ", _attribute,_count) -- Dont use \n because too many make DCS crash!
-    text=text..string.format("%s = %d\n", _attribute,_count)
-  end
-  self.markerid=self.coordinate:MarkToCoalition(marktext, self.coalition, true)
+  -- Print queue after processing requests.
+  self:_PrintQueue(self.queue, "Queue waiting")
+  self:_PrintQueue(self.pending, "Queue pending")
 
-  -- Debug output.
-  self:E(self.wid..text)
-  MESSAGE:New(text, 10):ToAllIf(self.Debug)
-
+  -- Update warhouse marker on F10 map.
+  self:_UpdateWarehouseMarkText()
+  
   -- Display complete list of stock itmes.
   if self.Debug then
-  --self:_DisplayStockItems(self.stock)
+    self:_DisplayStockItems(self.stock)
+  end  
+
+  -- Call status again in ~30 sec (user choice).
+  self:__Status(-self.dTstatus)
+end
+
+
+--- Function that checks if a pending job is done and can be removed from queue.
+-- @param #WAREHOUSE self
+function WAREHOUSE:_JobDone()
+
+  -- For jobs that are done, i.e. all cargo and transport assets are delivered, home or dead!
+  local done={}
+
+  -- Loop over all pending requests of this warehouse.
+  for _,request in pairs(self.pending) do  
+    local request=request --#WAREHOUSE.Pendingitem
+    
+    -- Count number of cargo groups.
+    local ncargo=0
+    if request.cargogroupset then
+      ncargo=request.cargogroupset:Count()
+    end
+    
+    -- Count number of transport groups (if any).
+    local ntransport=0
+    if request.transportgroupset then
+      ntransport=request.transportgroupset:Count()
+    end
+    
+    local ncargotot=request.nasset
+    local ncargodelivered=request.ndelivered
+    
+    -- Dead cargo: Ndead=Ntot-Ndeliverd-Nalive,
+    local ncargodead=ncargotot-ncargodelivered-ncargo
+    
+    
+    local ntransporttot=request.ntransport    
+    local ntransporthome=request.ntransporthome
+    
+    -- Dead transport: Ndead=Ntot-Nhome-Nalive.
+    local ntransportdead=ntransporttot-ntransporthome-ntransport
+    
+    local text=string.format("Request id=%d: Cargo: Ntot=%d, Nalive=%d, Ndelivered=%d, Ndead=%d  |  Transport: Ntot=%d, Nalive=%d, Nhome=%d, Ndead=%d",
+    request.uid, ncargotot, ncargo, ncargodelivered, ncargodead, ntransporttot, ntransport, ntransporthome, ntransportdead)
+    self:T(self.wid..text)
+    
+    
+    -- Handle different cases depending on what asset are still around.
+    if ncargo==0 then
+      ---------------------
+      -- Cargo delivered --
+      ---------------------
+    
+      -- Trigger delivered event.
+      if not self.delivered[request.uid] then 
+        self:Delivered(request)
+      end
+    
+      -- Check if transports are back home?
+      if ntransport==0 then
+        ---------------
+        -- Job done! --
+        ---------------
+        
+        -- Info on job.
+        local text=string.format("Warehouse %s: Job on request id=%d done!\n", self.alias, request.uid)
+        text=text..string.format("- %d of %d assets delivered to %s. Casualties %d.", ncargodelivered, ncargotot, request.warehouse.alias, ncargodead)
+        if request.ntransport>0 then
+          text=text..string.format("\n- %d of %d transports returned home. Casualties %d.", ntransporthome, ntransporttot, ntransportdead)
+        end
+        self:_InfoMessage(text, 20)
+        
+        -- Mark request for deletion.
+        table.insert(done, request)
+        
+      else
+        -----------------------------------
+        -- No cargo but still transports --
+        -----------------------------------
+        
+        -- This is difficult! How do I know if transports were unused? They could also be just on their way back home.
+        -- ==> Need to do a lot of checks.
+      
+        -- All transports are dead but there is still cargo left ==> Put cargo back into stock.
+        for _,_group in pairs(request.transportgroupset:GetSetObjects()) do
+          local group=_group --Wrapper.Group#GROUP
+          
+          -- Check if group is alive.
+          if group and group:IsAlive() then
+                  
+            -- Check if group is in the spawn zone?
+            local category=group:GetCategory()
+            
+            -- Get current speed.
+            local speed=group:GetVelocityKMH()
+            local notmoving=speed<1
+            
+            -- Closest airbase.
+            local airbase=group:GetCoordinate():GetClosestAirbase():GetName()
+            local athomebase=self.airbase and self.airbase:GetName()==airbase
+            
+            -- On ground
+            local onground=not group:InAir()
+            
+            -- In spawn zone.
+            local inspawnzone=group:IsPartlyOrCompletelyInZone(self.spawnzone)
+                     
+            -- Check conditions for being back home.   
+            local ishome=false
+            if category==Group.Category.GROUND or category==Group.Category.HELICOPTER then
+              -- Units go back to the spawn zone, helicopters land and they should not move any more.
+              ishome=inspawnzone and onground and notmoving
+            elseif category==Group.Category.AIRPLANE then
+              -- Planes need to be on ground at their home airbase and should not move any more.
+              ishome=athomebase and onground and notmoving
+            end
+            
+            -- Debug text.
+            local text=string.format("Group %s: speed=%d km/h, onground=%s , airbase=%s, spawnzone=%s ==> ishome=%s", group:GetName(), speed, tostring(onground), airbase, tostring(inspawnzone), tostring(ishome))
+            self:T(self.wid..text)
+            
+            if ishome then
+
+              -- Info message.
+              local text=string.format("Warehouse %s: Transport group arrived back home and no cargo left for request id=%d.\nSending transport group %s back to stock.", self.alias, request.uid, group:GetName())
+              self:_InfoMessage(text)            
+  
+              -- Debug smoke.
+              if self.Debug then
+                group:SmokeRed()
+              end
+            
+              -- Group arrived.
+              self:Arrived(group)
+            end
+          end          
+        end
+                
+      end
+      
+    else
+    
+      if ntransport==0 and request.ntransport>0 then
+        -----------------------------------
+        -- Still cargo but no transports --
+        -----------------------------------
+        
+        -- Info message.
+        self:_InfoMessage(string.format("Warehouse %s: All transports of request id=%s dead! Putting remaining %s cargo assets back into warehouse!", self.alias, request.uid, ncargo))
+      
+        -- All transports are dead but there is still cargo left ==> Put cargo back into stock.
+        for _,_group in pairs(request.cargogroupset:GetSetObjects()) do
+          --local group=group --Wrapper.Group#GROUP
+          
+          -- These groups have been respawned as cargo, i.e. their name changed!
+          local groupname=_group:GetName()
+          local group=GROUP:FindByName(groupname.."#CARGO")
+          
+          -- Check if group is alive.
+          if group and group:IsAlive() then
+          
+            -- Check if group is in spawn zone?
+            if group:IsPartlyOrCompletelyInZone(self.spawnzone) then
+              -- Debug smoke.    
+              if self.Debug then
+                group:SmokeBlue()
+              end            
+              -- Add asset group back to stock.
+              self:AddAsset(group)
+            end
+          end
+          
+        end
+      end
+            
+    end
+  
+  end -- loop over requests
+
+  -- Remove pending requests if done.
+  for _,request in pairs(done) do
+    self:_DeleteQueueItem(request, self.pending)
+  end
+end
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--- On after "AddAsset" event. Add a group to the warehouse stock. If the group is alive, it is destroyed.
+-- @param #WAREHOUSE self
+-- @param #string From From state.
+-- @param #string Event Event.
+-- @param #string To To state.
+-- @param Wrapper.Group#GROUP group Group or template group to be added to the warehouse stock.
+-- @param #number ngroups Number of groups to add to the warehouse stock. Default is 1.
+-- @param #WAREHOUSE.Attribute forceattribute (Optional) Explicitly force a generalized attribute for the asset. This has to be an @{#WAREHOUSE.Attribute}.
+-- @param #number forcecargobay (Optional) Explicitly force cargobay weight limit in kg for cargo carriers. This is for each *unit* of the group.
+-- @param #number forceweight (Optional) Explicitly force weight in kg of each unit in the group.
+function WAREHOUSE:onafterAddAsset(From, Event, To, group, ngroups, forceattribute, forcecargobay, forceweight)
+
+  -- Set default.
+  local n=ngroups or 1
+  
+  -- Handle case where just a string is passed.
+  if type(group)=="string" then
+    group=GROUP:FindByName(group)
+  end
+  
+    
+  if group then
+  
+    -- Try to get UIDs from group name. Is this group a known or a new asset?
+    local wid,aid,rid=self:_GetIDsFromGroup(group)
+    
+    if wid and aid and rid then
+      ---------------------------
+      -- This is a KNOWN asset --
+      ---------------------------
+      
+      -- Get the original warehouse this group belonged to.
+      local warehouse=self:FindWarehouseInDB(wid)
+      if warehouse then
+        local request=warehouse:_GetRequestOfGroup(group, warehouse.pending)
+        if request then
+        
+          -- Increase number of cargo delivered and transports home.
+          local istransport=warehouse:_GroupIsTransport(group,request)
+          if istransport==true then
+            request.ntransporthome=request.ntransporthome+1
+            request.transportgroupset:Remove(group:GetName(), true)
+            self:T3(warehouse.wid..string.format("Transport %d of %s returned home.", request.ntransporthome, tostring(request.ntransport)))
+          elseif istransport==false then
+            request.ndelivered=request.ndelivered+1
+            request.cargogroupset:Remove(self:_GetNameWithOut(group), true)
+            self:T3(warehouse.wid..string.format("Cargo %d of %s delivered.", request.ndelivered, tostring(request.nasset)))
+          else
+            self:T(warehouse.wid..string.format("WARNING: Group %s is neither cargo nor transport!", group:GetName()))
+          end
+          
+        end
+      end
+
+      -- Get the asset from the global DB.
+      local asset=self:FindAssetInDB(group)
+        
+      -- Note the group is only added once, i.e. the ngroups parameter is ignored here.
+      -- This is because usually these request comes from an asset that has been transfered from another warehouse and hence should only be added once.
+      if asset~=nil then        
+        self:_DebugMessage(string.format("Warehouse %s: Adding KNOWN asset uid=%d with attribute=%s to stock.", self.alias, asset.uid, asset.attribute), 5)
+        table.insert(self.stock, asset)
+      else
+        self:_ErrorMessage(string.format("ERROR: Known asset could not be found in global warehouse db!"), 0)
+      end      
+        
+    else
+      -------------------------
+      -- This is a NEW asset --
+      -------------------------
+       
+      -- Debug info.
+      self:_DebugMessage(string.format("Warehouse %s: Adding %d NEW assets of group %s to stock.", self.alias, n, tostring(group:GetName())), 5)
+       
+      -- This is a group that is not in the db yet. Add it n times.
+      local assets=self:_RegisterAsset(group, n, forceattribute, forcecargobay, forceweight)
+      
+      -- Add created assets to stock of this warehouse.
+      for _,asset in pairs(assets) do
+        table.insert(self.stock, asset)
+      end      
+      
+    end   
+    
+    -- Destroy group if it is alive.
+    if group:IsAlive()==true then
+      self:_DebugMessage(string.format("Destroying group %s.", group:GetName()), 5)
+      -- Setting parameter to false, i.e. creating NO dead or remove unit event, seems to not confuse the dispatcher logic.
+      group:Destroy(false)
+    end
+  
+  else
+    self:E(self.wid.."ERROR: Unknown group added as asset!")
+  end
+  
+  -- Update status.
+  self:__Status(-1)
+end
+
+--- Register new asset in globase warehouse data base.
+-- @param #WAREHOUSE self
+-- @param Wrapper.Group#GROUP group The group that will be added to the warehouse stock.
+-- @param #number ngroups Number of groups to be added.
+-- @param #string forceattribute Forced generalized attribute.
+-- @param #number forcecargobay Cargo bay weight limit in kg.
+-- @param #number forceweight Weight of units in kg.
+-- @return #table A table containing all registered assets.
+function WAREHOUSE:_RegisterAsset(group, ngroups, forceattribute, forcecargobay, forceweight)
+  self:F({groupname=group:GetName(), ngroups=ngroups, forceattribute=forceattribute})
+
+  -- Set default.
+  local n=ngroups or 1
+  
+  -- Get the size of an object.
+  local function _GetObjectSize(DCSdesc)
+    if DCSdesc.box then
+      local x=DCSdesc.box.max.x+math.abs(DCSdesc.box.min.x)  --length
+      local y=DCSdesc.box.max.y+math.abs(DCSdesc.box.min.y)  --height
+      local z=DCSdesc.box.max.z+math.abs(DCSdesc.box.min.z)  --width
+      return math.max(x,z), x , y, z
+    end
+    return 0,0,0,0
+  end  
+  
+  -- Get name of template group.
+  local templategroupname=group:GetName()
+  
+  local Descriptors=group:GetUnit(1):GetDesc()
+  local Category=group:GetCategory()
+  local TypeName=group:GetTypeName()
+  local SpeedMax=group:GetSpeedMax()
+  local RangeMin=group:GetRange()
+  local smax,sx,sy,sz=_GetObjectSize(Descriptors)
+  
+  -- Get weight and cargo bay size in kg.
+  local weight=0
+  local cargobay={}
+  local cargobaytot=0
+  local cargobaymax=0
+  for _i,_unit in pairs(group:GetUnits()) do
+    local unit=_unit --Wrapper.Unit#UNIT
+    local Desc=unit:GetDesc()
+    
+    -- Weight. We sum up all units in the group.
+    local unitweight=forceweight or Desc.massEmpty
+    if unitweight then
+      weight=weight+unitweight
+    end
+    
+    local cargomax=0
+    local massfuel=Desc.fuelMassMax or 0
+    local massempty=Desc.massEmpty or 0
+    local massmax=Desc.massMax or 0
+    
+    -- Calcuate cargo bay limit value.
+    cargomax=massmax-massfuel-massempty
+    self:T3(self.wid..string.format("Unit name=%s: mass empty=%.1f kg, fuel=%.1f kg, max=%.1f kg ==> cargo=%.1f kg", unit:GetName(), unitweight, massfuel, massmax, cargomax))
+    
+    -- Cargo bay size.
+    local bay=forcecargobay or unit:GetCargoBayFreeWeight()
+    
+    -- Add bay size to table.
+    table.insert(cargobay, bay)
+    
+    -- Sum up total bay size.
+    cargobaytot=cargobaytot+bay
+    
+    -- Get max bay size.
+    if bay>cargobaymax then
+      cargobaymax=bay
+    end
   end
 
-  -- Print queue.
-  self:_PrintQueue()
+  -- Set/get the generalized attribute.
+  local attribute=forceattribute or self:_GetAttribute(group)
 
-  -- Check queue and handle requests if possible.
-  local request=self:_CheckQueue()
+  -- Table for returned assets.
+  local assets={}
 
-  -- Execute the request. If the request is really executed, it is also deleted from the queue.
-  if request then
-    --self:Request(request.airbase, request.assetdesc, request.assetdescval, request.nasset, request.transporttype, request.ntransport)
-    self:Request(request)
+  -- Add this n times to the table.
+  for i=1,n do
+    local asset={} --#WAREHOUSE.Assetitem
+    
+    -- Increase asset unique id counter.
+    WAREHOUSE.db.AssetID=WAREHOUSE.db.AssetID+1
+    
+    -- Set parameters.
+    asset.uid=WAREHOUSE.db.AssetID
+    asset.templatename=templategroupname
+    asset.template=UTILS.DeepCopy(_DATABASE.Templates.Groups[templategroupname].Template)
+    asset.category=Category
+    asset.unittype=TypeName
+    asset.nunits=#asset.template.units    
+    asset.range=RangeMin
+    asset.speedmax=SpeedMax
+    asset.size=smax    
+    asset.weight=weight
+    asset.DCSdesc=Descriptors
+    asset.attribute=attribute
+    asset.transporter=false  -- not used yet
+    asset.cargobay=cargobay
+    asset.cargobaytot=cargobaytot
+    asset.cargobaymax=cargobaymax
+    
+    if i==1 then
+      self:_AssetItemInfo(asset)
+    end
+    
+    -- Add asset to global db.
+    WAREHOUSE.db.Assets[asset.uid]=asset
+    
+    -- Add asset to the table that is retured.
+    table.insert(assets,asset)
   end
 
-  -- Call status again in 30 sec.
-  self:__Status(10)
+  return assets
+end
+
+--- Asset item characteristics.
+-- @param #WAREHOUSE self
+-- @param #WAREHOUSE.Assetitem asset The asset for which info in printed in trace mode.
+function WAREHOUSE:_AssetItemInfo(asset)
+  -- Info about asset:
+  local text=string.format("\nNew asset with id=%d for warehouse %s:\n", asset.uid, self.alias)
+  text=text..string.format("Template name = %s\n", asset.templatename)
+  text=text..string.format("Unit type     = %s\n", asset.unittype)
+  text=text..string.format("Attribute     = %s\n", asset.attribute)
+  text=text..string.format("Category      = %d\n", asset.category)
+  text=text..string.format("Units #       = %d\n", asset.nunits)
+  text=text..string.format("Speed max     = %5.2f km/h\n", asset.speedmax)
+  text=text..string.format("Range max     = %5.2f km\n", asset.range/1000)
+  text=text..string.format("Size  max     = %5.2f m\n", asset.size)
+  text=text..string.format("Weight total  = %5.2f kg\n", asset.weight)
+  text=text..string.format("Cargo bay tot = %5.2f kg\n", asset.cargobaytot)
+  text=text..string.format("Cargo bay max = %5.2f kg\n", asset.cargobaymax)
+  self:T(self.wid..text)
+  self:T({DCSdesc=asset.DCSdesc})
+  self:T3({Template=asset.template})
 end
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
---- On before "Request" event. Checks if the request can be fullfilled.
+--- On before "AddRequest" event. Checks some basic properties of the given parameters.
 -- @param #WAREHOUSE self
--- @param Wrapper.Airbase#AIRBASE Airbase airbase requesting supply.
+-- @param #string From From state.
+-- @param #string Event Event.
+-- @param #string To To state.
+-- @param #WAREHOUSE warehouse The warehouse requesting supply.
 -- @param #WAREHOUSE.Descriptor AssetDescriptor Descriptor describing the asset that is requested.
 -- @param AssetDescriptorValue Value of the asset descriptor. Type depends on descriptor, i.e. could be a string, etc.
 -- @param #number nAsset Number of groups requested that match the asset specification.
 -- @param #WAREHOUSE.TransportType TransportType Type of transport.
 -- @param #number nTransport Number of transport units requested.
 -- @param #number Prio Priority of the request. Number ranging from 1=high to 100=low.
-function WAREHOUSE:AddRequest(airbase, AssetDescriptor, AssetDescriptorValue, nAsset, TransportType, nTransport, Prio)
+-- @param #string Assignment A keyword or text that later be used to identify this request and postprocess the assets.
+-- @return #boolean If true, request is okay at first glance.
+function WAREHOUSE:onbeforeAddRequest(From, Event, To, warehouse, AssetDescriptor, AssetDescriptorValue, nAsset, TransportType, nTransport, Assignment, Prio)
+  
+  -- Request is okay.
+  local okay=true
+  
+  if AssetDescriptor==WAREHOUSE.Descriptor.ATTRIBUTE then
+  
+    -- Check if a valid attibute was given.
+    local gotit=false
+    for _,attribute in pairs(WAREHOUSE.Attribute) do
+      if AssetDescriptorValue==attribute then
+        gotit=true
+      end
+    end
+    if not gotit then
+      self:_ErrorMessage("ERROR: Invalid request. Asset attribute is unknown!", 5)
+      okay=false
+    end
+  
+  elseif AssetDescriptor==WAREHOUSE.Descriptor.CATEGORY then
 
+    -- Check if a valid category was given.
+    local gotit=false
+    for _,category in pairs(Group.Category) do
+      if AssetDescriptorValue==category then
+        gotit=true
+      end
+    end
+    if not gotit then
+      self:_ErrorMessage("ERROR: Invalid request. Asset category is unknown!", 5)
+      okay=false
+    end
+    
+  elseif AssetDescriptor==WAREHOUSE.Descriptor.TEMPLATENAME then
+  
+    if type(AssetDescriptorValue)~="string" then
+      self:_ErrorMessage("ERROR: Invalid request. Asset template name must be passed as a string!", 5)
+      okay=false    
+    end
+  
+  elseif AssetDescriptor==WAREHOUSE.Descriptor.UNITTYPE then
+
+    if type(AssetDescriptorValue)~="string" then
+      self:_ErrorMessage("ERROR: Invalid request. Asset unit type must be passed as a string!", 5)
+      okay=false    
+    end
+  
+  else
+    self:_ErrorMessage("ERROR: Invalid request. Asset descriptor is not ATTRIBUTE, CATEGORY, TEMPLATENAME or UNITTYPE!", 5)
+    okay=false
+  end
+
+  -- Warehouse is stopped?
+  if self:IsStopped() then
+    self:_ErrorMessage("ERROR: Invalid request. Warehouse is stopped!", 0)
+    okay=false  
+  end
+
+  -- Warehouse is destroyed?
+  if self:IsDestroyed() then
+    self:_ErrorMessage("ERROR: Invalid request. Warehouse is destroyed!", 0)
+    okay=false
+  end
+ 
+  return okay
+end
+
+--- On after "AddRequest" event. Add a request to the warehouse queue, which is processed when possible.
+-- @param #WAREHOUSE self
+-- @param #string From From state.
+-- @param #string Event Event.
+-- @param #string To To state.
+-- @param #WAREHOUSE warehouse The warehouse requesting supply.
+-- @param #WAREHOUSE.Descriptor AssetDescriptor Descriptor describing the asset that is requested.
+-- @param AssetDescriptorValue Value of the asset descriptor. Type depends on descriptor, i.e. could be a string, etc.
+-- @param #number nAsset Number of groups requested that match the asset specification.
+-- @param #WAREHOUSE.TransportType TransportType Type of transport.
+-- @param #number nTransport Number of transport units requested. 
+-- @param #number Prio Priority of the request. Number ranging from 1=high to 100=low.
+-- @param #string Assignment A keyword or text that later be used to identify this request and postprocess the assets.
+function WAREHOUSE:onafterAddRequest(From, Event, To, warehouse, AssetDescriptor, AssetDescriptorValue, nAsset, TransportType, nTransport, Prio, Assignment)
+
+  -- Defaults.
   nAsset=nAsset or 1
   TransportType=TransportType or WAREHOUSE.TransportType.SELFPROPELLED
-  nTransport=nTransport or 1
   Prio=Prio or 50
-  
-  --TODO: check that
-  -- if warehouse or requestor is a FARP, plane asset and transport not possible 
-  -- if requestor or warehouse is a SHIP, APC transport not possible, SELFPROPELLED only for AIR/SHIP
-  -- etc. etc...
-  
-  local request_category=airbase:GetDesc().category
-
-  if self.category==Airbase.Category.HELIPAD or request_category==Airbase.Category.HELIPAD then
-    if TransportType==WAREHOUSE.TransportType.AIRPLANE then
-      self:E("ERROR: incorrect request. Warehouse or requestor is FARP. No transport by plane possible!")
-      return
+  if nTransport==nil then
+    if TransportType==WAREHOUSE.TransportType.SELFPROPELLED then
+      nTransport=0
+    else
+      nTransport=1
     end
   end
 
+  -- Self request?
+  local toself=false
+  if self.warehouse:GetName()==warehouse.warehouse:GetName() then
+    toself=true
+  end   
+ 
   -- Increase id.
   self.queueid=self.queueid+1
 
   -- Request queue table item.
-  local request={uid=self.queueid, prio=Prio, airbase=airbase, category=request_category, assetdesc=AssetDescriptor, assetdescval=AssetDescriptorValue, nasset=nAsset, transporttype=TransportType, ntransport=nTransport}
-
+  local request={
+  uid=self.queueid,
+  prio=Prio,
+  warehouse=warehouse,
+  assetdesc=AssetDescriptor,
+  assetdescval=AssetDescriptorValue,
+  nasset=nAsset,
+  transporttype=TransportType,
+  ntransport=nTransport,
+  assignment=tostring(Assignment),
+  airbase=warehouse:GetAirbase(),
+  category=warehouse:GetAirbaseCategory(),  
+  ndelivered=0,
+  ntransporthome=0,
+  assets={},
+  toself=toself,
+  } --#WAREHOUSE.Queueitem
+  
   -- Add request to queue.
   table.insert(self.queue, request)
+  
+  local text=string.format("Warehouse %s: New request from warehouse %s.\nDescriptor %s=%s, #assets=%s; Transport=%s, #transports =%s.", 
+  self.alias, warehouse.alias, request.assetdesc, tostring(request.assetdescval), tostring(request.nasset), request.transporttype, tostring(request.ntransport))
+  self:_DebugMessage(text, 5)
+
+  -- Update status
+  self:__Status(-1)
 end
 
----Sorts the queue and checks if the request can be fullfilled.
--- @param #WAREHOUSE self
--- @return #WAREHOUSE.Queueitem Chosen request.
-function WAREHOUSE:_CheckQueue()
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-  -- Sort queue wrt to first prio and then qid.
-  self:_SortQueue()
-
-  ---@param #WAREHOUSE.Queueitem qitem
-  --@return #boolean True if request is okay.
-  local function checkrequest(qitem)
-    local okay=true
-    -- Check if number of requested assets is in stock.
-    local _instock=#self:_FilterStock(self.stock, qitem.assetdesc, qitem.assetdescval)
-    env.info(string.format("FF desc = %s val=%s number=%d", qitem.assetdesc, tostring(qitem.assetdescval),_instock))
-    if qitem.nasset > _instock then
-      env.info("FF check queue nasset > instock okay=false")
-      okay=false
-    end
-    -- Check if enough transport units are in stock.
-    _instock=#self:_FilterStock(self.stock, WAREHOUSE.Descriptor.ATTRIBUTE, qitem.transporttype)
-    if qitem.ntransport > _instock then
-      env.info("FF check queue ntransport > instock okay=false")
-      okay=false
-    end
-    return okay
-  end
-
-  -- Search for a request we can execute.
-  local request=nil --#WAREHOUSE.Queueitem
-  for _,_qitem in ipairs(self.queue) do
-    local qitem=_qitem --#WAREHOUSE.Queueitem
-    local okay=checkrequest(qitem)
-    if okay==true then
-      request=qitem
-      break
-    end
-  end
-
-  -- Execute request.
-  return request
-end
-
-
---- On before "Request" event. Checks if the request can be fullfilled.
+--- On before "Request" event. Checks if the request can be fulfilled.
 -- @param #WAREHOUSE self
 -- @param #string From From state.
 -- @param #string Event Event.
@@ -65920,417 +69105,1411 @@ end
 -- @param #WAREHOUSE.Queueitem Request Information table of the request.
 -- @return #boolean If true, request is granted.
 function WAREHOUSE:onbeforeRequest(From, Event, To, Request)
-  --env.info(self.wid..string.format("Airbase %s requesting asset %s = %s.", Airbase:GetName(), tostring(AssetDescriptor), tostring(AssetDescriptorValue)))
+  self:T3({warehouse=self.alias, request=Request})
 
-  -- Distance from warehouse to requesting airbase.
-  local distance=self.coordinate:Get2DDistance(Request.airbase:GetCoordinate())
+  -- Distance from warehouse to requesting warehouse.
+  local distance=self:GetCoordinate():Get2DDistance(Request.warehouse:GetCoordinate())
 
-  -- Filter the requested assets.
-  local _stockrequest=self:_FilterStock(self.stock, Request.assetdesc, Request.assetdescval)
-
-  -- Asset is not in stock ==> request denied.
-  if #_stockrequest < Request.nasset then
-    local text=string.format("Request denied! Not enough assets currently in stock. Requested %d < %d in stock.", Request.nasset, #_stockrequest)
-    MESSAGE:New(text, 10):ToCoalitionIf(self.coalition, self.Report or self.Debug)
-    self:E(self.wid..text)
+  -- Shortcut to cargoassets.
+  local _assets=Request.cargoassets
+  
+  if Request.nasset==0 then
+    local text=string.format("Warehouse %s: Request denied! Zero assets were requested.", self.alias)
+    self:_InfoMessage(text, 10)
     return false
   end
+  
+  -- Check if destination is in range for all requested assets.
+  for _,_asset in pairs(_assets) do
+    local asset=_asset --#WAREHOUSE.Assetitem
 
-  -- Get the attibute of the requested asset.
-  local _stockitem=_stockrequest[1] --#WAREHOUSE.Stockitem
-  local _assetattribute=self:_GetAttribute(_stockitem.templatename)
-
-
-
-  -- Check that a transport unit is available.
-  if Request.transporttype~=WAREHOUSE.TransportType.SELFPROPELLED then
-    local _instock=self:_FilterStock(self.stock, WAREHOUSE.Descriptor.ATTRIBUTE, Request.transporttype)
-    if #_instock==0 then
-      local text=string.format("Request denied! No transport unit currently available.")
-      MESSAGE:New(text, 10):ToCoalitionIf(self.coalition, self.Report or self.Debug)
-      self:E(self.wid..text)
+    -- Check if destination is in range.    
+    if asset.range<distance then        
+      local text=string.format("Request denied! Destination %s is out of range for asset %s.", Request.airbase:GetName(), asset.templatename)
+      self:_InfoMessage(text, 10)
+      
+      -- Delete request from queue because it will never be possible.
+      --TODO: Unless(!) this is a moving warehouse which could, e.g., be an aircraft carrier. 
+      --self:_DeleteQueueItem(Request, self.queue)
+      
       return false
     end
+    
   end
-
-  -- TODO: For aircraft check that a parking spot is available.
 
   return true
 end
 
---- On after "Request" event. Initiates the transport of the assets to the requesting airbase.
+
+--- On after "Request" event. Initiates the transport of the assets to the requesting warehouse.
 -- @param #WAREHOUSE self
 -- @param #string From From state.
 -- @param #string Event Event.
 -- @param #string To To state.
 -- @param #WAREHOUSE.Queueitem Request Information table of the request.
 function WAREHOUSE:onafterRequest(From, Event, To, Request)
-  --env.info(self.wid..string.format("Airbase %s requesting asset %s = %s.", Airbase:GetName(), tostring(AssetDescriptor), tostring(AssetDescriptorValue)))
 
-  ----------------------------------------------------------------
+  -- Info message.
+  local text=string.format("Warehouse %s: Processing request id=%d from warehouse %s.\n", self.alias, Request.uid, Request.warehouse.alias)
+  text=text..string.format("Requested %s assets of %s=%s.\n", tostring(Request.nasset), Request.assetdesc, Request.assetdescval)
+  text=text..string.format("Transports %s of type %s.", tostring(Request.ntransport), tostring(Request.transporttype))
+  self:_InfoMessage(text, 5)
 
-  -- New empty cargo set in case we need it.
-  local CargoGroups = SET_CARGO:New()
+  ------------------------------------------------------------------------------------------------------------------------------------
+  -- Cargo assets.
+  ------------------------------------------------------------------------------------------------------------------------------------
 
-  --TODO: make nearradius depended on transport type and asset type.
-  local _loadradius=5000
-  local _nearradius=35
-
-  -- Filter the requested assets.
-  local _assetstock=self:_FilterStock(self.stock, Request.assetdesc, Request.assetdescval)
-
-  -- Spawn the assets.
-  local _delid={}
-  local _spawngroups={}
-  local _cargotype
-  local _cargocategory
-  for i=1,Request.nasset do
-
-    -- Get stock item.
-    local _assetitem=_assetstock[i] --#WAREHOUSE.Stockitem
-
-    -- Find a random point within the spawn zone.
-    local spawncoord=self.spawnzone:GetRandomCoordinate()    
-    
-    -- Alias of the group. Spawn with ALIAS here or DCS crashes!
-    local _alias=string.format("%s_AssetID-%04d_RequestID-%04d", _assetitem.templatename,_assetitem.id,Request.uid)
-    local _spawn=SPAWN:NewWithAlias(_assetitem.templatename,_alias)
-    local _group=nil --Wrapper.Group#GROUP
-    
-    -- Set a marker for the spawned group.
-    spawncoord:MarkToAll(string.format("Spawnpoint %s",_alias))
-      
-    if _assetitem.category==Group.Category.GROUND then
-      -- Spawn ground troops.      
-      _group=_spawn:SpawnFromCoordinate(spawncoord)
-      env.info(string.format("FF spawning group %s", _alias))  
-    elseif _assetitem.category==Group.Category.AIRPLANE or _assetitem.category==Group.Category.HELICOPTER then
-      -- Spawn air units.
-      local _takeoff=SPAWN.Takeoff.Cold
-      local _terminal=AIRBASE.TerminalType.OpenBig
-      if _assetitem.attribute==WAREHOUSE.Attribute.FIGHTER then
-        _terminal=AIRBASE.TerminalType.FighterAircraft
-      elseif _assetitem.attribute==WAREHOUSE.Attribute.BOMBER then
-        _terminal=AIRBASE.TerminalType.OpenBig
-      end
-      _group=_spawn:InitUnControlled(true):SpawnAtAirbase(self.homebase,_takeoff, nil,_terminal, true)
-    elseif _assetitem.category==Group.Category.TRAIN then
-      
-    end
-
-    if _group then
-      _spawngroups[i]=_group
-      _cargotype=_assetitem.attribute
-      _cargocategory=_assetitem.category
-      table.insert(_delid,_assetitem.id)
-
-      if Request.transporttype ~= WAREHOUSE.TransportType.SELFPROPELLED then
-        local cargogroup = CARGO_GROUP:New(_group, _alias, _alias, _loadradius, _nearradius)
-        CargoGroups:AddCargo(cargogroup)
-      end
-
-    end
+ -- Pending request. Add cargo groups to request.
+  local Pending=Request  --#WAREHOUSE.Pendingitem
+  
+  -- Set time stamp.
+  Pending.timestamp=timer.getAbsTime()
+  
+  -- Spawn assets of this request.
+  local _spawngroups=self:_SpawnAssetRequest(Pending) --Core.Set#SET_GROUP
+  
+  -- Check if any group was spawned. If not, delete the request.
+  if _spawngroups:Count()==0 then
+    self:_DebugMessage(string.format("ERROR: Groups or request %d could not be spawned. Request is rejected and deleted from queue!", Request.uid))
+    -- Delete request from queue.
+    self:_DeleteQueueItem(Request, self.queue)    
+    return
   end
+  
+  -- General type and category.
+  local _cargotype=Request.cargoattribute    --#WAREHOUSE.Attribute
+  local _cargocategory=Request.cargocategory --DCS#Group.Category
+   
+  -- Add groups to pending item.
+  Pending.cargogroupset=_spawngroups
 
-  -- Delete spawned items from warehouse stock.
-  for _,_id in pairs(_delid) do
-    self:_DeleteStockItem(_id)
-  end
-
-  ----------------------------------------------------------------
+  ------------------------------------------------------------------------------------------------------------------------------------
+  -- Self request: assets are spawned at warehouse but not transported anywhere.
+  ------------------------------------------------------------------------------------------------------------------------------------  
+  
+  -- Self request! Assets are only spawned but not routed or transported anywhere.  
+  if Request.toself then
+    self:_DebugMessage(string.format("Selfrequest! Current status %s", self:GetState()))
+    
+    -- Add request to pending queue.
+    table.insert(self.pending, Pending)
+    
+    -- Delete request from queue.
+    self:_DeleteQueueItem(Request, self.queue)
+        
+    -- Start self request.
+    self:__SelfRequest(1,_spawngroups, Pending)
+    
+    return
+  end  
+  
+  ------------------------------------------------------------------------------------------------------------------------------------
+  -- Self propelled: assets go to the requesting warehouse by themselfs. 
+  ------------------------------------------------------------------------------------------------------------------------------------
 
   -- No transport unit requested. Assets go by themselfes.
   if Request.transporttype==WAREHOUSE.TransportType.SELFPROPELLED then
+    self:T2(self.wid..string.format("Got selfpropelled request for %d assets.",_spawngroups:Count()))    
 
-    for _i,_spawngroup in pairs(_spawngroups) do
-
+    for _,_spawngroup in pairs(_spawngroups:GetSetObjects()) do
+      
+      -- Group intellisense.
       local group=_spawngroup --Wrapper.Group#GROUP
-      local ToCoordinate=Request.airbase:GetZone():GetRandomCoordinate()
-      
-      if _cargocategory==Group.Category.GROUND then        
-        self:_RouteGround(group, ToCoordinate)
-      elseif _cargocategory==Group.Category.AIRPLANE then
+            
+            
+      -- Route cargo to their destination.
+      if _cargocategory==Group.Category.GROUND then      
+        self:T2(self.wid..string.format("Route ground group %s.", group:GetName()))
+
+        -- Random place in the spawn zone of the requesting warehouse.
+        local ToCoordinate=Request.warehouse.spawnzone:GetRandomCoordinate()
+        
+        -- Debug marker.
+        if self.Debug then
+          ToCoordinate:MarkToAll(string.format("Destination of group %s", group:GetName()))
+        end
+
+        -- Route ground.
+        self:_RouteGround(group, Request)
+        
+      elseif _cargocategory==Group.Category.AIRPLANE or _cargocategory==Group.Category.HELICOPTER then
+        self:T2(self.wid..string.format("Route airborne group %s.", group:GetName()))
+        
+        -- Route plane to the requesting warehouses airbase.
+        -- Actually, the route is already set. We only need to activate the uncontrolled group.
         self:_RouteAir(group, Request.airbase)
-      elseif _cargocategory==Group.Category.HELICOPTER then
-        self:_RouteAir(group, Request.airbase)
+        
       elseif _cargocategory==Group.Category.SHIP then
+        self:T2(self.wid..string.format("Route naval group %s.", group:GetName()))
       
+        -- Route plane to the requesting warehouses airbase.
+        self:_RouteNaval(group, Request)
+        
       elseif _cargocategory==Group.Category.TRAIN then
-      
+        self:T2(self.wid..string.format("Route train group %s.", group:GetName()))
+        
+        -- Route train to the rail connection of the requesting warehouse.
+        self:_RouteTrain(group, Request.warehouse.rail)
+        
+      else
+        self:E(self.wid..string.format("ERROR: unknown category %s for self propelled cargo %s!", tostring(_cargocategory), tostring(group:GetName())))
       end
 
     end
     
+    -- Add request to pending queue.
+    table.insert(self.pending, Pending)
+    
     -- Delete request from queue.
-    self:_DeleteQueueItem(Request.uid)
-
+    self:_DeleteQueueItem(Request, self.queue)
+    
     -- No cargo transport necessary.
     return
   end
 
-  env.info("FF cargo set name(s) = "..CargoGroups:GetObjectNames())
-  ----------------------------------------------------------------
+  ------------------------------------------------------------------------------------------------------------------------------------
+  -- Prepare cargo groups for transport
+  ------------------------------------------------------------------------------------------------------------------------------------
+  
+  -- Add groups to cargo if they don't go by themselfs.
+  local CargoGroups --Core.Set#SET_CARGO
+  
+  -- Load radius and near radius.
+  local _loadradius=5000
+  local _nearradius=nil
+  
+  if Request.transporttype==WAREHOUSE.TransportType.AIRPLANE then
+    _loadradius=10000
+  elseif Request.transporttype==WAREHOUSE.TransportType.HELICOPTER then
+    --_loadradius=1000
+    _loadradius=nil
+  elseif Request.transporttype==WAREHOUSE.TransportType.APC then
+    _loadradius=nil
+  end
+  
+  --_loadradius=nil
+  --_nearradius=nil
+  
+  -- Empty cargo group set.
+  CargoGroups = SET_CARGO:New()
+  
+  local function getasset(group)
+    local _,aid,_=self:_GetIDsFromGroup(group)
+    self:FindAssetInDB(group)
+  end
+  
+  -- Add cargo groups to set.
+  for _i,_group in pairs(_spawngroups:GetSetObjects()) do
+  
+    -- New cargo group object.
+    local cargogroup=CARGO_GROUP:New(_group, _cargotype,_group:GetName(),_loadradius,_nearradius)
+    
+    -- Find asset belonging to this group.
+    local asset=self:FindAssetInDB(_group)
+    if asset then
+      -- Set weight for this group.
+      cargogroup:SetWeight(asset.weight)
+    end
+    
+    -- Add group to group set.
+    CargoGroups:AddCargo(cargogroup)
+  end
+  
+  ------------------------------------------------------------------------------------------------------------------------------------
+  -- Transport assets and dispatchers
+  ------------------------------------------------------------------------------------------------------------------------------------
 
-  local TransportSet = SET_GROUP:New() --:AddGroupsByName(Plane:GetName())
+  -- Set of cargo carriers.
+  local TransportSet = SET_GROUP:New()
 
-  -- Pickup and depoly locations.
-  local PickupAirbaseSet = SET_AIRBASE:New():AddAirbase(self.homebase)
-  local DeployAirbaseSet = SET_AIRBASE:New():AddAirbase(Request.airbase)
-  local DeployZoneSet    = SET_ZONE:New():FilterPrefixes("Deploy"):FilterStart()
-  --local bla=SET_ZONE:New():AddZonesByName(AddZoneNames)
+  -- Shortcut to transport assets.  
+  local _assetstock=Request.transportassets
+  
+  -- General type and category.
+  local _transporttype=Request.transportattribute
+  local _transportcategory=Request.transportcategory
+
+  -- Now we try to find all parking spots for all cargo groups in advance. Due to the for loop, the parking spots do not get updated while spawning.
+  local Parking={}
+  if  _transportcategory==Group.Category.AIRPLANE or _transportcategory==Group.Category.HELICOPTER then
+    Parking=self:_FindParkingForAssets(self.airbase,_assetstock)
+  end  
+  
+  -- Transport assets table.
+  local _transportassets={}
+  
+  ----------------------------
+  -- Spawn Transport Groups --
+  ----------------------------
+
+  -- Spawn the transport groups.
+  for i=1,Request.ntransport do
+
+    -- Get stock item.
+    local _assetitem=_assetstock[i] --#WAREHOUSE.Assetitem
+ 
+       -- Create an alias name with the UIDs for the sending warehouse, asset and request.
+    local _alias=self:_alias(_assetitem.unittype, self.uid, _assetitem.uid, Request.uid)      
+    
+    local spawngroup=nil --Wrapper.Group#GROUP
+    
+    -- Spawn assets depending on type.
+    if Request.transporttype==WAREHOUSE.TransportType.AIRPLANE then
+    
+      -- Spawn plane at airport in uncontrolled state. Will get activated when cargo is loaded.
+      spawngroup=self:_SpawnAssetAircraft(_alias,_assetitem, Pending, Parking[_assetitem.uid], true)
+    
+    elseif Request.transporttype==WAREHOUSE.TransportType.HELICOPTER then
+    
+      -- Spawn helos at airport in controlled state. They need to fly to the spawn zone. 
+      spawngroup=self:_SpawnAssetAircraft(_alias,_assetitem, Pending, Parking[_assetitem.uid], false)
+    
+    elseif Request.transporttype==WAREHOUSE.TransportType.APC then
+    
+      -- Spawn APCs in spawn zone.
+      spawngroup=self:_SpawnAssetGroundNaval(_alias, _assetitem, Request, self.spawnzone)
+    
+    elseif Request.transporttype==WAREHOUSE.TransportType.TRAIN then
+  
+      self:_ErrorMessage("ERROR: Cargo transport by train not supported yet!")
+      return
+  
+    elseif Request.transporttype==WAREHOUSE.TransportType.SHIP then
+  
+      self:_ErrorMessage("ERROR: Cargo transport by ship not supported yet!")
+      return
+  
+    elseif Request.transporttype==WAREHOUSE.TransportType.SELFPROPELLED then
+  
+      self:_ErrorMessage("ERROR: Transport type selfpropelled was already handled above. We should not get here!")
+      return
+  
+    else
+      self:_ErrorMessage("ERROR: Unknown transport type!")
+      return
+    end
+    
+    -- Check if group was spawned.
+    if spawngroup then
+      -- Set state of warehouse so we can retrieve it later.
+      spawngroup:SetState(spawngroup, "WAREHOUSE", self)
+
+      -- Add group to transportset.
+      TransportSet:AddGroup(spawngroup)
+
+      -- Add assets to pending request.
+      Pending.assets[_assetitem.uid]=_assetitem
+      
+      -- Add transport assets.
+      table.insert(_transportassets,_assetitem)
+    end
+  end
+
+  -- Delete spawned items from warehouse stock.
+  for _,_item in pairs(_transportassets) do
+    self:_DeleteStockItem(_item)
+  end
+  
+  -- Add transport groups, i.e. the carriers to request.
+  Pending.transportgroupset=TransportSet
+  
+  -- Add cargo group set.
+  Pending.transportcargoset=CargoGroups
+
+  -- Add request to pending queue.
+  table.insert(self.pending, Pending)
+
+  -- Delete request from queue.
+  self:_DeleteQueueItem(Request, self.queue)
+  
+  -- Adjust carrier units. This has to come AFTER the dispatchers have been defined because they set the cargobay free weight!
+  Pending.carriercargo={}  
+  for _,carriergroup in pairs(TransportSet:GetSetObjects()) do
+    local asset=self:FindAssetInDB(carriergroup)
+    for _i,_carrierunit in pairs(carriergroup:GetUnits()) do
+      local carrierunit=_carrierunit --Wrapper.Unit#UNIT
+      
+      -- Create empty tables which will be filled with the cargo groups of each carrier unit. Needed in case a carrier unit dies.
+      Pending.carriercargo[carrierunit:GetName()]={}
+      
+      -- Adjust cargo bay of carrier unit.
+      local cargobay=asset.cargobay[_i]
+      carrierunit:SetCargoBayWeightLimit(cargobay)
+      
+      -- Debug info.
+      self:T2(self.wid..string.format("Cargo bay weight limit ofcarrier unit %s: %.1f kg.", carrierunit:GetName(), carrierunit:GetCargoBayFreeWeight()))      
+    end
+  end    
+  
+  ------------------------
+  -- Create Dispatchers --
+  ------------------------
+
+  -- Cargo dispatcher.
   local CargoTransport --AI.AI_Cargo_Dispatcher#AI_CARGO_DISPATCHER
 
-  -- Filter the requested transport assets.
-  local _assetstock=self:_FilterStock(self.stock, WAREHOUSE.Descriptor.ATTRIBUTE, Request.transporttype)
-
-  -- Dependent on transport type, spawn the transports and set up the dispatchers.
   if Request.transporttype==WAREHOUSE.TransportType.AIRPLANE then
-
-    -- Spawn the transport groups.
-    local _delid={}
-    for i=1,Request.ntransport do
-
-      -- Get stock item.
-      local _assetitem=_assetstock[i] --#WAREHOUSE.Stockitem
-
-      -- Spawn with ALIAS here or DCS crashes!
-      local _alias=string.format("%s_%d", _assetitem.templatename,_assetitem.id)
-
-      -- Spawn plane at airport in uncontrolled state.
-      local _takeoff=SPAWN.Takeoff.Cold
-      local _terminal=AIRBASE.TerminalType.OpenBig
-      local spawngroup=SPAWN:NewWithAlias(_assetitem.templatename,_alias):InitUnControlled(true):SpawnAtAirbase(self.homebase,_takeoff, nil,_terminal, false)
-
-      if spawngroup then
-        -- Set state of warehouse so we can retrieve it later.
-        spawngroup:SetState(spawngroup, "WAREHOUSE", self)
-
-        -- Add group to transportset.
-        TransportSet:AddGroup(spawngroup)
-
-        table.insert(_delid,_assetitem.id)
-      end
-    end
-
-    -- Delete spawned items from warehouse stock.
-    for _,_id in pairs(_delid) do
-      self:_DeleteStockItem(_id)
-    end
+  
+    -- Pickup and deploy zones.
+    local PickupAirbaseSet = SET_ZONE:New():AddZone(ZONE_AIRBASE:New(self.airbase:GetName()))
+    local DeployAirbaseSet = SET_ZONE:New():AddZone(ZONE_AIRBASE:New(Request.airbase:GetName()))
 
     -- Define dispatcher for this task.
     CargoTransport = AI_CARGO_DISPATCHER_AIRPLANE:New(TransportSet, CargoGroups, PickupAirbaseSet, DeployAirbaseSet)
+    
+    -- Set home zone.
+    CargoTransport:SetHomeZone(ZONE_AIRBASE:New(self.airbase:GetName()))
 
   elseif Request.transporttype==WAREHOUSE.TransportType.HELICOPTER then
-
-    -- Spawn the transport groups.
-    local _delid={}
-    for i=1,Request.ntransport do
-
-      -- Get stock item.
-      local _assetitem=_assetstock[i] --#WAREHOUSE.Stockitem
-
-      -- Spawn with ALIAS here or DCS crashes!
-      local _alias=string.format("%s_%d", _assetitem.templatename,_assetitem.id)
-
-      -- Spawn plane at airport in uncontrolled state.
-      -- TODO: check terminal type.
-      local _takeoff=SPAWN.Takeoff.Hot
-      local _terminal=AIRBASE.TerminalType.HelicopterUsable      
-      local spawngroup=SPAWN:NewWithAlias(_assetitem.templatename,_alias):InitUnControlled(false):SpawnAtAirbase(self.homebase,_takeoff, nil,_terminal, false)
-
-      if spawngroup then
-        -- Set state of warehouse so we can retrieve it later.
-        spawngroup:SetState(spawngroup, "WAREHOUSE", self)
-
-        -- Add group to transportset.
-        TransportSet:AddGroup(spawngroup)
-
-        table.insert(_delid,_assetitem.id)
-      end
-    end
-
-    -- Delete spawned items from warehouse stock.
-    for _,_id in pairs(_delid) do
-      self:_DeleteStockItem(_id)
-    end
+  
+    -- Pickup and deploy zones.
+    local PickupZoneSet = SET_ZONE:New():AddZone(self.spawnzone)
+    local DeployZoneSet = SET_ZONE:New():AddZone(Request.warehouse.spawnzone)
 
     -- Define dispatcher for this task.
-    CargoTransport = AI_CARGO_DISPATCHER_HELICOPTER:New(TransportSet, CargoGroups, DeployZoneSet)
-
+    CargoTransport = AI_CARGO_DISPATCHER_HELICOPTER:New(TransportSet, CargoGroups, PickupZoneSet, DeployZoneSet)
+    
     -- Home zone.
     CargoTransport:SetHomeZone(self.spawnzone)
+    
+    --TODO: Need to check/optimize if/how this works with polygon zones!
+    -- The 20 m inner radius are to ensure that the helo does not land on the warehouse itself in the middle of the default spawn zone.
+    CargoTransport:SetPickupRadius(self.spawnzone:GetRadius(), 20)
+    CargoTransport:SetDeployRadius(Request.warehouse.spawnzone:GetRadius(), 20)    
 
   elseif Request.transporttype==WAREHOUSE.TransportType.APC then
-
-    -- Spawn the transport groups.
-    local _delid={}
-    for i=1,Request.ntransport do
-
-      -- Get stock item.
-      local _assetitem=_assetstock[i] --#WAREHOUSE.Stockitem
-
-      -- Spawn with ALIAS here or DCS crashes!
-      local _alias=string.format("%s_%d", _assetitem.templatename,_assetitem.id)
-
-      -- Spawn plane at airport in uncontrolled state.
-      local spawngroup=SPAWN:NewWithAlias(_assetitem.templatename,_alias):SpawnFromCoordinate(self.spawnzone:GetRandomCoordinate())
-
-      if spawngroup then
-        -- Set state of warehouse so we can retrieve it later.
-        spawngroup:SetState(spawngroup, "WAREHOUSE", self)
-
-        -- Add group to transportset.
-        TransportSet:AddGroup(spawngroup)
-
-        table.insert(_delid,_assetitem.id)
-      end
-    end
-
-    -- Delete spawned items from warehouse stock.
-    for _,_id in pairs(_delid) do
-      self:_DeleteStockItem(_id)
-    end
+  
+    -- Pickup and deploy zones.
+    local PickupZoneSet = SET_ZONE:New():AddZone(self.spawnzone)
+    local DeployZoneSet = SET_ZONE:New():AddZone(Request.warehouse.spawnzone)
 
     -- Define dispatcher for this task.
-    CargoTransport = AI_CARGO_DISPATCHER_APC:NewWithZones(TransportSet, CargoGroups, DeployZoneSet, 0)
+    CargoTransport = AI_CARGO_DISPATCHER_APC:New(TransportSet, CargoGroups, PickupZoneSet, DeployZoneSet, 0)
     
-  elseif Request.transporttype==WAREHOUSE.TransportType.TRAIN then
-
-    self:E(self.wid.."ERROR: transport by train not supported yet!")
-    return
-
-  elseif Request.transporttype==WAREHOUSE.TransportType.SHIP then
-
-    self:E(self.wid.."ERROR: transport by ship not supported yet!")
-    return
-
-  elseif Request.transporttype==WAREHOUSE.TransportType.SELFPROPELLED then
-
-    self:E(self.wid.."ERROR: transport type selfpropelled was already handled above. We should not get here!")
-    return
-
+    -- Set home zone.
+    CargoTransport:SetHomeZone(self.spawnzone)
+    
+    --TODO: Need to check/optimize if/how this works with polygon zones!
+    -- The 20 m inner radius are to ensure that the helo does not land on the warehouse itself in the middle of the default spawn zone.
+    CargoTransport:SetPickupRadius(self.spawnzone:GetRadius(), 20)
+    CargoTransport:SetDeployRadius(Request.warehouse.spawnzone:GetRadius(), 20)    
+        
   else
-    self:E(self.wid.."ERROR: unknown transport type!")
-    return
+    self:E(self.wid.."ERROR: Unknown transporttype!")
   end
 
+  --------------------------------
+  -- Dispatcher Event Functions --
+  --------------------------------
+  
+  --- Function called after carrier picked up something.
+  function CargoTransport:OnAfterPickedUp(From, Event, To, Carrier, PickupZone)
+
+    -- Get warehouse state.
+    local warehouse=Carrier:GetState(Carrier, "WAREHOUSE") --#WAREHOUSE
+  
+    -- Debug message.
+    local text=string.format("Carrier group %s picked up at pickup zone %s.", Carrier:GetName(), PickupZone:GetName())
+    warehouse:T(warehouse.wid..text)
+    
+  end
+  
+  --- Function called if something was deployed.
+  function CargoTransport:OnAfterDeployed(From, Event, To, Carrier, DeployZone)
+  
+    -- Get warehouse state.
+    local warehouse=Carrier:GetState(Carrier, "WAREHOUSE") --#WAREHOUSE
+  
+    -- Debug message.
+    -- TODO: Depoloy zone is nil!
+    --local text=string.format("Carrier group %s deployed at deploy zone %s.", Carrier:GetName(), DeployZone:GetName())
+    --warehouse:T(warehouse.wid..text)
+    
+  end
+  
+  --- Function called if carrier group is going home.
+  function CargoTransport:OnAfterHome(From, Event, To, Carrier, Coordinate, Speed, HomeZone)
+  
+    -- Get warehouse state.
+    local warehouse=Carrier:GetState(Carrier, "WAREHOUSE") --#WAREHOUSE
+  
+    -- Debug message.  
+    local text=string.format("Carrier group %s going home to zone %s.", Carrier:GetName(), HomeZone:GetName())
+    warehouse:T(warehouse.wid..text)
+    
+  end
+
+  --- Function called when a carrier unit has loaded a cargo group.
+  function CargoTransport:OnAfterLoaded(From, Event, To, Carrier, Cargo, CarrierUnit, PickupZone)
+  
+    -- Get warehouse state.
+    local warehouse=Carrier:GetState(Carrier, "WAREHOUSE") --#WAREHOUSE
+  
+    -- Debug message.
+    local text=string.format("Carrier group %s loaded cargo %s into unit %s in pickup zone %s", Carrier:GetName(), Cargo:GetObject():GetName(), CarrierUnit:GetName(), PickupZone:GetName())
+    warehouse:T(warehouse.wid..text)
+    
+    -- Get cargo group object.
+    local group=Cargo:GetObject() --Wrapper.Group#GROUP
+        
+    -- Get request.
+    local request=warehouse:_GetRequestOfGroup(group, warehouse.pending)
+    
+    -- Add cargo group to this carrier.
+    table.insert(request.carriercargo[CarrierUnit:GetName()], group)
+    
+  end
 
   --- Function called when cargo has arrived and was unloaded.
-  function CargoTransport:OnAfterUnloaded(From, Event, To, Carrier, Cargo)
-
-    env.info("FF: OnAfterUnloaded")
-    self:E({From=From})
-    self:E({Event=Event})
-    self:E({To=To})
-    self:E({Carrier=Carrier})
-    self:E({Cargo=Cargo})
-
-    -- Get group obejet.
-    local group=Cargo:GetObject() --Wrapper.Group#GROUP
+  function CargoTransport:OnAfterUnloaded(From, Event, To, Carrier, Cargo, CarrierUnit, DeployZone)
 
     -- Get warehouse state.
     local warehouse=Carrier:GetState(Carrier, "WAREHOUSE") --#WAREHOUSE
 
-    -- Trigger Delivered event.
-    warehouse:__Delivered(1, group)
+    -- Get group obejet.
+    local group=Cargo:GetObject() --Wrapper.Group#GROUP
+
+    -- Debug message.
+    local text=string.format("Cargo group %s was unloaded from carrier unit %s.", tostring(group:GetName()), tostring(CarrierUnit:GetName()))
+    warehouse:T(warehouse.wid..text)
+
+    -- Load the cargo in the warehouse.
+    --Cargo:Load(warehouse.warehouse)
+
+    -- Trigger Arrived event.
+    warehouse:Arrived(group)
   end
+  
+  --- On after BackHome event.
+  function CargoTransport:OnAfterBackHome(From, Event, To, Carrier)
+  
+    -- Intellisense.
+    local carrier=Carrier --Wrapper.Group#GROUP
+  
+    -- Get warehouse state.
+    local warehouse=carrier:GetState(carrier, "WAREHOUSE") --#WAREHOUSE
+    carrier:SmokeWhite()
+    
+    -- Debug info.
+    local text=string.format("Carrier %s is back home at warehouse %s.", tostring(Carrier:GetName()), tostring(warehouse.warehouse:GetName()))
+    MESSAGE:New(text, 5):ToAllIf(warehouse.Debug)
+    warehouse:I(warehouse.wid..text)
+    
+    -- Call arrived event for carrier.
+    warehouse:__Arrived(1, Carrier)
+    
+  end  
 
   -- Start dispatcher.
   CargoTransport:__Start(5)
 
-  -- Delete request from queue.
-  self:_DeleteQueueItem(Request.uid)
-
 end
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
---- Warehouse
+--- On after "Unloaded" event. Triggered when a group was unloaded from the carrier.
 -- @param #WAREHOUSE self
 -- @param #string From From state.
 -- @param #string Event Event.
 -- @param #string To To state.
--- @param Wrapper.Group#GROUP Group The group that was delivered.
-function WAREHOUSE:onafterDelivered(From, Event, To, Group)
-  env.info("FF warehouse cargo delivered! Croutine to closest point on road")
-  local road=Group:GetCoordinate():GetClosestPointToRoad()
-  local speed=Group:GetSpeedMax()*0.6
-  Group:RouteGroundTo(road, speed, "Off Road")
+-- @param Wrapper.Group#GROUP group The group that was delivered.
+function WAREHOUSE:onafterUnloaded(From, Event, To, group)
+  -- Debug info.
+  self:_DebugMessage(string.format("Cargo %s unloaded!", tostring(group:GetName())), 5)
+  
+  if group and group:IsAlive() then
+
+    -- Debug smoke.
+    if self.Debug then
+      group:SmokeWhite()
+    end
+  
+    -- Get max speed of group.
+    local speedmax=group:GetSpeedMax()
+    
+    if group:IsGround() then
+      -- Route group to spawn zone.
+      if speedmax>1 then
+        group:RouteGroundTo(self.spawnzone:GetRandomCoordinate(), speedmax*0.5, AI.Task.VehicleFormation.RANK, 3)
+      else
+        -- Immobile ground unit ==> directly put it into the warehouse.
+        self:Arrived(group)
+      end
+    elseif group:IsAir() then
+      -- Not sure if air units will be allowed as cargo even though it might be possible. Best put them into warehouse immediately.
+      self:Arrived(group)
+    elseif group:IsShip() then
+      -- Not sure if naval units will be allowed as cargo even though it might be possible. Best put them into warehouse immediately.
+      self:Arrived(group)    
+    end
+    
+  else
+    self:E(self.wid..string.format("ERROR unloaded Cargo group is not alive!"))
+  end  
 end
 
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- User functions
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
---- Add an airplane group to the warehouse stock.
+--- On after "Arrived" event. Triggered when a group has arrived at its destination warehouse.
+-- The routine should be called by the warehouse sending this asset and not by the receiving warehouse.
+-- It is checked if this asset is cargo (or self propelled) or transport. If it is cargo it is put into the stock of receiving warehouse.
+-- If it is a transporter it is put back into the sending warehouse since transports are supposed to return their home warehouse. 
 -- @param #WAREHOUSE self
--- @param #string templategroupname Name of the late activated template group as defined in the mission editor.
--- @param #number ngroups Number of groups to add to the warehouse stock. Default is 1.
--- @return #WAREHOUSE self
-function WAREHOUSE:AddAsset(templategroupname, ngroups)
+-- @param #string From From state.
+-- @param #string Event Event.
+-- @param #string To To state.
+-- @param Wrapper.Group#GROUP group The group that was delivered.
+function WAREHOUSE:onafterArrived(From, Event, To, group)
+     
+  -- Debug message and smoke.
+  if self.Debug then
+    group:SmokeOrange()
+  end
+  
+  -- Get pending request this group belongs to.
+  local request=self:_GetRequestOfGroup(group, self.pending)
 
-  -- Set default.
-  local n=ngroups or 1
-
-  local group=GROUP:FindByName(templategroupname)
-
-  if group then
-
-    local DCSgroup=group:GetDCSObject()
-    local DCSunit=DCSgroup:getUnit(1)
-    local DCSdesc=DCSunit:getDesc()
-    local DCSdisplay=DCSunit:getDesc().displayName
-    local DCScategory=DCSgroup:getCategory()
-    local DCStype=DCSunit:getTypeName()
-
-    env.info(string.format("group name   = %s", group:GetName()))
-    env.info(string.format("display name = %s", DCSdisplay))
-    env.info(string.format("category     = %s", DCScategory))
-    env.info(string.format("type         = %s", DCStype))
-    self:E({desc=DCSdesc})
-
-    local attribute=self:_GetAttribute(templategroupname)
-
-    -- Add this n times to the table.
-    for i=1,n do
-      local stockitem={} --#WAREHOUSE.Stockitem
-      self.assetid=self.assetid+1
-      stockitem.id=self.assetid
-      stockitem.templatename=templategroupname
-      stockitem.category=DCScategory
-      stockitem.unittype=DCStype
-      stockitem.attribute=attribute
-      table.insert(self.stock, stockitem)
+  if request then
+    
+    -- Get the right warehouse to put the asset into
+    -- Transports go back to the warehouse which called this function while cargo goes into the receiving warehouse.
+    local warehouse=request.warehouse
+    local istransport=self:_GroupIsTransport(group,request)
+    if istransport==true then
+      warehouse=self
+    elseif istransport==false then
+      warehouse=request.warehouse
+    else
+      self:E(self.wid..string.format("ERROR: Group %s is neither cargo nor transport", group:GetName()))
+      return
     end
+    
+    -- Debug message.
+    self:_DebugMessage(string.format("Group %s arrived at warehouse %s!", tostring(group:GetName()), warehouse.alias), 5)
+  
+    -- Route mobile ground group to the warehouse. Group has 60 seconds to get there or it is despawned and added as asset to the new warehouse regardless.
+    if group:IsGround() and group:GetSpeedMax()>1 then
+      group:RouteGroundTo(warehouse:GetCoordinate(), group:GetSpeedMax()*0.3, "Off Road")
+    end
+    
+    -- Increase number of cargo delivered and transports home.
+    local istransport=warehouse:_GroupIsTransport(group,request)
+    if istransport==true then
+      request.ntransporthome=request.ntransporthome+1
+      request.transportgroupset:Remove(group:GetName(), true)
+      self:T2(warehouse.wid..string.format("Transport %d of %s returned home.", request.ntransporthome, tostring(request.ntransport)))
+    elseif istransport==false then
+      request.ndelivered=request.ndelivered+1
+      request.cargogroupset:Remove(self:_GetNameWithOut(group), true)
+      self:T2(warehouse.wid..string.format("Cargo %d of %s delivered.", request.ndelivered, tostring(request.nasset)))
+    else
+      self:E(warehouse.wid..string.format("ERROR: Group %s is neither cargo nor transport!", group:GetName()))
+    end    
+  
+    -- Move asset from pending queue into new warehouse.
+    warehouse:__AddAsset(60, group)
+  end
+    
+end
 
+--- Get asset from group and request.
+-- @param #WAREHOUSE self
+-- @param Wrapper.Group#GROUP group The group for which the asset should be obtained.
+-- @param #WAREHOUSE.Pendingitem request Pending request.
+-- @return #WAREHOUSE.Assetitem The asset.
+function WAREHOUSE:_GetAssetFromGroupRequest(group,request)
+
+  -- Get the IDs for this group. In particular, we use the asset ID to figure out which group was delivered.
+  local wid,aid,rid=self:_GetIDsFromGroup(group)
+  
+  -- Retrieve asset from request.
+  local asset=request.assets[aid]
+end
+
+
+
+
+--- On after "Delivered" event. Triggered when all asset groups have reached their destination. Corresponding request is deleted from the pending queue.
+-- @param #WAREHOUSE self
+-- @param #string From From state.
+-- @param #string Event Event.
+-- @param #string To To state.
+-- @param #WAREHOUSE.Pendingitem request The pending request that is finished and deleted from the pending queue.
+function WAREHOUSE:onafterDelivered(From, Event, To, request)
+
+  -- Debug info
+  local text=string.format("Warehouse %s: All assets delivered to warehouse %s!", self.alias, request.warehouse.alias)
+  self:_InfoMessage(text, 5)
+
+  -- Make some noise :)
+  self:_Fireworks(request.warehouse:GetCoordinate())
+  
+  -- Set delivered status for this request uid.
+  self.delivered[request.uid]=true
+  
+end
+
+
+--- On after "SelfRequest" event. Request was initiated to the warehouse itself. Groups are just spawned at the warehouse or the associated airbase.
+-- If the warehouse is currently under attack when the self request is made, the self request is added to the defending table. One the attack is defeated,
+-- this request is used to put the groups back into the warehouse stock.
+-- @param #WAREHOUSE self
+-- @param #string From From state.
+-- @param #string Event Event.
+-- @param #string To To state.
+-- @param Core.Set#SET_GROUP groupset The set of asset groups that was delivered to the warehouse itself.
+-- @param #WAREHOUSE.Pendingitem request Pending self request.
+function WAREHOUSE:onafterSelfRequest(From, Event, To, groupset, request)
+
+  -- Debug info.
+  self:_DebugMessage(string.format("Assets spawned at warehouse %s after self request!", self.alias))
+  
+  -- Debug info.
+  for _,_group in pairs(groupset:GetSetObjects()) do
+    local group=_group --Wrapper.Group#GROUP
+    if self.Debug then
+      group:FlareGreen()
+    end
+  end
+  
+  -- Add a "defender request" to be able to despawn all assets once defeated.
+  if self:IsAttacked() then
+
+    -- Route (mobile) ground troops to warehouse zone if they are not alreay there.
+    if self.autodefence then
+      for _,_group in pairs(groupset:GetSetObjects()) do
+        local group=_group --Wrapper.Group#GROUP
+        local speedmax=group:GetSpeedMax()
+        if group:IsGround() and speedmax>1 and group:IsNotInZone(self.zone) then
+          group:RouteGroundTo(self.zone:GetRandomCoordinate(), 0.8*speedmax, "Off Road")
+        end
+      end      
+    end    
+  
+    -- Add request to defenders.
+    table.insert(self.defending, request)
+  end
+  
+end
+
+--- On after "Attacked" event. Warehouse is under attack by an another coalition.
+-- @param #WAREHOUSE self
+-- @param #string From From state.
+-- @param #string Event Event.
+-- @param #string To To state.
+-- @param DCS#coalition.side Coalition which is attacking the warehouse.
+-- @param DCS#country.id Country which is attacking the warehouse.
+function WAREHOUSE:onafterAttacked(From, Event, To, Coalition, Country)
+
+  -- Warning.
+  local text=string.format("Warehouse %s: We are under attack!", self.alias)
+  self:_InfoMessage(text)
+  
+  -- Debug smoke.
+  if self.Debug then
+    self:GetCoordinate():SmokeOrange()
+  end    
+  
+  -- Spawn all ground units in the spawnzone?
+  if self.autodefence then
+    local nground=self:GetNumberOfAssets(WAREHOUSE.Descriptor.CATEGORY, Group.Category.GROUND)
+    local text=string.format("Warehouse auto defence activated.\n")
+    
+    if nground>0 then
+      text=text..string.format("Deploying all %d ground assets.", nground)
+      
+      -- Add self request.
+      self:AddRequest(self, WAREHOUSE.Descriptor.CATEGORY, Group.Category.GROUND, WAREHOUSE.Quantity.ALL, nil, nil , 0)
+    else
+      text=text..string.format("No ground assets currently available.")      
+    end
+    self:_InfoMessage(text)
   else
-    -- Group name does not exist!
-    self:E(string.format("ERROR: Template group name not defined in the mission editor. Check the spelling! templategroupname=%s",tostring(templategroupname)))
+    local text=string.format("Warehouse auto defence inactive.")
+    self:I(self.wid..text)    
+  end
+end
+
+--- On after "Defeated" event. Warehouse defeated an attack by another coalition. Defender assets are added back to warehouse stock.
+-- @param #WAREHOUSE self
+-- @param #string From From state.
+-- @param #string Event Event.
+-- @param #string To To state.
+function WAREHOUSE:onafterDefeated(From, Event, To)
+
+  -- Message.
+  local text=string.format("Warehouse %s: Enemy attack was defeated!", self.alias)
+  self:_InfoMessage(text)
+
+  -- Debug smoke.
+  if self.Debug then
+    self:GetCoordinate():SmokeGreen()
+  end  
+
+  -- Auto defence: put assets back into stock.
+  if self.autodefence then
+    for _,request in pairs(self.defending) do
+        
+      -- Route defenders back to warehoue (for visual reasons only) and put them back into stock.  
+      for _,_group in pairs(request.cargogroupset:GetSetObjects()) do
+        local group=_group --Wrapper.Group#GROUP
+        
+        -- Get max speed of group and route it back slowly to the warehouse.
+        local speed=group:GetSpeedMax()
+        if group:IsGround() and speed>1 then
+          group:RouteGroundTo(self:GetCoordinate(), speed*0.3)
+        end 
+        
+        -- Add asset group back to stock after 60 seconds.
+        self:__AddAsset(60, group)
+      end
+        
+    end
+    
+    self.defending=nil
+    self.defending={}
+  end
+end
+
+--- On after "Captured" event. Warehouse has been captured by another coalition.
+-- @param #WAREHOUSE self
+-- @param #string From From state.
+-- @param #string Event Event.
+-- @param #string To To state.
+-- @param DCS#coalition.side Coalition which captured the warehouse.
+-- @param DCS#country.id Country which has captured the warehouse.
+function WAREHOUSE:onafterCaptured(From, Event, To, Coalition, Country)
+
+  -- Message.
+  local text=string.format("Warehouse %s: We were captured by enemy coalition (ID=%d)!", self.alias, Coalition)
+  self:_InfoMessage(text)
+  
+  -- Respawn warehouse with new coalition/country.
+  self.warehouse:ReSpawn(Country)
+  
+  -- Delete all waiting requests because they are not valid any more
+  self.queue=nil
+  self.queue={}
+    
+  -- Airbase could have been captured before and already belongs to the new coalition.
+  local airbase=AIRBASE:FindByName(self.airbasename)
+  local airbasecoaltion=airbase:GetCoalition()
+  
+  if Coalition==airbasecoaltion then
+    -- Airbase already owned by the coalition that captured the warehouse. Airbase can be used by this warehouse.
+    self.airbase=airbase
+  else
+    -- Airbase is owned by other coalition. So this warehouse does not have an airbase unil it is captured.
+    self.airbase=nil
+  end
+  
+  -- Debug smoke.
+  if self.Debug then
+    if Coalition==coalition.side.RED then
+      self:GetCoordinate():SmokeRed()
+    elseif Coalition==coalition.side.BLUE then
+      self:GetCoordinate():SmokeBlue()
+    end
+  end
+    
+end
+
+--- On after "AirbaseCaptured" event. Airbase of warehouse has been captured by another coalition.
+-- @param #WAREHOUSE self
+-- @param #string From From state.
+-- @param #string Event Event.
+-- @param #string To To state.
+-- @param DCS#coalition.side Coalition which captured the warehouse.
+function WAREHOUSE:onafterAirbaseCaptured(From, Event, To, Coalition)
+
+  -- Message.
+  local text=string.format("Warehouse %s: Our airbase %s was captured by the enemy (coalition=%d)!", self.alias, self.airbasename, Coalition)
+  self:_InfoMessage(text)
+
+  -- Debug smoke.
+  if self.Debug then
+    if Coalition==coalition.side.RED then
+      self.airbase:GetCoordinate():SmokeRed()
+    elseif Coalition==coalition.side.BLUE then
+      self.airbase:GetCoordinate():SmokeBlue()
+    end
+  end
+    
+  -- Set airbase to nil and category to no airbase.
+  self.airbase=nil
+end
+
+--- On after "AirbaseRecaptured" event. Airbase of warehouse has been re-captured from other coalition.
+-- @param #WAREHOUSE self
+-- @param #string From From state.
+-- @param #string Event Event.
+-- @param #string To To state.
+-- @param DCS#coalition.side Coalition Coalition side which originally captured the warehouse.
+function WAREHOUSE:onafterAirbaseRecaptured(From, Event, To, Coalition)
+
+  -- Message.
+  local text=string.format("Warehouse %s: We recaptured our airbase %s from the enemy (coalition=%d)!", self.alias, self.airbasename, Coalition)
+  self:_InfoMessage(text)
+
+  -- Set airbase and category.  
+  self.airbase=AIRBASE:FindByName(self.airbasename)
+  
+  -- Debug smoke.
+  if self.Debug then
+    if Coalition==coalition.side.RED then
+      self.airbase:GetCoordinate():SmokeRed()
+    elseif Coalition==coalition.side.BLUE then
+      self.airbase:GetCoordinate():SmokeBlue()
+    end
+  end
+  
+end
+
+
+--- On after "Destroyed" event. Warehouse was destroyed. All services are stopped. Warehouse is going to "Stopped" state in one minute.
+-- @param #WAREHOUSE self
+-- @param #string From From state.
+-- @param #string Event Event.
+-- @param #string To To state.
+function WAREHOUSE:onafterDestroyed(From, Event, To)
+
+  -- Message.
+  local text=string.format("Warehouse %s was destroyed! Assets lost %d.", self.alias, #self.stock)
+  self:_InfoMessage(text)
+  
+  -- Remove all table entries from waiting queue and stock.
+  for k,_ in pairs(self.queue) do
+    self.queue[k]=nil
+  end
+  for k,_ in pairs(self.stock) do
+    self.stock[k]=nil
   end
 
-  return self
+  --self.queue=nil
+  --self.queue={}
+
+  --self.stock=nil
+  --self.stock={}
+
 end
 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- Spawn functions
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--- Spawns requested assets at warehouse or associated airbase.
+-- @param #WAREHOUSE self
+-- @param #WAREHOUSE.Queueitem Request Information table of the request.
+-- @return Core.Set#SET_GROUP Set of groups that were spawned.
+function WAREHOUSE:_SpawnAssetRequest(Request)
+  self:F2({requestUID=Request.uid})
+
+  -- Shortcut to cargo assets.  
+  local _assetstock=Request.cargoassets
+
+  -- General type and category.
+  local _cargotype=Request.cargoattribute    --#WAREHOUSE.Attribute
+  local _cargocategory=Request.cargocategory --DCS#Group.Category
+  
+  -- Now we try to find all parking spots for all cargo groups in advance. Due to the for loop, the parking spots do not get updated while spawning.
+  local Parking={}
+  if _cargocategory==Group.Category.AIRPLANE or _cargocategory==Group.Category.HELICOPTER then
+    Parking=self:_FindParkingForAssets(self.airbase,_assetstock) or {}
+  end
+  
+  -- Spawn aircraft in uncontrolled state if request comes from the same warehouse.
+  local UnControlled=false
+  local AIOnOff=true
+  if Request.toself then
+    UnControlled=true
+    AIOnOff=false
+  end
+  
+  -- Create an empty group set.
+  local _groupset=SET_GROUP:New()
+
+  -- Table for all spawned assets.
+  local _assets={}
+  
+  -- Loop over cargo requests.
+  for i=1,#_assetstock do
+
+    -- Get stock item.
+    local _assetitem=_assetstock[i] --#WAREHOUSE.Assetitem
+    
+    -- Alias of the group.
+    local _alias=self:_Alias(_assetitem, Request)
+
+    -- Spawn an asset group.
+    local _group=nil --Wrapper.Group#GROUP          
+    if _assetitem.category==Group.Category.GROUND then
+    
+      -- Spawn ground troops.      
+      _group=self:_SpawnAssetGroundNaval(_alias,_assetitem, Request, self.spawnzone)
+      
+    elseif _assetitem.category==Group.Category.AIRPLANE or _assetitem.category==Group.Category.HELICOPTER then
+    
+      -- Spawn air units.
+      if Parking[_assetitem.uid] then
+        _group=self:_SpawnAssetAircraft(_alias,_assetitem, Request, Parking[_assetitem.uid], UnControlled)
+      else
+        _group=self:_SpawnAssetAircraft(_alias,_assetitem, Request, nil, UnControlled)
+      end
+      
+    elseif _assetitem.category==Group.Category.TRAIN then
+    
+      -- Spawn train.
+      if self.rail then
+        --TODO: Rail should only get one asset because they would spawn on top!
+      end
+      
+      self:E(self.wid.."ERROR: Spawning of TRAIN assets not possible yet!")
+      
+    elseif _assetitem.category==Group.Category.SHIP then
+    
+      -- Spawn naval assets.
+      _group=self:_SpawnAssetGroundNaval(_alias,_assetitem, Request, self.portzone)
+      
+    else
+      self:E(self.wid.."ERROR: Unknown asset category!")
+    end
+
+    -- Add group to group set and asset list.
+    if _group then
+      _groupset:AddGroup(_group)
+      table.insert(_assets, _assetitem)      
+    else
+      self:E(self.wid.."ERROR: Cargo asset could not be spawned!")
+    end
+    
+  end
+
+  -- Delete spawned items from warehouse stock.
+  for _,_asset in pairs(_assets) do
+    local asset=_asset --#WAREHOUSE.Assetitem
+    Request.assets[asset.uid]=asset
+    self:_DeleteStockItem(asset)
+  end
+  
+  -- Overwrite the assets with the actually spawned ones.
+  Request.cargoassets=_assets
+
+  return _groupset
+end 
+
+
+--- Spawn a ground or naval asset in the corresponding spawn zone of the warehouse.
+-- @param #WAREHOUSE self
+-- @param #string alias Alias name of the asset group.
+-- @param #WAREHOUSE.Assetitem asset Ground asset that will be spawned.
+-- @param #WAREHOUSE.Queueitem request Request belonging to this asset. Needed for the name/alias.
+-- @param Core.Zone#ZONE spawnzone Zone where the assets should be spawned.
+-- @param boolean aioff If true, AI of ground units are set to off.
+-- @return Wrapper.Group#GROUP The spawned group or nil if the group could not be spawned.
+function WAREHOUSE:_SpawnAssetGroundNaval(alias, asset, request, spawnzone, aioff)
+
+  if asset and (asset.category==Group.Category.GROUND or asset.category==Group.Category.SHIP) then
+  
+    -- Prepare spawn template.
+    local template=self:_SpawnAssetPrepareTemplate(asset, alias)  
+ 
+    -- Initial spawn point.
+    template.route.points[1]={} 
+    
+    -- Get a random coordinate in the spawn zone.
+    local coord=spawnzone:GetRandomCoordinate()
+    
+    --spawnzone:SmokeZone(1, 30)
+
+    -- Translate the position of the units.
+    for i=1,#template.units do
+      
+      -- Unit template.
+      local unit = template.units[i]
+      
+      -- Translate position.
+      local SX = unit.x or 0
+      local SY = unit.y or 0
+      local BX = asset.template.route.points[1].x
+      local BY = asset.template.route.points[1].y
+      local TX = coord.x + (SX-BX)
+      local TY = coord.z + (SY-BY)
+      
+      template.units[i].x = TX
+      template.units[i].y = TY
+             
+    end
+    
+    template.route.points[1].x = coord.x
+    template.route.points[1].y = coord.z
+    
+    template.x   = coord.x
+    template.y   = coord.z
+    template.alt = coord.y    
+  
+    -- Spawn group.
+    local group=_DATABASE:Spawn(template) --Wrapper.Group#GROUP
+    
+    -- Activate group. Should only be necessary for late activated groups.
+    --group:Activate()
+    
+    -- Switch AI off if desired. This works only for ground and naval groups.
+    if aioff then
+      group:SetAIOff()
+    end
+    
+    return group
+  end
+    
+  return nil
+end
+
+--- Spawn an aircraft asset (plane or helo) at the airbase associated with the warehouse.
+-- @param #WAREHOUSE self
+-- @param #string alias Alias name of the asset group.
+-- @param #WAREHOUSE.Assetitem asset Ground asset that will be spawned.
+-- @param #WAREHOUSE.Queueitem request Request belonging to this asset. Needed for the name/alias.
+-- @param #table parking Parking data for this asset.
+-- @param #boolean uncontrolled Spawn aircraft in uncontrolled state.
+-- @param #boolean hotstart Spawn aircraft with engines already on. Default is a cold start with engines off.
+-- @return Wrapper.Group#GROUP The spawned group or nil if the group could not be spawned.
+function WAREHOUSE:_SpawnAssetAircraft(alias, asset, request, parking, uncontrolled, hotstart)
+
+  if asset and asset.category==Group.Category.AIRPLANE or asset.category==Group.Category.HELICOPTER then
+  
+    -- Prepare the spawn template.
+    local template=self:_SpawnAssetPrepareTemplate(asset, alias)
+    
+    -- Set route points.
+    if request.transporttype==WAREHOUSE.TransportType.SELFPROPELLED then
+    
+      -- Get flight path if the group goes to another warehouse by itself.
+      template.route.points=self:_GetFlightplan(asset, self.airbase, request.warehouse.airbase)
+      
+    else
+      
+      -- Cold start (default).
+      local _type=COORDINATE.WaypointType.TakeOffParking
+      local _action=COORDINATE.WaypointAction.FromParkingArea
+      
+      -- Hot start.
+      if hotstart then
+        _type=COORDINATE.WaypointType.TakeOffParkingHot
+        _action=COORDINATE.WaypointAction.FromParkingAreaHot
+      end
+    
+      -- First route point is the warehouse airbase.
+      template.route.points[1]=self.airbase:GetCoordinate():WaypointAir("BARO",_type,_action, 0, true, self.airbase, nil, "Spawnpoint")
+      
+    end
+    
+    -- Get airbase ID and category.
+    local AirbaseID = self.airbase:GetID()
+    local AirbaseCategory = self:GetAirbaseCategory()
+    
+    -- Check enough parking spots.
+    if AirbaseCategory==Airbase.Category.HELIPAD or AirbaseCategory==Airbase.Category.SHIP then
+    
+      --TODO Figure out what's necessary in this case.
+    
+    else
+    
+      if #parking<#template.units then
+        local text=string.format("ERROR: Not enough parking! Free parking = %d < %d aircraft to be spawned.", #parking, #template.units)
+        self:_DebugMessage(text)
+        return nil
+      end
+      
+    end
+        
+    -- Position the units.
+    for i=1,#template.units do
+    
+      -- Unit template.
+      local unit = template.units[i]
+
+      if AirbaseCategory == Airbase.Category.HELIPAD or AirbaseCategory == Airbase.Category.SHIP then
+
+        -- Helipads we take the position of the airbase location, since the exact location of the spawn point does not make sense.
+        local coord=self.airbase:GetCoordinate()
+        
+        unit.x=coord.x
+        unit.y=coord.z
+        unit.alt=coord.y
+  
+        unit.parking_id = nil
+        unit.parking    = nil
+      
+      else
+    
+        local coord=parking[i].Coordinate    --Core.Point#COORDINATE
+        local terminal=parking[i].TerminalID --#number
+        
+        if self.Debug then
+          coord:MarkToAll(string.format("Spawnplace unit %s terminal %d.", unit.name, terminal))
+        end
+        
+        unit.x=coord.x
+        unit.y=coord.z
+        unit.alt=coord.y
+  
+        unit.parking_id = nil
+        unit.parking    = terminal
+        
+      end
+    end
+    
+    -- And template position.
+    template.x = template.units[1].x
+    template.y = template.units[1].y
+    
+    -- DCS bug workaround. Spawning helos in uncontrolled state on carriers causes a big spash!
+    -- See https://forums.eagle.ru/showthread.php?t=219550
+    -- Should be solved in latest OB update 2.5.3.21708
+    --if AirbaseCategory == Airbase.Category.SHIP and asset.category==Group.Category.HELICOPTER then
+    --  uncontrolled=false
+    --end
+    
+    -- Uncontrolled spawning.
+    template.uncontrolled=uncontrolled
+    
+    -- Debug info.
+    self:T2({airtemplate=template})
+    
+    -- Spawn group.
+    local group=_DATABASE:Spawn(template) --Wrapper.Group#GROUP
+    
+    -- Activate group - should only be necessary for late activated groups.
+    --group:Activate()
+    
+    return group
+  end
+  
+  return nil
+end
+
+
+--- Prepare a spawn template for the asset. Deep copy of asset template, adjusting template and unit names, nillifying group and unit ids.
+-- @param #WAREHOUSE self
+-- @param #WAREHOUSE.Assetitem asset Ground asset that will be spawned.
+-- @param #string alias Alias name of the group.
+-- @return #table Prepared new spawn template.
+function WAREHOUSE:_SpawnAssetPrepareTemplate(asset, alias)
+
+  -- Create an own copy of the template!
+  local template=UTILS.DeepCopy(asset.template)
+  
+  -- Set unique name.
+  template.name=alias
+  
+  -- Set current(!) coalition and country. 
+  template.CoalitionID=self:GetCoalition()
+  template.CountryID=self:GetCountry()
+  
+  -- Nillify the group ID.
+  template.groupId=nil
+
+  -- For group units, visible needs to be false.
+  if asset.category==Group.Category.GROUND then
+    --template.visible=false
+  end
+  
+  -- No late activation.
+  template.lateActivation=false
+
+  -- Set and empty route.
+  template.route = {}
+  template.route.routeRelativeTOT=true
+  template.route.points = {}
+
+  -- Handle units.
+  for i=1,#template.units do
+  
+    -- Unit template.
+    local unit = template.units[i]
+    
+    -- Nillify the unit ID.
+    unit.unitId=nil
+    
+    -- Set unit name: <alias>-01, <alias>-02, ...
+    unit.name=string.format("%s-%02d", template.name , i)
+  
+  end
+
+  return template
+end
+
+
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- Helper functions
+-- Routing functions
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
---- Route ground units to destination.
+--- Route ground units to destination. ROE is set to return fire and alarm state to green.
 -- @param #WAREHOUSE self
--- @param Wrapper.Group#GROUP Group The ground group.
--- @param Core.Point#COORDINATE Coordinate of the destination.
+-- @param Wrapper.Group#GROUP group The ground group to be routed
+-- @param #WAREHOUSE.Queueitem request The request for this group.
 -- @param #number Speed Speed in km/h to drive to the destination coordinate. Default is 60% of max possible speed the unit can go.
-function WAREHOUSE:_RouteGround(Group, Coordinate, Speed)
+function WAREHOUSE:_RouteGround(group, request)
+
+  if group and group:IsAlive() then
+
+    -- Set speed to 70% of max possible.
+    local _speed=group:GetSpeedMax()*0.7
+    
+    -- Route waypoints.
+    local Waypoints={}
+    
+    -- Check if an off road path has been defined.    
+    local hasoffroad=self:HasConnectionOffRoad(request.warehouse, self.Debug)
+    
+    -- Check if any off road paths have be defined. They have priority!
+    if hasoffroad then
+
+      -- Get off road path to remote warehouse. If more have been defined, pick one randomly.
+      local remotename=request.warehouse.warehouse:GetName()
+      local path=self.offroadpaths[remotename][math.random(#self.offroadpaths[remotename])]
+        
+      -- Loop over user defined shipping lanes.
+      for i=1,#path do
+      
+        -- Shortcut and coordinate intellisense.
+        local coord=path[i] --Core.Point#COORDINATE
+        
+        -- Get waypoint for coordinate.
+        local Waypoint=coord:WaypointGround(_speed, "Off Road")
+        
+        -- Add waypoint to route.
+        table.insert(Waypoints, Waypoint)      
+      end    
+        
+    else
+       
+      -- Waypoints for road-to-road connection.
+      Waypoints = group:TaskGroundOnRoad(request.warehouse.road, _speed, "Off Road", false, self.road)
+      
+      -- First waypoint = current position of the group.
+      local FromWP=group:GetCoordinate():WaypointGround(_speed, "Off Road")
+      table.insert(Waypoints, 1, FromWP)
+      
+      -- Final coordinate.
+      local ToWP=request.warehouse.spawnzone:GetRandomCoordinate():WaypointGround(_speed, "Off Road")
+      table.insert(Waypoints, #Waypoints+1, ToWP)
+    
+    end
+    
+    -- Task function triggering the arrived event at the last waypoint.
+    local TaskFunction = self:_SimpleTaskFunction("warehouse:_Arrived", group)    
+
+    -- Put task function on last waypoint.
+    local Waypoint = Waypoints[#Waypoints]
+    group:SetTaskWaypoint(Waypoint, TaskFunction)
+
+    -- Route group to destination.
+    group:Route(Waypoints, 1)
+    
+    -- Set ROE and alaram state.
+    group:OptionROEReturnFire()
+    group:OptionAlarmStateGreen()
+  end
+end
+
+--- Route naval units along user defined shipping lanes to destination warehouse. ROE is set to return fire.
+-- @param #WAREHOUSE self
+-- @param Wrapper.Group#GROUP group The naval group to be routed
+-- @param #WAREHOUSE.Queueitem request The request for this group.
+function WAREHOUSE:_RouteNaval(group, request)
+
+  -- Check if we have a group and it is alive.
+  if group and group:IsAlive() then
+
+    -- Set speed to 80% of max possible.
+    local _speed=group:GetSpeedMax()*0.8
+    
+    -- Get shipping lane to remote warehouse. If more have been defined, pick one randomly.
+    local remotename=request.warehouse.warehouse:GetName()
+    local lane=self.shippinglanes[remotename][math.random(#self.shippinglanes[remotename])]
+        
+    if lane then
+      
+      -- Route waypoints.
+      local Waypoints={}
+      
+      -- Loop over user defined shipping lanes.
+      for i=1,#lane do
+      
+        -- Shortcut and coordinate intellisense.
+        local coord=lane[i] --Core.Point#COORDINATE
+        
+        -- Get waypoint for coordinate.
+        local Waypoint=coord:WaypointGround(_speed)
+        
+        -- Add waypoint to route.
+        table.insert(Waypoints, Waypoint)      
+      end
+      
+      -- Task function triggering the arrived event at the last waypoint.
+      local TaskFunction = self:_SimpleTaskFunction("warehouse:_Arrived", group)
+      
+      -- Put task function on last waypoint.
+      local Waypoint = Waypoints[#Waypoints]
+      group:SetTaskWaypoint(Waypoint, TaskFunction)
+  
+      -- Route group to destination.
+      group:Route(Waypoints, 1)      
+      
+      -- Set ROE (Naval units dont have and alaram state.)
+      group:OptionROEReturnFire()
+    
+    else
+      -- This should not happen! Existance of shipping lane was checked before executing this request.
+      self:E(self.wid..string.format("ERROR: No shipping lane defined for Naval asset!"))
+    end
+    
+  end
+end
+
+
+--- Route the airplane from one airbase another. Activates uncontrolled aircraft and sets ROE/ROT for ferry flights.
+-- ROE is set to return fire and ROT to passive defence.
+-- @param #WAREHOUSE self
+-- @param Wrapper.Group#GROUP Aircraft Airplane group to be routed.
+function WAREHOUSE:_RouteAir(aircraft)
+
+  if aircraft and aircraft:IsAlive()~=nil then
+    
+    -- Debug info.
+    self:T2(self.wid..string.format("RouteAir aircraft group %s alive=%s", aircraft:GetName(), tostring(aircraft:IsAlive())))
+    
+    -- Give start command to activate uncontrolled aircraft. 
+    --aircraft:SetCommand({id='Start', params={}})
+    aircraft:StartUncontrolled()
+
+    -- Debug info.
+    self:T2(self.wid..string.format("RouteAir aircraft group %s alive=%s (after start command)", aircraft:GetName(), tostring(aircraft:IsAlive())))
+    
+    -- Set ROE and alaram state.
+    aircraft:OptionROEReturnFire()
+    aircraft:OptionROTPassiveDefense()
+    
+  else
+    self:E(string.format("ERROR: aircraft %s cannot be routed since it does not exist or is not alive %s!", tostring(aircraft:GetName()), tostring(aircraft:IsAlive())))
+  end
+end
+
+--- Route trains to their destination - or at least to the closest point on rail of the desired final destination.
+-- @param #WAREHOUSE self
+-- @param Wrapper.Group#GROUP Group The train group.
+-- @param Core.Point#COORDINATE Coordinate of the destination. Tail will be routed to the closest point
+-- @param #number Speed Speed in km/h to drive to the destination coordinate. Default is 60% of max possible speed the unit can go.
+function WAREHOUSE:_RouteTrain(Group, Coordinate, Speed)
 
   if Group and Group:IsAlive() then
 
     local _speed=Speed or Group:GetSpeedMax()*0.6
 
     -- Create a
-    local Waypoints = Group:TaskGroundOnRoad(Coordinate, _speed, "Off Road", true)
+    local Waypoints = Group:TaskGroundOnRailRoads(Coordinate, Speed)
 
-    -- Task function triggering the arrived event.
-    local TaskFunction = Group:TaskFunction("WAREHOUSE._Arrived", self)
+    -- Task function triggering the arrived event at the last waypoint.
+    local TaskFunction = self:_SimpleTaskFunction("warehouse:_Arrived", Group)
 
     -- Put task function on last waypoint.
     local Waypoint = Waypoints[#Waypoints]
@@ -66341,126 +70520,1694 @@ function WAREHOUSE:_RouteGround(Group, Coordinate, Speed)
   end
 end
 
---- Task function for last waypoint. Triggering the Delivered event.
--- @param Wrapper.Group#GROUP Group The group that arrived.
+--- Task function for last waypoint. Triggering the "Arrived" event.
 -- @param #WAREHOUSE self
-function WAREHOUSE._Arrived(Group, self)
-  --Trigger delivered event.
-  self:__Delivered(1, Group)
+-- @param Wrapper.Group#GROUP group The group that arrived.
+function WAREHOUSE:_Arrived(group)
+  self:_DebugMessage(string.format("Group %s arrived!", tostring(group:GetName())))
+  
+  if group then
+    --Trigger "Arrived event.
+    self:__Arrived(1, group)
+  end
+  
 end
 
---- Route the airplane from one airbase another.
--- @param #AI_CARGO_AIRPLANE self
--- @param Wrapper.Group#GROUP Airplane Airplane group to be routed.
--- @param Wrapper.Airbase#AIRBASE ToAirbase Destination airbase.
--- @param #number Speed Speed in km/h. Default is 80% of max possible speed the group can do.
-function WAREHOUSE:_RouteAir(Aircraft, ToAirbase, Speed)
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- Event handler functions
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-  if Aircraft and Aircraft:IsAlive() then
+--- Warehouse event function, handling the birth of a unit.
+-- @param #WAREHOUSE self
+-- @param Core.Event#EVENTDATA EventData Event data.
+function WAREHOUSE:_OnEventBirth(EventData)
+  self:T3(self.wid..string.format("Warehouse %s (id=%s) captured event birth!", self.alias, self.uid))
+  
+  if EventData and EventData.IniGroup then
+    local group=EventData.IniGroup
+    -- Note: Remember, group:IsAlive might(?) not return true here.
+    local wid,aid,rid=self:_GetIDsFromGroup(group)
+    if wid==self.uid then
+      self:T(self.wid..string.format("Warehouse %s captured event birth of its asset unit %s.", self.alias, EventData.IniUnitName))
+    else
+      --self:T3({wid=wid, uid=self.uid, match=(wid==self.uid), tw=type(wid), tu=type(self.uid)})
+    end
+  end
+end
 
-    -- Set takeoff type.
-    local Takeoff = SPAWN.Takeoff.Cold
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    -- Get template of group.
-    local Template = Aircraft:GetTemplate()
+--- Function handling the event when a (warehouse) unit starts its engines.
+-- @param #WAREHOUSE self
+-- @param Core.Event#EVENTDATA EventData Event data.
+function WAREHOUSE:_OnEventEngineStartup(EventData)
+  self:T3(self.wid..string.format("Warehouse %s captured event engine startup!",self.alias))
 
-    -- Nil check
-    if Template==nil then
-      return
+  if EventData and EventData.IniGroup then
+    local group=EventData.IniGroup
+    local wid,aid,rid=self:_GetIDsFromGroup(group)
+    if wid==self.uid then
+      self:T(self.wid..string.format("Warehouse %s captured event engine startup of its asset unit %s.", self.alias, EventData.IniUnitName))
+    end
+  end  
+end
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--- Function handling the event when a (warehouse) unit takes off.
+-- @param #WAREHOUSE self
+-- @param Core.Event#EVENTDATA EventData Event data.
+function WAREHOUSE:_OnEventTakeOff(EventData)
+  self:T3(self.wid..string.format("Warehouse %s captured event takeoff!",self.alias))
+  
+  if EventData and EventData.IniGroup then
+    local group=EventData.IniGroup
+    local wid,aid,rid=self:_GetIDsFromGroup(group)
+    if wid==self.uid then
+      self:T(self.wid..string.format("Warehouse %s captured event takeoff of its asset unit %s.", self.alias, EventData.IniUnitName))
+    end
+  end  
+end
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--- Function handling the event when a (warehouse) unit lands.
+-- @param #WAREHOUSE self
+-- @param Core.Event#EVENTDATA EventData Event data.
+function WAREHOUSE:_OnEventLanding(EventData)
+  self:T3(self.wid..string.format("Warehouse %s captured event landing!", self.alias))
+  
+  if EventData and EventData.IniGroup then
+    local group=EventData.IniGroup
+    
+    -- Try to get UIDs from group name.
+    local wid,aid,rid=self:_GetIDsFromGroup(group)
+    
+    -- Check that this group belongs to this warehouse.
+    if wid~=nil and wid==self.uid then
+    
+      -- Debug info.
+      self:T(self.wid..string.format("Warehouse %s captured event landing of its asset unit %s.", self.alias, EventData.IniUnitName))
+            
+    end
+  end
+end
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--- Function handling the event when a (warehouse) unit shuts down its engines.
+-- @param #WAREHOUSE self
+-- @param Core.Event#EVENTDATA EventData Event data.
+function WAREHOUSE:_OnEventEngineShutdown(EventData)
+  self:T3(self.wid..string.format("Warehouse %s captured event engine shutdown!", self.alias))
+  
+  if EventData and EventData.IniGroup then
+    local group=EventData.IniGroup
+    local wid,aid,rid=self:_GetIDsFromGroup(group)
+    if wid==self.uid then
+      self:T(self.wid..string.format("Warehouse %s captured event engine shutdown of its asset unit %s.", self.alias, EventData.IniUnitName))
+    end
+  end  
+end
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--- Arrived event if an air unit/group arrived at its destination. This can be an engine shutdown or a landing event.
+-- @param #WAREHOUSE self
+-- @param Core.Event#EVENTDATA EventData Event data table.
+function WAREHOUSE:_OnEventArrived(EventData)
+
+  if EventData and EventData.IniUnit then
+  
+    -- Unit that arrived.
+    local unit=EventData.IniUnit
+    
+    -- Check if unit is alive and on the ground. Engine shutdown can also be triggered in other situations!
+    if unit and unit:IsAlive()==true and unit:InAir()==false then
+    
+      -- Get group.
+      local group=EventData.IniGroup
+      
+      -- Get unique IDs from group name. 
+      local wid,aid,rid=self:_GetIDsFromGroup(group)
+      
+      -- If all IDs are good we can assume it is a warehouse asset.
+      if wid~=nil and aid~=nil and rid~=nil then
+            
+        -- Check that warehouse ID is right.
+        if self.uid==wid then
+        
+          local request=self:_GetRequestOfGroup(group, self.pending)
+          local istransport=self:_GroupIsTransport(group,request)
+          
+          -- Check if engine shutdown happend at right airbase because the event is also triggered in other situations.
+          local rightairbase=group:GetCoordinate():GetClosestAirbase():GetName()==request.warehouse:GetAirbase():GetName()
+    
+          -- Check that group is cargo and not transport.
+          if istransport==false and rightairbase then    
+      
+            -- Debug info.
+            local text=string.format("Air asset group %s from warehouse %s arrived at its destination.", group:GetName(), self.alias)
+            self:_InfoMessage(text)
+            
+            -- Trigger arrived event for this group. Note that each unit of a group will trigger this event. So the onafterArrived function needs to take care of that.
+            -- Actually, we only take the first unit of the group that arrives. If it does, we assume the whole group arrived, which might not be the case, since
+            -- some units might still be taxiing or whatever. Therefore, we add 10 seconds for each additional unit of the group until the first arrived event is triggered.
+            local nunits=#group:GetUnits()
+            local dt=10*(nunits-1)+1  -- one unit = 1 sec, two units = 11 sec, three units = 21 sec before we call the group arrived.
+            self:__Arrived(dt, group)
+            
+          end
+          
+        end
+        
+      else
+        self:T3(string.format("Group that arrived did not belong to a warehouse. Warehouse ID=%s, Asset ID=%s, Request ID=%s.", tostring(wid), tostring(aid), tostring(rid)))
+      end
+    end
+  end
+
+end
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--- Warehouse event handling function.
+-- @param #WAREHOUSE self
+-- @param Core.Event#EVENTDATA EventData Event data.
+function WAREHOUSE:_OnEventCrashOrDead(EventData)
+  self:T3(self.wid..string.format("Warehouse %s captured event dead or crash!", self.alias))
+  
+  if EventData then
+  
+    -- Check if warehouse was destroyed. We compare the name of the destroyed unit.
+    if EventData.IniUnitName then  
+      local warehousename=self.warehouse:GetName()
+      if EventData.IniUnitName==warehousename then
+        self:_DebugMessage(string.format("Warehouse %s alias %s was destroyed!", warehousename, self.alias))
+  
+        -- Trigger Destroyed event.
+        self:Destroyed()
+      end
+    end
+    
+    --self:I(self.wid..string.format("Warehouse %s captured event dead or crash or unit %s.", self.alias, tostring(EventData.IniUnitName)))
+      
+    -- Check if an asset unit was destroyed.  
+    if EventData.IniGroup then
+    
+      -- Group initiating the event.        
+      local group=EventData.IniGroup
+      
+      -- Get warehouse, asset and request IDs from the group name.
+      local wid,aid,rid=self:_GetIDsFromGroup(group)
+      
+      -- Check that we have the right warehouse.
+      if wid==self.uid then
+      
+        -- Debug message.
+        self:T(self.wid..string.format("Warehouse %s captured event dead or crash of its asset unit %s.", self.alias, EventData.IniUnitName))
+        
+        -- Loop over all pending requests and get the one belonging to this unit.
+        for _,request in pairs(self.pending) do
+          local request=request --#WAREHOUSE.Pendingitem
+          
+          -- This is the right request.
+          if request.uid==rid then
+          
+            -- Update cargo and transport group sets of this request. We need to know if this job is finished.
+            self:_UnitDead(EventData.IniUnit, request)
+            
+          end        
+        end
+      end
+    end
+  end  
+end
+
+--- A unit of a group just died. Update group sets in request.
+-- This is important in order to determine if a job is done and can be removed from the (pending) queue.
+-- @param #WAREHOUSE self
+-- @param Wrapper.Unit#UNIT deadunit Unit that died.
+-- @param #WAREHOUSE.Pendingitem request Request that needs to be updated.
+function WAREHOUSE:_UnitDead(deadunit, request)
+
+  -- Flare unit
+  deadunit:FlareRed()
+  
+  -- Group the dead unit belongs to.
+  local group=deadunit:GetGroup()
+  
+  -- Check if this was the last unit of the group ==> whole group dead.
+  local groupdead=true
+  local nunits=0
+  local nunits0=0
+  if group then
+    -- Get current size of group and substract the unit that just died because it is not counted yet!
+    nunits=group:GetSize()-1
+    nunits0=group:GetInitialSize()
+   
+    if nunits > 0 then
+      groupdead=false
+    end    
+  end
+  
+  
+  -- Here I need to get rid of the #CARGO at the end to obtain the original name again!
+  local unitname=self:_GetNameWithOut(deadunit)
+  local groupname=self:_GetNameWithOut(group)
+  
+  
+  -- Debug message.
+  local text=string.format("Unit %s died! #units=%d/%d ==> Group dead=%s (IsAlive=%s).", unitname, nunits, nunits0, tostring(groupdead), tostring(group:IsAlive()))
+  self:T2(self.wid..text)
+
+  -- Check if this really works as expected!
+  if nunits<0 then
+    self:E(self.wid.."ERROR: Number of units negative! This should not happen.")
+  end
+  
+  if groupdead then
+    self:T(self.wid..string.format("Group %s (transport=%s) is dead!", groupname, tostring(self:_GroupIsTransport(group,request))))
+    group:SmokeWhite()
+  end
+   
+  
+  -- Not sure what this does actually and if it would be better to set it to true.
+  local NoTriggerEvent=false  
+  
+  if request.transporttype==WAREHOUSE.TransportType.SELFPROPELLED then
+  
+    ---
+    -- Easy case: Group can simply be removed from the cargogroupset.
+    ---
+    
+    -- Remove dead group from carg group set.
+    if groupdead==true then
+      request.cargogroupset:Remove(groupname, NoTriggerEvent)
+      self:T(self.wid..string.format("Removed selfpropelled cargo %s: ncargo=%d.", groupname, request.cargogroupset:Count()))
+    end
+  
+  else
+  
+    ---
+    -- Complicated case: Dead unit could be: 
+    -- 1.) A Cargo unit (e.g. waiting to be picked up).
+    -- 2.) A Transport unit which itself holds cargo groups.
+    --- 
+   
+    -- Check if this a cargo or transport group.
+    local istransport=self:_GroupIsTransport(group,request)
+    
+    if istransport==true then
+    
+      -- Get the carrier unit table holding the cargo groups inside this carrier.
+      local cargogroups=request.carriercargo[unitname]
+      
+      if cargogroups then
+      
+        -- Loop over all groups inside the destroyed carrier ==> all dead.
+        for _,cargogroup in pairs(cargogroups) do
+          local cargoname=self:_GetNameWithOut(cargogroup)
+          request.cargogroupset:Remove(cargoname, NoTriggerEvent)
+          self:T(self.wid..string.format("Removed transported cargo %s inside dead carrier %s: ncargo=%d", cargoname, unitname, request.cargogroupset:Count()))
+        end
+        
+      end
+    
+      -- Whole carrier group is dead. Remove it from the carrier group set.
+      if groupdead then
+        request.transportgroupset:Remove(groupname, NoTriggerEvent)
+        self:T(self.wid..string.format("Removed transport %s: ntransport=%d", groupname, request.transportgroupset:Count()))
+      end  
+        
+    elseif istransport==false then
+      
+      -- This must have been an alive cargo group that was killed outside the carrier, e.g. waiting to be transported or waiting to be put back.
+      -- Remove dead group from cargo group set.
+      if groupdead==true then
+        request.cargogroupset:Remove(groupname, NoTriggerEvent)
+        self:T(self.wid..string.format("Removed transported cargo %s outside carrier: ncargo=%d", groupname, request.cargogroupset:Count()))
+        -- This as well?
+        --request.transportcargoset:RemoveCargosByName(RemoveCargoNames)
+      end
+      
+    else  
+      self:E(self.wid..string.format("ERROR: Group %s is neither cargo nor transport!", group:GetName()))
+    end
+  end
+  
+end
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--- Warehouse event handling function.
+-- Handles the case when the airbase associated with the warehous is captured.
+-- @param #WAREHOUSE self
+-- @param Core.Event#EVENTDATA EventData Event data.
+function WAREHOUSE:_OnEventBaseCaptured(EventData)
+  self:T3(self.wid..string.format("Warehouse %s captured event base captured!",self.alias))
+  
+  -- This warehouse does not have an airbase and never had one. So it could not have been captured.
+  if self.airbasename==nil then
+    return
+  end
+  
+  if EventData and EventData.Place then
+      
+    -- Place is the airbase that was captured.
+    local airbase=EventData.Place --Wrapper.Airbase#AIRBASE
+    
+    -- Check that this airbase belongs or did belong to this warehouse.
+    if EventData.PlaceName==self.airbasename then
+            
+      -- New coalition of airbase after it was captured.
+      local NewCoalitionAirbase=airbase:GetCoalition()
+      
+      -- Debug info
+      self:T(self.wid..string.format("Airbase of warehouse %s (coalition ID=%d) was captured! New owner coalition ID=%d.",self.alias, self:GetCoalition(), NewCoalitionAirbase))
+            
+      -- So what can happen?
+      -- Warehouse is blue, airbase is blue and belongs to warehouse and red captures it  ==> self.airbase=nil
+      -- Warehouse is blue, airbase is blue self.airbase is nil and blue (re-)captures it ==> self.airbase=Event.Place        
+      if self.airbase==nil then
+        -- New coalition is the same as of the warehouse ==> warehouse previously lost this airbase and now it was re-captured.
+        if NewCoalitionAirbase == self:GetCoalition() then
+          self:AirbaseRecaptured(NewCoalitionAirbase)
+        end
+      else
+        -- Captured airbase belongs to this warehouse but was captured by other coaltion.
+        if NewCoalitionAirbase ~= self:GetCoalition() then
+          self:AirbaseCaptured(NewCoalitionAirbase)
+        end
+      end
+        
+    end
+  end
+end
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- Helper functions
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--- Checks if the warehouse zone was conquered by antoher coalition.
+-- @param #WAREHOUSE self
+function WAREHOUSE:_CheckConquered()
+
+  -- Get coordinate and radius to check.
+  local coord=self.zone:GetCoordinate()
+  local radius=self.zone:GetRadius()
+  
+  -- Scan units in zone.
+  local gotunits,_,_,units,_,_=coord:ScanObjects(radius, true, false, false)
+  
+  local Nblue=0
+  local Nred=0
+  local Nneutral=0
+  
+  local CountryBlue=nil
+  local CountryRed=nil
+  local CountryNeutral=nil
+  
+  if gotunits then
+    -- Loop over all units.
+    for _,_unit in pairs(units) do
+      local unit=_unit --Wrapper.Unit#UNIT
+      
+      local distance=coord:Get2DDistance(unit:GetCoordinate())
+      
+      -- Filter only alive groud units. Also check distance again, because the scan routine might give some larger distances.
+      if unit:IsGround() and unit:IsAlive() and distance <= radius then
+      
+        -- Get coalition and country.
+        local _coalition=unit:GetCoalition()
+        local _country=unit:GetCountry()
+        
+        -- Debug info.
+        self:T2(self.wid..string.format("Unit %s in warehouse zone of radius=%d m. Coalition=%d, country=%d. Distance = %d m.",unit:GetName(), radius,_coalition,_country, distance))
+        
+        -- Add up units for each side.
+        if _coalition==coalition.side.BLUE then
+          Nblue=Nblue+1
+          CountryBlue=_country
+        elseif _coalition==coalition.side.RED then
+          Nred=Nred+1
+          CountryRed=_country
+        else
+          Nneutral=Nneutral+1
+          CountryNeutral=_country
+        end
+        
+      end      
+    end
+  end
+  
+  -- Debug info.
+  self:T(self.wid..string.format("Ground troops in warehouse zone: blue=%d, red=%d, neutral=%d", Nblue, Nred, Nneutral))
+ 
+ 
+  -- Figure out the new coalition if any.
+  -- Condition is that only units of one coalition are within the zone.
+  local newcoalition=self:GetCoalition()
+  local newcountry=self:GetCountry()
+  if Nblue>0 and Nred==0 and Nneutral==0 then
+    -- Only blue units in zone ==> Zone goes to blue.
+    newcoalition=coalition.side.BLUE
+    newcountry=CountryBlue
+  elseif Nblue==0 and Nred>0 and Nneutral==0 then
+    -- Only red units in zone ==> Zone goes to red.
+    newcoalition=coalition.side.RED
+    newcountry=CountryRed
+  elseif Nblue==0 and Nred==0 and Nneutral>0 then
+    -- Only neutral units in zone but neutrals do not attack or even capture!
+    --newcoalition=coalition.side.NEUTRAL
+    --newcountry=CountryNeutral
+  end
+
+  -- Coalition has changed ==> warehouse was captured! This should be before the attack check.
+  if self:IsAttacked() and newcoalition ~= self:GetCoalition() then
+    self:Captured(newcoalition, newcountry)
+    return
+  end
+  
+  -- Before a warehouse can be captured, it has to be attacked.
+  -- That is, even if only enemy units are present it is not immediately captured in order to spawn all ground assets for defence.
+  if self:GetCoalition()==coalition.side.BLUE then
+    -- Blue warehouse is running and we have red units in the zone.
+    if self:IsRunning() and Nred>0 then
+      self:Attacked(coalition.side.RED, CountryRed)
+    end
+    -- Blue warehouse was under attack by blue but no more blue units in zone.
+    if self:IsAttacked() and Nred==0 then
+      self:Defeated()
+    end    
+  elseif self:GetCoalition()==coalition.side.RED then
+    -- Red Warehouse is running and we have blue units in the zone.
+    if self:IsRunning() and Nblue>0 then
+      self:Attacked(coalition.side.BLUE, CountryBlue)
+    end
+    -- Red warehouse was under attack by blue but no more blue units in zone.
+    if self:IsAttacked() and Nblue==0 then
+      self:Defeated()
+    end
+  elseif self:GetCoalition()==coalition.side.NEUTRAL then
+    -- Neutrals dont attack!
+  end
+  
+end
+
+--- Checks if the associated airbase still belongs to the warehouse.
+-- @param #WAREHOUSE self
+function WAREHOUSE:_CheckAirbaseOwner()
+  -- The airbasename is set at start and not deleted if the airbase was captured.
+  if self.airbasename then
+  
+    local airbase=AIRBASE:FindByName(self.airbasename)
+    local airbasecurrentcoalition=airbase:GetCoalition()
+    
+    if self.airbase then
+    
+      -- Warehouse has lost its airbase.
+      if self:GetCoalition()~=airbasecurrentcoalition then
+        self.airbase=nil
+      end
+      
+    else
+      
+      -- Warehouse has re-captured the airbase.
+      if self:GetCoalition()==airbasecurrentcoalition then
+        self.airbase=airbase
+      end      
+      
+    end
+    
+  end
+end
+
+--- Checks if the request can be fulfilled in general. If not, it is removed from the queue.
+-- Check if departure and destination bases are of the right type.
+-- @param #WAREHOUSE self
+-- @param #table queue The queue which is holding the requests to check.
+-- @return #boolean If true, request can be executed. If false, something is not right.
+function WAREHOUSE:_CheckRequestConsistancy(queue)
+  self:T3(self.wid..string.format("Number of queued requests = %d", #queue))
+
+  -- Requests to delete.
+  local invalid={}
+  
+  for _,_request in pairs(queue) do
+    local request=_request --#WAREHOUSE.Queueitem
+    
+    -- Debug info.
+    self:T2(self.wid..string.format("Checking request id=%d.", request.uid))
+    
+    -- Let's assume everything is fine.
+    local valid=true
+    
+    -- Check if at least one asset was requested.
+    if request.nasset==0 then
+      self:E(self.wid..string.format("ERROR: INVALID request. Request for zero assets not possible. Can happen when, e.g. \"all\" ground assets are requests but none in stock."))
+      valid=false
+    end
+  
+    -- Request from enemy coalition?
+    if self:GetCoalition()~=request.warehouse:GetCoalition() then
+      self:E(self.wid..string.format("ERROR: INVALID request. Requesting warehouse is of wrong coaltion! Own coalition %s != %s of requesting warehouse.", self:GetCoalitionName(), request.warehouse:GetCoalitionName()))
+      valid=false
+    end
+    
+    -- Is receiving warehouse stopped?
+    if request.warehouse:IsStopped() then
+      self:E(self.wid..string.format("ERROR: INVALID request. Requesting warehouse is stopped!"))
+      valid=false    
     end
 
-    -- Waypoints of the route.
-    local Points={}
-
-    -- To point.
-    local AirbasePointVec2 = ToAirbase:GetPointVec2()
-    local ToWaypoint = AirbasePointVec2:WaypointAir(
-      POINT_VEC3.RoutePointAltType.BARO,
-      "Land",
-      "Landing",
-      Speed or Aircraft:GetSpeedMax()*0.8
-    )
-    ToWaypoint["airdromeId"]   = ToAirbase:GetID()
-    ToWaypoint["speed_locked"] = true
-
-    -- Aibase id and category.
-    local AirbaseID       = ToAirbase:GetID()
-    local AirbaseCategory = ToAirbase:GetDesc().category
-
-    if AirbaseCategory == Airbase.Category.SHIP or AirbaseCategory == Airbase.Category.HELIPAD then
-      ToWaypoint.linkUnit   = AirbaseID
-      ToWaypoint.helipadId  = AirbaseID
-      ToWaypoint.airdromeId = nil
-    elseif AirbaseCategory == Airbase.Category.AIRDROME then
-      ToWaypoint.airdromeId = AirbaseID
-      ToWaypoint.helipadId  = nil
-      ToWaypoint.linkUnit   = nil
+    -- Is receiving warehouse destroyed?
+    if request.warehouse:IsDestroyed() then
+      self:E(self.wid..string.format("ERROR: INVALID request. Requesting warehouse is destroyed!"))
+      valid=false    
     end
+    
+    -- Add request as unvalid and delete it later.
+    if valid==false then
+      self:E(self.wid..string.format("Got invalid request id=%d.", request.uid))
+      table.insert(invalid, request) 
+    else
+      self:T3(self.wid..string.format("Got valid request id=%d.", request.uid))
+    end    
+  end
 
-    -- Task function triggering the arrived event.
-    local Task = Aircraft:TaskFunction("WAREHOUSE._Arrived", self)
+  -- Delete invalid requests.
+  for _,_request in pairs(invalid) do
+    self:E(self.wid..string.format("Deleting INVALID request id=%d.",_request.uid))
+    self:_DeleteQueueItem(_request, self.queue)
+  end
+    
+end
 
-    -- or
-    --ToWaypoint.task=Aircraft:TaskCombo({Task})
-    ToWaypoint.task={Task}
+--- Check if a request is valid in general. If not, it will be removed from the queue.
+-- This routine needs to have at least one asset in stock that matches the request descriptor in order to determine whether the request category of troops.
+-- If no asset is in stock, the request will remain in the queue but cannot be executed.
+-- @param #WAREHOUSE self
+-- @param #WAREHOUSE.Queueitem request The request to be checked.
+-- @return #boolean If true, request can be executed. If false, something is not right.
+function WAREHOUSE:_CheckRequestValid(request)
 
-    -- Second point of the route. First point is done in RespawnAtCurrentAirbase() routine.
-    Template.route.points[2] = ToWaypoint
+  -- Check if number of requested assets is in stock.
+  local _assets,_nassets,_enough=self:_FilterStock(self.stock, request.assetdesc, request.assetdescval, request.nasset)
+  
+  -- No assets in stock? Checks cannot be performed.
+  if #_assets==0 then
+    return true
+  end
+  
+  -- Convert relative to absolute number if necessary.
+  local nasset=request.nasset
+  if type(request.nasset)=="string" then
+    nasset=self:_QuantityRel2Abs(request.nasset,_nassets)
+  end
 
-    -- Respawn group at the current airbase.
-    Aircraft:RespawnAtCurrentAirbase(Template, Takeoff, false)
+  -- Debug check, request.nasset might be a string Quantity enumerator.
+  local text=string.format("Request valid? Number of assets: requested=%s=%d, selected=%d, total=%d, enough=%s.", tostring(request.nasset), nasset,#_assets,_nassets, tostring(_enough))
+  self:T(text)
+   
+  -- First asset. Is representative for all filtered items in stock.
+  local asset=_assets[1] --#WAREHOUSE.Assetitem
+  
+  -- Asset is air, ground etc.
+  local asset_plane  = asset.category==Group.Category.AIRPLANE
+  local asset_helo   = asset.category==Group.Category.HELICOPTER
+  local asset_ground = asset.category==Group.Category.GROUND
+  local asset_train  = asset.category==Group.Category.TRAIN
+  local asset_naval  = asset.category==Group.Category.SHIP
+
+  -- General air request.
+  local asset_air=asset_helo or asset_plane
+
+  -- Assume everything is okay.
+  local valid=true
+  
+  -- Category of the requesting warehouse airbase.
+  local requestcategory=request.warehouse:GetAirbaseCategory()
+  
+  if request.transporttype==WAREHOUSE.TransportType.SELFPROPELLED then
+    -------------------------------------------
+    -- Case where the units go my themselves --
+    -------------------------------------------
+
+    if asset_air then
+    
+      if asset_plane then
+      
+        -- No airplane to or from FARPS.
+        if requestcategory==Airbase.Category.HELIPAD or self:GetAirbaseCategory()==Airbase.Category.HELIPAD then
+          self:E("ERROR: Incorrect request. Asset airplane requested but warehouse or requestor is HELIPAD/FARP!")
+          valid=false
+        end
+        
+        -- Category SHIP is not general enough! Fighters can go to carriers. Which fighters, is there an attibute?
+        -- Also for carriers, attibute?
+        
+      elseif asset_helo then
+      
+        -- Helos need a FARP or AIRBASE or SHIP for spawning. Also at the the receiving warehouse. So even if they could go there they "cannot" be spawned again.
+        -- Unless I allow spawning of helos in the the spawn zone. But one should place at least a FARP there.
+        if self:GetAirbaseCategory()==-1 or requestcategory==-1 then
+          self:E("ERROR: Incorrect request. Helos need a AIRBASE/HELIPAD/SHIP as home/destination base!")
+          valid=false     
+        end
+        
+      end
+      
+      -- All aircraft need an airbase of any type at depature and destination.
+      if self.airbase==nil or request.airbase==nil then
+      
+        self:E("ERROR: Incorrect request. Either warehouse or requesting warehouse does not have any kind of airbase!")
+        valid=false
+        
+      else
+      
+        -- Check if enough parking spots are available. This checks the spots available in general, i.e. not the free spots.
+        -- TODO: For FARPS/ships, is it possible to send more assets than parking spots? E.g. a FARPS has only four (or even one).
+        -- TODO: maybe only check if spots > 0 for the necessary terminal type? At least for FARPS.
+        
+        -- Get necessary terminal type.
+        local termtype=self:_GetTerminal(asset.attribute)
+        
+        -- Get number of parking spots.
+        local np_departure=self.airbase:GetParkingSpotsNumber(termtype)
+        local np_destination=request.airbase:GetParkingSpotsNumber(termtype)
+        
+        -- Debug info.
+        self:T(string.format("Asset attribute = %s, terminal type = %d, spots at departure = %d, destination = %d", asset.attribute, termtype, np_departure, np_destination))
+        
+        -- Not enough parking at sending warehouse.
+        --if (np_departure < request.nasset) and not (self.category==Airbase.Category.SHIP or self.category==Airbase.Category.HELIPAD) then
+        if np_departure < nasset then
+          self:E(string.format("ERROR: Incorrect request. Not enough parking spots of terminal type %d at warehouse. Available spots %d < %d necessary.", termtype, np_departure, nasset))
+          valid=false    
+        end
+
+        -- No parking at requesting warehouse.
+        if np_destination == 0 then
+          self:E(string.format("ERROR: Incorrect request. No parking spots of terminal type %d at requesting warehouse. Available spots = %d!", termtype, np_destination))
+          valid=false    
+        end        
+        
+      end
+      
+    elseif asset_ground then
+      
+      -- No ground assets directly to or from ships.
+      -- TODO: May needs refinement if warehouse is on land and requestor is ship in harbour?!
+      if (requestcategory==Airbase.Category.SHIP or self:GetAirbaseCategory()==Airbase.Category.SHIP) then
+        self:E("ERROR: Incorrect request. Ground asset requested but warehouse or requestor is SHIP!")
+        valid=false
+      end
+      
+      if asset_train then
+      
+        -- Check if there is a valid path on rail.
+        local hasrail=self:HasConnectionRail(request.warehouse)
+        if not hasrail then
+          self:E("ERROR: Incorrect request. No valid path on rail for train assets!")
+          valid=false
+        end
+        
+      else
+      
+        if self.warehouse:GetName()~=request.warehouse.warehouse:GetName() then
+        
+          -- Check if there is a valid path on road.
+          local hasroad=self:HasConnectionRoad(request.warehouse)
+          
+          -- Check if there is a valid off road path.
+          local hasoffroad=self:HasConnectionOffRoad(request.warehouse)
+          
+          if not (hasroad or hasoffroad) then
+            self:E("ERROR: Incorrect request. No valid path on or off road for ground assets!")
+            valid=false
+          end
+          
+        end
+        
+      end
+           
+    elseif asset_naval then
+  
+        -- Check shipping lane.
+        local shippinglane=self:HasConnectionNaval(request.warehouse)
+        
+        if not shippinglane then
+          self:E("ERROR: Incorrect request. No shipping lane has been defined between warehouses!")
+          valid=false
+        end      
+    
+    end
+    
+  else     
+    -------------------------------
+    -- Assests need a transport ---
+    -------------------------------
+
+    if request.transporttype==WAREHOUSE.TransportType.AIRPLANE then
+    
+      -- Airplanes only to AND from airdromes.
+      if self:GetAirbaseCategory()~=Airbase.Category.AIRDROME or requestcategory~=Airbase.Category.AIRDROME then
+        self:E("ERROR: Incorrect request. Warehouse or requestor does not have an airdrome. No transport by plane possible!")
+        valid=false
+      end
+      
+      --TODO: Not sure if there are any transport planes that can land on a carrier?
+        
+    elseif request.transporttype==WAREHOUSE.TransportType.APC then
+    
+      -- Transport by ground units.
+      
+      -- No transport to or from ships
+      if self:GetAirbaseCategory()==Airbase.Category.SHIP or requestcategory==Airbase.Category.SHIP then
+        self:E("ERROR: Incorrect request. Warehouse or requestor is SHIP. No transport by APC possible!")
+        valid=false
+      end
+      
+      -- Check if there is a valid path on road.
+      local hasroad=self:HasConnectionRoad(request.warehouse)
+      if not hasroad then
+        self:E("ERROR: Incorrect request. No valid path on road for ground transport assets!")
+        valid=false
+      end
+
+    elseif request.transporttype==WAREHOUSE.TransportType.HELICOPTER then
+    
+      -- Transport by helicopters ==> need airbase for spawning but not for delivering to the spawn zone of the receiver.
+      if self:GetAirbaseCategory()==-1 then
+        self:E("ERROR: Incorrect request. Warehouse has no airbase. Transport by helicopter not possible!")
+        valid=false
+      end
+    
+    elseif request.transporttype==WAREHOUSE.TransportType.SHIP then
+    
+      -- Transport by ship.
+      self:E("ERROR: Incorrect request. Transport by SHIP not implemented yet!")
+      valid=false
+    
+    elseif request.transporttype==WAREHOUSE.TransportType.TRAIN then
+    
+      -- Transport by train.
+      self:E("ERROR: Incorrect request. Transport by TRAIN not implemented yet!")
+      valid=false
+     
+    else
+      -- No match.
+      self:E("ERROR: Incorrect request. Transport type unknown!")
+      valid=false
+    end
+    
+    -- Airborne assets: check parking situation.
+    if request.transporttype==WAREHOUSE.TransportType.AIRPLANE or request.transporttype==WAREHOUSE.TransportType.HELICOPTER then
+    
+      -- Check if number of requested assets is in stock.
+      local _assets,_nassets,_enough=self:_FilterStock(self.stock, WAREHOUSE.Descriptor.ATTRIBUTE, request.transporttype, request.ntransport)
+      
+      -- Convert relative to absolute number if necessary.
+      local nasset=request.ntransport
+      if type(request.ntransport)=="string" then
+        nasset=self:_QuantityRel2Abs(request.ntransport,_nassets)
+      end
+
+      -- Debug check, request.nasset might be a string Quantity enumerator.
+      local text=string.format("Request valid? Number of transports: requested=%s=%d, selected=%d, total=%d, enough=%s.", tostring(request.ntransport), nasset,#_assets,_nassets, tostring(_enough))
+      self:T(text)
+
+      -- Get necessary terminal type for helos or transport aircraft.
+      local termtype=self:_GetTerminal(request.transporttype)
+      
+      -- Get number of parking spots.
+      local np_departure=self.airbase:GetParkingSpotsNumber(termtype)
+                   
+      -- Debug info.
+      self:T(self.wid..string.format("Transport attribute = %s, terminal type = %d, spots at departure = %d.", request.transporttype, termtype, np_departure))
+      
+      -- Not enough parking at sending warehouse.
+      --if (np_departure < request.nasset) and not (self.category==Airbase.Category.SHIP or self.category==Airbase.Category.HELIPAD) then
+      if np_departure < nasset then
+        self:E(self.wid..string.format("ERROR: Incorrect request. Not enough parking spots of terminal type %d at warehouse. Available spots %d < %d necessary.", termtype, np_departure, nasset))
+        valid=false
+      end
+      
+      -- Planes also need parking at the receiving warehouse.
+      if request.transporttype==WAREHOUSE.TransportType.AIRPLANE then
+      
+        -- Total number of parking spots for transport planes at destination.
+        local np_destination=request.airbase:GetParkingSpotsNumber(termtype)
+
+        -- Debug info.
+        self:T(self.wid..string.format("Transport attribute = %s: total # of spots (type=%d) at destination = %d.", asset.attribute, termtype, np_destination))
+                  
+        -- No parking at requesting warehouse.
+        if np_destination == 0 then
+          self:E(string.format("ERROR: Incorrect request. No parking spots of terminal type %d at requesting warehouse for transports. Available spots = %d!", termtype, np_destination))
+          valid=false    
+        end
+      end
+      
+    end
+    
 
   end
+  
+  -- Add request as unvalid and delete it later.
+  if valid==false then
+    self:E(self.wid..string.format("ERROR: Got invalid request id=%d.", request.uid))
+  else
+    self:T3(self.wid..string.format("Request id=%d valid :)", request.uid))
+  end
+  
+  return valid
+end
+
+
+--- Checks if the request can be fulfilled right now.
+-- Check for current parking situation, number of assets and transports currently in stock.
+-- @param #WAREHOUSE self
+-- @param #WAREHOUSE.Queueitem request The request to be checked.
+-- @return #boolean If true, request can be executed. If false, something is not right.
+function WAREHOUSE:_CheckRequestNow(request)
+
+  -- Check if receiving warehouse is running. We do allow self requests if the warehouse is under attack though!
+  if (request.warehouse:IsRunning()==false) and not (request.toself and self:IsAttacked()) then
+    local text=string.format("Warehouse %s: Request denied! Receiving warehouse %s is not running. Current state %s.", self.alias, request.warehouse.alias, request.warehouse:GetState())
+    self:_InfoMessage(text, 5)
+    
+    return false
+  end
+  
+  -- If no transport is requested, assets need to be mobile unless it is a self request.
+  local onlymobile=false
+  if type(request.transport)=="number" and request.ntransport==0 and not request.toself then
+    onlymobile=true
+  end
+  
+  -- Check if number of requested assets is in stock.
+  local _assets,_nassets,_enough=self:_FilterStock(self.stock, request.assetdesc, request.assetdescval, request.nasset, onlymobile)
+  
+  local _transports
+  
+  -- Check if enough assets are in stock.
+  if not _enough then
+    local text=string.format("Warehouse %s: Request denied! Not enough (cargo) assets currently available.", self.alias)
+    self:_InfoMessage(text, 5)
+    --text=string.format("Enough=%s, #_assets=%d, _nassets=%d, request.nasset=%s", tostring(_enough), #_assets,_nassets, tostring(request.nasset))
+    --env.info(text)
+    return false
+  end
+
+  -- Check if at least one (cargo) asset is available.
+  if _nassets>0 then
+
+    -- Get the attibute of the requested asset.
+    local _assetattribute=_assets[1].attribute
+    local _assetcategory=_assets[1].category  
+    
+    -- Check available parking for air asset units.    
+    if self.airbase and (_assetcategory==Group.Category.AIRPLANE or _assetcategory==Group.Category.HELICOPTER) then
+    
+      local Parking=self:_FindParkingForAssets(self.airbase,_assets)
+      
+      --if Parking==nil and not (self.category==Airbase.Category.HELIPAD) then
+      if Parking==nil then
+        local text=string.format("Warehouse %s: Request denied! Not enough free parking spots for all requested assets at the moment.", self.alias)
+        self:_InfoMessage(text, 5)
+        
+        return false
+      end
+      
+    end
+    
+    -- Add this here or gettransport fails
+    request.cargoassets=_assets
+    
+  end  
+  
+  -- Check that a transport units.
+  if request.transporttype ~= WAREHOUSE.TransportType.SELFPROPELLED then
+
+    -- Get best transports for this asset pack.
+    _transports=self:_GetTransportsForAssets(request)
+    
+    -- Check if at least one transport asset is available.
+    if #_transports>0 then
+    
+      -- Get the attibute of the transport units.
+      local _transportattribute=_transports[1].attribute
+      local _transportcategory=_transports[1].category
+      
+      -- Check available parking for transport units.
+      if self.airbase and (_transportcategory==Group.Category.AIRPLANE or _transportcategory==Group.Category.HELICOPTER) then
+        local Parking=self:_FindParkingForAssets(self.airbase,_transports)
+        if Parking==nil then
+          local text=string.format("Warehouse %s: Request denied! Not enough free parking spots for all transports at the moment.", self.alias)
+          self:_InfoMessage(text, 5)
+          
+          return false
+        end
+      end
+    
+    else
+
+      -- Not enough or the right transport carriers.
+      local text=string.format("Warehouse %s: Request denied! Not enough transport carriers available at the moment.", self.alias)
+      self:_InfoMessage(text, 5)
+      
+      return false    
+    end        
+
+  else
+  
+    -- Self propelled case. Nothing to do for now.
+  
+  end
+
+
+  -- Set chosen cargo assets.
+  request.cargoassets=_assets
+  request.cargoattribute=_assets[1].attribute
+  request.cargocategory=_assets[1].category  
+  request.nasset=#_assets
+
+  -- Debug info:
+  local text=string.format("Selected cargo assets, attibute=%s, category=%d:\n", request.cargoattribute, request.cargocategory)        
+  for _i,_asset in pairs(_assets) do
+    local asset=_asset --#WAREHOUSE.Assetitem
+    text=text..string.format("%d) name=%s, type=%s, category=%d, #units=%d",_i, asset.templatename, asset.unittype, asset.category, asset.nunits)
+  end
+  self:T(self.wid..text)  
+
+  if request.transporttype ~= WAREHOUSE.TransportType.SELFPROPELLED then
+
+    -- Set chosen transport assets.
+    request.transportassets=_transports
+    request.transportattribute=_transports[1].attribute
+    request.transportcategory=_transports[1].category
+    request.ntransport=#_transports
+  
+    -- Debug info:
+    local text=string.format("Selected transport assets, attibute=%s, category=%d:\n", request.transportattribute, request.transportcategory)        
+    for _i,_asset in pairs(_transports) do
+      local asset=_asset --#WAREHOUSE.Assetitem
+      text=text..string.format("%d) name=%s, type=%s, category=%d, #units=%d\n",_i, asset.templatename, asset.unittype, asset.category, asset.nunits)
+    end
+    self:T(self.wid..text)
+    
+  end
+    
+  return true
+end
+
+---Get (optimized) transport carriers for the given assets to be transported. 
+-- @param #WAREHOUSE self
+-- @param #WAREHOUSE.Pendingitem Chosen request.
+function WAREHOUSE:_GetTransportsForAssets(request)
+
+  -- Get all transports of the requested type in stock.
+  local transports=self:_FilterStock(self.stock, WAREHOUSE.Descriptor.ATTRIBUTE, request.transporttype)
+
+  -- Copy asset.
+  local cargoassets=UTILS.DeepCopy(request.cargoassets)
+  local cargoset=request.transportcargoset
+
+  -- TODO: Get weight and cargo bay from CARGO_GROUP
+  --local cargogroup=CARGO_GROUP:New(CargoGroup,Type,Name,LoadRadius,NearRadius) 
+  --cargogroup:GetWeight()
+     
+  -- Sort transport carriers w.r.t. cargo bay size.
+  local function sort_transports(a,b)
+    return a.cargobaymax>b.cargobaymax
+  end
+  
+  -- Sort cargo assets w.r.t. weight in assending order.
+  local function sort_cargoassets(a,b)
+    return a.weight>b.weight
+  end
+  
+  -- Sort tables.
+  table.sort(transports, sort_transports)
+  table.sort(cargoassets, sort_cargoassets)
+  
+  -- Total cargo bay size of all groups.
+  self:T2(self.wid.."Transport capability:")
+  local totalbay=0
+  for i=1,#transports do
+    local transport=transports[i] --#WAREHOUSE.Assetitem
+    for j=1,transport.nunits do 
+      totalbay=totalbay+transport.cargobay[j]
+      self:T2(self.wid..string.format("Cargo bay = %d  (unit=%d)", transport.cargobay[j], j))
+    end
+  end
+  self:T2(self.wid..string.format("Total capacity = %d", totalbay))
+
+  -- Total cargo weight of all assets to transports.
+  self:T2(self.wid.."Cargo weight:")
+  local totalcargoweight=0
+  for i=1,#cargoassets do
+    local asset=cargoassets[i] --#WAREHOUSE.Assetitem
+    totalcargoweight=totalcargoweight+asset.weight
+    self:T2(self.wid..string.format("weight = %d", asset.weight))
+  end    
+  self:T2(self.wid..string.format("Total weight = %d", totalcargoweight))
+  
+  -- Transports used.
+  local used_transports={}
+  
+  -- Loop over all transport groups, largest cargobaymax to smallest.
+  for i=1,#transports do
+  
+    -- Shortcut for carrier and cargo bay
+    local transport=transports[i]
+
+    -- Cargo put into carrier.       
+    local putintocarrier={}
+    
+    -- Cargo assigned to this transport group?
+    local used=false
+    
+    -- Loop over all units
+    for k=1,transport.nunits do
+    
+      -- Get cargo bay of this carrier.
+      local cargobay=transport.cargobay[k]
+      
+      -- Loop over cargo assets.
+      for j,asset in pairs(cargoassets) do
+        local asset=asset --#WAREHOUSE.Assetitem
+        
+        -- How many times does the cargo fit into the carrier?
+        local delta=cargobay-asset.weight
+        
+        --self:E(self.wid..string.format("%s unit %d loads cargo uid=%d: bayempty=%02d, bayloaded = %02d - weight=%02d", transport.templatename, k, asset.uid, transport.cargobay[k], cargobay, asset.weight))
+        
+        -- Cargo fits into carrier
+        if delta>=0 then
+          -- Reduce remaining cargobay.
+          cargobay=cargobay-asset.weight
+          self:T3(self.wid..string.format("%s unit %d loads cargo uid=%d: bayempty=%02d, bayloaded = %02d - weight=%02d", transport.templatename, k, asset.uid, transport.cargobay[k], cargobay, asset.weight))
+          
+          -- Remember this cargo and remove it so it does not get loaded into other carriers.
+          table.insert(putintocarrier, j)
+         
+          -- This transport group is used.
+          used=true
+        else          
+          self:T2(self.wid..string.format("Carrier unit %s too small for cargo asset %s ==> cannot be used! Cargo bay - asset weight = %d kg", transport.templatename, asset.templatename, delta))
+        end
+      
+      end -- loop over assets      
+    end   -- loop over units
+    
+    -- Remove cargo assets from list. Needs to be done back-to-front in order not to confuse the loop.
+    for j=#putintocarrier,1, -1 do
+      
+      local nput=putintocarrier[j]
+      local cargo=cargoassets[nput]
+      
+      -- Need to check if multiple units in a group and the group has already been removed!
+      -- TODO: This might need to be improved but is working okay so far.
+      if cargo then
+        -- Remove this group because it was used.
+        self:T2(self.wid..string.format("Cargo id=%d assigned for carrier id=%d", cargo.uid, transport.uid))      
+        table.remove(cargoassets, nput)
+      end
+    end
+    
+    -- Cargo was assined for this carrier.
+    if used then
+      table.insert(used_transports, transport)
+    end
+    
+    -- Convert relative quantity (all, half) to absolute number if necessary.
+    local ntrans=self:_QuantityRel2Abs(request.ntransport, #transports)
+    
+    -- Max number of transport groups reached?
+    if #used_transports >= ntrans then
+      request.ntransport=#used_transports
+      break
+    end
+  end
+  
+  -- Debug info.
+  local text=string.format("Used Transports for request %d to warehouse %s:\n", request.uid, request.warehouse.alias)
+  local totalcargobay=0  
+  for _i,_transport in pairs(used_transports) do
+    local transport=_transport --#WAREHOUSE.Assetitem
+    text=text..string.format("%d) %s: cargobay tot = %d kg, cargobay max = %d kg, nunits=%d\n", _i, transport.unittype, transport.cargobaytot, transport.cargobaymax, transport.nunits)
+    totalcargobay=totalcargobay+transport.cargobaytot
+    --for _,cargobay in pairs(transport.cargobay) do
+    --  env.info(string.format("cargobay %d", cargobay))
+    --end
+  end
+  text=text..string.format("Total cargo bay capacity = %.1f kg\n", totalcargobay)
+  text=text..string.format("Total cargo weight       = %.1f kg\n", totalcargoweight)
+  text=text..string.format("Minimum number of runs   = %.1f", totalcargoweight/totalcargobay)
+  self:_DebugMessage(text)  
+
+  return used_transports
+end
+
+---Relative to absolute quantity.
+-- @param #WAREHOUSE self
+-- @param #string relative Relative number in terms of @{#WAREHOUSE.Quantity}.
+-- @param #number ntot Total number.
+-- @return #number Absolute number.
+function WAREHOUSE:_QuantityRel2Abs(relative, ntot)
+
+  local nabs=0
+
+  -- Handle string input for nmax.
+  if type(relative)=="string" then
+    if relative==WAREHOUSE.Quantity.ALL then
+      nabs=ntot
+    elseif relative==WAREHOUSE.Quantity.THREEQUARTERS then
+      nabs=UTILS.Round(ntot*3/4)
+    elseif relative==WAREHOUSE.Quantity.HALF then
+      nabs=UTILS.Round(ntot/2)
+    elseif relative==WAREHOUSE.Quantity.THIRD then
+      nabs=UTILS.Round(ntot/3)    
+    elseif relative==WAREHOUSE.Quantity.QUARTER then
+      nabs=UTILS.Round(ntot/4)
+    else
+      nabs=math.min(1, ntot)
+    end
+  else
+    nabs=relative
+  end
+  
+  self:T2(self.wid..string.format("Relative %s: tot=%d, abs=%.2f", tostring(relative), ntot, nabs))
+
+  return nabs
+end
+
+---Sorts the queue and checks if the request can be fulfilled.
+-- @param #WAREHOUSE self
+-- @return #WAREHOUSE.Queueitem Chosen request.
+function WAREHOUSE:_CheckQueue()
+
+  -- Sort queue wrt to first prio and then qid.
+  self:_SortQueue()
+
+  -- Search for a request we can execute.
+  local request=nil --#WAREHOUSE.Queueitem
+  
+  local invalid={}
+  local gotit=false
+  for _,_qitem in ipairs(self.queue) do
+    local qitem=_qitem --#WAREHOUSE.Queueitem
+    
+    -- Check if request is valid in general.
+    local valid=self:_CheckRequestValid(qitem)
+    
+    -- Check if request is possible now.
+    local okay=false
+    if valid then      
+      okay=self:_CheckRequestNow(qitem)
+    else
+      -- Remember invalid request and delete later in order not to confuse the loop.
+      table.insert(invalid, qitem)
+    end
+    
+    -- Get the first valid request that can be executed now.
+    if okay and valid and not gotit then
+      request=qitem
+      gotit=true
+      break
+    end
+  end
+  
+  -- Delete invalid requests.
+  for _,_request in pairs(invalid) do
+    self:T(self.wid..string.format("Deleting invalid request id=%d.",_request.uid))
+    self:_DeleteQueueItem(_request, self.queue)
+  end
+
+  -- Execute request.
+  return request
+end
+
+--- Simple task function. Can be used to call a function which has the warehouse and the executing group as parameters.
+-- @param #WAREHOUSE self
+-- @param #string Function The name of the function to call passed as string.
+-- @param Wrapper.Group#GROUP group The group which is meant.
+function WAREHOUSE:_SimpleTaskFunction(Function, group)
+  self:F2({Function})
+
+  -- Name of the warehouse (static) object.
+  local warehouse=self.warehouse:GetName()
+  local groupname=group:GetName()
+
+  -- Task script.
+  local DCSScript = {}
+  --DCSScript[#DCSScript+1] = string.format('env.info(\"WAREHOUSE: Simple task function called!\") ')
+  DCSScript[#DCSScript+1] = string.format('local mygroup   = GROUP:FindByName(\"%s\") ', groupname)        -- The group that executes the task function. Very handy with the "...".
+  DCSScript[#DCSScript+1] = string.format("local mystatic  = STATIC:FindByName(\"%s\") ", warehouse)       -- The static that holds the warehouse self object.
+  DCSScript[#DCSScript+1] = string.format('local warehouse = mystatic:GetState(mystatic, \"WAREHOUSE\") ') -- Get the warehouse self object from the static.
+  DCSScript[#DCSScript+1] = string.format('%s(mygroup)', Function)                                         -- Call the function, e.g. myfunction.(warehouse,mygroup)  
+
+  -- Create task.
+  local DCSTask = CONTROLLABLE.TaskWrappedAction(self, CONTROLLABLE.CommandDoScript(self, table.concat(DCSScript)))
+  
+  return DCSTask
+end
+
+--- Get the proper terminal type based on generalized attribute of the group.
+--@param #WAREHOUSE self
+--@param #WAREHOUSE.Attribute _attribute Generlized attibute of unit.
+--@return Wrapper.Airbase#AIRBASE.TerminalType Terminal type for this group.
+function WAREHOUSE:_GetTerminal(_attribute)
+
+  -- Default terminal is "large".
+  local _terminal=AIRBASE.TerminalType.OpenBig
+  
+  
+  if _attribute==WAREHOUSE.Attribute.AIR_FIGHTER then
+    -- Fighter ==> small.
+    _terminal=AIRBASE.TerminalType.FighterAircraft
+  elseif _attribute==WAREHOUSE.Attribute.AIR_BOMBER or _attribute==WAREHOUSE.Attribute.AIR_TRANSPORTPLANE or _attribute==WAREHOUSE.Attribute.AIR_TANKER or _attribute==WAREHOUSE.Attribute.AIR_AWACS then
+    -- Bigger aircraft.
+    _terminal=AIRBASE.TerminalType.OpenBig
+  elseif _attribute==WAREHOUSE.Attribute.AIR_TRANSPORTHELO or _attribute==WAREHOUSE.Attribute.AIR_ATTACKHELO then
+    -- Helicopter.
+    _terminal=AIRBASE.TerminalType.HelicopterUsable
+  end
+  
+  return _terminal
+end
+
+
+--- Seach unoccupied parking spots at the airbase for a list of assets. For each asset group a list of parking spots is returned.
+-- During the search also the not yet spawned asset aircraft are considered.
+-- If not enough spots for all asset units could be found, the routine returns nil!
+-- @param #WAREHOUSE self
+-- @param Wrapper.Airbase#AIRBASE airbase The airbase where we search for parking spots.
+-- @param #table assets A table of assets for which the parking spots are needed.
+-- @return #table Table of coordinates and terminal IDs of free parking spots. Each table entry has the elements .Coordinate and .TerminalID.
+function WAREHOUSE:_FindParkingForAssets(airbase, assets)
+
+  -- Init default
+  local scanradius=100
+  local scanunits=true
+  local scanstatics=true
+  local scanscenery=false
+  local verysafe=false
+
+  -- Function calculating the overlap of two (square) objects.
+  local function _overlap(l1,l2,dist)
+    local safedist=(l1/2+l2/2)*1.05  -- 5% safety margine added to safe distance!
+    local safe = (dist > safedist)
+    self:T3(string.format("l1=%.1f l2=%.1f s=%.1f d=%.1f ==> safe=%s", l1,l2,safedist,dist,tostring(safe)))
+    return safe    
+  end
+  
+  -- Get parking spot data table. This contains all free and "non-free" spots.
+  local parkingdata=airbase:GetParkingSpotsTable()
+  
+  -- List of obstacles.
+  local obstacles={}
+  
+  -- Loop over all parking spots and get the currently present obstacles.
+  -- How long does this take on very large airbases, i.e. those with hundereds of parking spots? Seems to be okay!
+  for _,parkingspot in pairs(parkingdata) do
+  
+    -- Coordinate of the parking spot.
+    local _spot=parkingspot.Coordinate   -- Core.Point#COORDINATE
+    local _termid=parkingspot.TerminalID
+            
+    -- Scan a radius of 100 meters around the spot.
+    local _,_,_,_units,_statics,_sceneries=_spot:ScanObjects(scanradius, scanunits, scanstatics, scanscenery)
+
+    -- Check all units.    
+    for _,_unit in pairs(_units) do
+      local unit=_unit --Wrapper.Unit#UNIT
+      local _coord=unit:GetCoordinate()
+      local _size=self:_GetObjectSize(unit:GetDCSObject())
+      local _name=unit:GetName()
+      table.insert(obstacles, {coord=_coord, size=_size, name=_name, type="unit"})
+    end
+  
+    -- Check all statics.
+    for _,static in pairs(_statics) do
+      local _vec3=static:getPoint()
+      local _coord=COORDINATE:NewFromVec3(_vec3)
+      local _name=static:getName()
+      local _size=self:_GetObjectSize(static)
+      table.insert(obstacles, {coord=_coord, size=_size, name=_name, type="static"})
+    end
+    
+    -- Check all scenery.
+    for _,scenery in pairs(_sceneries) do
+      local _vec3=scenery:getPoint()
+      local _coord=COORDINATE:NewFromVec3(_vec3)
+      local _name=scenery:getTypeName()
+      local _size=self:_GetObjectSize(scenery)
+      table.insert(obstacles,{coord=_coord, size=_size, name=_name, type="scenery"})
+    end
+    
+    --[[
+    -- TODO Clients? Unoccupied client aircraft are also important! Are they already included in scanned units maybe?
+    local clients=_DATABASE.CLIENTS
+    for _,_client in pairs(clients) do
+      local client=_client --Wrapper.Client#CLIENT
+      env.info(string.format("FF Client name %s", client:GetName()))
+      local unit=UNIT:FindByName(client:GetName())
+      --local unit=client:GetClientGroupUnit()      
+      local _coord=unit:GetCoordinate()
+      local _name=unit:GetName()
+      local _size=self:_GetObjectSize(client:GetClientGroupDCSUnit())
+      table.insert(obstacles,{coord=_coord, size=_size, name=_name, type="client"})
+    end 
+    ]]    
+  end
+  
+  -- Parking data for all assets.
+  local parking={}
+
+  -- Loop over all assets that need a parking psot.
+  for _,asset in pairs(assets) do
+    local _asset=asset --#WAREHOUSE.Assetitem
+    
+    -- Get terminal type of this asset
+    local terminaltype=self:_GetTerminal(asset.attribute)
+    
+    -- Asset specific parking.
+    parking[_asset.uid]={}
+    
+    -- Loop over all units - each one needs a spot.
+    for i=1,_asset.nunits do
+  
+      -- Loop over all parking spots.
+      local gotit=false
+      for _,_parkingspot in pairs(parkingdata) do      
+        local parkingspot=_parkingspot --Wrapper.Airbase#AIRBASE.ParkingSpot
+      
+        -- Check correct terminal type for asset. We don't want helos in shelters etc.
+        if AIRBASE._CheckTerminalType(parkingspot.TerminalType, terminaltype) then          
+  
+          -- Coordinate of the parking spot.
+          local _spot=parkingspot.Coordinate   -- Core.Point#COORDINATE
+          local _termid=parkingspot.TerminalID
+          local _toac=parkingspot.TOAC
+          
+          --env.info(string.format("FF asset=%s (id=%d): needs terminal type=%d, id=%d, #obstacles=%d", _asset.templatename, _asset.uid, terminaltype, _termid, #obstacles))
+           
+          -- Loop over all obstacles.
+          local free=true
+          local problem=nil
+          for _,obstacle in pairs(obstacles) do
+          
+            -- Check if aircraft overlaps with any obstacle.
+            local dist=_spot:Get2DDistance(obstacle.coord)
+            local safe=_overlap(_asset.size, obstacle.size, dist)
+            
+            -- Spot is blocked.
+            if not safe then
+              --env.info(string.format("FF asset=%s (id=%d): spot id=%d dist=%.1fm is NOT SAFE", _asset.templatename, _asset.uid, _termid, dist))
+              free=false
+              problem=obstacle
+              problem.dist=dist
+              break
+            else
+              --env.info(string.format("FF asset=%s (id=%d): spot id=%d dist=%.1fm is SAFE", _asset.templatename, _asset.uid, _termid, dist))
+            end
+          
+          end
+          
+          -- Check if spot is free
+          if free then
+          
+            -- Add parkingspot for this asset unit.
+            table.insert(parking[_asset.uid], parkingspot)
+            
+            self:T(self.wid..string.format("Parking spot #%d is free for asset id=%d!", _termid, _asset.uid))
+            
+            -- Add the unit as obstacle so that this spot will not be available for the next unit.
+            table.insert(obstacles, {coord=_spot, size=_asset.size, name=_asset.templatename, type="asset"})
+            
+            gotit=true
+            break
+            
+          else
+          
+            -- Debug output for occupied spots.
+            self:T(self.wid..string.format("Parking spot #%d is occupied or not big enough!", _termid))
+            if self.Debug then
+              local coord=problem.coord --Core.Point#COORDINATE
+              local text=string.format("Obstacle blocking spot #%d is %s type %s with size=%.1f m and distance=%.1f m.", _termid, problem.name, problem.type, problem.size, problem.dist)
+              coord:MarkToAll(string.format(text))
+            end
+            
+          end
+          
+        end -- check terminal type
+      end -- loop over parking spots
+      
+      -- No parking spot for at least one asset :(
+      if not gotit then
+        self:T(self.wid..string.format("WARNING: No free parking spot for asset id=%d",_asset.uid))
+        return nil
+      end      
+    end -- loop over asset units
+  end -- loop over asset groups
+    
+  return parking
+end
+
+
+--- Get the request belonging to a group.
+-- @param #WAREHOUSE self
+-- @param Wrapper.Group#GROUP group The group from which the info is gathered.
+-- @param #table queue Queue holding all requests.
+-- @return #WAREHOUSE.Pendingitem The request belonging to this group.
+function WAREHOUSE:_GetRequestOfGroup(group, queue)
+
+  -- Get warehouse, asset and request ID from group name.
+  local wid,aid,rid=self:_GetIDsFromGroup(group)
+  
+  -- Find the request.
+  for _,_request in pairs(queue) do
+    local request=_request --#WAREHOUSE.Queueitem
+    if request.uid==rid then
+      return request
+    end
+  end
+    
+end
+
+--- Is the group a used as transporter for a given request?
+-- @param #WAREHOUSE self
+-- @param Wrapper.Group#GROUP group The group from which the info is gathered.
+-- @param #WAREHOUSE.Pendingitem request Request.
+-- @return #boolean True if group is transport, false if group is cargo and nil otherwise.
+function WAREHOUSE:_GroupIsTransport(group, request)
+
+  -- Name of the group under question.
+  local groupname=self:_GetNameWithOut(group)
+
+  if request.transportgroupset then  
+    local transporters=request.transportgroupset:GetSetObjects()
+  
+    for _,transport in pairs(transporters) do
+      if transport:GetName()==groupname then
+        return true
+      end
+    end
+  end
+  
+  if request.cargogroupset then
+    local cargos=request.cargogroupset:GetSetObjects()
+    
+    for _,cargo in pairs(cargos) do
+      if self:_GetNameWithOut(cargo)==groupname then
+        return false
+      end
+    end
+  end    
+  
+  return nil
+end
+
+
+--- Creates a unique name for spawned assets. From the group name the original warehouse, global asset and the request can be derived. 
+-- @param #WAREHOUSE self
+-- @param #WAREHOUSE.Assetitem _assetitem Asset for which the name is created.
+-- @param #WAREHOUSE.Queueitem _queueitem (Optional) Request specific name.
+-- @return #string Alias name "UnitType\_WID-%d\_AID-%d\_RID-%d"
+function WAREHOUSE:_Alias(_assetitem,_queueitem)
+  return self:_alias(_assetitem.unittype, self.uid, _assetitem.uid,_queueitem.uid)
+end
+
+--- Creates a unique name for spawned assets. From the group name the original warehouse, global asset and the request can be derived.
+-- @param #WAREHOUSE self
+-- @param #string unittype Type of unit.
+-- @param #number wid Warehouse id.
+-- @param #number aid Asset item id.
+-- @param #number qid Queue/request item id.
+-- @return #string Alias name "UnitType\_WID-%d\_AID-%d\_RID-%d"
+function WAREHOUSE:_alias(unittype, wid, aid, qid)
+  local _alias=string.format("%s_WID-%d_AID-%d", unittype, wid, aid)
+  if qid then
+    _alias=_alias..string.format("_RID-%d", qid)
+  end
+  return _alias
+end
+
+--- Get group name without any spawn or cargo suffix #CARGO etc.
+-- @param #WAREHOUSE self
+-- @param Wrapper.Group#GROUP group The group from which the info is gathered.
+-- @return #string Name of the object without trailing #...
+function WAREHOUSE:_GetNameWithOut(group)
+  if group then
+    local name=group:GetName()
+    local namewithout=UTILS.Split(name, "#")[1]
+    if namewithout then
+      return namewithout
+    else
+      return name
+    end
+  end
+  return group:GetName()
+end
+
+
+--- Get warehouse id, asset id and request id from group name (alias).
+-- @param #WAREHOUSE self
+-- @param Wrapper.Group#GROUP group The group from which the info is gathered.
+-- @return #number Warehouse ID.
+-- @return #number Asset ID.
+-- @return #number Request ID.
+function WAREHOUSE:_GetIDsFromGroup(group)
+
+  ---@param #string text The text to analyse.
+  local function analyse(text)
+  
+    -- Get rid of #0001 tail from spawn.
+    local unspawned=UTILS.Split(text, "#")[1]
+  
+    -- Split keywords.  
+    local keywords=UTILS.Split(unspawned, "_")
+    local _wid=nil  -- warehouse UID
+    local _aid=nil  -- asset UID
+    local _rid=nil  -- request UID
+    
+    -- Loop over keys.
+    for _,keys in pairs(keywords) do
+      local str=UTILS.Split(keys, "-")
+      local key=str[1]
+      local val=str[2]
+      if key:find("WID") then
+        _wid=tonumber(val)
+      elseif key:find("AID") then
+        _aid=tonumber(val)
+      elseif key:find("RID") then
+        _rid=tonumber(val)
+      end      
+    end
+    
+    return _wid,_aid,_rid
+  end
+  
+  if group then
+  
+    -- Group name
+    local name=group:GetName()
+      
+    -- Get ids
+    local wid,aid,rid=analyse(name)
+    
+    -- Debug info
+    self:T3(self.wid..string.format("Group Name   = %s", tostring(name)))  
+    self:T3(self.wid..string.format("Warehouse ID = %s", tostring(wid)))
+    self:T3(self.wid..string.format("Asset     ID = %s", tostring(aid)))
+    self:T3(self.wid..string.format("Request   ID = %s", tostring(rid)))
+    
+    return wid,aid,rid
+  else
+    self:E("WARNING: Group not found in GetIDsFromGroup() function!")
+  end
+
 end
 
 --- Filter stock assets by table entry.
 -- @param #WAREHOUSE self
--- @param #table stock Table holding all assets in stock of the warehouse. Each entry is of type @{#WAREHOUSE.Stockitem}.
--- @param #string item Descriptor
--- @param value Value of the descriptor.
+-- @param #table stock Table holding all assets in stock of the warehouse. Each entry is of type @{#WAREHOUSE.Assetitem}.
+-- @param #string descriptor Descriptor describing the filtered assets.
+-- @param attribute Value of the descriptor.
+-- @param #number nmax (Optional) Maximum number of items that will be returned. Default nmax=nil is all matching items are returned.
+-- @param #boolean mobile (Optional) If true, filter only mobile assets.
 -- @return #table Filtered stock items table.
-function WAREHOUSE:_FilterStock(stock, item, value)
+-- @return #number Total number of (requested) assets available.
+-- @return #boolean If true, enough assets are available.
+function WAREHOUSE:_FilterStock(stock, descriptor, attribute, nmax, mobile)
+
+  -- Default all.
+  nmax=nmax or WAREHOUSE.Quantity.ALL
+  if mobile==nil then
+    mobile=false
+  end
 
   -- Filtered array.
   local filtered={}
 
+  -- Count total number in stock.
+  local ntot=0
+  for _,_asset in ipairs(stock) do
+    local asset=_asset --#WAREHOUSE.Assetitem
+    local ismobile=asset.speedmax>0
+    if asset[descriptor]==attribute then
+      if (mobile==true and ismobile) or mobile==false then
+        ntot=ntot+1
+      end
+    end
+  end
+  
+  -- Treat case where ntot=0, i.e. no assets at all.
+  if ntot==0 then
+    return filtered, ntot, false
+  end
+  
+  -- Convert relative to absolute number if necessary.
+  nmax=self:_QuantityRel2Abs(nmax,ntot)
+
   -- Loop over stock items.
-  for _i,_stock in ipairs(stock) do
-    if _stock[item]==value then
-      _stock.pos=_i
-      table.insert(filtered, _stock)
+  for _i,_asset in ipairs(stock) do
+    local asset=_asset --#WAREHOUSE.Assetitem
+    
+    -- Check if asset has the right attribute.
+    if asset[descriptor]==attribute then
+        
+      -- Check if asset has to be mobile.
+      if (mobile and asset.speedmax>0) or (not mobile) then
+           
+        -- Add asset to filtered table.
+        table.insert(filtered, asset)
+        
+        -- Break loop if nmax was reached.
+        if nmax~=nil and #filtered>=nmax then
+          return filtered, ntot, true
+        end
+        
+      end      
     end
   end
 
-  return filtered
-end
-
---- Filter stock assets by table entry.
--- @param #WAREHOUSE self
--- @param #table stock Table holding all assets in stock of the warehouse. Each entry is of type @{#WAREHOUSE.Stockitem}.
-function WAREHOUSE:_DisplayStockItems(stock)
-
-  local text=self.wid..string.format("Warehouse %s stock assets:\n", self.homebase:GetName())
-  for _,_stock in pairs(stock) do
-    local mystock=_stock --#WAREHOUSE.Stockitem
-    text=text..string.format("template = %s, category = %d, unittype = %s, attribute = %s\n", mystock.templatename, mystock.category, mystock.unittype, mystock.attribute)
-  end
-
-  env.info(text)
-  MESSAGE:New(text, 10):ToAll()
+  return filtered, ntot, ntot>=nmax
 end
 
 --- Check if a group has a generalized attribute.
 -- @param #WAREHOUSE self
--- @param #string groupname Name of the group.
+-- @param Wrapper.Group#GROUP group MOOSE group object.
 -- @param #WAREHOUSE.Attribute attribute Attribute to check.
 -- @return #boolean True if group has the specified attribute.
-function WAREHOUSE:_HasAttribute(groupname, attribute)
-
-  local group=GROUP:FindByName(groupname)
+function WAREHOUSE:_HasAttribute(group, attribute)
 
   if group then
-    local groupattribute=self:_HasAttribute(groupname,attribute)
+    local groupattribute=self:_GetAttribute(group)
     return groupattribute==attribute
   end
 
@@ -66468,85 +72215,137 @@ function WAREHOUSE:_HasAttribute(groupname, attribute)
 end
 
 --- Get the generalized attribute of a group.
+-- Note that for a heterogenious group, the attribute is determined from the attribute of the first unit!
 -- @param #WAREHOUSE self
--- @param #string groupname Name of the group.
+-- @param Wrapper.Group#GROUP group MOOSE group object.
 -- @return #WAREHOUSE.Attribute Generalized attribute of the group.
-function WAREHOUSE:_GetAttribute(groupname)
+function WAREHOUSE:_GetAttribute(group)
 
-  local group=GROUP:FindByName(groupname)
-
-  local attribute=WAREHOUSE.Attribute.OTHER --#WAREHOUSE.Attribute
+  -- Default
+  local attribute=WAREHOUSE.Attribute.OTHER_UNKNOWN --#WAREHOUSE.Attribute
 
   if group then
-
-    -- Get generalized attributes.
-    -- Transports: Helos, planes and APCs
+    
+    -----------
+    --- Air ---
+    -----------   
+    -- Planes
     local transportplane=group:HasAttribute("Transports") and group:HasAttribute("Planes")
-    local transporthelo=group:HasAttribute("Transport helicopters")
-    local transportapc=group:HasAttribute("Infantry carriers")
-    local fighter=group:HasAttribute("Fighters") or group:HasAttribute("Interceptors") or group:HasAttribute("Multirole fighters")
-    local tanker=group:HasAttribute("Tankers")
     local awacs=group:HasAttribute("AWACS")
-    local artillery=group:HasAttribute("Artillery")
-    local infantry=group:HasAttribute("Infantry")
+    local fighter=group:HasAttribute("Fighters") or group:HasAttribute("Interceptors") or group:HasAttribute("Multirole fighters") or (group:HasAttribute("Bombers") and not group:HasAttribute("Strategic bombers")) 
+    local bomber=group:HasAttribute("Strategic bombers")
+    local tanker=group:HasAttribute("Tankers")  
+    local uav=group:HasAttribute("UAVs")  
+    -- Helicopters
+    local transporthelo=group:HasAttribute("Transport helicopters")
     local attackhelicopter=group:HasAttribute("Attack helicopters")
-    local bomber=group:HasAttribute("Bombers")
+
+    --------------
+    --- Ground ---
+    --------------    
+    -- Ground
+    local apc=group:HasAttribute("Infantry carriers")
+    local truck=group:HasAttribute("Trucks") and group:GetCategory()==Group.Category.GROUND
+    local infantry=group:HasAttribute("Infantry")
+    local artillery=group:HasAttribute("Artillery")
     local tank=group:HasAttribute("Old Tanks") or group:HasAttribute("Modern Tanks")
-    local truck=group:HasAttribute("Trucks")
+    local aaa=group:HasAttribute("AAA")
+    local ewr=group:HasAttribute("EWR")
+    local sam=group:HasAttribute("SAM elements") and (not group:HasAttribute("AAA"))
+    -- Train
+    local train=group:GetCategory()==Group.Category.TRAIN
 
-    -- Debug output.
-    --[[
-    env.info(string.format("transport pane = %s", tostring(transportplane)))    
-    env.info(string.format("transport helo = %s", tostring(transporthelo)))
-    env.info(string.format("transport apc  = %s", tostring(transportapc)))
-    env.info(string.format("figther        = %s", tostring(fighter)))
-    env.info(string.format("tanker         = %s", tostring(tanker)))
-    env.info(string.format("awacs          = %s", tostring(awacs)))
-    env.info(string.format("artillery      = %s", tostring(artillery)))
-    env.info(string.format("infantry       = %s", tostring(infantry)))
-    env.info(string.format("attack helo    = %s", tostring(attackhelicopter)))
-    env.info(string.format("bomber         = %s", tostring(bomber)))
-    env.info(string.format("tank           = %s", tostring(tank)))
-    env.info(string.format("truck          = %s", tostring(truck)))
-    ]]
+    -------------
+    --- Naval ---
+    -------------        
+    -- Ships
+    local aircraftcarrier=group:HasAttribute("Aircraft Carriers")
+    local warship=group:HasAttribute("Heavy armed ships")
+    local armedship=group:HasAttribute("Armed ships")
+    local unarmedship=group:HasAttribute("Unarmed ships")
+    
 
+    -- Define attribute. Order is important.
     if transportplane then
-      attribute=WAREHOUSE.Attribute.TRANSPORT_PLANE
-    elseif transporthelo then
-      attribute=WAREHOUSE.Attribute.TRANSPORT_HELO
-    elseif transportapc then
-      attribute=WAREHOUSE.Attribute.TRANSPORT_APC
-    elseif fighter then
-      attribute=WAREHOUSE.Attribute.FIGHTER
-    elseif tanker then
-      attribute=WAREHOUSE.Attribute.TANKER
+      attribute=WAREHOUSE.Attribute.AIR_TRANSPORTPLANE
     elseif awacs then
-      attribute=WAREHOUSE.Attribute.AWACS
-    elseif artillery then
-      attribute=WAREHOUSE.Attribute.ARTILLERY
-    elseif infantry then
-      attribute=WAREHOUSE.Attribute.INFANTRY
-    elseif attackhelicopter then
-      attribute=WAREHOUSE.Attribute.ATTACKHELICOPTER
+      attribute=WAREHOUSE.Attribute.AIR_AWACS
+    elseif fighter then
+      attribute=WAREHOUSE.Attribute.AIR_FIGHTER
     elseif bomber then
-      attribute=WAREHOUSE.Attribute.BOMBER
+      attribute=WAREHOUSE.Attribute.AIR_BOMBER
+    elseif tanker then
+      attribute=WAREHOUSE.Attribute.AIR_TANKER
+    elseif transporthelo then
+      attribute=WAREHOUSE.Attribute.AIR_TRANSPORTHELO
+    elseif attackhelicopter then
+      attribute=WAREHOUSE.Attribute.AIR_ATTACKHELO
+    elseif uav then
+      attribute=WAREHOUSE.Attribute.AIR_UAV
+    elseif apc then
+      attribute=WAREHOUSE.Attribute.GROUND_APC
+    elseif infantry then
+      attribute=WAREHOUSE.Attribute.GROUND_INFANTRY
+    elseif artillery then
+      attribute=WAREHOUSE.Attribute.GROUND_ARTILLERY
     elseif tank then
-      attribute=WAREHOUSE.Attribute.TANK
+      attribute=WAREHOUSE.Attribute.GROUND_TANK
+    elseif aaa then
+      attribute=WAREHOUSE.Attribute.GROUND_AAA
+    elseif ewr then
+      attribute=WAREHOUSE.Attribute.GROUND_EWR
+    elseif sam then
+      attribute=WAREHOUSE.Attribute.GROUND_SAM
     elseif truck then
-      attribute=WAREHOUSE.Attribute.TRUCK
+      attribute=WAREHOUSE.Attribute.GROUND_TRUCK    
+    elseif train then
+      attribute=WAREHOUSE.Attribute.GROUND_TRAIN
+    elseif aircraftcarrier then
+      attribute=WAREHOUSE.Attribute.NAVAL_AIRCRAFTCARRIER
+    elseif warship then
+      attribute=WAREHOUSE.Attribute.NAVAL_WARSHIP
+    elseif armedship then
+      attribute=WAREHOUSE.Attribute.NAVAL_ARMEDSHIP    
+    elseif unarmedship then
+      attribute=WAREHOUSE.Attribute.NAVAL_UNARMEDSHIP
     else
-      attribute=WAREHOUSE.Attribute.OTHER
+      if group:IsGround() then
+        attribute=WAREHOUSE.Attribute.GROUND_OTHER
+      elseif group:IsShip() then
+        attribute=WAREHOUSE.Attribute.NAVAL_OTHER
+      elseif group:IsAir() then
+        attribute=WAREHOUSE.Attribute.AIR_OTHER
+      else
+        attribute=WAREHOUSE.Attribute.OTHER_UNKNOWN
+      end      
     end
-
   end
 
   return attribute
 end
 
+--- Size of the bounding box of a DCS object derived from the DCS descriptor table. If boundinb box is nil, a size of zero is returned.
+-- @param #WAREHOUSE self
+-- @param DCS#Object DCSobject The DCS object for which the size is needed.
+-- @return #number Max size of object in meters (length (x) or width (z) components not including height (y)).
+-- @return #number Length (x component) of size.
+-- @return #number Height (y component) of size.
+-- @return #number Width (z component) of size.
+function WAREHOUSE:_GetObjectSize(DCSobject)
+  local DCSdesc=DCSobject:getDesc()
+  if DCSdesc.box then
+    local x=DCSdesc.box.max.x+math.abs(DCSdesc.box.min.x)  --length
+    local y=DCSdesc.box.max.y+math.abs(DCSdesc.box.min.y)  --height
+    local z=DCSdesc.box.max.z+math.abs(DCSdesc.box.min.z)  --width
+    return math.max(x,z), x , y, z
+  end
+  return 0,0,0,0
+end  
+
 --- Returns the number of assets for each generalized attribute.
 -- @param #WAREHOUSE self
 -- @param #table stock The stock of the warehouse.
--- @return #table Data table holding the numbers.
+-- @return #table Data table holding the numbers, i.e. data[attibute]=n.
 function WAREHOUSE:GetStockInfo(stock)
 
   local _data={}
@@ -66554,7 +72353,7 @@ function WAREHOUSE:GetStockInfo(stock)
 
     local n=0
     for _i,_item in pairs(stock) do
-      local _ite=_item --#WAREHOUSE.Stockitem
+      local _ite=_item --#WAREHOUSE.Assetitem
       if _ite.attribute==_attribute then
         n=n+1
       end
@@ -66566,13 +72365,13 @@ function WAREHOUSE:GetStockInfo(stock)
   return _data
 end
 
---- Delete item from stock.
+--- Delete an asset item from stock.
 -- @param #WAREHOUSE self
--- @param #number _uid The unique id of the item to be deleted.
-function WAREHOUSE:_DeleteStockItem(_uid)
+-- @param #WAREHOUSE.Assetitem stockitem Asset item to delete from stock table.
+function WAREHOUSE:_DeleteStockItem(stockitem)
   for i=1,#self.stock do
-    local item=self.stock[i] --#WAREHOUSE.Stockitem
-    if item.id==_uid then
+    local item=self.stock[i] --#WAREHOUSE.Assetitem
+    if item.uid==stockitem.uid then
       table.remove(self.stock,i)
       break
     end
@@ -66581,19 +72380,19 @@ end
 
 --- Delete item from queue.
 -- @param #WAREHOUSE self
--- @param #number _uid The id of the item to be deleted.
-function WAREHOUSE:_DeleteQueueItem(_uid)
-  env.info("FF BEFORE delete queue")
-  self:_PrintQueue()
-  for i=1,#self.queue do
-    local item=self.queue[i] --#WAREHOUSE.Queueitem
-    if item.uid==_uid then
-      table.remove(self.queue,i)
+-- @param #WAREHOUSE.Queueitem qitem Item of queue to be removed.
+-- @param #table queue The queue from which the item should be deleted.
+function WAREHOUSE:_DeleteQueueItem(qitem, queue)
+  self:F({qitem=qitem, queue=queue})
+  
+  for i=1,#queue do
+    local _item=queue[i] --#WAREHOUSE.Queueitem
+    if _item.uid==qitem.uid then
+      self:T(self.wid..string.format("Deleting queue item id=%d.", qitem.uid))
+      table.remove(queue,i)
       break
     end
   end
-  env.info("FF AFTER delete queue")
-  self:_PrintQueue()
 end
 
 --- Sort requests queue wrt prio and request uid.
@@ -66609,19 +72408,585 @@ end
 
 --- Prints the queue to DCS.log file.
 -- @param #WAREHOUSE self
-function WAREHOUSE:_PrintQueue()
-  env.info(self.wid.."Queue:")
-  for _,_qitem in ipairs(self.queue) do
-    local qitem=_qitem --#WAREHOUSE.Queueitem
-    local text=string.format("uid=%d, prio=%d, airbase=%s (category=%d), descriptor: %s=%s, nasssets=%d, transport=%s, ntransport=%d",
-      qitem.uid, qitem.prio, qitem.airbase:GetName(),qitem.category, qitem.assetdesc,tostring(qitem.assetdescval),qitem.nasset,qitem.transporttype,qitem.ntransport)
-    env.info(text)
+-- @param #table queue Queue to print.
+-- @param #string name Name of the queue for info reasons.
+function WAREHOUSE:_PrintQueue(queue, name)
+
+  local total="Empty"
+  if #queue>0 then
+    total=string.format("Total = %d", #queue)
+  end
+
+  -- Init string.
+  local text=string.format("%s at %s: %s",name, self.alias, total)
+  
+  for i,qitem in ipairs(queue) do
+    local qitem=qitem --#WAREHOUSE.Pendingitem
+       
+    local uid=qitem.uid
+    local prio=qitem.prio
+    local clock="N/A"
+    if qitem.timestamp then 
+      clock=tostring(UTILS.SecondsToClock(qitem.timestamp))
+    end
+    local assignment=tostring(qitem.assignment)
+    local requestor=qitem.warehouse.alias
+    local airbasename=qitem.warehouse:GetAirbaseName()
+    local requestorAirbaseCat=qitem.warehouse:GetAirbaseCategory()
+    local assetdesc=qitem.assetdesc
+    local assetdescval=qitem.assetdescval
+    local nasset=tostring(qitem.nasset)
+    local ndelivered=tostring(qitem.ndelivered)    
+    local ncargogroupset="N/A"
+    if qitem.cargogroupset then
+      ncargogroupset=tostring(qitem.cargogroupset:Count()) 
+    end        
+    local transporttype="N/A"
+    if qitem.transporttype then
+      transporttype=qitem.transporttype
+    end        
+    local ntransport="N/A"
+    if qitem.ntransport then
+      ntransport=tostring(qitem.ntransport)    
+    end    
+    local ntransportalive="N/A"
+    if qitem.transportgroupset then
+      ntransportalive=tostring(qitem.transportgroupset:Count())
+    end
+    local ntransporthome="N/A"
+    if qitem.ntransporthome then
+      ntransporthome=tostring(qitem.ntransporthome)
+    end    
+      
+    -- Output text:    
+    text=text..string.format(
+    "\n%d) UID=%d, Prio=%d, Clock=%s, Assignment=%s | Requestor=%s [Airbase=%s, category=%d] | Assets(%s)=%s: #requested=%s / #alive=%s / #delivered=%s | Transport=%s: #requested=%s / #alive=%s / #home=%s",
+    i, uid, prio, clock, assignment, requestor, airbasename, requestorAirbaseCat, assetdesc, assetdescval, nasset, ncargogroupset, ndelivered, transporttype, ntransport, ntransportalive, ntransporthome)
+        
+  end
+  
+  self:I(self.wid..text)
+end
+
+--- Display status of warehouse.
+-- @param #WAREHOUSE self
+function WAREHOUSE:_DisplayStatus()  
+  local text=string.format("\n------------------------------------------------------\n")
+  text=text..string.format("Warehouse %s status: %s\n", self.alias, self:GetState())
+  text=text..string.format("------------------------------------------------------\n")
+  text=text..string.format("Coalition name   = %s\n", self:GetCoalitionName())
+  text=text..string.format("Country name     = %s\n", self:GetCountryName())
+  text=text..string.format("Airbase name     = %s (category=%d)\n", self:GetAirbaseName(), self:GetAirbaseCategory())
+  text=text..string.format("Queued requests  = %d\n", #self.queue)
+  text=text..string.format("Pending requests = %d\n", #self.pending)
+  text=text..string.format("------------------------------------------------------\n")
+  text=text..self:_GetStockAssetsText()
+  self:T(text)
+end
+
+--- Get text about warehouse stock.
+-- @param #WAREHOUSE self
+-- @param #boolean messagetoall If true, send message to all.
+-- @return #string Text about warehouse stock
+function WAREHOUSE:_GetStockAssetsText(messagetoall)
+
+  -- Get assets in stock.
+  local _data=self:GetStockInfo(self.stock)
+  
+  -- Text.  
+  local text="Stock:\n"
+  local total=0
+  for _attribute,_count in pairs(_data) do
+    if _count>0 then
+      local attribute=tostring(UTILS.Split(_attribute, "_")[2])
+      text=text..string.format("%s = %d\n", attribute,_count)
+      total=total+_count
+    end
+  end
+  text=text..string.format("===================\n")
+  text=text..string.format("Total = %d\n", total)
+  text=text..string.format("------------------------------------------------------\n")
+  
+  -- Send message?
+  MESSAGE:New(text, 10):ToAllIf(messagetoall)
+  
+  return text
+end
+
+--- Create or update mark text at warehouse, which is displayed in F10 map showing how many assets of each type are in stock.
+-- Only the coaliton of the warehouse owner is able to see it.
+-- @param #WAREHOUSE self
+-- @return #string Text about warehouse stock
+function WAREHOUSE:_UpdateWarehouseMarkText()
+
+  -- Create a mark with the current assets in stock.
+  if self.markerid~=nil then
+    trigger.action.removeMark(self.markerid)
+  end
+  
+  -- Get assets in stock.
+  local _data=self:GetStockInfo(self.stock)
+
+  -- Text.  
+  local text=string.format("Warehouse state: %s\nTotal assets in stock %d:\n", self:GetState(), #self.stock)
+
+  for _attribute,_count in pairs(_data) do
+    if _count>0 then
+      local attribute=tostring(UTILS.Split(_attribute, "_")[2])
+      text=text..string.format("%s=%d, ", attribute,_count)
+    end
+  end
+  
+  -- Create/update marker at warehouse in F10 map.
+  self.markerid=self:GetCoordinate():MarkToCoalition(text, self:GetCoalition(), true)
+end
+
+--- Display stock items of warehouse.
+-- @param #WAREHOUSE self
+-- @param #table stock Table holding all assets in stock of the warehouse. Each entry is of type @{#WAREHOUSE.Assetitem}.
+function WAREHOUSE:_DisplayStockItems(stock)
+
+  local text=self.wid..string.format("Warehouse %s stock assets:", self.alias)
+  for _i,_stock in pairs(stock) do
+    local mystock=_stock --#WAREHOUSE.Assetitem
+    local name=mystock.templatename
+    local category=mystock.category
+    local cargobaymax=mystock.cargobaymax
+    local cargobaytot=mystock.cargobaytot
+    local nunits=mystock.nunits
+    local range=mystock.range
+    local size=mystock.size
+    local speed=mystock.speedmax
+    local uid=mystock.uid
+    local unittype=mystock.unittype
+    local weight=mystock.weight    
+    local attribute=mystock.attribute
+    text=text..string.format("\n%02d) uid=%d, name=%s, unittype=%s, category=%d, attribute=%s, nunits=%d, speed=%.1f km/h, range=%.1f km, size=%.1f m, weight=%.1f kg, cargobax max=%.1f kg tot=%.1f kg",
+    _i, uid, name, unittype, category, attribute, nunits, speed, range/1000, size, weight, cargobaymax, cargobaytot)
+  end
+
+  self:T3(text)
+end
+
+--- Fireworks!
+-- @param #WAREHOUSE self
+-- @param Core.Point#COORDINATE coord
+function WAREHOUSE:_Fireworks(coord)
+
+  -- Place.
+  coord=coord or self:GetCoordinate()
+
+  -- Fireworks!
+  for i=1,91 do
+    local color=math.random(0,3)
+    coord:Flare(color, i-1)
   end
 end
+
+--- Info Message. Message send to coalition if reports or debug mode activated (and duration > 0). Text self:I(text) added to DCS.log file.
+-- @param #WAREHOUSE self
+-- @param #string text The text of the error message.
+-- @param #number duration Message display duration in seconds. Default 20 sec. If duration is zero, no message is displayed.
+function WAREHOUSE:_InfoMessage(text, duration)
+  duration=duration or 20
+  if duration>0 then
+    MESSAGE:New(text, duration):ToCoalitionIf(self:GetCoalition(), self.Debug or self.Report)
+  end
+  self:I(self.wid..text)
+end
+
+
+--- Debug message. Message send to all if debug mode is activated (and duration > 0). Text self:T(text) added to DCS.log file.
+-- @param #WAREHOUSE self
+-- @param #string text The text of the error message.
+-- @param #number duration Message display duration in seconds. Default 20 sec. If duration is zero, no message is displayed.
+function WAREHOUSE:_DebugMessage(text, duration)
+  duration=duration or 20
+  if duration>0 then
+    MESSAGE:New(text, duration):ToAllIf(self.Debug)
+  end
+  self:T(self.wid..text)
+end
+
+--- Error message. Message send to all (if duration > 0). Text self:E(text) added to DCS.log file.
+-- @param #WAREHOUSE self
+-- @param #string text The text of the error message.
+-- @param #number duration Message display duration in seconds. Default 20 sec. If duration is zero, no message is displayed.
+function WAREHOUSE:_ErrorMessage(text, duration)
+  duration=duration or 20
+  if duration>0 then
+    MESSAGE:New(text, duration):ToAllIf()
+  end
+  self:E(self.wid..text)
+end
+
+
+--- Calculate the maximum height an aircraft can reach for the given parameters.
+-- @param #WAREHOUSE self
+-- @param #number D Total distance in meters from Departure to holding point at destination.
+-- @param #number alphaC Climb angle in rad.
+-- @param #number alphaD Descent angle in rad.
+-- @param #number Hdep AGL altitude of departure point.
+-- @param #number Hdest AGL altitude of destination point.
+-- @param #number Deltahhold Relative altitude of holding point above destination.
+-- @return #number Maximum height the aircraft can reach.
+function WAREHOUSE:_GetMaxHeight(D, alphaC, alphaD, Hdep, Hdest, Deltahhold)
+
+  local Hhold=Hdest+Deltahhold
+  local hdest=Hdest-Hdep
+  local hhold=hdest+Deltahhold
+  
+  local Dp=math.sqrt(D^2 + hhold^2)
+  
+  local alphaS=math.atan(hdest/D) -- slope angle
+  local alphaH=math.atan(hhold/D) -- angle to holding point (could be necative!)
+  
+  local alphaCp=alphaC-alphaH  -- climb angle with slope
+  local alphaDp=alphaD+alphaH  -- descent angle with slope
+  
+  -- ASA triangle.
+  local gammap=math.pi-alphaCp-alphaDp
+  local sCp=Dp*math.sin(alphaDp)/math.sin(gammap)
+  local sDp=Dp*math.sin(alphaCp)/math.sin(gammap)
+  
+  -- Max height from departure.
+  local hmax=sCp*math.sin(alphaC)
+  
+  -- Debug info.
+  if self.Debug then
+    env.info(string.format("Hdep    = %.3f km", Hdep/1000))
+    env.info(string.format("Hdest   = %.3f km", Hdest/1000))
+    env.info(string.format("DetaHold= %.3f km", Deltahhold/1000))
+    env.info()
+    env.info(string.format("D       = %.3f km", D/1000))
+    env.info(string.format("Dp      = %.3f km", Dp/1000))
+    env.info()
+    env.info(string.format("alphaC  = %.3f Deg", math.deg(alphaC)))
+    env.info(string.format("alphaCp = %.3f Deg", math.deg(alphaCp)))
+    env.info()
+    env.info(string.format("alphaD  = %.3f Deg", math.deg(alphaD)))
+    env.info(string.format("alphaDp = %.3f Deg", math.deg(alphaDp)))
+    env.info()
+    env.info(string.format("alphaS  = %.3f Deg", math.deg(alphaS)))
+    env.info(string.format("alphaH  = %.3f Deg", math.deg(alphaH)))
+    env.info()
+    env.info(string.format("sCp      = %.3f km", sCp/1000))
+    env.info(string.format("sDp      = %.3f km", sDp/1000))
+    env.info()
+    env.info(string.format("hmax     = %.3f km", hmax/1000))
+    env.info()
+    
+    -- Descent height
+    local hdescent=hmax-hhold
+    
+    local dClimb   = hmax/math.tan(alphaC)
+    local dDescent = (hmax-hhold)/math.tan(alphaD)
+    local dCruise  = D-dClimb-dDescent
+    
+    env.info(string.format("hmax     = %.3f km", hmax/1000))
+    env.info(string.format("hdescent = %.3f km", hdescent/1000))
+    env.info(string.format("Dclimb   = %.3f km", dClimb/1000))
+    env.info(string.format("Dcruise  = %.3f km", dCruise/1000))
+    env.info(string.format("Ddescent = %.3f km", dDescent/1000))
+    env.info()
+  end
+  
+  return hmax
+end
+
+
+--- Make a flight plan from a departure to a destination airport. 
+-- @param #WAREHOUSE self
+-- @param #WAREHOUSE.Assetitem asset 
+-- @param Wrapper.Airbase#AIRBASE departure Departure airbase.
+-- @param Wrapper.Airbase#AIRBASE destination Destination airbase.
+-- @return #table Table of flightplan waypoints.
+-- @return #table Table of flightplan coordinates. 
+function WAREHOUSE:_GetFlightplan(asset, departure, destination)
+  
+  -- Parameters in SI units (m/s, m).
+  local Vmax=asset.speedmax/3.6
+  local Range=asset.range
+  local category=asset.category
+  local ceiling=asset.DCSdesc.Hmax
+  local Vymax=asset.DCSdesc.VyMax
+    
+  -- Max cruise speed 90% of max speed.
+  local VxCruiseMax=0.90*Vmax
+
+  -- Min cruise speed 70% of max cruise or 600 km/h whichever is lower.
+  local VxCruiseMin = math.min(VxCruiseMax*0.70, 166)
+  
+  -- Cruise speed (randomized). Expectation value at midpoint between min and max.
+  local VxCruise = UTILS.RandomGaussian((VxCruiseMax-VxCruiseMin)/2+VxCruiseMin, (VxCruiseMax-VxCruiseMax)/4, VxCruiseMin, VxCruiseMax)
+  
+  -- Climb speed 90% ov Vmax but max 720 km/h.
+  local VxClimb = math.min(Vmax*0.90, 200)
+  
+  -- Descent speed 60% of Vmax but max 500 km/h.
+  local VxDescent = math.min(Vmax*0.60, 140)
+  
+  -- Holding speed is 90% of descent speed.
+  local VxHolding = VxDescent*0.9
+  
+  -- Final leg is 90% of holding speed.
+  local VxFinal = VxHolding*0.9
+  
+  -- Reasonably civil climb speed Vy=1500 ft/min = 7.6 m/s but max aircraft specific climb rate.
+  local VyClimb=math.min(7.6, Vymax)
+  
+  -- Climb angle in rad.
+  --local AlphaClimb=math.asin(VyClimb/VxClimb)
+  local AlphaClimb=math.rad(4)
+  
+  -- Descent angle in rad. Moderate 4 degrees.
+  local AlphaDescent=math.rad(4)
+  
+  -- Expected cruise level (peak of Gaussian distribution)
+  local FLcruise_expect=150*RAT.unit.FL2m
+  if category==Group.Category.HELICOPTER then 
+    FLcruise_expect=1000 -- 1000 m ASL
+  end
+  
+  -------------------------
+  --- DEPARTURE AIRPORT ---
+  -------------------------
+  
+  -- Coordinates of departure point.
+  local Pdeparture=departure:GetCoordinate()
+  
+  -- Height ASL of departure point.
+  local H_departure=Pdeparture.y
+  
+  --------------------------- 
+  --- DESTINATION AIRPORT ---
+  ---------------------------
+  
+  -- Position of destination airport.
+  local Pdestination=destination:GetCoordinate()
+  
+  -- Height ASL of destination airport/zone.
+  local H_destination=Pdestination.y
+   
+  -----------------------------
+  --- DESCENT/HOLDING POINT ---
+  -----------------------------
+
+  -- Get a random point between 5 and 10 km away from the destination.
+  local Rhmin=5000
+  local Rhmax=10000
+  
+  -- For helos we set a distance between 500 to 1000 m.
+  if category==Group.Category.HELICOPTER then    
+    Rhmin=500
+    Rhmax=1000
+  end
+  
+  -- Coordinates of the holding point. y is the land height at that point.
+  local Pholding=Pdestination:GetRandomCoordinateInRadius(Rhmax, Rhmin)
+
+  -- Distance from holding point to final destination (not used).
+  local d_holding=Pholding:Get2DDistance(Pdestination)
+  
+  -- AGL height of holding point.
+  local H_holding=Pholding.y
+  
+  ---------------
+  --- GENERAL ---
+  ---------------
+  
+  -- We go directly to the holding point not the destination airport. From there, planes are guided by DCS to final approach.
+  local heading=Pdeparture:HeadingTo(Pholding)
+  local d_total=Pdeparture:Get2DDistance(Pholding)
+
+  ------------------------------
+  --- Holding Point Altitude ---
+  ------------------------------
+  
+  -- Holding point altitude. For planes between 1600 and 2400 m AGL. For helos 160 to 240 m AGL.
+  local h_holding=1200
+  if category==Group.Category.HELICOPTER then
+    h_holding=150
+  end
+  h_holding=UTILS.Randomize(h_holding, 0.2)
+  
+  -- Max holding altitude.
+  local DeltaholdingMax=self:_GetMaxHeight(d_total, AlphaClimb, AlphaDescent, H_departure, H_holding, 0)
+  
+  if h_holding>DeltaholdingMax then
+    h_holding=math.abs(DeltaholdingMax)
+  end
+  
+  -- This is the height ASL of the holding point we want to fly to.
+  local Hh_holding=H_holding+h_holding
+  
+  ---------------------------
+  --- Max Flight Altitude ---
+  ---------------------------  
+  
+  -- Get max flight altitude relative to H_departure.
+  local h_max=self:_GetMaxHeight(d_total, AlphaClimb, AlphaDescent, H_departure, H_holding, h_holding)
+
+  -- Max flight level ASL aircraft can reach for given angles and distance.
+  local FLmax = h_max+H_departure
+      
+  --CRUISE  
+  -- Min cruise alt is just above holding point at destination or departure height, whatever is larger.
+  local FLmin=math.max(H_departure, Hh_holding)
+  
+  -- Ensure that FLmax not above its service ceiling.
+  FLmax=math.min(FLmax, ceiling)
+  
+  -- If the route is very short we set FLmin a bit lower than FLmax.
+  if FLmin>FLmax then
+    FLmin=FLmax
+  end
+  
+  -- Expected cruise altitude - peak of gaussian distribution.
+  if FLcruise_expect<FLmin then
+    FLcruise_expect=FLmin
+  end
+  if FLcruise_expect>FLmax then
+    FLcruise_expect=FLmax
+  end
+    
+  -- Set cruise altitude. Selected from Gaussian distribution but limited to FLmin and FLmax.
+  local FLcruise=UTILS.RandomGaussian(FLcruise_expect, math.abs(FLmax-FLmin)/4, FLmin, FLmax)
+
+  -- Climb and descent heights.
+  local h_climb   = FLcruise - H_departure
+  local h_descent = FLcruise - Hh_holding
+    
+  -- Get distances.
+  local d_climb   = h_climb/math.tan(AlphaClimb)
+  local d_descent = h_descent/math.tan(AlphaDescent)
+  local d_cruise  = d_total-d_climb-d_descent
+  
+  -- Debug.
+  local text=string.format("Flight plan:\n")
+  text=text..string.format("Vx max        = %.2f km/h\n", Vmax*3.6)
+  text=text..string.format("Vx climb      = %.2f km/h\n", VxClimb*3.6)
+  text=text..string.format("Vx cruise     = %.2f km/h\n", VxCruise*3.6)
+  text=text..string.format("Vx descent    = %.2f km/h\n", VxDescent*3.6)
+  text=text..string.format("Vx holding    = %.2f km/h\n", VxHolding*3.6)
+  text=text..string.format("Vx final      = %.2f km/h\n", VxFinal*3.6)
+  text=text..string.format("Vy max        = %.2f m/s\n",  Vymax)
+  text=text..string.format("Vy climb      = %.2f m/s\n",  VyClimb)
+  text=text..string.format("Alpha Climb   = %.2f Deg\n",  math.deg(AlphaClimb))
+  text=text..string.format("Alpha Descent = %.2f Deg\n",  math.deg(AlphaDescent))
+  text=text..string.format("Dist climb    = %.3f km\n",   d_climb/1000)
+  text=text..string.format("Dist cruise   = %.3f km\n",   d_cruise/1000)
+  text=text..string.format("Dist descent  = %.3f km\n",   d_descent/1000)
+  text=text..string.format("Dist total    = %.3f km\n",   d_total/1000)
+  text=text..string.format("h_climb       = %.3f km\n",   h_climb/1000)
+  text=text..string.format("h_desc        = %.3f km\n",   h_descent/1000)
+  text=text..string.format("h_holding     = %.3f km\n",   h_holding/1000)
+  text=text..string.format("h_max         = %.3f km\n",   h_max/1000)
+  text=text..string.format("FL min        = %.3f km\n",   FLmin/1000)
+  text=text..string.format("FL expect     = %.3f km\n",   FLcruise_expect/1000)
+  text=text..string.format("FL cruise *   = %.3f km\n",   FLcruise/1000)
+  text=text..string.format("FL max        = %.3f km\n",   FLmax/1000)
+  text=text..string.format("Ceiling       = %.3f km\n",   ceiling/1000)
+  text=text..string.format("Max range     = %.3f km\n",   Range/1000)
+  self:T(self.wid..text)
+    
+  -- Ensure that cruise distance is positve. Can be slightly negative in special cases. And we don't want to turn back.
+  if d_cruise<0 then
+    d_cruise=100
+  end
+
+  ------------------------
+  --- Create Waypoints ---
+  ------------------------
+
+  -- Waypoints and coordinates
+  local wp={}
+  local c={}
+  
+  --- Departure/Take-off
+  c[#c+1]=Pdeparture
+  wp[#wp+1]=Pdeparture:WaypointAir("RADIO", COORDINATE.WaypointType.TakeOffParking, COORDINATE.WaypointAction.FromParkingArea, VxClimb, true, departure, nil, "Departure")
+  
+  --- Begin of Cruise
+  local Pcruise=Pdeparture:Translate(d_climb, heading)
+  Pcruise.y=FLcruise
+  c[#c+1]=Pcruise
+  wp[#wp+1]=Pcruise:WaypointAir("BARO", COORDINATE.WaypointType.TurningPoint, COORDINATE.WaypointAction.TurningPoint, VxCruise, true, nil, nil, "Cruise")
+
+  --- Descent    
+  local Pdescent=Pcruise:Translate(d_cruise, heading)
+  Pdescent.y=FLcruise
+  c[#c+1]=Pdescent
+  wp[#wp+1]=Pdescent:WaypointAir("BARO", COORDINATE.WaypointType.TurningPoint, COORDINATE.WaypointAction.TurningPoint, VxDescent, true, nil, nil, "Descent")
+    
+  --- Holding point
+  Pholding.y=H_holding+h_holding
+  c[#c+1]=Pholding
+  wp[#wp+1]=Pholding:WaypointAir("BARO", COORDINATE.WaypointType.TurningPoint, COORDINATE.WaypointAction.TurningPoint, VxHolding, true, nil, nil, "Holding")  
+
+  --- Final destination.  
+  c[#c+1]=Pdestination
+  wp[#wp+1]=Pdestination:WaypointAir("RADIO", COORDINATE.WaypointType.Land, COORDINATE.WaypointAction.Landing, VxFinal, true,  destination, nil, "Final Destination")
+  
+
+  -- Mark points at waypoints for debugging.
+  if self.Debug then
+    for i,coord in pairs(c) do
+      local coord=coord --Core.Point#COORDINATE
+      local dist=0
+      if i>1 then
+        dist=coord:Get2DDistance(c[i-1])
+      end
+      coord:MarkToAll(string.format("Waypoint %i, distance = %.2f km",i, dist/1000))
+    end  
+  end
+      
+  return wp,c
+end
+
+
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+--[[
+  --- Departure/Take-off
+  c[#c+1]=Pdeparture
+  wp[#wp+1]=Pdeparture:WaypointAir("RADIO", COORDINATE.WaypointType.TakeOffParking, COORDINATE.WaypointAction.FromParkingArea, VxClimb, true, departure, nil, "Departure")
+  
+  --- Climb 
+  local Pclimb=Pdeparture:Translate(d_climb/2, heading)
+  Pclimb.y=H_departure+(FLcruise-H_departure)/2
+  c[#c+1]=Pclimb
+  wp[#wp+1]=Pclimb:WaypointAir("BARO", COORDINATE.WaypointType.TurningPoint, COORDINATE.WaypointAction.TurningPoint, VxClimb, true, nil, nil, "Climb")
+  
+  --- Begin of Cruise
+  local Pcruise1=Pclimb:Translate(d_climb/2, heading)
+  Pcruise1.y=FLcruise
+  c[#c+1]=Pcruise1
+  wp[#wp+1]=Pcruise1:WaypointAir("BARO", COORDINATE.WaypointType.TurningPoint, COORDINATE.WaypointAction.TurningPoint, VxCruise, true, nil, nil, "Begin of Cruise")
+
+  --- End of Cruise    
+  local Pcruise2=Pcruise1:Translate(d_cruise, heading)
+  Pcruise2.y=FLcruise
+  c[#c+1]=Pcruise2
+  wp[#wp+1]=Pcruise2:WaypointAir("BARO", COORDINATE.WaypointType.TurningPoint, COORDINATE.WaypointAction.TurningPoint, VxCruise, true, nil, nil, "End of Cruise")
+
+  --- Descent  
+  local Pdescent=Pcruise2:Translate(d_descent/2, heading)
+  Pdescent.y=FLcruise-(FLcruise-(h_holding+H_holding))/2
+  c[#c+1]=Pdescent
+  wp[#wp+1]=Pcruise2:WaypointAir("BARO", COORDINATE.WaypointType.TurningPoint, COORDINATE.WaypointAction.TurningPoint, VxDescent, true, nil, nil, "Descent")
+    
+  --- Holding point
+   Pholding.y=H_holding+h_holding  
+  c[#c+1]=Pholding
+  wp[#wp+1]=Pholding:WaypointAir("BARO", COORDINATE.WaypointType.TurningPoint, COORDINATE.WaypointAction.TurningPoint, VxHolding, true, nil, nil, "Holding")  
+
+  --- Final destination.  
+  c[#c+1]=Pdestination
+  wp[#wp+1]=Pdestination:WaypointAir("RADIO", COORDINATE.WaypointType.Land, COORDINATE.WaypointAction.Landing, VxFinal, true,  destination, nil, "Final Destination")
+]]
 --- **AI** -- Balance player slots with AI to create an engaging simulation environment, independent of the amount of players. 
 -- 
 -- **Features:**
@@ -76071,7 +82436,7 @@ function AI_FORMATION:onafterFormationLine( FollowGroupSet, From , Event , To, X
   
   local FollowSet = FollowGroupSet:GetSet()
   
-  local i = 0
+  local i = 1  --FF i=0 caused first unit to have no XSpace! Probably needs further adjustments. This is just a quick work around.
   
   for FollowID, FollowGroup in pairs( FollowSet ) do
   
@@ -76604,6 +82969,7 @@ function AI_CARGO:New( Carrier, CargoSet )
   -- @param #string To
   
   for _, CarrierUnit in pairs( Carrier:GetUnits() ) do
+    local CarrierUnit = CarrierUnit -- Wrapper.Unit#UNIT
     CarrierUnit:SetCargoBayWeightLimit()
   end
   
@@ -76626,6 +82992,40 @@ function AI_CARGO:IsRelocating()
 end
 
 
+--- On after Pickup event.
+-- @param #AI_CARGO self
+-- @param Wrapper.Group#GROUP APC
+-- @param From
+-- @param Event
+-- @param To
+-- @param Core.Point#COORDINATE Coordinate of the pickup point.
+-- @param #number Speed Speed in km/h to drive to the pickup coordinate. Default is 50% of max possible speed the unit can go.
+-- @param #number Height Height in meters to move to the home coordinate.
+-- @param Core.Zone#ZONE PickupZone (optional) The zone where the cargo will be picked up. The PickupZone can be nil, if there wasn't any PickupZoneSet provided.
+function AI_CARGO:onafterPickup( APC, From, Event, To, Coordinate, Speed, Height, PickupZone )
+
+  self.Transporting = false
+  self.Relocating = true
+  
+end
+
+
+--- On after Deploy event.
+-- @param #AI_CARGO self
+-- @param Wrapper.Group#GROUP APC
+-- @param From
+-- @param Event
+-- @param To
+-- @param Core.Point#COORDINATE Coordinate Deploy place.
+-- @param #number Speed Speed in km/h to drive to the depoly coordinate. Default is 50% of max possible speed the unit can go.
+-- @param #number Height Height in meters to move to the deploy coordinate.
+-- @param Core.Zone#ZONE DeployZone The zone where the cargo will be deployed.
+function AI_CARGO:onafterDeploy( APC, From, Event, To, Coordinate, Speed, Height, DeployZone )
+
+  self.Relocating = false
+  self.Transporting = true
+  
+end
 
 --- On before Load event.
 -- @param #AI_CARGO self
@@ -76639,7 +83039,7 @@ function AI_CARGO:onbeforeLoad( Carrier, From, Event, To, PickupZone )
 
   local Boarding = false
 
-  local LoadInterval = 2
+  local LoadInterval = 5
   local LoadDelay = 0
   local Carrier_List = {}
   local Carrier_Weight = {}
@@ -76659,12 +83059,12 @@ function AI_CARGO:onbeforeLoad( Carrier, From, Event, To, PickupZone )
     local Carrier_Count = #Carrier_List
     local Carrier_Index = 1
       
+    local Loaded = false
+
     for _, Cargo in UTILS.spairs( self.CargoSet:GetSet(), function( t, a, b ) return t[a]:GetWeight() > t[b]:GetWeight() end ) do
       local Cargo = Cargo -- Cargo.Cargo#CARGO
 
       self:F( { IsUnLoaded = Cargo:IsUnLoaded(), IsDeployed = Cargo:IsDeployed(), Cargo:GetName(), Carrier:GetName() } )
-
-      local Loaded = false
 
       -- Try all Carriers, but start from the one according the Carrier_Index
       for Carrier_Loop = 1, #Carrier_List do
@@ -76677,7 +83077,7 @@ function AI_CARGO:onbeforeLoad( Carrier, From, Event, To, PickupZone )
           Carrier_Index = 1
         end
         
-        if Cargo:IsUnLoaded() then -- and not Cargo:IsDeployed() then
+        if Cargo:IsUnLoaded() and not Cargo:IsDeployed() then
           if Cargo:IsInLoadRadius( CarrierUnit:GetCoordinate() ) then
             self:F( { "In radius", CarrierUnit:GetName() } )
             
@@ -76687,8 +83087,8 @@ function AI_CARGO:onbeforeLoad( Carrier, From, Event, To, PickupZone )
             if Carrier_Weight[CarrierUnit] > CargoWeight then --and CargoBayFreeVolume > CargoVolume then
               Carrier:RouteStop()
               --Cargo:Ungroup()
-              Cargo:__Board( LoadDelay, CarrierUnit, 25 )
-              LoadDelay = LoadDelay + LoadInterval
+              Cargo:__Board( -LoadDelay, CarrierUnit )
+              LoadDelay = LoadDelay + Cargo:GetCount() * LoadInterval
               self:__Board( LoadDelay, Cargo, CarrierUnit, PickupZone )
   
               -- So now this CarrierUnit has Cargo that is being loaded.
@@ -76706,11 +83106,12 @@ function AI_CARGO:onbeforeLoad( Carrier, From, Event, To, PickupZone )
         
       end
       
-      if not Loaded then
-        -- No loading happened, so we need to pickup something else.
-        self.Relocating = false
-      end
       
+    end
+    
+    if not Loaded == true then
+      -- No loading happened, so we need to pickup something else.
+      self.Relocating = false
     end
   end
 
@@ -76733,12 +83134,12 @@ function AI_CARGO:onafterBoard( Carrier, From, Event, To, Cargo, CarrierUnit, Pi
   if Carrier and Carrier:IsAlive() then
     self:F({ IsLoaded = Cargo:IsLoaded(), Cargo:GetName(), Carrier:GetName() } )
     if not Cargo:IsLoaded() then
-      self:__Board( 10, Cargo, CarrierUnit, PickupZone )
+      self:__Board( -10, Cargo, CarrierUnit, PickupZone )
       return
     end
   end
 
-  self:__Loaded( 10, Cargo, CarrierUnit, PickupZone )
+  self:__Loaded( 0.1, Cargo, CarrierUnit, PickupZone )
   
 end
 
@@ -76766,7 +83167,7 @@ function AI_CARGO:onafterLoaded( Carrier, From, Event, To, Cargo, PickupZone )
   end
   
   if Loaded then
-    self:PickedUp( PickupZone )
+    self:__PickedUp( 0.1, PickupZone )
   end
   
 end
@@ -76782,6 +83183,19 @@ function AI_CARGO:onafterPickedUp( Carrier, From, Event, To, PickupZone )
   self:F( { Carrier, From, Event, To } )
 
   Carrier:RouteResume()
+
+  local HasCargo = false
+  if Carrier and Carrier :IsAlive() then
+    for Cargo, CarrierUnit in pairs( self.Carrier_Cargo ) do
+      HasCargo = true
+      break
+    end
+  end
+
+  self.Relocating = false
+  if HasCargo then
+    self.Transporting = true
+  end
   
 end
 
@@ -76809,7 +83223,7 @@ function AI_CARGO:onafterUnload( Carrier, From, Event, To, DeployZone )
         self:F( { Cargo = Cargo:GetName(), Isloaded = Cargo:IsLoaded() } )
         if Cargo:IsLoaded() then
           Cargo:__UnBoard( UnboardDelay )
-          UnboardDelay = UnboardDelay + UnboardInterval
+          UnboardDelay = UnboardDelay + Cargo:GetCount() * UnboardInterval
           Cargo:SetDeployed( true )
           self:__Unboard( UnboardDelay, Cargo, CarrierUnit, DeployZone )
         end 
@@ -76892,7 +83306,7 @@ end
 function AI_CARGO:onafterDeployed( Carrier, From, Event, To, DeployZone )
   self:F( { Carrier, From, Event, To, DeployZone = DeployZone } )
 
-    self:__Guard( 0.1 )
+    self.Transporting = false
 
 end
 
@@ -77167,7 +83581,7 @@ end
 -- @param #string Event Event.
 -- @param #string To To state.
 function AI_CARGO_APC:onafterMonitor( APC, From, Event, To )
-  self:F( { APC, From, Event, To } )
+  self:F( { APC, From, Event, To, IsTransporting = self:IsTransporting() } )
 
   if self.CombatRadius > 0 then
     if APC and APC:IsAlive() then
@@ -77253,8 +83667,6 @@ function AI_CARGO_APC._Pickup( APC, self, Coordinate, Speed, PickupZone )
 
   if APC:IsAlive() then
     self:Load( PickupZone )
-    self.Relocating = false
-    self.Transporting = true
   end
 end
 
@@ -77265,8 +83677,6 @@ function AI_CARGO_APC._Deploy( APC, self, Coordinate, DeployZone )
 
   if APC:IsAlive() then
     self:Unload( DeployZone )
-    self.Transporting = false
-    self.Relocating = false
   end
 end
 
@@ -77280,8 +83690,9 @@ end
 -- @param To
 -- @param Core.Point#COORDINATE Coordinate of the pickup point.
 -- @param #number Speed Speed in km/h to drive to the pickup coordinate. Default is 50% of max possible speed the unit can go.
+-- @param #number Height Height in meters to move to the pickup coordinate. This parameter is ignored for APCs.
 -- @param Core.Zone#ZONE PickupZone (optional) The zone where the cargo will be picked up. The PickupZone can be nil, if there wasn't any PickupZoneSet provided.
-function AI_CARGO_APC:onafterPickup( APC, From, Event, To, Coordinate, Speed, PickupZone )
+function AI_CARGO_APC:onafterPickup( APC, From, Event, To, Coordinate, Speed, Height, PickupZone )
 
   if APC and APC:IsAlive() then
 
@@ -77303,8 +83714,7 @@ function AI_CARGO_APC:onafterPickup( APC, From, Event, To, Coordinate, Speed, Pi
       AI_CARGO_APC._Pickup( APC, self, Coordinate, Speed, PickupZone )
     end
 
-    self.Relocating = true
-    self.Transporting = false
+    self:GetParent( self, AI_CARGO_APC ).onafterPickup( self, APC, From, Event, To, Coordinate, Speed, Height, PickupZone )
   end
   
 end
@@ -77318,7 +83728,9 @@ end
 -- @param To
 -- @param Core.Point#COORDINATE Coordinate Deploy place.
 -- @param #number Speed Speed in km/h to drive to the depoly coordinate. Default is 50% of max possible speed the unit can go.
-function AI_CARGO_APC:onafterDeploy( APC, From, Event, To, Coordinate, Speed, DeployZone )
+-- @param #number Height Height in meters to move to the deploy coordinate. This parameter is ignored for APCs.
+-- @param Core.Zone#ZONE DeployZone The zone where the cargo will be deployed.
+function AI_CARGO_APC:onafterDeploy( APC, From, Event, To, Coordinate, Speed, Height, DeployZone )
 
   if APC and APC:IsAlive() then
 
@@ -77336,10 +83748,26 @@ function AI_CARGO_APC:onafterDeploy( APC, From, Event, To, Coordinate, Speed, De
   
     APC:Route( Waypoints, 1 ) -- Move after a random seconds to the Route. See the Route method for details.
 
-    self.Relocating = false
-    self.Transporting = true
+    self:GetParent( self, AI_CARGO_APC ).onafterDeploy( self, APC, From, Event, To, Coordinate, Speed, Height, DeployZone )
+
   end
   
+end
+
+--- On after Deployed event.
+-- @param #AI_CARGO_APC self
+-- @param Wrapper.Group#GROUP Carrier
+-- @param #string From From state.
+-- @param #string Event Event.
+-- @param #string To To state.
+-- @param Core.Zone#ZONE DeployZone The zone wherein the cargo is deployed. This can be any zone type, like a ZONE, ZONE_GROUP, ZONE_AIRBASE.
+function AI_CARGO_APC:onafterDeployed( APC, From, Event, To, DeployZone )
+  self:F( { APC, From, Event, To, DeployZone = DeployZone } )
+
+  self:__Guard( 0.1 )
+
+  self:GetParent( self, AI_CARGO_APC ).onafterDeployed( self, APC, From, Event, To, DeployZone )
+
 end
 
 
@@ -77351,7 +83779,8 @@ end
 -- @param To
 -- @param Core.Point#COORDINATE Coordinate Home place.
 -- @param #number Speed Speed in km/h to drive to the pickup coordinate. Default is 50% of max possible speed the unit can go.
-function AI_CARGO_APC:onafterHome( APC, From, Event, To, Coordinate, Speed, HomeZone )
+-- @param #number Height Height in meters to move to the home coordinate. This parameter is ignored for APCs.
+function AI_CARGO_APC:onafterHome( APC, From, Event, To, Coordinate, Speed, Height, HomeZone )
 
   if APC and APC:IsAlive() ~= nil then
 
@@ -77547,15 +83976,8 @@ function AI_CARGO_HELICOPTER:New( Helicopter, CargoSet )
   return self
 end
 
-function AI_CARGO_HELICOPTER:IsTransporting()
 
-  return self.Transporting == true
-end
 
-function AI_CARGO_HELICOPTER:IsRelocating()
-
-  return self.Relocating == true
-end
 
 
 --- Set the Carrier.
@@ -77763,33 +84185,6 @@ end
 
 
 
---- On after PickedUp event, raised when all cargo has been loaded into the CarrierGroup.
--- @param #AI_CARGO_HELICOPTER self
--- @param Wrapper.Group#GROUP Helicopter
--- @param #string From From state.
--- @param #string Event Event.
--- @param #string To To state.
--- @param Cargo.Cargo#CARGO Cargo Cargo object.
--- @return #boolean Cargo is loaded.
--- @param Core.Zone#ZONE PickupZone (optional) The zone where the cargo will be picked up. The PickupZone can be nil, if there wasn't any PickupZoneSet provided.
-function AI_CARGO_HELICOPTER:onafterPickedUp( Helicopter, From, Event, To, PickupZone )
-  self:F( { Helicopter, From, Event, To } )
-  
-  local HasCargo = false
-  if Helicopter and Helicopter:IsAlive() then
-    for Cargo, CarrierUnit in pairs( self.Carrier_Cargo ) do
-      HasCargo = true
-      break
-    end
-    self.Relocating = false
-    if HasCargo then
-      self.Transporting = true
-    end
-  end
-end
-
-
-
 --- On after Deployed event.
 -- @param #AI_CARGO_HELICOPTER self
 -- @param Wrapper.Group#GROUP Helicopter
@@ -77811,7 +84206,8 @@ function AI_CARGO_HELICOPTER:onafterDeployed( Helicopter, From, Event, To, Deplo
     end, Helicopter
   )
   
-  self.Transporting = false
+  self:GetParent( self, AI_CARGO_HELICOPTER ).onafterDeployed( self, Helicopter, From, Event, To, DeployZone )
+  
   
 end
 
@@ -77823,15 +84219,16 @@ end
 -- @param To
 -- @param Core.Point#COORDINATE Coordinate Pickup place.
 -- @param #number Speed Speed in km/h to drive to the pickup coordinate. Default is 50% of max possible speed the unit can go.
+-- @param #number Height Height in meters to move to the pickup coordinate. This parameter is ignored for APCs.
 -- @param Core.Zone#ZONE PickupZone (optional) The zone where the cargo will be picked up. The PickupZone can be nil, if there wasn't any PickupZoneSet provided.
-function AI_CARGO_HELICOPTER:onafterPickup( Helicopter, From, Event, To, Coordinate, Speed, PickupZone )
+function AI_CARGO_HELICOPTER:onafterPickup( Helicopter, From, Event, To, Coordinate, Speed, Height, PickupZone )
 
   if Helicopter and Helicopter:IsAlive() ~= nil then
 
     Helicopter:Activate()
 
     self.RoutePickup = true
-    Coordinate.y = math.random( 50, 500 )
+    Coordinate.y = Height
     
     local _speed=Speed or Helicopter:GetSpeedMax()*0.5        
      
@@ -77877,8 +84274,8 @@ function AI_CARGO_HELICOPTER:onafterPickup( Helicopter, From, Event, To, Coordin
     
     self.PickupZone = PickupZone
 
-    self.Relocating = true
-    self.Transporting = false
+    self:GetParent( self, AI_CARGO_HELICOPTER ).onafterPickup( self, Helicopter, From, Event, To, Coordinate, Speed, Height, PickupZone )
+
   end
   
 end
@@ -77899,7 +84296,8 @@ end
 -- @param To
 -- @param Core.Point#COORDINATE Coordinate Place at which the cargo is deployed.
 -- @param #number Speed Speed in km/h to drive to the pickup coordinate. Default is 50% of max possible speed the unit can go.
-function AI_CARGO_HELICOPTER:onafterDeploy( Helicopter, From, Event, To, Coordinate, Speed, DeployZone )
+-- @param #number Height Height in meters to move to the deploy coordinate.
+function AI_CARGO_HELICOPTER:onafterDeploy( Helicopter, From, Event, To, Coordinate, Speed, Height, DeployZone )
 
   if Helicopter and Helicopter:IsAlive() ~= nil then
 
@@ -77910,7 +84308,7 @@ function AI_CARGO_HELICOPTER:onafterDeploy( Helicopter, From, Event, To, Coordin
     
     --- Calculate the target route point.
 
-    Coordinate.y = math.random( 50, 500 )
+    Coordinate.y = Height
     
     local _speed=Speed or Helicopter:GetSpeedMax()*0.5      
 
@@ -77955,8 +84353,7 @@ function AI_CARGO_HELICOPTER:onafterDeploy( Helicopter, From, Event, To, Coordin
     -- Now route the helicopter
     Helicopter:Route( Route, 0 )
 
-    self.Relocating = false
-    self.Transporting = true
+    self:GetParent( self, AI_CARGO_HELICOPTER ).onafterDeploy( self, Helicopter, From, Event, To, Coordinate, Speed, Height, DeployZone )
   end
   
 end
@@ -77970,8 +84367,9 @@ end
 -- @param To
 -- @param Core.Point#COORDINATE Coordinate Home place.
 -- @param #number Speed Speed in km/h to drive to the pickup coordinate. Default is 50% of max possible speed the unit can go.
+-- @param #number Height Height in meters to move to the home coordinate.
 -- @param Core.Zone#ZONE HomeZone The zone wherein the carrier will return when all cargo has been transported. This can be any zone type, like a ZONE, ZONE_GROUP, ZONE_AIRBASE.
-function AI_CARGO_HELICOPTER:onafterHome( Helicopter, From, Event, To, Coordinate, Speed, HomeZone )
+function AI_CARGO_HELICOPTER:onafterHome( Helicopter, From, Event, To, Coordinate, Speed, Height, HomeZone )
 
   if Helicopter and Helicopter:IsAlive() ~= nil then
 
@@ -77981,7 +84379,7 @@ function AI_CARGO_HELICOPTER:onafterHome( Helicopter, From, Event, To, Coordinat
     
     --- Calculate the target route point.
 
-    Coordinate.y = math.random( 50, 200 )    
+    Coordinate.y = Height
     
     Speed = Speed or Helicopter:GetSpeedMax()*0.5          
 
@@ -78172,18 +84570,6 @@ function AI_CARGO_AIRPLANE:New( Airplane, CargoSet )
 end
 
 
-function AI_CARGO_AIRPLANE:IsTransporting()
-
-  return self.Transporting == true
-end
-
-function AI_CARGO_AIRPLANE:IsRelocating()
-
-  return self.Relocating == true
-end
-
-
-
 --- Set the Carrier (controllable). Also initializes events for carrier and defines the coalition.
 -- @param #AI_CARGO_AIRPLANE self
 -- @param Wrapper.Group#GROUP Airplane Transport plane.
@@ -78278,18 +84664,13 @@ function AI_CARGO_AIRPLANE:onafterLanded( Airplane, From, Event, To )
 
     -- Aircraft was sent to this airbase to pickup troops. Initiate loadling.
     if self.RoutePickup == true then
-      env.info("FF load airplane "..Airplane:GetName())
       self:Load( self.PickupZone )
-      self.RoutePickup = false
-      self.Relocating = true
     end
     
     -- Aircraft was send to this airbase to deploy troops. Initiate unloading.
     if self.RouteDeploy == true then
       self:Unload()
       self.RouteDeploy = false
-      self.Transporting = false
-      self.Relocating = false
     end
      
   end
@@ -78305,18 +84686,19 @@ end
 -- @param #string To To state.
 -- @param Core.Point#COORDINATE Coordinate
 -- @param #number Speed in km/h for travelling to pickup base.
--- @param Core.Zone#ZONE_AIRBASE PickupZone
-function AI_CARGO_AIRPLANE:onafterPickup( Airplane, From, Event, To, Coordinate, Speed, PickupZone )
+-- @param #number Height Height in meters to move to the pickup coordinate.
+-- @param Core.Zone#ZONE_AIRBASE (optional) PickupZone The zone where the cargo will be picked up.
+function AI_CARGO_AIRPLANE:onafterPickup( Airplane, From, Event, To, Coordinate, Speed, Height, PickupZone )
 
-  if Airplane and Airplane:IsAlive()~=nil then
-    env.info("FF onafterpick aircraft alive")
+  if Airplane and Airplane:IsAlive() then
+    --env.info("FF onafterpick aircraft alive")
     
     self.PickupZone = PickupZone
   
     -- Get closest airbase of current position.
     local ClosestAirbase, DistToAirbase=Airplane:GetCoordinate():GetClosestAirbase()
     
-    env.info("FF onafterpickup closest airbase "..ClosestAirbase:GetName())
+    --env.info("FF onafterpickup closest airbase "..ClosestAirbase:GetName())
   
     -- Two cases. Aircraft spawned in air or at an airbase.
     if Airplane:InAir() then
@@ -78325,18 +84707,19 @@ function AI_CARGO_AIRPLANE:onafterPickup( Airplane, From, Event, To, Coordinate,
       self.Airbase=ClosestAirbase
     end
     
+    -- Set pickup airbase.
     local Airbase = PickupZone:GetAirbase()
     
     -- Distance from closest to pickup airbase ==> we need to know if we are already at the pickup airbase. 
     local Dist = Airbase:GetCoordinate():Get2DDistance(ClosestAirbase:GetCoordinate())
-    env.info("Distance closest to pickup airbase = "..Dist)
+    --env.info("Distance closest to pickup airbase = "..Dist)
     
     if Airplane:InAir() or Dist>500 then
     
-      env.info("FF onafterpickup routing to airbase "..ClosestAirbase:GetName())
+      --env.info("FF onafterpickup routing to airbase "..ClosestAirbase:GetName())
     
       -- Route aircraft to pickup airbase.
-      self:Route( Airplane, Airbase, Speed ) 
+      self:Route( Airplane, Airbase, Speed, Height ) 
           
       -- Set airbase as starting point in the next Route() call.
       self.Airbase = Airbase
@@ -78345,7 +84728,7 @@ function AI_CARGO_AIRPLANE:onafterPickup( Airplane, From, Event, To, Coordinate,
       self.RoutePickup = true
       
     else
-      env.info("FF onafterpick calling landed")
+      --env.info("FF onafterpick calling landed")
     
       -- We are already at the right airbase ==> Landed ==> triggers loading of troops. Is usually called at engine shutdown event.
       self.RoutePickup=true
@@ -78353,10 +84736,9 @@ function AI_CARGO_AIRPLANE:onafterPickup( Airplane, From, Event, To, Coordinate,
       
     end
 
-    self.Transporting = false
-    self.Relocating = true
+    self:GetParent( self, AI_CARGO_AIRPLANE ).onafterPickup( self, Airplane, From, Event, To, Coordinate, Speed, Height, PickupZone )
   else
-    env.info("FF onafterpick aircraft not alive")
+    --env.info("FF onafterpick aircraft not alive")
   end
 
   
@@ -78370,8 +84752,9 @@ end
 -- @param #string To To state.
 -- @param Core.Point#COORDINATE Coordinate
 -- @param #number Speed in km/h for travelling to pickup base.
--- @param Core.Zone#ZONE_AIRBASE DeployZone
-function AI_CARGO_AIRPLANE:onafterDeploy( Airplane, From, Event, To, Coordinate, Speed, DeployZone )
+-- @param #number Height Height in meters to move to the home coordinate.
+-- @param Core.Zone#ZONE_AIRBASE DeployZone The zone where the cargo will be deployed.
+function AI_CARGO_AIRPLANE:onafterDeploy( Airplane, From, Event, To, Coordinate, Speed, Height, DeployZone )
 
   if Airplane and Airplane:IsAlive()~=nil then
     
@@ -78383,7 +84766,7 @@ function AI_CARGO_AIRPLANE:onafterDeploy( Airplane, From, Event, To, Coordinate,
     end
     
     -- Route to destination airbase.
-    self:Route( Airplane, Airbase, Speed )
+    self:Route( Airplane, Airbase, Speed, Height )
     
     -- Aircraft is on a depoly mission.
     self.RouteDeploy = true
@@ -78391,27 +84774,9 @@ function AI_CARGO_AIRPLANE:onafterDeploy( Airplane, From, Event, To, Coordinate,
     -- Set destination airbase for next :Route() command.
     self.Airbase = Airbase
     
-    self.Transporting = true
-    self.Relocating = false
+    self:GetParent( self, AI_CARGO_AIRPLANE ).onafterDeploy( self, Airplane, From, Event, To, Coordinate, Speed, Height, DeployZone )
   end
   
-end
-
-
-
---- On after PickedUp event. All cargo is inside the carrier and ready to be transported.
--- @param #AI_CARGO_AIRPLANE self
--- @param Wrapper.Group#GROUP Airplane Cargo transport plane.
--- @param #string From From state.
--- @param #string Event Event.
--- @param #string To To state.
--- @param Core.Zone#ZONE PickupZone (optional) The zone where the cargo will be picked up. The PickupZone can be nil, if there wasn't any PickupZoneSet provided.
-function AI_CARGO_AIRPLANE:onafterPickedUp( Airplane, From, Event, To, PickupZone )
-  self:F( { AirplaneGroup, From, Event, To } )
-
-  if Airplane and Airplane:IsAlive() then
-    self.Transporting = true -- This will only be executed when there is no cargo boarded anymore. The dispatcher will then kick-off the deploy cycle!
-  end
 end
 
 
@@ -78449,32 +84814,17 @@ end
 
 
 
---- On after Deployed event.
--- @param #AI_CARGO_AIRPLANE self
--- @param Wrapper.Group#GROUP Airplane Cargo transport plane.
--- @param #string From From state.
--- @param #string Event Event.
--- @param #string To To state.
--- @param Cargo.Cargo#CARGO Cargo
-function AI_CARGO_AIRPLANE:onafterDeployed( Airplane, From, Event, To, DeployZone )
-
-  if Airplane and Airplane:IsAlive() then
-    self.Transporting = false -- This will only be executed when there is no cargo onboard anymore. The dispatcher will then kick-off the pickup cycle!
-  end
-end
-
-
-
 
 --- Route the airplane from one airport or it's current position to another airbase.
 -- @param #AI_CARGO_AIRPLANE self
 -- @param Wrapper.Group#GROUP Airplane Airplane group to be routed.
 -- @param Wrapper.Airbase#AIRBASE Airbase Destination airbase.
 -- @param #number Speed Speed in km/h. Default is 80% of max possible speed the group can do.
+-- @param #number Height Height in meters to move to the Airbase.
 -- @param #boolean Uncontrolled If true, spawn group in uncontrolled state.
-function AI_CARGO_AIRPLANE:Route( Airplane, Airbase, Speed, Uncontrolled )
+function AI_CARGO_AIRPLANE:Route( Airplane, Airbase, Speed, Height, Uncontrolled )
 
-  if Airplane and Airplane:IsAlive()~=nil then
+  if Airplane and Airplane:IsAlive() then
 
     -- Set takeoff type.
     local Takeoff = SPAWN.Takeoff.Cold
@@ -78537,8 +84887,136 @@ function AI_CARGO_AIRPLANE:Route( Airplane, Airbase, Speed, Uncontrolled )
     end
   end
 end
+
+--- On after Home event. Aircraft will be routed to their home base.
+-- @param #AI_CARGO_AIRPLANE self
+-- @param Wrapper.Group#GROUP Airplane The cargo plane.
+-- @param From From state.
+-- @param Event Event.
+-- @param To To State.
+-- @param Core.Point#COORDINATE Coordinate Home place (not used).
+-- @param #number Speed Speed in km/h to fly to the home airbase (zone). Default is 80% of max possible speed the unit can go.
+-- @param #number Height Height in meters to move to the home coordinate.
+-- @param Core.Zone#ZONE_AIRBASE HomeZone The home airbase (zone) where the plane should return to.
+function AI_CARGO_AIRPLANE:onafterHome(Airplane, From, Event, To, Coordinate, Speed, Height, HomeZone )
+  if Airplane and Airplane:IsAlive() then
+
+    -- We are going home!
+    self.RouteHome = true
+       
+    -- Home Base.
+    local HomeBase=HomeZone:GetAirbase()
+    self.Airbase=HomeBase
+    
+    -- Now route the airplane home
+   self:Route( Airplane, HomeBase, Speed, Height )
+    
+  end
+  
+end
 --- **AI** -- (R2.4) - Models the intelligent transportation of infantry and other cargo.
 --
+-- ## Features:
+-- 
+--   * AI_CARGO_DISPATCHER is the **base class** for:
+--   
+--     * @{AI.AI_Cargo_Dispatcher_APC#AI_CARGO_DISPATCHER_APC}
+--     * @{AI.AI_Cargo_Dispatcher_Helicopter#AI_CARGO_DISPATCHER_HELICOPTER}
+--     * @{AI.AI_Cargo_Dispatcher_Airplane#AI_CARGO_DISPATCHER_AIRPLANE}
+--     
+--   * Provides the facilities to transport cargo over the battle field for the above classes.
+--   * Dispatches transport tasks to a common set of cargo transporting groups.
+--   * Different options can be setup to tweak the cargo transporation behaviour.
+-- 
+-- ===
+-- 
+-- ## Test Missions:
+-- 
+-- Test missions can be located on the main GITHUB site.
+-- 
+-- [FlightControl-Master/MOOSE_MISSIONS/AID - AI Dispatching/AID-CGO - AI Cargo Dispatching/](https://github.com/FlightControl-Master/MOOSE_MISSIONS/tree/develop/AID%20-%20AI%20Dispatching/AID-CGO%20-%20AI%20Cargo%20Dispatching)
+-- 
+-- ===
+-- 
+-- # The dispatcher concept.
+-- 
+-- Carrier equipment can be mobilized to intelligently transport infantry and other cargo within the simulation.
+-- The AI_CARGO_DISPATCHER module uses the @{Cargo.Cargo} capabilities within the MOOSE framework, to enable Carrier GROUP objects 
+-- to transport @{Cargo.Cargo} towards several deploy zones.
+-- @{Cargo.Cargo} must be declared within the mission to make the AI_CARGO_DISPATCHER object recognize the cargo.
+-- Please consult the @{Cargo.Cargo} module for more information. 
+-- 
+-- 
+-- ## Why cargo dispatching?
+-- 
+-- It provides a realistic way of distributing your army forces around the battlefield, and to provide a quick means of cargo transportation.
+-- Instead of having troops or cargo to "appear" suddenly at certain locations, the dispatchers will pickup the cargo and transport it.
+-- It also allows to enforce or retreat your army from certain zones when needed, using helicopters or APCs.
+-- Airplanes can transport cargo over larger distances between the airfields.
+-- 
+-- 
+-- ## What is a cargo object then?
+-- 
+-- In order to make use of the MOOSE cargo system, you need to **declare** the DCS objects as MOOSE cargo objects!
+-- This sounds complicated, but it is actually quite simple.
+-- 
+-- See here an example:
+-- 
+--     local EngineerCargoGroup = CARGO_GROUP:New( GROUP:FindByName( "Engineers" ), "Workmaterials", "Engineers", 250 )
+--     
+-- The above code declares a MOOSE cargo object called `EngineerCargoGroup`.
+-- It actually just refers to an infantry group created within the sim called `"Engineers"`.
+-- The infantry group now becomes controlled by the MOOSE cargo object `EngineerCargoGroup`.
+-- A MOOSE cargo object also has properties, like the type of cargo, the logical name, and the reporting range.
+-- 
+-- For more information, please consult the @{Cargo.Cargo} module documentation. Please read through it, because it will explain how to setup the cargo objects for use
+-- within your dispatchers.
+-- 
+-- 
+-- ## Do I need to do a lot of coding to setup a dispatcher?
+-- 
+-- No! It requires a bit of studying to set it up, but once you understand the different components that use the cargo dispatcher, it becomes very easy.
+-- Also, the dispatchers work in a true dynamic environment. The carriers and cargo, pickup and deploy zones can be created dynamically in your mission,
+-- and will automatically be recognized by the dispatcher.
+-- 
+-- 
+-- ## Is the dispatcher causing a lot of CPU overhead?
+-- 
+-- A little yes, but once the cargo is properly loaded into the carrier, the CPU consumption is very little.
+-- When infantry or vehicles board into a carrier, or unboard from a carrier, you may perceive certain performance lags.
+-- We are working to minimize the impact of those.
+-- That being said, the DCS simulator is limited. It is just impossible to deploy hundreds of cargo over the battlefield, hundreds of helicopters transporting, 
+-- without any performance impact. The amount of helicopters that are active and flying in your simulation influences more the performance than the dispatchers.
+-- It really comes down to trying it out and getting experienced with what is possible and what is not (or too much).
+-- 
+-- 
+-- ## Are the dispatchers a "black box" in terms of the logic?
+-- 
+-- No. You can tailor the dispatcher mechanisms using event handlers, and create additional logic to enhance the behaviour and dynamism in your own mission.
+-- The events are listed below, and so are the options, but here are a couple of examples of what is possible:
+-- 
+--    * You could handle the **Deployed** event, when all the cargo is unloaded from a carrier in the dispatcher.
+--      Adding your own code to the event handler, you could move the deployed cargo (infantry) to specific points to engage in the battlefield.
+--    
+--    * When a carrier is picking up cargo, the *Pickup** event is triggered, and you can inform the coalition of this event, 
+--      because it is an indication that troops are planned to join.
+-- 
+--    
+-- ## Are there options that you can set to modify the behaviour of the carries?
+-- 
+-- Yes, there are options to configure:
+-- 
+--    * the location where carriers will park or land near the cargo for pickup. 
+--    * the location where carriers will park or land in the deploy zone for cargo deployment.
+--    * the height for airborne carriers when they fly to and from pickup and deploy zones.
+--    * the speed of the carriers. This is an important parameter, because depending on the tactication situation, speed will influence the detection by radars.
+-- 
+-- 
+-- ## Can the zones be of any zone type?
+-- 
+-- Yes, please ensure that the zones are declared using the @{Core.Zone} classes.
+-- Possible zones that function at the moment are ZONE, ZONE_GROUP, ZONE_UNIT, ZONE_POLYGON.
+-- 
 -- ===
 -- 
 -- ### Author: **FlightControl**
@@ -78548,11 +85026,32 @@ end
 -- @module AI.AI_Cargo_Dispatcher
 -- @image AI_Cargo_Dispatcher.JPG
 
+
 --- @type AI_CARGO_DISPATCHER
+-- @field Core.Set#SET_GROUP CarrierSet The set of @{Wrapper.Group#GROUP} objects of carriers that will transport the cargo. 
+-- @field Core.Set#SET_CARGO CargoSet The set of @{Cargo.Cargo#CARGO} objects, which can be CARGO_GROUP, CARGO_CRATE, CARGO_SLINGLOAD objects.
+-- @field Core.Zone#SET_ZONE PickupZoneSet The set of pickup zones, which are used to where the cargo can be picked up by the carriers. If nil, then cargo can be picked up everywhere. 
+-- @field Core.Zone#SET_ZONE DeployZoneSet The set of deploy zones, which are used to where the cargo will be deployed by the carriers. 
+-- @field #number PickupMaxSpeed The maximum speed to move to the cargo pickup location.
+-- @field #number PickupMinSpeed The minimum speed to move to the cargo pickup location.
+-- @field #number DeployMaxSpeed The maximum speed to move to the cargo deploy location.
+-- @field #number DeployMinSpeed The minimum speed to move to the cargo deploy location.
+-- @field #number PickupMaxHeight The maximum height to fly to the cargo pickup location.
+-- @field #number PickupMinHeight The minimum height to fly to the cargo pickup location.
+-- @field #number DeployMaxHeight The maximum height to fly to the cargo deploy location.
+-- @field #number DeployMinHeight The minimum height to fly to the cargo deploy location.
+-- @field #number PickupOuterRadius The outer radius in meters around the cargo coordinate to pickup the cargo.
+-- @field #number PickupInnerRadius The inner radius in meters around the cargo coordinate to pickup the cargo.
+-- @field #number DeployOuterRadius The outer radius in meters around the cargo coordinate to deploy the cargo.
+-- @field #number DeployInnerRadius The inner radius in meters around the cargo coordinate to deploy the cargo.
+-- @field Core.Zone#ZONE_BASE HomeZone The home zone where the carriers will return when there is no more cargo to pickup.
+-- @field #number MonitorTimeInterval The interval in seconds when the cargo dispatcher will search for new cargo to be picked up.
 -- @extends Core.Fsm#FSM
 
 
 --- A dynamic cargo handling capability for AI groups.
+-- 
+-- ---   
 -- 
 -- Carrier equipment can be mobilized to intelligently transport infantry and other cargo within the simulation.
 -- The AI_CARGO_DISPATCHER module uses the @{Cargo.Cargo} capabilities within the MOOSE framework, to enable Carrier GROUP objects 
@@ -78560,18 +85059,57 @@ end
 -- @{Cargo.Cargo} must be declared within the mission to make the AI_CARGO_DISPATCHER object recognize the cargo.
 -- Please consult the @{Cargo.Cargo} module for more information. 
 -- 
--- # 1) AI_CARGO_DISPATCHER constructor
+-- # 1) AI_CARGO_DISPATCHER constructor.
 --   
---   * @{#AI_CARGO_DISPATCHER.New}(): Creates a new AI\_CARGO\_DISPATCHER object.
+--   * @{#AI_CARGO_DISPATCHER.New}(): Creates a new AI_CARGO_DISPATCHER object.
 -- 
--- # 2) AI_CARGO_DISPATCHER is a FSM
+-- Find below some examples of AI cargo dispatcher objects created.
+-- 
+-- ### An AI dispatcher object for a helicopter squadron, moving infantry from pickup zones to deploy zones.
+-- 
+--        local SetCargoInfantry = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
+--        local SetHelicopter = SET_GROUP:New():FilterPrefixes( "Helicopter" ):FilterStart()
+--        local SetPickupZones = SET_ZONE:New():FilterPrefixes( "Pickup" ):FilterStart()
+--        local SetDeployZones = SET_ZONE:New():FilterPrefixes( "Deploy" ):FilterStart()
+--      
+--        AICargoDispatcherHelicopter = AI_CARGO_DISPATCHER_HELICOPTER:New( SetHelicopter, SetCargoInfantry, SetPickupZones, SetDeployZones ) 
+--        AICargoDispatcherHelicopter:SetHomeZone( ZONE:FindByName( "Home" ) )
+-- 
+-- ### An AI dispatcher object for a vehicle squadron, moving infantry from pickup zones to deploy zones.
+-- 
+--        local SetCargoInfantry = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
+--        local SetAPC = SET_GROUP:New():FilterPrefixes( "APC" ):FilterStart()
+--        local SetDeployZones = SET_ZONE:New():FilterPrefixes( "Deploy" ):FilterStart()
+--      
+--        AICargoDispatcherAPC = AI_CARGO_DISPATCHER_APC:New( SetAPC, SetCargoInfantry, nil, SetDeployZones ) 
+--        AICargoDispatcherAPC:Start()
+-- 
+-- ### An AI dispatcher object for an airplane squadron, moving infantry and vehicles from pickup airbases to deploy airbases.
+--   
+--        local CargoInfantrySet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
+--        local AirplanesSet = SET_GROUP:New():FilterPrefixes( "Airplane" ):FilterStart()
+--        local PickupZoneSet = SET_ZONE:New()
+--        local DeployZoneSet = SET_ZONE:New()
+--      
+--        PickupZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Gudauta ) )
+--        DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Sochi_Adler ) )
+--        DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Maykop_Khanskaya ) )
+--        DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Mineralnye_Vody ) )
+--        DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Vaziani ) )
+--      
+--        AICargoDispatcherAirplanes = AI_CARGO_DISPATCHER_AIRPLANE:New( AirplanesSet, CargoInfantrySet, PickupZoneSet, DeployZoneSet ) 
+--        AICargoDispatcherAirplanes:SetHomeZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Kobuleti ) )
+-- 
+-- ---
+-- 
+-- # 2) AI_CARGO_DISPATCHER is a Finite State Machine.
 -- 
 -- This section must be read as follows. Each of the rows indicate a state transition, triggered through an event, and with an ending state of the event was executed.
 -- The first column is the **From** state, the second column the **Event**, and the third column the **To** state.
 -- 
 -- So, each of the rows have the following structure.
 -- 
---  * **From** => **Event** => **To**
+--   * **From** => **Event** => **To**
 -- 
 -- Important to know is that an event can only be executed if the **current state** is the **From** state.
 -- This, when an **Event** that is being triggered has a **From** state that is equal to the **Current** state of the state machine, the event will be executed,
@@ -78579,28 +85117,27 @@ end
 -- 
 -- These are the different possible state transitions of this state machine implementation: 
 -- 
---  * Idle => Start => Monitoring
---  * Monitoring => Monitor => Monitoring
---  * Monitoring => Stop => Idle
+--   * Idle => Start => Monitoring
+--   * Monitoring => Monitor => Monitoring
+--   * Monitoring => Stop => Idle
 --      
---  * Monitoring => Pickup => Monitoring
---  * Monitoring => Load => Monitoring
---  * Monitoring => Loading => Monitoring
---  * Monitoring => Loaded => Monitoring
---  * Monitoring => PickedUp => Monitoring
---  * Monitoring => Deploy => Monitoring
---  * Monitoring => Unload => Monitoring
---  * Monitoring => Unloaded => Monitoring
---  * Monitoring => Deployed => Monitoring
---  * Monitoring => Home => Monitoring
--- 
---      
--- ## 2.1) AI_CARGO_DISPATCHER States
+--   * Monitoring => Pickup => Monitoring
+--   * Monitoring => Load => Monitoring
+--   * Monitoring => Loading => Monitoring
+--   * Monitoring => Loaded => Monitoring
+--   * Monitoring => PickedUp => Monitoring
+--   * Monitoring => Deploy => Monitoring
+--   * Monitoring => Unload => Monitoring
+--   * Monitoring => Unloaded => Monitoring
+--   * Monitoring => Deployed => Monitoring
+--   * Monitoring => Home => Monitoring
+--
+-- ## 2.1) AI_CARGO_DISPATCHER States.
 -- 
 --   * **Monitoring**: The process is dispatching.
 --   * **Idle**: The process is idle.
 -- 
--- ## 2.2) AI_CARGO_DISPATCHER Events
+-- ## 2.2) AI_CARGO_DISPATCHER Events.
 -- 
 --   * **Start**: Start the transport process.
 --   * **Stop**: Stop the transport process.
@@ -78617,6 +85154,8 @@ end
 --   * **Deployed**: All cargo is unloaded from the carriers in the group.
 --   * **Home**: A Carrier is going home.
 -- 
+-- ---
+-- 
 -- # 3) Enhance your mission scripts with **Tailored** Event Handling!
 -- 
 -- Use these methods to capture the events and tailor the events with your own code!
@@ -78631,6 +85170,27 @@ end
 --     but you need to declare them as they are automatically provided by the event handling system of MOOSE.
 -- 
 -- You can send messages or fire off any other events within the code section. The sky is the limit!
+-- 
+-- Mission AID-CGO-140, AID-CGO-240 and AID-CGO-340 contain examples how these events can be tailored.
+-- 
+-- For those who don't have the time to check the test missions, find the underlying example of a Deployed event that is tailored.
+-- 
+--      --- Deployed Handler OnAfter for AI_CARGO_DISPATCHER.
+--      -- Use this event handler to tailor the event when a carrier has deployed all cargo objects from the CarrierGroup.
+--      -- You can use this event handler to post messages to players, or provide status updates etc.
+--      -- @function OnAfterDeployed
+--      -- @param #AICargoDispatcherHelicopter self
+--      -- @param #string From A string that contains the "*from state name*" when the event was fired.
+--      -- @param #string Event A string that contains the "*event name*" when the event was fired.
+--      -- @param #string To A string that contains the "*to state name*" when the event was fired.
+--      -- @param Wrapper.Group#GROUP CarrierGroup The group object that contains the CarrierUnits.
+--      -- @param Core.Zone#ZONE DeployZone The zone wherein the cargo is deployed. This can be any zone type, like a ZONE, ZONE_GROUP, ZONE_AIRBASE.
+--      function AICargoDispatcherHelicopter:OnAfterDeployed( From, Event, To, CarrierGroup, DeployZone )
+--      
+--        MESSAGE:NewType( "Group " .. CarrierGroup:GetName() .. " deployed all cargo in zone " .. DeployZone:GetName(), MESSAGE.Type.Information ):ToAll()
+--      
+--      end 
+-- 
 -- 
 -- ## 3.1) Tailor the **Pickup** event
 -- 
@@ -78648,8 +85208,9 @@ end
 --      -- @param Wrapper.Group#GROUP CarrierGroup The group object that contains the CarrierUnits.
 --      -- @param Core.Point#COORDINATE Coordinate The coordinate of the pickup location.
 --      -- @param #number Speed The velocity in meters per second on which the CarrierGroup is routed towards the pickup Coordinate.
+--      -- @param #number Height Height in meters to move to the pickup coordinate.
 --      -- @param Core.Zone#ZONE_AIRBASE PickupZone (optional) The zone from where the cargo is picked up. Note that the zone is optional and may not be provided, but for AI_CARGO_DISPATCHER_AIRBASE there will always be a PickupZone, as the pickup location is an airbase zone.
---      function CLASS:OnAfterPickup( From, Event, To, CarrierGroup, Coordinate, Speed, PickupZone )
+--      function CLASS:OnAfterPickup( From, Event, To, CarrierGroup, Coordinate, Speed, Height, PickupZone )
 --      
 --        -- Write here your own code.
 --      
@@ -78771,8 +85332,9 @@ end
 --      -- @param Wrapper.Group#GROUP CarrierGroup The group object that contains the CarrierUnits.
 --      -- @param Core.Point#COORDINATE Coordinate The deploy coordinate.
 --      -- @param #number Speed The velocity in meters per second on which the CarrierGroup is routed towards the deploy Coordinate.
+--      -- @param #number Height Height in meters to move to the deploy coordinate.
 --      -- @param Core.Zone#ZONE DeployZone The zone wherein the cargo is deployed. This can be any zone type, like a ZONE, ZONE_GROUP, ZONE_AIRBASE.
---      function CLASS:OnAfterDeploy( From, Event, To, CarrierGroup, Coordinate, Speed, DeployZone )
+--      function CLASS:OnAfterDeploy( From, Event, To, CarrierGroup, Coordinate, Speed, Height, DeployZone )
 --      
 --        -- Write here your own code.
 --      
@@ -78886,29 +85448,37 @@ end
 --      -- @param Wrapper.Group#GROUP CarrierGroup The group object that contains the CarrierUnits.
 --      -- @param Core.Point#COORDINATE Coordinate The home coordinate the Carrier will arrive and stop it's activities.
 --      -- @param #number Speed The velocity in meters per second on which the CarrierGroup is routed towards the home Coordinate.
+--      -- @param #number Height Height in meters to move to the home coordinate.
 --      -- @param Core.Zone#ZONE HomeZone The zone wherein the carrier will return when all cargo has been transported. This can be any zone type, like a ZONE, ZONE_GROUP, ZONE_AIRBASE.
---      function CLASS:OnAfterHome( From, Event, To, CarrierGroup, Coordinate, Speed, HomeZone )
+--      function CLASS:OnAfterHome( From, Event, To, CarrierGroup, Coordinate, Speed, Height, HomeZone )
 --
 --        -- Write here your own code.
 --      
 --      end      
 -- 
+-- ---
 -- 
--- # 3) Set the pickup parameters.
+-- # 4) Set the pickup parameters.
 -- 
 -- Several parameters can be set to pickup cargo:
 -- 
 --    * @{#AI_CARGO_DISPATCHER.SetPickupRadius}(): Sets or randomizes the pickup location for the carrier around the cargo coordinate in a radius defined an outer and optional inner radius. 
 --    * @{#AI_CARGO_DISPATCHER.SetPickupSpeed}(): Set the speed or randomizes the speed in km/h to pickup the cargo.
+--    * @{#AI_CARGO_DISPATCHER.SetPickupHeight}(): Set the height or randomizes the height in meters to pickup the cargo.
 --    
--- # 4) Set the deploy parameters.
+-- ---   
+--    
+-- # 5) Set the deploy parameters.
 -- 
 -- Several parameters can be set to deploy cargo:
 -- 
 --    * @{#AI_CARGO_DISPATCHER.SetDeployRadius}(): Sets or randomizes the deploy location for the carrier around the cargo coordinate in a radius defined an outer and an optional inner radius. 
 --    * @{#AI_CARGO_DISPATCHER.SetDeploySpeed}(): Set the speed or randomizes the speed in km/h to deploy the cargo.
+--    * @{#AI_CARGO_DISPATCHER.SetDeployHeight}(): Set the height or randomizes the height in meters to deploy the cargo.
 -- 
--- # 5) Set the home zone when there isn't any more cargo to pickup.
+-- ---
+-- 
+-- # 6) Set the home zone when there isn't any more cargo to pickup.
 -- 
 -- A home zone can be specified to where the Carriers will move when there isn't any cargo left for pickup.
 -- Use @{#AI_CARGO_DISPATCHER.SetHomeZone}() to specify the home zone.
@@ -78920,38 +85490,75 @@ end
 -- @field #AI_CARGO_DISPATCHER
 AI_CARGO_DISPATCHER = {
   ClassName = "AI_CARGO_DISPATCHER",
-  SetCarrier = nil,
-  DeployZoneSet = nil,
   AI_Cargo = {},
   PickupCargo = {}
 }
 
---- @field #AI_CARGO_DISPATCHER.AI_Cargo 
+--- @field #list 
 AI_CARGO_DISPATCHER.AI_Cargo = {}
 
---- @field #AI_CARGO_DISPATCHER.PickupCargo
+--- @field #list
 AI_CARGO_DISPATCHER.PickupCargo = {}
 
 
 --- Creates a new AI_CARGO_DISPATCHER object.
 -- @param #AI_CARGO_DISPATCHER self
--- @param Core.Set#SET_GROUP SetCarrier
--- @param Core.Set#SET_CARGO SetCargo
+-- @param Core.Set#SET_GROUP CarrierSet The set of @{Wrapper.Group#GROUP} objects of carriers that will transport the cargo. 
+-- @param Core.Set#SET_CARGO CargoSet The set of @{Cargo.Cargo#CARGO} objects, which can be CARGO_GROUP, CARGO_CRATE, CARGO_SLINGLOAD objects.
+-- @param Core.Set#SET_ZONE PickupZoneSet (optional) The set of pickup zones, which are used to where the cargo can be picked up by the carriers. If nil, then cargo can be picked up everywhere. 
+-- @param Core.Set#SET_ZONE DeployZoneSet The set of deploy zones, which are used to where the cargo will be deployed by the carriers. 
 -- @return #AI_CARGO_DISPATCHER
 -- @usage
 -- 
--- -- Create a new cargo dispatcher
--- SetCarriers = SET_GROUP:New():FilterPrefixes( "APC" ):FilterStart()
--- SetCargos = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
--- SetDeployZone = SET_ZONE:New():FilterPrefixes( "Deploy" ):FilterStart()
--- AICargoDispatcher = AI_CARGO_DISPATCHER:New( SetCarrier, SetCargo )
+--      -- An AI dispatcher object for a helicopter squadron, moving infantry from pickup zones to deploy zones.
 -- 
-function AI_CARGO_DISPATCHER:New( SetCarrier, SetCargo )
+--      local SetCargoInfantry = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
+--      local SetHelicopter = SET_GROUP:New():FilterPrefixes( "Helicopter" ):FilterStart()
+--      local SetPickupZones = SET_ZONE:New():FilterPrefixes( "Pickup" ):FilterStart()
+--      local SetDeployZones = SET_ZONE:New():FilterPrefixes( "Deploy" ):FilterStart()
+--      
+--      AICargoDispatcherHelicopter = AI_CARGO_DISPATCHER_HELICOPTER:New( SetHelicopter, SetCargoInfantry, SetPickupZones, SetDeployZones ) 
+--      AICargoDispatcherHelicopter:Start()
+-- 
+-- @usage
+-- 
+--      -- An AI dispatcher object for a vehicle squadron, moving infantry from pickup zones to deploy zones.
+-- 
+--      local SetCargoInfantry = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
+--      local SetAPC = SET_GROUP:New():FilterPrefixes( "APC" ):FilterStart()
+--      local SetDeployZones = SET_ZONE:New():FilterPrefixes( "Deploy" ):FilterStart()
+--      
+--      AICargoDispatcherAPC = AI_CARGO_DISPATCHER_APC:New( SetAPC, SetCargoInfantry, nil, SetDeployZones ) 
+--      AICargoDispatcherAPC:Start()
+-- 
+-- @usage
+-- 
+--      -- An AI dispatcher object for an airplane squadron, moving infantry and vehicles from pickup airbases to deploy airbases.
+--   
+--      local CargoInfantrySet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
+--      local AirplanesSet = SET_GROUP:New():FilterPrefixes( "Airplane" ):FilterStart()
+--      local PickupZoneSet = SET_ZONE:New()
+--      local DeployZoneSet = SET_ZONE:New()
+--      
+--      PickupZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Gudauta ) )
+--      DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Sochi_Adler ) )
+--      DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Maykop_Khanskaya ) )
+--      DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Mineralnye_Vody ) )
+--      DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Vaziani ) )
+--      
+--      AICargoDispatcherAirplanes = AI_CARGO_DISPATCHER_AIRPLANE:New( AirplanesSet, CargoInfantrySet, PickupZoneSet, DeployZoneSet ) 
+--      AICargoDispatcherAirplanes:Start()
+-- 
+function AI_CARGO_DISPATCHER:New( CarrierSet, CargoSet, PickupZoneSet, DeployZoneSet )
 
   local self = BASE:Inherit( self, FSM:New() ) -- #AI_CARGO_DISPATCHER
 
-  self.SetCarrier = SetCarrier -- Core.Set#SET_GROUP
-  self.SetCargo = SetCargo -- Core.Set#SET_CARGO
+  self.SetCarrier = CarrierSet -- Core.Set#SET_GROUP
+  self.SetCargo = CargoSet -- Core.Set#SET_CARGO
+  
+  self.PickupZoneSet = PickupZoneSet
+  self.DeployZoneSet = DeployZoneSet
+  
 
   self:SetStartState( "Idle" ) 
   
@@ -78977,15 +85584,15 @@ function AI_CARGO_DISPATCHER:New( SetCarrier, SetCargo )
   
   self:AddTransition( "Monitoring", "Home", "Monitoring" )
   
-  self.MonitorTimeInterval = 30
-  self.DeployRadiusInner = 200
-  self.DeployRadiusOuter = 500
+  self:SetMonitorTimeInterval( 30 )
+  
+  self:SetDeployRadius( 500, 200 )
   
   self.PickupCargo = {}
   self.CarrierHome = {}
   
   -- Put a Dead event handler on SetCarrier, to ensure that when a carrier is destroyed, that all internal parameters are reset.
-  function SetCarrier.OnAfterRemoved( SetCarrier, From, Event, To, CarrierName, Carrier )
+  function self.SetCarrier.OnAfterRemoved( SetCarrier, From, Event, To, CarrierName, Carrier )
     self:F( { Carrier = Carrier:GetName() } )
     self.PickupCargo[Carrier] = nil
     self.CarrierHome[Carrier] = nil
@@ -78995,103 +85602,36 @@ function AI_CARGO_DISPATCHER:New( SetCarrier, SetCargo )
 end
 
 
---- Creates a new AI_CARGO_DISPATCHER object.
+--- Set the monitor time interval.
 -- @param #AI_CARGO_DISPATCHER self
--- @param Core.Set#SET_GROUP SetCarrier
--- @param Core.Set#SET_CARGO SetCargo
--- @param Core.Set#SET_ZONE PickupZoneSet
--- @param Core.Set#SET_ZONE DeployZoneSet
+-- @param #number MonitorTimeInterval The interval in seconds when the cargo dispatcher will search for new cargo to be picked up.
 -- @return #AI_CARGO_DISPATCHER
--- @usage
--- 
--- -- Create a new cargo dispatcher
--- SetCarriers = SET_GROUP:New():FilterPrefixes( "APC" ):FilterStart()
--- SetCargos = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
--- DeployZoneSet = SET_ZONE:New():FilterPrefixes( "Deploy" ):FilterStart()
--- AICargoDispatcher = AI_CARGO_DISPATCHER:New( SetCarrier, SetCargo, SetDeployZone )
--- 
-function AI_CARGO_DISPATCHER:NewWithZones( SetCarriers, SetCargos, PickupZoneSet, DeployZoneSet )
+function AI_CARGO_DISPATCHER:SetMonitorTimeInterval( MonitorTimeInterval )
 
-  local self = AI_CARGO_DISPATCHER:New( SetCarriers, SetCargos ) -- #AI_CARGO_DISPATCHER
-  
-  self.PickupZoneSet = PickupZoneSet
-  self.DeployZoneSet = DeployZoneSet
+  self.MonitorTimeInterval = MonitorTimeInterval
   
   return self
 end
-
-
---- Creates a new AI_CARGO_DISPATCHER object.
--- @param #AI_CARGO_DISPATCHER self
--- @param Core.Set#SET_GROUP SetCarrier
--- @param Core.Set#SET_CARGO SetCargo
--- @param Core.Set#SET_AIRBASE PickupAirbasesSet
--- @param Core.Set#SET_AIRBASE DeployAirbasesSet
--- @return #AI_CARGO_DISPATCHER
--- @usage
--- 
--- -- Create a new cargo dispatcher
--- SetCarriers = SET_GROUP:New():FilterPrefixes( "APC" ):FilterStart()
--- SetCargos = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
--- PickupAirbasesSet = SET_AIRBASES:New()
--- DeployAirbasesSet = SET_AIRBASES:New()
--- AICargoDispatcher = AI_CARGO_DISPATCHER:New( SetCarrier, SetCargo, PickupAirbasesSet, DeployAirbasesSet )
--- 
-function AI_CARGO_DISPATCHER:NewWithAirbases( SetCarriers, SetCargos, PickupAirbasesSet, DeployAirbasesSet )
-
-  local self = AI_CARGO_DISPATCHER:New( SetCarriers, SetCargos ) -- #AI_CARGO_DISPATCHER
-  
-  self.DeployAirbasesSet = DeployAirbasesSet
-  self.PickupAirbasesSet = PickupAirbasesSet
-  
-  return self
-end
-
 
 
 --- Set the home zone.
 -- When there is nothing anymore to pickup, the carriers will go to a random coordinate in this zone.
 -- They will await here new orders.
 -- @param #AI_CARGO_DISPATCHER self
--- @param Core.Zone#ZONE_BASE HomeZone
+-- @param Core.Zone#ZONE_BASE HomeZone The home zone where the carriers will return when there is no more cargo to pickup.
 -- @return #AI_CARGO_DISPATCHER
 -- @usage
 -- 
 -- -- Create a new cargo dispatcher
--- AICargoDispatcher = AI_CARGO_DISPATCHER:New( SetCarrier, SetCargo, SetDeployZone )
+-- AICargoDispatcherHelicopter = AI_CARGO_DISPATCHER_HELICOPTER:New( SetHelicopter, SetCargoInfantry, SetPickupZones, SetDeployZones ) 
 -- 
 -- -- Set the home coordinate
 -- local HomeZone = ZONE:New( "Home" )
--- AICargoDispatcher:SetHomeZone( HomeZone )
+-- AICargoDispatcherHelicopter:SetHomeZone( HomeZone )
 -- 
 function AI_CARGO_DISPATCHER:SetHomeZone( HomeZone )
 
   self.HomeZone = HomeZone
-  
-  return self
-end
-
---- Set the home airbase. This is for air units, i.e. helicopters and airplanes.
--- When there is nothing anymore to pickup, the carriers will go back to their home base. They will await here new orders.
--- @param #AI_CARGO_DISPATCHER self
--- @param Wrapper.Airbase#AIRBASE HomeBase Airbase where the carriers will go after all pickup assignments are done.
--- @return #AI_CARGO_DISPATCHER self
-function AI_CARGO_DISPATCHER:SetHomeBase( HomeBase )
-
-  self.HomeBase = HomeBase
-  
-  return self
-end
-
-
---- Set the home base.
--- When there is nothing anymore to pickup, the carriers will return to their home airbase. There they will await new orders.
--- @param #AI_CARGO_DISPATCHER self
--- @param Wrapper.Airbase#AIRBASE HomeBase The airbase where the carrier will go to, once they completed all pending assignments.
--- @return #AI_CARGO_DISPATCHER self
-function AI_CARGO_DISPATCHER:SetHomeBase( HomeBase )
-
-  self.HomeBase = HomeBase
   
   return self
 end
@@ -79116,10 +85656,10 @@ end
 -- @usage
 -- 
 -- -- Create a new cargo dispatcher
--- AICargoDispatcher = AI_CARGO_DISPATCHER:New( SetCarrier, SetCargo, SetDeployZone )
+-- AICargoDispatcherHelicopter = AI_CARGO_DISPATCHER_HELICOPTER:New( SetHelicopter, SetCargoInfantry, SetPickupZones, SetDeployZones ) 
 -- 
 -- -- Set the carrier to land within a band around the cargo coordinate between 500 and 300 meters!
--- AICargoDispatcher:SetPickupRadius( 500, 300 )
+-- AICargoDispatcherHelicopter:SetPickupRadius( 500, 300 )
 -- 
 function AI_CARGO_DISPATCHER:SetPickupRadius( OuterRadius, InnerRadius )
 
@@ -79141,10 +85681,10 @@ end
 -- @usage
 -- 
 -- -- Create a new cargo dispatcher
--- AICargoDispatcher = AI_CARGO_DISPATCHER:New( SetCarrier, SetCargo, SetDeployZone )
+-- AICargoDispatcherHelicopter = AI_CARGO_DISPATCHER_HELICOPTER:New( SetHelicopter, SetCargoInfantry, SetPickupZones, SetDeployZones ) 
 -- 
 -- -- Set the minimum pickup speed to be 100 km/h and the maximum speed to be 200 km/h.
--- AICargoDispatcher:SetPickupSpeed( 200, 100 )
+-- AICargoDispatcherHelicopter:SetPickupSpeed( 200, 100 )
 -- 
 function AI_CARGO_DISPATCHER:SetPickupSpeed( MaxSpeed, MinSpeed )
 
@@ -79174,10 +85714,10 @@ end
 -- @usage
 -- 
 -- -- Create a new cargo dispatcher
--- AICargoDispatcher = AI_CARGO_DISPATCHER:New( SetCarrier, SetCargo, SetDeployZone )
+-- AICargoDispatcherHelicopter = AI_CARGO_DISPATCHER_HELICOPTER:New( SetHelicopter, SetCargoInfantry, SetPickupZones, SetDeployZones ) 
 -- 
 -- -- Set the carrier to land within a band around the cargo coordinate between 500 and 300 meters!
--- AICargoDispatcher:SetDeployRadius( 500, 300 )
+-- AICargoDispatcherHelicopter:SetDeployRadius( 500, 300 )
 -- 
 function AI_CARGO_DISPATCHER:SetDeployRadius( OuterRadius, InnerRadius )
 
@@ -79199,10 +85739,10 @@ end
 -- @usage
 -- 
 -- -- Create a new cargo dispatcher
--- AICargoDispatcher = AI_CARGO_DISPATCHER:New( SetCarrier, SetCargo, SetDeployZone )
+-- AICargoDispatcherHelicopter = AI_CARGO_DISPATCHER_HELICOPTER:New( SetHelicopter, SetCargoInfantry, SetPickupZones, SetDeployZones ) 
 -- 
 -- -- Set the minimum deploy speed to be 100 km/h and the maximum speed to be 200 km/h.
--- AICargoDispatcher:SetDeploySpeed( 200, 100 )
+-- AICargoDispatcherHelicopter:SetDeploySpeed( 200, 100 )
 -- 
 function AI_CARGO_DISPATCHER:SetDeploySpeed( MaxSpeed, MinSpeed )
 
@@ -79215,6 +85755,55 @@ function AI_CARGO_DISPATCHER:SetDeploySpeed( MaxSpeed, MinSpeed )
   return self
 end
 
+
+--- Set the height or randomizes the height in meters to fly and pickup the cargo. The default height is 200 meters.
+-- @param #AI_CARGO_DISPATCHER self
+-- @param #number MaxHeight (optional) The maximum height to fly to the cargo pickup location.
+-- @param #number MinHeight (optional) The minimum height to fly to the cargo pickup location.
+-- @return #AI_CARGO_DISPATCHER
+-- @usage
+-- 
+-- -- Create a new cargo dispatcher
+-- AICargoDispatcherHelicopter = AI_CARGO_DISPATCHER_HELICOPTER:New( SetHelicopter, SetCargoInfantry, SetPickupZones, SetDeployZones ) 
+-- 
+-- -- Set the minimum pickup fly height to be 50 meters and the maximum height to be 200 meters.
+-- AICargoDispatcherHelicopter:SetPickupHeight( 200, 50 )
+-- 
+function AI_CARGO_DISPATCHER:SetPickupHeight( MaxHeight, MinHeight )
+
+  MaxHeight = MaxHeight or 200
+  MinHeight = MinHeight or MaxHeight
+
+  self.PickupMinHeight = MinHeight
+  self.PickupMaxHeight = MaxHeight
+  
+  return self
+end
+
+
+--- Set the height or randomizes the height in meters to fly and deploy the cargo.  The default height is 200 meters.
+-- @param #AI_CARGO_DISPATCHER self
+-- @param #number MaxHeight (optional) The maximum height to fly to the cargo deploy location.
+-- @param #number MinHeight (optional) The minimum height to fly to the cargo deploy location.
+-- @return #AI_CARGO_DISPATCHER
+-- @usage
+-- 
+-- -- Create a new cargo dispatcher
+-- AICargoDispatcherHelicopter = AI_CARGO_DISPATCHER_HELICOPTER:New( SetHelicopter, SetCargoInfantry, SetPickupZones, SetDeployZones ) 
+-- 
+-- -- Set the minimum deploy fly height to be 50 meters and the maximum height to be 200 meters.
+-- AICargoDispatcherHelicopter:SetDeployHeight( 200, 50 )
+-- 
+function AI_CARGO_DISPATCHER:SetDeployHeight( MaxHeight, MinHeight )
+
+  MaxHeight = MaxHeight or 200
+  MinHeight = MinHeight or MaxHeight
+
+  self.DeployMinHeight = MinHeight
+  self.DeployMaxHeight = MaxHeight
+  
+  return self
+end
 
 
 --- The Start trigger event, which actually takes action at the specified time interval.
@@ -79242,9 +85831,10 @@ function AI_CARGO_DISPATCHER:onafterMonitor()
       -- @param Wrapper.Group#GROUP CarrierGroup The group object that contains the CarrierUnits.
       -- @param Core.Point#COORDINATE Coordinate The coordinate of the pickup location.
       -- @param #number Speed The velocity in meters per second on which the CarrierGroup is routed towards the pickup Coordinate.
+      -- @param #number Height Height in meters to move to the pickup coordinate.
       -- @param Core.Zone#ZONE_AIRBASE PickupZone (optional) The zone from where the cargo is picked up. Note that the zone is optional and may not be provided, but for AI_CARGO_DISPATCHER_AIRBASE there will always be a PickupZone, as the pickup location is an airbase zone.
-      function AI_Cargo.OnAfterPickup( AI_Cargo, CarrierGroup, From, Event, To, Coordinate, Speed, PickupZone )
-        self:Pickup( CarrierGroup, Coordinate, Speed, PickupZone )
+      function AI_Cargo.OnAfterPickup( AI_Cargo, CarrierGroup, From, Event, To, Coordinate, Speed, Height, PickupZone )
+        self:Pickup( CarrierGroup, Coordinate, Speed, Height, PickupZone )
       end
       
       --- Load event handler OnAfter for AI_CARGO_DISPATCHER.
@@ -79327,10 +85917,11 @@ function AI_CARGO_DISPATCHER:onafterMonitor()
       -- @param Wrapper.Group#GROUP CarrierGroup The group object that contains the CarrierUnits.
       -- @param Core.Point#COORDINATE Coordinate The deploy coordinate.
       -- @param #number Speed The velocity in meters per second on which the CarrierGroup is routed towards the deploy Coordinate.
+      -- @param #number Height Height in meters to move to the deploy coordinate.
       -- @param Core.Zone#ZONE DeployZone The zone wherein the cargo is deployed. This can be any zone type, like a ZONE, ZONE_GROUP, ZONE_AIRBASE.
       
-      function AI_Cargo.OnAfterDeploy( AI_Cargo, CarrierGroup, From, Event, To, Coordinate, Speed, DeployZone )
-        self:Deploy( CarrierGroup, Coordinate, Speed, DeployZone )
+      function AI_Cargo.OnAfterDeploy( AI_Cargo, CarrierGroup, From, Event, To, Coordinate, Speed, Height, DeployZone )
+        self:Deploy( CarrierGroup, Coordinate, Speed, Height, DeployZone )
       end      
 
 
@@ -79414,10 +86005,11 @@ function AI_CARGO_DISPATCHER:onafterMonitor()
       -- @param Wrapper.Group#GROUP CarrierGroup The group object that contains the CarrierUnits.
       -- @param Core.Point#COORDINATE Coordinate The home coordinate the Carrier will arrive and stop it's activities.
       -- @param #number Speed The velocity in meters per second on which the CarrierGroup is routed towards the home Coordinate.
+      -- @param #number Height Height in meters to move to the home coordinate.
       -- @param Core.Zone#ZONE HomeZone The zone wherein the carrier will return when all cargo has been transported. This can be any zone type, like a ZONE, ZONE_GROUP, ZONE_AIRBASE.
       
-      function AI_Cargo.OnAfterHome( AI_Cargo, Carrier, From, Event, To, Coordinate, Speed, HomeZone )
-        self:Home( Carrier, Coordinate, Speed, HomeZone )
+      function AI_Cargo.OnAfterHome( AI_Cargo, Carrier, From, Event, To, Coordinate, Speed, Height, HomeZone )
+        self:Home( Carrier, Coordinate, Speed, Height, HomeZone )
       end      
     end
 
@@ -79432,12 +86024,14 @@ function AI_CARGO_DISPATCHER:onafterMonitor()
       local PickupCargo = nil
       local PickupZone = nil
       
+      --self.SetCargo:Flush()
       for CargoName, Cargo in UTILS.spairs( self.SetCargo:GetSet(), function( t, a, b ) return t[a]:GetWeight() < t[b]:GetWeight() end ) do
         local Cargo = Cargo -- Cargo.Cargo#CARGO
         self:F( { Cargo = Cargo:GetName(), UnLoaded = Cargo:IsUnLoaded(), Deployed = Cargo:IsDeployed(), PickupCargo = self.PickupCargo[Carrier] ~= nil } )
         if Cargo:IsUnLoaded() == true and Cargo:IsDeployed() == false then
           local CargoCoordinate = Cargo:GetCoordinate()
           local CoordinateFree = true
+          --self.PickupZoneSet:Flush()
           PickupZone = self.PickupZoneSet and self.PickupZoneSet:IsCoordinateInZone( CargoCoordinate )
           if not self.PickupZoneSet or PickupZone then
             for CarrierPickup, Coordinate in pairs( self.PickupCargo ) do
@@ -79477,13 +86071,13 @@ function AI_CARGO_DISPATCHER:onafterMonitor()
       if PickupCargo then
         self.CarrierHome[Carrier] = nil
         local PickupCoordinate = PickupCargo:GetCoordinate():GetRandomCoordinateInRadius( self.PickupOuterRadius, self.PickupInnerRadius )
-        AI_Cargo:Pickup( PickupCoordinate, math.random( self.PickupMinSpeed, self.PickupMaxSpeed ), PickupZone )
+        AI_Cargo:Pickup( PickupCoordinate, math.random( self.PickupMinSpeed, self.PickupMaxSpeed ), math.random( self.PickupMinHeight, self.PickupMaxHeight ), PickupZone )
         break
       else
         if self.HomeZone then
           if not self.CarrierHome[Carrier] then
             self.CarrierHome[Carrier] = true
-            AI_Cargo:Home( self.HomeZone:GetRandomPointVec2(), math.random( self.PickupMinSpeed, self.PickupMaxSpeed ), self.HomeZone )
+            AI_Cargo:Home( self.HomeZone:GetRandomPointVec2(), math.random( self.PickupMinSpeed, self.PickupMaxSpeed ), math.random( self.PickupMinHeight, self.PickupMaxHeight ), self.HomeZone )
           end
         end
       end
@@ -79493,20 +86087,6 @@ function AI_CARGO_DISPATCHER:onafterMonitor()
   self:__Monitor( self.MonitorTimeInterval )
 end
 
---- Start event handler OnBefore for AI_CARGO_DISPATCHER
--- @function [parent=#AI_CARGO_DISPATCHER] OnBeforeStart
--- @param #AI_CARGO_DISPATCHER self
--- @param #string From
--- @param #string Event
--- @param #string To
--- @return #boolean
-
---- Start event handler OnAfter for AI_CARGO_DISPATCHER
--- @function [parent=#AI_CARGO_DISPATCHER] OnAfterStart
--- @param #AI_CARGO_DISPATCHER self
--- @param #string From
--- @param #string Event
--- @param #string To
 
 --- Start Trigger for AI_CARGO_DISPATCHER
 -- @function [parent=#AI_CARGO_DISPATCHER] Start
@@ -79521,20 +86101,6 @@ function AI_CARGO_DISPATCHER:onafterStart( From, Event, To )
   self:__Monitor( -1 )
 end
 
---- Stop event handler OnBefore for AI_CARGO_DISPATCHER
--- @function [parent=#AI_CARGO_DISPATCHER] OnBeforeStop
--- @param #AI_CARGO_DISPATCHER self
--- @param #string From
--- @param #string Event
--- @param #string To
--- @return #boolean
-
---- Stop event handler OnAfter for AI_CARGO_DISPATCHER
--- @function [parent=#AI_CARGO_DISPATCHER] OnAfterStop
--- @param #AI_CARGO_DISPATCHER self
--- @param #string From
--- @param #string Event
--- @param #string To
 
 --- Stop Trigger for AI_CARGO_DISPATCHER
 -- @function [parent=#AI_CARGO_DISPATCHER] Stop
@@ -79561,7 +86127,7 @@ function AI_CARGO_DISPATCHER:onafterTransport( From, Event, To, Carrier, Cargo )
       local DeployZone = self.DeployZoneSet:GetRandomZone()
       
       local DeployCoordinate = DeployZone:GetCoordinate():GetRandomCoordinateInRadius( self.DeployOuterRadius, self.DeployInnerRadius )
-      self.AI_Cargo[Carrier]:Deploy( DeployCoordinate, math.random( self.DeployMinSpeed, self.DeployMaxSpeed ), DeployZone )
+      self.AI_Cargo[Carrier]:__Deploy( 0.1, DeployCoordinate, math.random( self.DeployMinSpeed, self.DeployMaxSpeed ), math.random( self.DeployMinHeight, self.DeployMaxHeight ), DeployZone )
     end
   end
   
@@ -79571,7 +86137,7 @@ end
 
 --- **AI** -- (2.4) - Models the intelligent transportation of infantry and other cargo using APCs.
 --
--- **Features:**
+-- ## Features:
 -- 
 --   * Quickly transport cargo to various deploy zones using ground vehicles (APCs, trucks ...).
 --   * Various @{Cargo.Cargo#CARGO} types can be transported. These are infantry groups and crates.
@@ -79583,6 +86149,15 @@ end
 --   * Different ranges can be setup for enemy defenses.
 --   * Different options can be setup to tweak the cargo transporation behaviour.
 --  
+-- ===
+-- 
+-- ## Test Missions:
+-- 
+-- Test missions can be located on the main GITHUB site.
+-- 
+-- [FlightControl-Master/MOOSE_MISSIONS/AID - AI Dispatching/AID-CGO - AI Cargo Dispatching/]  
+-- (https://github.com/FlightControl-Master/MOOSE_MISSIONS/tree/develop/AID%20-%20AI%20Dispatching/AID-CGO%20-%20AI%20Cargo%20Dispatching)
+-- 
 -- ===
 -- 
 -- ### Author: **FlightControl**
@@ -79602,8 +86177,7 @@ end
 -- 
 -- The AI_CARGO_DISPATCHER_APC module is derived from the AI_CARGO_DISPATCHER module.
 -- 
--- ## Note! In order to fully understand the mechanisms of the AI_CARGO_DISPATCHER_APC class, it is recommended that you
--- **first consult and READ the documentation of the @{AI.AI_Cargo_Dispatcher} module!!!**
+-- ## Note! In order to fully understand the mechanisms of the AI_CARGO_DISPATCHER_APC class, it is recommended that you first consult and READ the documentation of the @{AI.AI_Cargo_Dispatcher} module!!!
 -- 
 -- Especially to learn how to **Tailor the different cargo handling events**, this will be very useful!
 -- 
@@ -79612,50 +86186,92 @@ end
 -- CARGO derived objects must be declared within the mission to make the AI_CARGO_DISPATCHER_HELICOPTER object recognize the cargo.
 -- 
 -- 
--- ## 1. AI\_CARGO\_DISPATCHER\_APC constructor
+-- # 1) AI_CARGO_DISPATCHER_APC constructor.
 --   
---   * @{#AI_CARGO_DISPATCHER\_APC.New}(): Creates a new AI\_CARGO\_DISPATCHER\_APC object.
+--   * @{#AI_CARGO_DISPATCHER_APC.New}(): Creates a new AI_CARGO_DISPATCHER_APC object.
 -- 
--- ## 2. AI\_CARGO\_DISPATCHER\_APC is a FSM
+-- ---
 -- 
--- ![Process](..\Presentations\AI_CARGO_DISPATCHER_APC\Dia3.JPG)
+-- # 2) AI_CARGO_DISPATCHER_APC is a Finite State Machine.
 -- 
--- ### 2.1. AI\_CARGO\_DISPATCHER\_APC States
+-- This section must be read as follows. Each of the rows indicate a state transition, triggered through an event, and with an ending state of the event was executed.
+-- The first column is the **From** state, the second column the **Event**, and the third column the **To** state.
+-- 
+-- So, each of the rows have the following structure.
+-- 
+--   * **From** => **Event** => **To**
+-- 
+-- Important to know is that an event can only be executed if the **current state** is the **From** state.
+-- This, when an **Event** that is being triggered has a **From** state that is equal to the **Current** state of the state machine, the event will be executed,
+-- and the resulting state will be the **To** state.
+-- 
+-- These are the different possible state transitions of this state machine implementation: 
+-- 
+--   * Idle => Start => Monitoring
+--   * Monitoring => Monitor => Monitoring
+--   * Monitoring => Stop => Idle
+--      
+--   * Monitoring => Pickup => Monitoring
+--   * Monitoring => Load => Monitoring
+--   * Monitoring => Loading => Monitoring
+--   * Monitoring => Loaded => Monitoring
+--   * Monitoring => PickedUp => Monitoring
+--   * Monitoring => Deploy => Monitoring
+--   * Monitoring => Unload => Monitoring
+--   * Monitoring => Unloaded => Monitoring
+--   * Monitoring => Deployed => Monitoring
+--   * Monitoring => Home => Monitoring
+-- 
+--      
+-- ## 2.1) AI_CARGO_DISPATCHER States.
 -- 
 --   * **Monitoring**: The process is dispatching.
 --   * **Idle**: The process is idle.
 -- 
--- ### 2.2. AI\_CARGO\_DISPATCHER\_APC Events
+-- ## 2.2) AI_CARGO_DISPATCHER Events.
 -- 
---   * **Monitor**: Monitor and take action.
 --   * **Start**: Start the transport process.
 --   * **Stop**: Stop the transport process.
+--   * **Monitor**: Monitor and take action.
+--   
 --   * **Pickup**: Pickup cargo.
 --   * **Load**: Load the cargo.
+--   * **Loading**: The dispatcher is coordinating the loading of a cargo.
 --   * **Loaded**: Flag that the cargo is loaded.
+--   * **PickedUp**: The dispatcher has loaded all requested cargo into the CarrierGroup.
 --   * **Deploy**: Deploy cargo to a location.
 --   * **Unload**: Unload the cargo.
 --   * **Unloaded**: Flag that the cargo is unloaded.
---   * **Home**: A APC is going home.
+--   * **Deployed**: All cargo is unloaded from the carriers in the group.
+--   * **Home**: A Carrier is going home.
 -- 
--- ## 3. Set the pickup parameters.
+-- ## 2.3) Enhance your mission scripts with **Tailored** Event Handling!
+-- 
+-- Within your mission, you can capture these events when triggered, and tailor the events with your own code!
+-- Check out the @{AI.AI_Cargo_Dispatcher#AI_CARGO_DISPATCHER} class at chapter 3 for details on the different event handlers that are available and how to use them.
+-- 
+-- **There are a lot of templates available that allows you to quickly setup an event handler for a specific event type!**
+-- 
+-- ---
+-- 
+-- # 3) Set the pickup parameters.
 -- 
 -- Several parameters can be set to pickup cargo:
 -- 
---    * @{#AI_CARGO_DISPATCHER\_APC.SetPickupRadius}(): Sets or randomizes the pickup location for the APC around the cargo coordinate in a radius defined an outer and optional inner radius. 
---    * @{#AI_CARGO_DISPATCHER\_APC.SetPickupSpeed}(): Set the speed or randomizes the speed in km/h to pickup the cargo.
+--    * @{#AI_CARGO_DISPATCHER_APC.SetPickupRadius}(): Sets or randomizes the pickup location for the APC around the cargo coordinate in a radius defined an outer and optional inner radius. 
+--    * @{#AI_CARGO_DISPATCHER_APC.SetPickupSpeed}(): Set the speed or randomizes the speed in km/h to pickup the cargo.
 --    
--- ## 4. Set the deploy parameters.
+-- # 4) Set the deploy parameters.
 -- 
 -- Several parameters can be set to deploy cargo:
 -- 
---    * @{#AI_CARGO_DISPATCHER\_APC.SetDeployRadius}(): Sets or randomizes the deploy location for the APC around the cargo coordinate in a radius defined an outer and an optional inner radius. 
---    * @{#AI_CARGO_DISPATCHER\_APC.SetDeploySpeed}(): Set the speed or randomizes the speed in km/h to deploy the cargo.
+--    * @{#AI_CARGO_DISPATCHER_APC.SetDeployRadius}(): Sets or randomizes the deploy location for the APC around the cargo coordinate in a radius defined an outer and an optional inner radius. 
+--    * @{#AI_CARGO_DISPATCHER_APC.SetDeploySpeed}(): Set the speed or randomizes the speed in km/h to deploy the cargo.
 -- 
--- ## 5. Set the home zone when there isn't any more cargo to pickup.
+-- # 5) Set the home zone when there isn't any more cargo to pickup.
 -- 
 -- A home zone can be specified to where the APCs will move when there isn't any cargo left for pickup.
--- Use @{#AI_CARGO_DISPATCHER\_APC.SetHomeZone}() to specify the home zone.
+-- Use @{#AI_CARGO_DISPATCHER_APC.SetHomeZone}() to specify the home zone.
 -- 
 -- If no home zone is specified, the APCs will wait near the deploy zone for a new pickup command.   
 -- 
@@ -79668,28 +86284,34 @@ AI_CARGO_DISPATCHER_APC = {
 
 --- Creates a new AI_CARGO_DISPATCHER_APC object.
 -- @param #AI_CARGO_DISPATCHER_APC self
--- @param Core.Set#SET_GROUP APCSet The collection of APC @{Wrapper.Group}s.
--- @param Core.Set#SET_CARGO CargoSet The collection of @{Cargo.Cargo} derived objects.
--- @param Core.Set#SET_ZONE PickupZoneSet (optional) The collection of pickup @{Zone}s, which are used to where the cargo can be picked up by the APCs. If nil, then cargo can be picked up everywhere. 
--- @param Core.Set#SET_ZONE DeployZoneSet The collection of deploy @{Zone}s, which are used to where the cargo will be deployed by the APCs. 
+-- @param Core.Set#SET_GROUP APCSet The set of @{Wrapper.Group#GROUP} objects of vehicles, trucks, APCs that will transport the cargo.
+-- @param Core.Set#SET_CARGO CargoSet The set of @{Cargo.Cargo#CARGO} objects, which can be CARGO_GROUP, CARGO_CRATE, CARGO_SLINGLOAD objects.
+-- @param Core.Set#SET_ZONE PickupZoneSet (optional) The set of pickup zones, which are used to where the cargo can be picked up by the APCs. If nil, then cargo can be picked up everywhere. 
+-- @param Core.Set#SET_ZONE DeployZoneSet The set of deploy zones, which are used to where the cargo will be deployed by the APCs. 
 -- @param DCS#Distance CombatRadius The cargo will be unloaded from the APC and engage the enemy if the enemy is within CombatRadius range. The radius is in meters, the default value is 500 meters.
 -- @return #AI_CARGO_DISPATCHER_APC
 -- @usage
 -- 
--- -- Create a new cargo dispatcher for the set of APCs, with a combatradius of 500.
--- APCSet = SET_GROUP:New():FilterPrefixes( "APC" ):FilterStart()
--- CargoSet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
--- DeployZoneSet = SET_ZONE:New():FilterPrefixes( "Deploy" ):FilterStart()
--- AICargoDispatcher = AI_CARGO_DISPATCHER_APC:New( APCSet, SCargoSet, nil, DeployZoneSet, 500 )
+--      -- An AI dispatcher object for a vehicle squadron, moving infantry from pickup zones to deploy zones.
+-- 
+--      local SetCargoInfantry = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
+--      local SetAPC = SET_GROUP:New():FilterPrefixes( "APC" ):FilterStart()
+--      local SetDeployZones = SET_ZONE:New():FilterPrefixes( "Deploy" ):FilterStart()
+--      
+--      AICargoDispatcherAPC = AI_CARGO_DISPATCHER_APC:New( SetAPC, SetCargoInfantry, nil, SetDeployZones ) 
+--      AICargoDispatcherAPC:Start()
 -- 
 function AI_CARGO_DISPATCHER_APC:New( APCSet, CargoSet, PickupZoneSet, DeployZoneSet, CombatRadius )
 
-  local self = BASE:Inherit( self, AI_CARGO_DISPATCHER:NewWithZones( APCSet, CargoSet, PickupZoneSet, DeployZoneSet ) ) -- #AI_CARGO_DISPATCHER_APC
+  local self = BASE:Inherit( self, AI_CARGO_DISPATCHER:New( APCSet, CargoSet, PickupZoneSet, DeployZoneSet ) ) -- #AI_CARGO_DISPATCHER_APC
 
-  self:SetDeploySpeed( 70, 120 )
-  self:SetPickupSpeed( 70, 120 )
+  self:SetDeploySpeed( 120, 70 )
+  self:SetPickupSpeed( 120, 70 )
   self:SetPickupRadius( 0, 0 )
   self:SetDeployRadius( 0, 0 )
+  
+  self:SetPickupHeight()
+  self:SetDeployHeight()
   
   self:SetCombatRadius( CombatRadius )
 
@@ -79724,13 +86346,22 @@ end
 
 --- **AI** -- (2.4) - Models the intelligent transportation of infantry and other cargo using Helicopters.
 --
--- **Features:**
+-- ## Features:
 -- 
 --   * The helicopters will fly towards the pickup locations to pickup the cargo.
 --   * The helicopters will fly towards the deploy zones to deploy the cargo.
 --   * Precision deployment as well as randomized deployment within the deploy zones are possible.
 --   * Helicopters will orbit the deploy zones when there is no space for landing until the deploy zone is free.
 --   
+-- ===
+-- 
+-- ## Test Missions:
+-- 
+-- Test missions can be located on the main GITHUB site.
+-- 
+-- [FlightControl-Master/MOOSE_MISSIONS/AID - AI Dispatching/AID-CGO - AI Cargo Dispatching/]  
+-- (https://github.com/FlightControl-Master/MOOSE_MISSIONS/tree/develop/AID%20-%20AI%20Dispatching/AID-CGO%20-%20AI%20Cargo%20Dispatching)
+-- 
 -- ===
 -- 
 -- ### Author: **FlightControl**
@@ -79751,8 +86382,7 @@ end
 -- 
 -- The AI_CARGO_DISPATCHER_HELICOPTER module is derived from the AI_CARGO_DISPATCHER module.
 -- 
--- ## Note! In order to fully understand the mechanisms of the AI_CARGO_DISPATCHER_HELICOPTER class, it is recommended that you
--- **first consult and READ the documentation of the @{AI.AI_Cargo_Dispatcher} module!!!**
+-- ## Note! In order to fully understand the mechanisms of the AI_CARGO_DISPATCHER_HELICOPTER class, it is recommended that you first consult and READ the documentation of the @{AI.AI_Cargo_Dispatcher} module!!!**
 -- 
 -- Especially to learn how to **Tailor the different cargo handling events**, this will be very useful!
 -- 
@@ -79762,33 +86392,71 @@ end
 -- 
 -- ---
 -- 
--- ## 1. AI\_CARGO\_DISPATCHER\_HELICOPTER constructor
+-- # 1. AI\_CARGO\_DISPATCHER\_HELICOPTER constructor.
 --   
 --   * @{#AI_CARGO_DISPATCHER\_HELICOPTER.New}(): Creates a new AI\_CARGO\_DISPATCHER\_HELICOPTER object.
 -- 
 -- ---
 -- 
--- ## 2. AI\_CARGO\_DISPATCHER\_HELICOPTER is a FSM
+-- # 2. AI\_CARGO\_DISPATCHER\_HELICOPTER is a Finite State Machine.
 -- 
--- ![Process](..\Presentations\AI_CARGO_DISPATCHER_HELICOPTER\Dia3.JPG)
+-- This section must be read as follows. Each of the rows indicate a state transition, triggered through an event, and with an ending state of the event was executed.
+-- The first column is the **From** state, the second column the **Event**, and the third column the **To** state.
 -- 
--- ### 2.1. AI\_CARGO\_DISPATCHER\_HELICOPTER States
+-- So, each of the rows have the following structure.
+-- 
+--   * **From** => **Event** => **To**
+-- 
+-- Important to know is that an event can only be executed if the **current state** is the **From** state.
+-- This, when an **Event** that is being triggered has a **From** state that is equal to the **Current** state of the state machine, the event will be executed,
+-- and the resulting state will be the **To** state.
+-- 
+-- These are the different possible state transitions of this state machine implementation: 
+-- 
+--   * Idle => Start => Monitoring
+--   * Monitoring => Monitor => Monitoring
+--   * Monitoring => Stop => Idle
+--      
+--   * Monitoring => Pickup => Monitoring
+--   * Monitoring => Load => Monitoring
+--   * Monitoring => Loading => Monitoring
+--   * Monitoring => Loaded => Monitoring
+--   * Monitoring => PickedUp => Monitoring
+--   * Monitoring => Deploy => Monitoring
+--   * Monitoring => Unload => Monitoring
+--   * Monitoring => Unloaded => Monitoring
+--   * Monitoring => Deployed => Monitoring
+--   * Monitoring => Home => Monitoring
+-- 
+--      
+-- ## 2.1) AI_CARGO_DISPATCHER States.
 -- 
 --   * **Monitoring**: The process is dispatching.
 --   * **Idle**: The process is idle.
 -- 
--- ### 2.2. AI\_CARGO\_DISPATCHER\_HELICOPTER Events
+-- ## 2.2) AI_CARGO_DISPATCHER Events.
 -- 
---   * **Monitor**: Monitor and take action.
 --   * **Start**: Start the transport process.
 --   * **Stop**: Stop the transport process.
+--   * **Monitor**: Monitor and take action.
+--   
 --   * **Pickup**: Pickup cargo.
 --   * **Load**: Load the cargo.
+--   * **Loading**: The dispatcher is coordinating the loading of a cargo.
 --   * **Loaded**: Flag that the cargo is loaded.
+--   * **PickedUp**: The dispatcher has loaded all requested cargo into the CarrierGroup.
 --   * **Deploy**: Deploy cargo to a location.
 --   * **Unload**: Unload the cargo.
 --   * **Unloaded**: Flag that the cargo is unloaded.
---   * **Home**: A Helicopter is going home.
+--   * **Deployed**: All cargo is unloaded from the carriers in the group.
+--   * **Home**: A Carrier is going home.
+-- 
+-- ## 2.3) Enhance your mission scripts with **Tailored** Event Handling!
+-- 
+-- Within your mission, you can capture these events when triggered, and tailor the events with your own code!
+-- Check out the @{AI.AI_Cargo_Dispatcher#AI_CARGO_DISPATCHER} class at chapter 3 for details on the different event handlers that are available and how to use them.
+-- 
+-- **There are a lot of templates available that allows you to quickly setup an event handler for a specific event type!**
 -- 
 -- ---
 -- 
@@ -79796,8 +86464,9 @@ end
 -- 
 -- Several parameters can be set to pickup cargo:
 -- 
---    * @{#AI_CARGO_DISPATCHER\_HELICOPTER.SetPickupRadius}(): Sets or randomizes the pickup location for the helicopter around the cargo coordinate in a radius defined an outer and optional inner radius. 
---    * @{#AI_CARGO_DISPATCHER\_HELICOPTER.SetPickupSpeed}(): Set the speed or randomizes the speed in km/h to pickup the cargo.
+--    * @{#AI_CARGO_DISPATCHER_HELICOPTER.SetPickupRadius}(): Sets or randomizes the pickup location for the helicopter around the cargo coordinate in a radius defined an outer and optional inner radius. 
+--    * @{#AI_CARGO_DISPATCHER_HELICOPTER.SetPickupSpeed}(): Set the speed or randomizes the speed in km/h to pickup the cargo.
+--    * @{#AI_CARGO_DISPATCHER_HELICOPTER.SetPickupHeight}(): Set the height or randomizes the height in meters to pickup the cargo.
 -- 
 -- ---   
 --    
@@ -79805,15 +86474,16 @@ end
 -- 
 -- Several parameters can be set to deploy cargo:
 -- 
---    * @{#AI_CARGO_DISPATCHER\_HELICOPTER.SetDeployRadius}(): Sets or randomizes the deploy location for the helicopter around the cargo coordinate in a radius defined an outer and an optional inner radius. 
---    * @{#AI_CARGO_DISPATCHER\_HELICOPTER.SetDeploySpeed}(): Set the speed or randomizes the speed in km/h to deploy the cargo.
+--    * @{#AI_CARGO_DISPATCHER_HELICOPTER.SetDeployRadius}(): Sets or randomizes the deploy location for the helicopter around the cargo coordinate in a radius defined an outer and an optional inner radius. 
+--    * @{#AI_CARGO_DISPATCHER_HELICOPTER.SetDeploySpeed}(): Set the speed or randomizes the speed in km/h to deploy the cargo.
+--    * @{#AI_CARGO_DISPATCHER_HELICOPTER.SetDeployHeight}(): Set the height or randomizes the height in meters to deploy the cargo.
 -- 
 -- ---
 -- 
 -- ## 5. Set the home zone when there isn't any more cargo to pickup.
 -- 
 -- A home zone can be specified to where the Helicopters will move when there isn't any cargo left for pickup.
--- Use @{#AI_CARGO_DISPATCHER\_HELICOPTER.SetHomeZone}() to specify the home zone.
+-- Use @{#AI_CARGO_DISPATCHER_HELICOPTER.SetHomeZone}() to specify the home zone.
 -- 
 -- If no home zone is specified, the helicopters will wait near the deploy zone for a new pickup command.   
 -- 
@@ -79826,30 +86496,39 @@ AI_CARGO_DISPATCHER_HELICOPTER = {
 
 --- Creates a new AI_CARGO_DISPATCHER_HELICOPTER object.
 -- @param #AI_CARGO_DISPATCHER_HELICOPTER self
--- @param Core.Set#SET_GROUP HelicopterSet The collection of Helicopter @{Wrapper.Group}s.
--- @param Core.Set#SET_CARGO CargoSet The collection of @{Cargo.Cargo} derived objects.
--- @param Core.Set#SET_ZONE PickupZoneSet (optional) The collection of pickup @{Zone}s, which are used to where the cargo can be picked up by the APCs. If nil, then cargo can be picked up everywhere. 
--- @param Core.Set#SET_ZONE DeployZoneSet The collection of deploy @{Zone}s, which are used to where the cargo will be deployed by the Helicopters. 
+-- @param Core.Set#SET_GROUP HelicopterSet The set of @{Wrapper.Group#GROUP} objects of helicopters that will transport the cargo.
+-- @param Core.Set#SET_CARGO CargoSet The set of @{Cargo.Cargo#CARGO} objects, which can be CARGO_GROUP, CARGO_CRATE, CARGO_SLINGLOAD objects.
+-- @param Core.Set#SET_ZONE PickupZoneSet (optional) The set of pickup zones, which are used to where the cargo can be picked up by the APCs. If nil, then cargo can be picked up everywhere. 
+-- @param Core.Set#SET_ZONE DeployZoneSet The set of deploy zones, which are used to where the cargo will be deployed by the Helicopters. 
 -- @return #AI_CARGO_DISPATCHER_HELICOPTER
 -- @usage
 -- 
--- -- Create a new cargo dispatcher
--- HelicopterSet = SET_GROUP:New():FilterPrefixes( "Helicopter" ):FilterStart()
--- CargoSet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
--- DeployZoneSet = SET_ZONE:New():FilterPrefixes( "Deploy" ):FilterStart()
--- AICargoDispatcher = AI_CARGO_DISPATCHER_HELICOPTER:New( HelicopterSet, SetCargo, nil, DeployZoneSet )
+--      -- An AI dispatcher object for a helicopter squadron, moving infantry from pickup zones to deploy zones.
+-- 
+--      local SetCargoInfantry = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
+--      local SetHelicopter = SET_GROUP:New():FilterPrefixes( "Helicopter" ):FilterStart()
+--      local SetPickupZones = SET_ZONE:New():FilterPrefixes( "Pickup" ):FilterStart()
+--      local SetDeployZones = SET_ZONE:New():FilterPrefixes( "Deploy" ):FilterStart()
+--      
+--      AICargoDispatcherHelicopter = AI_CARGO_DISPATCHER_HELICOPTER:New( SetHelicopter, SetCargoInfantry, SetPickupZones, SetDeployZones ) 
+--      AICargoDispatcherHelicopter:Start()
 -- 
 function AI_CARGO_DISPATCHER_HELICOPTER:New( HelicopterSet, CargoSet, PickupZoneSet, DeployZoneSet )
 
-  local self = BASE:Inherit( self, AI_CARGO_DISPATCHER:NewWithZones( HelicopterSet, CargoSet, PickupZoneSet, DeployZoneSet ) ) -- #AI_CARGO_DISPATCHER_HELICOPTER
+  local self = BASE:Inherit( self, AI_CARGO_DISPATCHER:New( HelicopterSet, CargoSet, PickupZoneSet, DeployZoneSet ) ) -- #AI_CARGO_DISPATCHER_HELICOPTER
 
-  self:SetDeploySpeed( 200, 150 )
-  self:SetPickupSpeed( 200, 150 )
+  self:SetPickupSpeed( 350, 150 )
+  self:SetDeploySpeed( 350, 150 )
+
   self:SetPickupRadius( 0, 0 )
   self:SetDeployRadius( 0, 0 )
   
+  self:SetPickupHeight( 500, 200 )
+  self:SetDeployHeight( 500, 200 )
+  
   return self
 end
+
 
 function AI_CARGO_DISPATCHER_HELICOPTER:AICargo( Helicopter, CargoSet )
 
@@ -79858,11 +86537,20 @@ end
 
 --- **AI** -- (R2.4) - Models the intelligent transportation of infantry and other cargo using Planes.
 --
--- **Features:**
+-- ## Features:
 --
 --   * The airplanes will fly towards the pickup airbases to pickup the cargo.
 --   * The airplanes will fly towards the deploy airbases to deploy the cargo.
 --   
+-- ===
+-- 
+-- ## Test Missions:
+-- 
+-- Test missions can be located on the main GITHUB site.
+-- 
+-- [FlightControl-Master/MOOSE_MISSIONS/AID - AI Dispatching/AID-CGO - AI Cargo Dispatching/]  
+-- (https://github.com/FlightControl-Master/MOOSE_MISSIONS/tree/develop/AID%20-%20AI%20Dispatching/AID-CGO%20-%20AI%20Cargo%20Dispatching)
+-- 
 -- ===
 -- 
 -- ### Author: **FlightControl**
@@ -79871,7 +86559,8 @@ end
 --
 -- @module AI.AI_Cargo_Dispatcher_Airplane
 -- @image AI_Cargo_Dispatching_For_Airplanes.JPG
--- 
+
+
 --- @type AI_CARGO_DISPATCHER_AIRPLANE
 -- @extends AI.AI_Cargo_Dispatcher#AI_CARGO_DISPATCHER
 
@@ -79882,14 +86571,79 @@ end
 -- 
 -- The AI_CARGO_DISPATCHER_AIRPLANE module is derived from the AI_CARGO_DISPATCHER module.
 -- 
--- ## Note! In order to fully understand the mechanisms of the AI_CARGO_DISPATCHER_AIRPLANE class, it is recommended that you
--- **first consult and READ the documentation of the @{AI.AI_Cargo_Dispatcher} module!!!**
+-- ## Note! In order to fully understand the mechanisms of the AI_CARGO_DISPATCHER_AIRPLANE class, it is recommended that you first consult and READ the documentation of the @{AI.AI_Cargo_Dispatcher} module!!!**
 -- 
 -- Especially to learn how to **Tailor the different cargo handling events**, this will be very useful!
 -- 
 -- On top, the AI_CARGO_DISPATCHER_AIRPLANE class uses the @{Cargo.Cargo} capabilities within the MOOSE framework.
 -- Also ensure that you fully understand how to declare and setup Cargo objects within the MOOSE framework before using this class.
 -- CARGO derived objects must be declared within the mission to make the AI_CARGO_DISPATCHER_HELICOPTER object recognize the cargo.
+-- 
+-- # 1) AI_CARGO_DISPATCHER_AIRPLANE constructor.
+--   
+--   * @{#AI_CARGO_DISPATCHER_AIRPLANE.New}(): Creates a new AI_CARGO_DISPATCHER_AIRPLANE object.
+-- 
+-- ---
+-- 
+-- # 2) AI_CARGO_DISPATCHER_AIRPLANE is a Finite State Machine.
+-- 
+-- This section must be read as follows. Each of the rows indicate a state transition, triggered through an event, and with an ending state of the event was executed.
+-- The first column is the **From** state, the second column the **Event**, and the third column the **To** state.
+-- 
+-- So, each of the rows have the following structure.
+-- 
+--   * **From** => **Event** => **To**
+-- 
+-- Important to know is that an event can only be executed if the **current state** is the **From** state.
+-- This, when an **Event** that is being triggered has a **From** state that is equal to the **Current** state of the state machine, the event will be executed,
+-- and the resulting state will be the **To** state.
+-- 
+-- These are the different possible state transitions of this state machine implementation: 
+-- 
+--   * Idle => Start => Monitoring
+--   * Monitoring => Monitor => Monitoring
+--   * Monitoring => Stop => Idle
+--      
+--   * Monitoring => Pickup => Monitoring
+--   * Monitoring => Load => Monitoring
+--   * Monitoring => Loading => Monitoring
+--   * Monitoring => Loaded => Monitoring
+--   * Monitoring => PickedUp => Monitoring
+--   * Monitoring => Deploy => Monitoring
+--   * Monitoring => Unload => Monitoring
+--   * Monitoring => Unloaded => Monitoring
+--   * Monitoring => Deployed => Monitoring
+--   * Monitoring => Home => Monitoring
+-- 
+--      
+-- ## 2.1) AI_CARGO_DISPATCHER States.
+-- 
+--   * **Monitoring**: The process is dispatching.
+--   * **Idle**: The process is idle.
+-- 
+-- ## 2.2) AI_CARGO_DISPATCHER Events.
+-- 
+--   * **Start**: Start the transport process.
+--   * **Stop**: Stop the transport process.
+--   * **Monitor**: Monitor and take action.
+--   
+--   * **Pickup**: Pickup cargo.
+--   * **Load**: Load the cargo.
+--   * **Loading**: The dispatcher is coordinating the loading of a cargo.
+--   * **Loaded**: Flag that the cargo is loaded.
+--   * **PickedUp**: The dispatcher has loaded all requested cargo into the CarrierGroup.
+--   * **Deploy**: Deploy cargo to a location.
+--   * **Unload**: Unload the cargo.
+--   * **Unloaded**: Flag that the cargo is unloaded.
+--   * **Deployed**: All cargo is unloaded from the carriers in the group.
+--   * **Home**: A Carrier is going home.
+-- 
+-- ## 2.3) Enhance your mission scripts with **Tailored** Event Handling!
+-- 
+-- Within your mission, you can capture these events when triggered, and tailor the events with your own code!
+-- Check out the @{AI.AI_Cargo_Dispatcher#AI_CARGO_DISPATCHER} class at chapter 3 for details on the different event handlers that are available and how to use them.
+-- 
+-- **There are a lot of templates available that allows you to quickly setup an event handler for a specific event type!**
 -- 
 -- 
 -- 
@@ -79900,30 +86654,43 @@ AI_CARGO_DISPATCHER_AIRPLANE = {
 
 --- Creates a new AI_CARGO_DISPATCHER_AIRPLANE object.
 -- @param #AI_CARGO_DISPATCHER_AIRPLANE self
--- @param Core.Set#SET_GROUP AirplaneSet Set of cargo transport airplanes.
--- @param Core.Set#SET_CARGO CargoSet Set of cargo, which is supposed to be transported.
--- @param Core.Zone#SET_ZONE PickupZoneSet Set of zone airbases where the cargo has to be picked up.
--- @param Core.Zone#SET_ZONE DeployZoneSet Set of zone airbases where the cargo is deployed. Choice for each cargo is random.
+-- @param Core.Set#SET_GROUP AirplaneSet The set of @{Wrapper.Group#GROUP} objects of airplanes that will transport the cargo.
+-- @param Core.Set#SET_CARGO CargoSet The set of @{Cargo.Cargo#CARGO} objects, which can be CARGO_GROUP, CARGO_CRATE, CARGO_SLINGLOAD objects.
+-- @param Core.Zone#SET_ZONE PickupZoneSet The set of zone airbases where the cargo has to be picked up.
+-- @param Core.Zone#SET_ZONE DeployZoneSet The set of zone airbases where the cargo is deployed. Choice for each cargo is random.
 -- @return #AI_CARGO_DISPATCHER_AIRPLANE self
 -- @usage
 -- 
--- -- Create a new cargo dispatcher
--- AirplaneSet = SET_GROUP:New():FilterPrefixes( "Airplane" ):FilterStart()
--- CargoSet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
--- PickupZoneSet = SET_AIRBASE:New()
--- DeployZoneSet = SET_AIRBASE:New()
--- PickupZoneSet:AddZone( ZONE_AIRBASE:New( "Gudauta", AIRBASE:FindByName( AIRBASE.Caucasus.Gudauta ), 3000 ) )
--- DeployZoneSet:AddZone( ZONE_AIRBASE:New( "Sochi", AIRBASE:FindByName( AIRBASE.Caucasus.Sochi_Adler ), 3000 ) )
--- AICargoDispatcher = AI_CARGO_DISPATCHER_AIRPLANE:New( AirplaneSet, CargoSet, PickupZoneSet, DeployZoneSet )
+--      -- An AI dispatcher object for an airplane squadron, moving infantry and vehicles from pickup airbases to deploy airbases.
+--   
+--      local CargoInfantrySet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
+--      local AirplanesSet = SET_GROUP:New():FilterPrefixes( "Airplane" ):FilterStart()
+--      local PickupZoneSet = SET_ZONE:New()
+--      local DeployZoneSet = SET_ZONE:New()
+--      
+--      PickupZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Gudauta ) )
+--      DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Sochi_Adler ) )
+--      DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Maykop_Khanskaya ) )
+--      DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Mineralnye_Vody ) )
+--      DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Vaziani ) )
+--      
+--      AICargoDispatcherAirplanes = AI_CARGO_DISPATCHER_AIRPLANE:New( AirplanesSet, CargoInfantrySet, PickupZoneSet, DeployZoneSet ) 
+--      AICargoDispatcherAirplanes:Start()
 -- 
 function AI_CARGO_DISPATCHER_AIRPLANE:New( AirplaneSet, CargoSet, PickupZoneSet, DeployZoneSet )
 
-  local self = BASE:Inherit( self, AI_CARGO_DISPATCHER:NewWithZones( AirplaneSet, CargoSet, PickupZoneSet, DeployZoneSet ) ) -- #AI_CARGO_DISPATCHER_AIRPLANE
+  local self = BASE:Inherit( self, AI_CARGO_DISPATCHER:New( AirplaneSet, CargoSet, PickupZoneSet, DeployZoneSet ) ) -- #AI_CARGO_DISPATCHER_AIRPLANE
 
-  self:SetDeploySpeed( 200, 150 )
-  self:SetPickupSpeed( 200, 150 )
+  self:SetPickupSpeed( 1200, 600 )
+  self:SetDeploySpeed( 1200, 600 )
+  
   self:SetPickupRadius( 0, 0 )
   self:SetDeployRadius( 0, 0 )
+
+  self:SetPickupHeight( 8000, 6000 )  
+  self:SetDeployHeight( 8000, 6000 )
+    
+  self:SetMonitorTimeInterval( 600 )
 
   return self
 end
@@ -81491,6 +88258,8 @@ function COMMANDCENTER:New( CommandCenterPositionable, CommandCenterName )
   self:SetMenu()
   
   _SETTINGS:SetSystemMenu( CommandCenterPositionable )
+  
+  self:SetCommandMenu()
 	
 	return self
 end
@@ -81661,10 +88430,7 @@ function COMMANDCENTER:GetMenu( TaskGroup )
   self.CommandCenterMenus[TaskGroup] = CommandCenterMenu
 
   if self.AutoAssignTasks == false then
-    local AutoAssignTaskMenu = MENU_GROUP_COMMAND:New( TaskGroup, "Assign Task On", CommandCenterMenu, self.SetAutoAssignTasks, self, true ):SetTime(MenuTime):SetTag("AutoTask")
     local AssignTaskMenu = MENU_GROUP_COMMAND:New( TaskGroup, "Assign Task", CommandCenterMenu, self.AssignRandomTask, self, TaskGroup ):SetTime(MenuTime):SetTag("AutoTask")
-  else
-    local AutoAssignTaskMenu = MENU_GROUP_COMMAND:New( TaskGroup, "Assign Task Off", CommandCenterMenu, self.SetAutoAssignTasks, self, false ):SetTime(MenuTime):SetTag("AutoTask")
   end
   CommandCenterMenu:Remove( MenuTime, "AutoTask" )
     
@@ -81696,10 +88462,32 @@ function COMMANDCENTER:AssignRandomTask( TaskGroup )
 end
 
 
+--- Sets the menu of the command center.
+-- This command is called within the :New() method.
+-- @param #COMMANDCENTER self
+function COMMANDCENTER:SetCommandMenu()
+
+  local MenuTime = timer.getTime()
+  
+  if self.CommandCenterPositionable and self.CommandCenterPositionable:IsInstanceOf(GROUP) then
+    local CommandCenterText = self:GetText()
+    local CommandCenterMenu = MENU_GROUP:New( self.CommandCenterPositionable, CommandCenterText ):SetTime(MenuTime)
+  
+    if self.AutoAssignTasks == false then
+      local AutoAssignTaskMenu = MENU_GROUP_COMMAND:New( self.CommandCenterPositionable, "Assign Task On", CommandCenterMenu, self.SetAutoAssignTasks, self, true ):SetTime(MenuTime):SetTag("AutoTask")
+    else
+      local AutoAssignTaskMenu = MENU_GROUP_COMMAND:New( self.CommandCenterPositionable, "Assign Task Off", CommandCenterMenu, self.SetAutoAssignTasks, self, false ):SetTime(MenuTime):SetTag("AutoTask")
+    end
+    CommandCenterMenu:Remove( MenuTime, "AutoTask" )
+  end
+
+end
+
+
+
 --- Automatically assigns tasks to all TaskGroups.
 -- @param #COMMANDCENTER self
 -- @param #boolean AutoAssign true for ON and false or nil for OFF.
--- @return #COMMANDCENTER
 function COMMANDCENTER:SetAutoAssignTasks( AutoAssign )
 
   self.AutoAssignTasks = AutoAssign or false
@@ -81716,6 +88504,8 @@ function COMMANDCENTER:SetAutoAssignTasks( AutoAssign )
   else
     self:ScheduleStop( self.AssignTasks )
   end
+  
+  self:SetCommandCenterMenu()
 
 end
 
@@ -81738,12 +88528,13 @@ function COMMANDCENTER:AssignTasks()
       end
     end
   end
+
 end
 
 
 --- Get all the Groups active within the command center.
 -- @param #COMMANDCENTER self
--- @return Core.Set#SET_GROUP
+-- @return Core.Set#SET_GROUP The set of groups active within the command center.
 function COMMANDCENTER:AddGroups()
 
   local GroupSet = SET_GROUP:New()
@@ -81759,7 +88550,7 @@ end
 
 --- Checks of the TaskGroup has a Task.
 -- @param #COMMANDCENTER self
--- @return #boolean
+-- @return #boolean When true, the TaskGroup has a Task, otherwise the returned value will be false.
 function COMMANDCENTER:IsGroupAssigned( TaskGroup )
 
   local Assigned = false
@@ -81776,9 +88567,9 @@ function COMMANDCENTER:IsGroupAssigned( TaskGroup )
 end
 
 
---- Checks of the COMMANDCENTER has a GROUP.
+--- Checks of the command center has the given MissionGroup.
 -- @param #COMMANDCENTER self
--- @param Wrapper.Group#GROUP
+-- @param Wrapper.Group#GROUP MissionGroup The group active within one of the missions governed by the command center.
 -- @return #boolean
 function COMMANDCENTER:HasGroup( MissionGroup )
 
@@ -81795,37 +88586,39 @@ function COMMANDCENTER:HasGroup( MissionGroup )
   return Has
 end
 
---- Send a CC message to the coalition of the CC.
+--- Let the command center send a Message to all players.
 -- @param #COMMANDCENTER self
+-- @param #string Message The message text.
 function COMMANDCENTER:MessageToAll( Message )
 
     self:GetPositionable():MessageToAll( Message, 20, self:GetName() )
 
 end
 
---- Send a CC message to a GROUP.
+--- Let the command center send a message to the MessageGroup.
 -- @param #COMMANDCENTER self
--- @param #string Message
--- @param Wrapper.Group#GROUP TaskGroup
-function COMMANDCENTER:MessageToGroup( Message, TaskGroup )
+-- @param #string Message The message text.
+-- @param Wrapper.Group#GROUP MessageGroup The group to receive the message.
+function COMMANDCENTER:MessageToGroup( Message, MessageGroup )
 
-  self:GetPositionable():MessageToGroup( Message, 15, TaskGroup, self:GetShortText() )
+  self:GetPositionable():MessageToGroup( Message, 15, MessageGroup, self:GetShortText() )
 
 end
 
---- Send a CC message of a specified type to a GROUP.
+--- Let the command center send a message to the MessageGroup.
 -- @param #COMMANDCENTER self
--- @param #string Message
--- @param Wrapper.Group#GROUP TaskGroup
+-- @param #string Message The message text.
+-- @param Wrapper.Group#GROUP MessageGroup The group to receive the message.
 -- @param Core.Message#MESSAGE.MessageType MessageType The type of the message, resulting in automatic time duration and prefix of the message.
-function COMMANDCENTER:MessageTypeToGroup( Message, TaskGroup, MessageType )
+function COMMANDCENTER:MessageTypeToGroup( Message, MessageGroup, MessageType )
 
-  self:GetPositionable():MessageTypeToGroup( Message, MessageType, TaskGroup, self:GetShortText() )
+  self:GetPositionable():MessageTypeToGroup( Message, MessageType, MessageGroup, self:GetShortText() )
 
 end
 
---- Send a CC message to the coalition of the CC.
+--- Let the command center send a message to the coalition of the command center.
 -- @param #COMMANDCENTER self
+-- @param #string Message The message text.
 function COMMANDCENTER:MessageToCoalition( Message )
 
   local CCCoalition = self:GetPositionable():GetCoalition()
@@ -81836,9 +88629,9 @@ function COMMANDCENTER:MessageToCoalition( Message )
 end
 
 
---- Send a CC message of a specified type to the coalition of the CC.
+--- Let the command center send a message of a specified type to the coalition of the command center.
 -- @param #COMMANDCENTER self
--- @param #string Message The message.
+-- @param #string Message The message text.
 -- @param Core.Message#MESSAGE.MessageType MessageType The type of the message, resulting in automatic time duration and prefix of the message.
 function COMMANDCENTER:MessageTypeToCoalition( Message, MessageType )
 
@@ -81850,9 +88643,10 @@ function COMMANDCENTER:MessageTypeToCoalition( Message, MessageType )
 end
 
 
---- Report the status of all MISSIONs to a GROUP.
+--- Let the command center send a report of the status of all missions to a group.
 -- Each Mission is listed, with an indication how many Tasks are still to be completed.
 -- @param #COMMANDCENTER self
+-- @param Wrapper.Group#GROUP ReportGroup The group to receive the report.
 function COMMANDCENTER:ReportSummary( ReportGroup )
   self:F( ReportGroup )
 
@@ -81870,9 +88664,10 @@ function COMMANDCENTER:ReportSummary( ReportGroup )
   self:MessageToGroup( Report:Text(), ReportGroup )
 end
 
---- Report the players of all MISSIONs to a GROUP.
+--- Let the command center send a report of the players of all missions to a group.
 -- Each Mission is listed, with an indication how many Tasks are still to be completed.
 -- @param #COMMANDCENTER self
+-- @param Wrapper.Group#GROUP ReportGroup The group to receive the report.
 function COMMANDCENTER:ReportMissionsPlayers( ReportGroup )
   self:F( ReportGroup )
 
@@ -81888,9 +88683,11 @@ function COMMANDCENTER:ReportMissionsPlayers( ReportGroup )
   self:MessageToGroup( Report:Text(), ReportGroup )
 end
 
---- Report the status of a Task to a Group.
+--- Let the command center send a report of the status of a task to a group.
 -- Report the details of a Mission, listing the Mission, and all the Task details.
 -- @param #COMMANDCENTER self
+-- @param Wrapper.Group#GROUP ReportGroup The group to receive the report.
+-- @param Tasking.Task#TASK Task The task to be reported.
 function COMMANDCENTER:ReportDetails( ReportGroup, Task )
   self:F( ReportGroup )
 
@@ -85693,11 +92490,13 @@ end
 
 do -- DETECTION MANAGER
   
-  --- DETECTION_MANAGER class.
-  -- @type DETECTION_MANAGER
+  --- @type DETECTION_MANAGER
   -- @field Core.Set#SET_GROUP SetGroup The groups to which the FAC will report to.
   -- @field Functional.Detection#DETECTION_BASE Detection The DETECTION_BASE object that is used to report the detected objects.
   -- @extends Core.Fsm#FSM
+
+  --- DETECTION_MANAGER class.
+  -- @field #DETECTION_MANAGER
   DETECTION_MANAGER = {
     ClassName = "DETECTION_MANAGER",
     SetGroup = nil,
@@ -88694,20 +95493,36 @@ end
 
 --- **Tasking** -- Base class to model tasks for players to transport cargo.
 -- 
+-- ## Features:
+-- 
+--   * TASK_CARGO is the **base class** for:
+--   
+--     * @{Tasking.Task_Cargo_Transport#TASK_CARGO_TRANSPORT}
+--     * @{Tasking.Task_Cargo_CSAR#TASK_CARGO_CSAR}
+-- 
+-- 
+-- ===
+-- 
+-- ## Test Missions:
+-- 
+-- Test missions can be located on the main GITHUB site.
+-- 
+-- [FlightControl-Master/MOOSE_MISSIONS/TAD - Task Dispatching/CGO - Cargo Dispatching/](https://github.com/FlightControl-Master/MOOSE_MISSIONS/tree/develop/TAD%20-%20Task%20Dispatching/CGO%20-%20Cargo%20Dispatching)
+-- 
 -- ===
 --
--- # 1) Tasking system.
+-- ## Tasking system.
 -- 
--- #### If you are not yet aware what the MOOSE tasking system is about, read FIRST the explanation on tasking **@{Tasking.Task}**.
+-- #### If you are not yet aware what the MOOSE tasking system is about, read FIRST the explanation on the @{Tasking.Task} module.
 -- 
 -- ===
 -- 
--- # 2) Context of cargo tasking.
+-- ## Context of cargo tasking.
 -- 
 -- The Moose framework provides various CARGO classes that allow DCS physical or logical objects to be transported or sling loaded by Carriers.
 -- The CARGO_ classes, as part of the MOOSE core, are able to Board, Load, UnBoard and UnLoad cargo between Carrier units.
 -- 
--- The TASK\_CARGO class is not meant to use within your missions as a mission designer. It is a base class, and other classes are derived from it.
+-- The TASK_CARGO class is not meant to use within your missions as a mission designer. It is a base class, and other classes are derived from it.
 -- 
 -- The following TASK_CARGO_ classes are important, as they implement the CONCRETE tasks:
 -- 
@@ -88719,7 +95534,7 @@ end
 -- 
 -- ===
 -- 
--- # 3) Cargo tasking from a player perspective.
+-- ## Cargo tasking from a player perspective.
 -- 
 -- A human player can join the battle field in a client airborne slot or a ground vehicle within the CA module (ALT-J).
 -- The player needs to accept the task from the task overview list within the mission, using the menus.
@@ -88740,19 +95555,19 @@ end
 -- In the menu, you'll find for each CARGO, that is part of the scope of the task, various actions that can be completed.
 -- Depending on the location of your Carrier unit, the menu options will vary.
 -- 
--- ## 3.1) Joining a Cargo Transport Task
+-- ### Joining a Cargo Transport Task
 -- 
 -- Once you've joined a task, using the **Join Planned Task Menu**, 
 -- you can Pickup cargo from a pickup location and Deploy cargo in deployment zones, using the **Task Action Menu**.
 --  
--- ## 3.2) Task Action Menu.
+-- ### Task Action Menu.
 -- 
 -- When a player has joined a **`CARGO`** task (type), for that player only, 
 -- it's **Task Action Menu** will show an additional menu options.
 -- 
 -- From within this menu, you will be able to route to a cargo location, deploy zone, and load/unload cargo.
 -- 
--- ## 3.3) Pickup cargo by Boarding, Loading and Sling Loading.
+-- ### Pickup cargo by Boarding, Loading and Sling Loading.
 -- 
 -- There are three different ways how cargo can be picked up:
 -- 
@@ -88834,7 +95649,7 @@ end
 -- These routing options will only be shown, when your carrier bays have cargo loaded.
 -- So, only when there is something to be deployed from your carrier, the deploy options will be shown.
 --     
--- ### 3.3.1) Pickup Cargo.
+-- #### Pickup Cargo.
 -- 
 -- In order to pickup cargo, use the **task action menu** to **route to a specific cargo**.
 -- When a cargo route is selected, the HQ will send you routing messages indicating the location of the cargo.
@@ -88849,7 +95664,7 @@ end
 -- It takes a bit of skill to land a helicopter near a cargo to be loaded, but that is part of the game, isn't it?
 -- Expecially when you are landing in a "hot" zone, so when cargo is under immediate threat of fire.
 -- 
--- ### 3.3.2) Board Cargo (infantry).
+-- #### Board Cargo (infantry).
 -- 
 -- ![](../Tasking/Boarding_Ready.png)  
 -- 
@@ -88894,7 +95709,7 @@ end
 --     If during boarding the Carrier gets airborne, the boarding process will be cancelled.
 --   * The carrier must remain stationary when the boarding sequence has started until further notified.
 -- 
--- ### 3.3.3) Load Cargo.
+-- #### Load Cargo.
 -- 
 -- Cargo can be loaded into vehicles or helicopters or airplanes, as long as the carrier is sufficiently near to the cargo object.
 -- 
@@ -88920,7 +95735,7 @@ end
 --   * For airborne Carriers, it is required to **land first right near the cargo**, before the loading process can be initiated.
 -- As stated, this requires some pilot skills :-)
 -- 
--- ### 3.3.4) Sling Load Cargo (helicopters only).
+-- #### Sling Load Cargo (helicopters only).
 -- 
 -- If your Carrier is within the **Loading Range of the cargo**, and the cargo is **stationary**, the **cargo can also be sling loaded**!
 -- Note that this is only possible for helicopters.
@@ -88932,7 +95747,7 @@ end
 -- As stated, this requires some pilot skills :-)
 -- 
 -- 
--- ## 3.4) Deploy cargo by Unboarding, Unloading and Sling Deploying.
+-- ### Deploy cargo by Unboarding, Unloading and Sling Deploying.
 -- 
 -- #### **Deploying the relevant cargo within deploy zones, will make you achieve cargo transportation tasks!!!**
 -- 
@@ -88980,7 +95795,7 @@ end
 -- ![Task_Types](../Tasking/Task_Cargo_Settings.JPG)  
 -- Use the **Settings Menu** to select the coordinate format that you would like to use for location determination.
 -- 
--- ### 3.4.1) Unboard Cargo.
+-- #### Unboard Cargo.
 -- 
 -- If your carrier contains cargo, and the cargo is **moveable**, the **cargo can be unboarded**!
 -- You can only unload cargo if there is cargo within your cargo bays within the carrier.
@@ -89020,7 +95835,7 @@ end
 -- 
 -- **Deploying a cargo within a deployment zone, may complete a deployment task! So ensure that you deploy the right cargo at the right deployment zone!**
 -- 
--- ### 3.4.2) Unload Cargo.
+-- #### Unload Cargo.
 -- 
 -- If your carrier contains cargo, and the cargo is **stationary**, the **cargo can be unloaded**, but not unboarded!
 -- You can only unload cargo if there is cargo within your cargo bays within the carrier.
@@ -89052,7 +95867,7 @@ end
 -- **Deploying a cargo within a deployment zone, may complete a deployment task! So ensure that you deploy the right cargo at the right deployment zone!**
 -- 
 -- 
--- ### 3.4.3) Sling Deploy Cargo (helicopters only).
+-- #### Sling Deploy Cargo (helicopters only).
 -- 
 -- If your Carrier is within the **deploy zone**, and the cargo is **stationary**, the **cargo can also be sling deploying**!
 -- Note that this is only possible for helicopters.
@@ -89060,6 +95875,15 @@ end
 -- To sling deploy cargo, there is no task action menu required. Just follow the normal sling deploying procedure.
 -- 
 -- **Deploying a cargo within a deployment zone, may complete a deployment task! So ensure that you deploy the right cargo at the right deployment zone!**
+-- 
+-- ## Cargo tasking from a mission designer perspective.
+-- 
+-- Please consult the documentation how to implement the derived classes of SET_CARGO in:
+-- 
+--   - @{Tasking.Task_Cargo#TASK_CARGO}: Documents the main methods how to handle the cargo tasking from a mission designer perspective.
+--   - @{Tasking.Task_Cargo#TASK_CARGO_TRANSPORT}: Documents the specific methods how to handle the cargo transportation tasking from a mission designer perspective.
+--   - @{Tasking.Task_Cargo#TASK_CARGO_CSAR}: Documents the specific methods how to handle the cargo CSAR tasking from a mission designer perspective.
+--   
 -- 
 -- ===
 -- 
@@ -89138,6 +95962,8 @@ do -- TASK_CARGO
   --   * **Assigned**: The cargo task is assigned to a @{Wrapper.Group#GROUP}.
   --   * **Success**: The cargo task is successfully completed.
   --   * **Failed**: The cargo task has failed. This will happen if the player exists the task early, without communicating a possible cancellation to HQ.
+  -- 
+  -- 
   -- 
   -- ===
   -- 
@@ -89410,11 +96236,11 @@ do -- TASK_CARGO
               -- Cargo in deployzones are flagged as deployed.
               for DeployZoneName, DeployZone in pairs( Task.DeployZones ) do
                 if Cargo:IsInZone( DeployZone ) then
-                  Task:E( { CargoIsDeployed = Task.CargoDeployed and "true" or "false" } )
+                  Task:I( { CargoIsDeployed = Task.CargoDeployed and "true" or "false" } )
                   if Cargo:IsDeployed() == false then
                     Cargo:SetDeployed( true )
                     -- Now we call a callback method to handle the CargoDeployed event.
-                    Task:E( { CargoIsAlive = Cargo:IsAlive() and "true" or "false" } )
+                    Task:I( { CargoIsAlive = Cargo:IsAlive() and "true" or "false" } )
                     if Cargo:IsAlive() then
                       Task:CargoDeployed( TaskUnit, Cargo, DeployZone )
                     end
@@ -89684,7 +96510,7 @@ do -- TASK_CARGO
           else
             Cargo:MessageToGroup( "Boarding ...", TaskUnit:GetGroup() )
             if not Cargo:IsBoarding() then
-              Cargo:Board( TaskUnit, 20, self )
+              Cargo:Board( TaskUnit, nil, self )
             end
           end
         else
@@ -90114,11 +96940,8 @@ do -- TASK_CARGO_TRANSPORT
   -- 
   -- ===
   -- 
-  -- A transport task can be created manually, but actually, it is better to **GENERATE** these tasks using the 
-  -- @{Tasking.Task_Cargo_Dispatcher} module.
-  -- 
-  -- Using the dispatcher, transport tasks can be created much more easy.
-  -- 
+  -- A transport task can be created manually.
+  --  
   -- # 1) Create a transport task manually (code it).
   -- 
   -- Although it is recommended to use the dispatcher, you can create a transport task yourself as a mission designer.
@@ -90187,6 +97010,124 @@ do -- TASK_CARGO_TRANSPORT
   -- So you can see, setting up a transport task manually is a lot of work.
   -- It is better you use the cargo dispatcher to create transport tasks and it will work as it is intended.
   -- By doing this, cargo transport tasking will become a dynamic experience.
+  -- 
+  -- 
+  -- # 2) Create a task using the @{Tasking.Task_Cargo_Dispatcher} module.
+  -- 
+  -- Actually, it is better to **GENERATE** these tasks using the @{Tasking.Task_Cargo_Dispatcher} module.
+  -- Using the dispatcher module, transport tasks can be created much more easy.
+  -- 
+  -- Find below an example how to use the TASK_CARGO_DISPATCHER class:
+  -- 
+  -- 
+  --    -- Find the HQ group.
+  --    HQ = GROUP:FindByName( "HQ", "Bravo" )
+  --    
+  --    -- Create the command center with the name "Lima".
+  --    CommandCenter = COMMANDCENTER
+  --      :New( HQ, "Lima" )
+  --    
+  --    -- Create the mission, for the command center, with the name "Operation Cargo Fun", a "Tactical" mission, with the mission briefing "Transport Cargo", for the BLUE coalition.
+  --    Mission = MISSION
+  --      :New( CommandCenter, "Operation Cargo Fun", "Tactical", "Transport Cargo", coalition.side.BLUE )
+  --    
+  --    -- Create the SET of GROUPs containing clients (players) that will transport the cargo.
+  --    -- These are have a name that start with "Transport" and are of the "blue" coalition.
+  --    TransportGroups = SET_GROUP:New():FilterCoalitions( "blue" ):FilterPrefixes( "Transport" ):FilterStart()
+  --    
+  --    
+  --    -- Here we create the TASK_CARGO_DISPATCHER object! This is where we assign the dispatcher to generate tasks in the Mission for the TransportGroups.
+  --    TaskDispatcher = TASK_CARGO_DISPATCHER:New( Mission, TransportGroups )
+  --    
+  --    
+  --    -- Here we declare the SET of CARGOs called "Workmaterials".
+  --    local CargoSetWorkmaterials = SET_CARGO:New():FilterTypes( "Workmaterials" ):FilterStart()
+  --    
+  --    -- Here we declare (add) CARGO_GROUP objects of various types, that are filtered and added in the CargoSetworkmaterials cargo set.
+  --    -- These cargo objects have the type "Workmaterials" which is exactly the type of cargo the CargoSetworkmaterials is filtering on.
+  --    local EngineerCargoGroup = CARGO_GROUP:New( GROUP:FindByName( "Engineers" ), "Workmaterials", "Engineers", 250 )
+  --    local ConcreteCargo = CARGO_SLINGLOAD:New( STATIC:FindByName( "Concrete" ), "Workmaterials", "Concrete", 150, 50 )
+  --    local CrateCargo = CARGO_CRATE:New( STATIC:FindByName( "Crate" ), "Workmaterials", "Crate", 150, 50 )
+  --    local EnginesCargo = CARGO_CRATE:New( STATIC:FindByName( "Engines" ), "Workmaterials", "Engines", 150, 50 )
+  --    local MetalCargo = CARGO_CRATE:New( STATIC:FindByName( "Metal" ), "Workmaterials", "Metal", 150, 50 )
+  --    
+  --    -- And here we create a new WorkplaceTask, using the :AddTransportTask method of the TaskDispatcher.
+  --    local WorkplaceTask = TaskDispatcher:AddTransportTask( "Build a Workplace", CargoSetWorkmaterials, "Transport the workers, engineers and the equipment near the Workplace." )
+  --    TaskDispatcher:SetTransportDeployZone( WorkplaceTask, ZONE:New( "Workplace" ) )
+  -- 
+  -- # 3) Handle cargo task events.
+  -- 
+  -- When a player is picking up and deploying cargo using his carrier, events are generated by the tasks. These events can be captured and tailored with your own code.
+  -- 
+  -- In order to properly capture the events and avoid mistakes using the documentation, it is advised that you execute the following actions:
+  -- 
+  --   * **Copy / Paste** the code section into your script.
+  --   * **Change** the CLASS literal to the task object name you have in your script.
+  --   * Within the function, you can now **write your own code**!
+  --   * **IntelliSense** will recognize the type of the variables provided by the function. Note: the From, Event and To variables can be safely ignored, 
+  --     but you need to declare them as they are automatically provided by the event handling system of MOOSE.
+  -- 
+  -- You can send messages or fire off any other events within the code section. The sky is the limit!
+  -- 
+  -- 
+  -- ## 3.1) Handle the CargoPickedUp event.
+  -- 
+  -- Find below an example how to tailor the **CargoPickedUp** event, generated by the WorkplaceTask:
+  -- 
+  --      function WorkplaceTask:OnAfterCargoPickedUp( From, Event, To, TaskUnit, Cargo )
+  --        
+  --        MESSAGE:NewType( "Unit " .. TaskUnit:GetName().. " has picked up cargo.", MESSAGE.Type.Information ):ToAll()
+  --        
+  --      end
+  -- 
+  -- If you want to code your own event handler, use this code fragment to tailor the event when a player carrier has picked up a cargo object in the CarrierGroup.
+  -- You can use this event handler to post messages to players, or provide status updates etc.
+  -- 
+  --      --- CargoPickedUp event handler OnAfter for CLASS.
+  --      -- @param #CLASS self
+  --      -- @param #string From A string that contains the "*from state name*" when the event was triggered.
+  --      -- @param #string Event A string that contains the "*event name*" when the event was triggered.
+  --      -- @param #string To A string that contains the "*to state name*" when the event was triggered.
+  --      -- @param Wrapper.Unit#UNIT TaskUnit The unit (client) of the player that has picked up the cargo.
+  --      -- @param Cargo.Cargo#CARGO Cargo The cargo object that has been picked up. Note that this can be a CARGO_GROUP, CARGO_CRATE or CARGO_SLINGLOAD object!
+  --      function CLASS:OnAfterCargoPickedUp( From, Event, To, TaskUnit, Cargo )
+  --      
+  --        -- Write here your own code.
+  --      
+  --      end
+  -- 
+  -- 
+  -- ## 3.2) Handle the CargoDeployed event.
+  -- 
+  -- Find below an example how to tailor the **CargoDeployed** event, generated by the WorkplaceTask:
+  -- 
+  --      function WorkplaceTask:OnAfterCargoDeployed( From, Event, To, TaskUnit, Cargo, DeployZone )
+  --        
+  --        MESSAGE:NewType( "Unit " .. TaskUnit:GetName().. " has deployed cargo at zone " .. DeployZone:GetName(), MESSAGE.Type.Information ):ToAll()
+  --        
+  --        Helos[ math.random(1,#Helos) ]:Spawn()
+  --        EnemyHelos[ math.random(1,#EnemyHelos) ]:Spawn()
+  --      end
+  -- 
+  -- If you want to code your own event handler, use this code fragment to tailor the event when a player carrier has deployed a cargo object from the CarrierGroup.
+  -- You can use this event handler to post messages to players, or provide status updates etc.
+  -- 
+  -- 
+  --      --- CargoDeployed event handler OnAfter for CLASS.
+  --      -- @param #CLASS self
+  --      -- @param #string From A string that contains the "*from state name*" when the event was triggered.
+  --      -- @param #string Event A string that contains the "*event name*" when the event was triggered.
+  --      -- @param #string To A string that contains the "*to state name*" when the event was triggered.
+  --      -- @param Wrapper.Unit#UNIT TaskUnit The unit (client) of the player that has deployed the cargo.
+  --      -- @param Cargo.Cargo#CARGO Cargo The cargo object that has been deployed. Note that this can be a CARGO_GROUP, CARGO_CRATE or CARGO_SLINGLOAD object!
+  --      -- @param Core.Zone#ZONE DeployZone The zone wherein the cargo is deployed. This can be any zone type, like a ZONE, ZONE_GROUP, ZONE_AIRBASE.
+  --      function CLASS:OnAfterCargoDeployed( From, Event, To, TaskUnit, Cargo, DeployZone )
+  --      
+  --        -- Write here your own code.
+  --      
+  --      end
+  -- 
+  -- 
   -- 
   -- ===
   -- 
@@ -90444,6 +97385,114 @@ do -- TASK_CARGO_CSAR
   -- It is better you use the cargo dispatcher to generate CSAR tasks and it will work as it is intended.
   -- By doing this, CSAR tasking will become a dynamic experience.
   -- 
+  -- # 2) Create a task using the @{Tasking.Task_Cargo_Dispatcher} module.
+  -- 
+  -- Actually, it is better to **GENERATE** these tasks using the @{Tasking.Task_Cargo_Dispatcher} module.
+  -- Using the dispatcher module, transport tasks can be created much more easy.
+  -- 
+  -- Find below an example how to use the TASK_CARGO_DISPATCHER class:
+  -- 
+  -- 
+  --      -- Find the HQ group.
+  --      HQ = GROUP:FindByName( "HQ", "Bravo" )
+  --    
+  --      -- Create the command center with the name "Lima".
+  --      CommandCenter = COMMANDCENTER
+  --        :New( HQ, "Lima" )
+  --    
+  --      -- Create the mission, for the command center, with the name "CSAR Mission", a "Tactical" mission, with the mission briefing "Rescue downed pilots.", for the RED coalition.
+  --      Mission = MISSION
+  --        :New( CommandCenter, "CSAR Mission", "Tactical", "Rescue downed pilots.", coalition.side.RED )
+  --    
+  --      -- Create the SET of GROUPs containing clients (players) that will transport the cargo.
+  --      -- These are have a name that start with "Rescue" and are of the "red" coalition.
+  --      AttackGroups = SET_GROUP:New():FilterCoalitions( "red" ):FilterPrefixes( "Rescue" ):FilterStart()
+  --    
+  --    
+  --      -- Here we create the TASK_CARGO_DISPATCHER object! This is where we assign the dispatcher to generate tasks in the Mission for the AttackGroups.
+  --      TaskDispatcher = TASK_CARGO_DISPATCHER:New( Mission, AttackGroups )
+  --    
+  --      
+  --      -- Here the task dispatcher will generate automatically CSAR tasks once a pilot ejects.
+  --      TaskDispatcher:StartCSARTasks( 
+  --        "CSAR", 
+  --        { ZONE_UNIT:New( "Hospital", STATIC:FindByName( "Hospital" ), 100 ) }, 
+  --        "One of our pilots has ejected. Go out to Search and Rescue our pilot!\n" .. 
+  --        "Use the radio menu to let the command center assist you with the CSAR tasking."
+  --      )
+  -- 
+  -- # 3) Handle cargo task events.
+  -- 
+  -- When a player is picking up and deploying cargo using his carrier, events are generated by the tasks. These events can be captured and tailored with your own code.
+  -- 
+  -- In order to properly capture the events and avoid mistakes using the documentation, it is advised that you execute the following actions:
+  -- 
+  --   * **Copy / Paste** the code section into your script.
+  --   * **Change** the CLASS literal to the task object name you have in your script.
+  --   * Within the function, you can now **write your own code**!
+  --   * **IntelliSense** will recognize the type of the variables provided by the function. Note: the From, Event and To variables can be safely ignored, 
+  --     but you need to declare them as they are automatically provided by the event handling system of MOOSE.
+  -- 
+  -- You can send messages or fire off any other events within the code section. The sky is the limit!
+  -- 
+  -- NOTE: CSAR tasks are actually automatically created by the TASK_CARGO_DISPATCHER. So the underlying is not really applicable for mission designers as they will use the dispatcher instead
+  -- of capturing these events from manually created CSAR tasks!
+  -- 
+  -- ## 3.1) Handle the **CargoPickedUp** event.
+  -- 
+  -- Find below an example how to tailor the **CargoPickedUp** event, generated by the CSARTask:
+  -- 
+  --      function CSARTask:OnAfterCargoPickedUp( From, Event, To, TaskUnit, Cargo )
+  --        
+  --        MESSAGE:NewType( "Unit " .. TaskUnit:GetName().. " has picked up cargo.", MESSAGE.Type.Information ):ToAll()
+  --        
+  --      end
+  -- 
+  -- If you want to code your own event handler, use this code fragment to tailor the event when a player carrier has picked up a cargo object in the CarrierGroup.
+  -- You can use this event handler to post messages to players, or provide status updates etc.
+  -- 
+  --      --- CargoPickedUp event handler OnAfter for CLASS.
+  --      -- @param #CLASS self
+  --      -- @param #string From A string that contains the "*from state name*" when the event was triggered.
+  --      -- @param #string Event A string that contains the "*event name*" when the event was triggered.
+  --      -- @param #string To A string that contains the "*to state name*" when the event was triggered.
+  --      -- @param Wrapper.Unit#UNIT TaskUnit The unit (client) of the player that has picked up the cargo.
+  --      -- @param Cargo.Cargo#CARGO Cargo The cargo object that has been picked up. Note that this can be a CARGO_GROUP, CARGO_CRATE or CARGO_SLINGLOAD object!
+  --      function CLASS:OnAfterCargoPickedUp( From, Event, To, TaskUnit, Cargo )
+  --      
+  --        -- Write here your own code.
+  --      
+  --      end
+  -- 
+  -- 
+  -- ## 3.2) Handle the **CargoDeployed** event.
+  -- 
+  -- Find below an example how to tailor the **CargoDeployed** event, generated by the CSARTask:
+  -- 
+  --      function CSARTask:OnAfterCargoDeployed( From, Event, To, TaskUnit, Cargo, DeployZone )
+  --        
+  --        MESSAGE:NewType( "Unit " .. TaskUnit:GetName().. " has deployed cargo at zone " .. DeployZone:GetName(), MESSAGE.Type.Information ):ToAll()
+  --        
+  --      end
+  -- 
+  -- If you want to code your own event handler, use this code fragment to tailor the event when a player carrier has deployed a cargo object from the CarrierGroup.
+  -- You can use this event handler to post messages to players, or provide status updates etc.
+  -- 
+  -- 
+  --      --- CargoDeployed event handler OnAfter for CLASS.
+  --      -- @param #CLASS self
+  --      -- @param #string From A string that contains the "*from state name*" when the event was triggered.
+  --      -- @param #string Event A string that contains the "*event name*" when the event was triggered.
+  --      -- @param #string To A string that contains the "*to state name*" when the event was triggered.
+  --      -- @param Wrapper.Unit#UNIT TaskUnit The unit (client) of the player that has deployed the cargo.
+  --      -- @param Cargo.Cargo#CARGO Cargo The cargo object that has been deployed. Note that this can be a CARGO_GROUP, CARGO_CRATE or CARGO_SLINGLOAD object!
+  --      -- @param Core.Zone#ZONE DeployZone The zone wherein the cargo is deployed. This can be any zone type, like a ZONE, ZONE_GROUP, ZONE_AIRBASE.
+  --      function CLASS:OnAfterCargoDeployed( From, Event, To, TaskUnit, Cargo, DeployZone )
+  --      
+  --        -- Write here your own code.
+  --      
+  --      end
+  --      
   -- ===
   -- 
   -- @field #TASK_CARGO_CSAR
@@ -90885,6 +97934,97 @@ do -- TASK_CARGO_DISPATCHER
   -- Use the @{#TASK_CARGO_DISPATCHER.SetCSARDeployZone}() to setup one deployment zone, and @{#TASK_CARGO_DISPATCHER.SetCSARDeployZones}() to setup multiple default deployment zones in one call.
   -- 
   -- 
+  -- # 5) Handle cargo task events.
+  -- 
+  -- When a player is picking up and deploying cargo using his carrier, events are generated by the dispatcher. These events can be captured and tailored with your own code.
+  -- 
+  -- In order to properly capture the events and avoid mistakes using the documentation, it is advised that you execute the following actions:
+  -- 
+  --   * **Copy / Paste** the code section into your script.
+  --   * **Change** the CLASS literal to the task object name you have in your script.
+  --   * Within the function, you can now **write your own code**!
+  --   * **IntelliSense** will recognize the type of the variables provided by the function. Note: the From, Event and To variables can be safely ignored, 
+  --     but you need to declare them as they are automatically provided by the event handling system of MOOSE.
+  -- 
+  -- You can send messages or fire off any other events within the code section. The sky is the limit!
+  -- 
+  -- First, we need to create a TASK_CARGO_DISPATCHER object.
+  -- 
+  --      TaskDispatcher = TASK_CARGO_DISPATCHER:New( Mission, PilotGroupSet )
+  -- 
+  -- Second, we create a new cargo transport task for the transportation of workmaterials.
+  -- 
+  --      TaskDispatcher:AddTransportTask( 
+  --        "Transport workmaterials", 
+  --        WorkmaterialsCargoSet, 
+  --        "Transport the workers, engineers and the equipment near the Workplace." )
+  -- 
+  -- Note that we don't really need to keep the resulting task, it is kept internally also in the dispatcher.
+  -- 
+  -- Using the `TaskDispatcher` object, we can now cpature the CargoPickedUp and CargoDeployed events.
+  -- 
+  -- ## 5.1) Handle the **CargoPickedUp** event.
+  -- 
+  -- Find below an example how to tailor the **CargoPickedUp** event, generated by the `TaskDispatcher`:
+  -- 
+  --      function TaskDispatcher:OnAfterCargoPickedUp( From, Event, To, Task, TaskPrefix, TaskUnit, Cargo )
+  --        
+  --        MESSAGE:NewType( "Unit " .. TaskUnit:GetName().. " has picked up cargo for task " .. Task:GetName() .. ".", MESSAGE.Type.Information ):ToAll()
+  --        
+  --      end
+  -- 
+  -- If you want to code your own event handler, use this code fragment to tailor the event when a player carrier has picked up a cargo object in the CarrierGroup.
+  -- You can use this event handler to post messages to players, or provide status updates etc.
+  -- 
+  --      --- CargoPickedUp event handler OnAfter for CLASS.
+  --      -- @param #CLASS self
+  --      -- @param #string From A string that contains the "*from state name*" when the event was triggered.
+  --      -- @param #string Event A string that contains the "*event name*" when the event was triggered.
+  --      -- @param #string To A string that contains the "*to state name*" when the event was triggered.
+  --      -- @param Tasking.Task_Cargo#TASK_CARGO Task The cargo task for which the cargo has been picked up. Note that this will be a derived TAKS_CARGO object!
+  --      -- @param #string TaskPrefix The prefix of the task that was provided when the task was created.
+  --      -- @param Wrapper.Unit#UNIT TaskUnit The unit (client) of the player that has picked up the cargo.
+  --      -- @param Cargo.Cargo#CARGO Cargo The cargo object that has been picked up. Note that this can be a CARGO_GROUP, CARGO_CRATE or CARGO_SLINGLOAD object!
+  --      function CLASS:OnAfterCargoPickedUp( From, Event, To, Task, TaskPrefix, TaskUnit, Cargo )
+  --      
+  --        -- Write here your own code.
+  --      
+  --      end
+  -- 
+  -- 
+  -- ## 5.2) Handle the **CargoDeployed** event.
+  -- 
+  -- Find below an example how to tailor the **CargoDeployed** event, generated by the `TaskDispatcher`:
+  -- 
+  --       function WorkplaceTask:OnAfterCargoDeployed( From, Event, To, Task, TaskPrefix, TaskUnit, Cargo, DeployZone )
+  --        
+  --         MESSAGE:NewType( "Unit " .. TaskUnit:GetName().. " has deployed cargo at zone " .. DeployZone:GetName() .. " for task " .. Task:GetName() .. ".", MESSAGE.Type.Information ):ToAll()
+  --        
+  --         Helos[ math.random(1,#Helos) ]:Spawn()
+  --         EnemyHelos[ math.random(1,#EnemyHelos) ]:Spawn()
+  --       end
+  -- 
+  -- If you want to code your own event handler, use this code fragment to tailor the event when a player carrier has deployed a cargo object from the CarrierGroup.
+  -- You can use this event handler to post messages to players, or provide status updates etc.
+  -- 
+  -- 
+  --      --- CargoDeployed event handler OnAfter for CLASS.
+  --      -- @param #CLASS self
+  --      -- @param #string From A string that contains the "*from state name*" when the event was triggered.
+  --      -- @param #string Event A string that contains the "*event name*" when the event was triggered.
+  --      -- @param #string To A string that contains the "*to state name*" when the event was triggered.
+  --      -- @param Tasking.Task_Cargo#TASK_CARGO Task The cargo task for which the cargo has been deployed. Note that this will be a derived TAKS_CARGO object!
+  --      -- @param #string TaskPrefix The prefix of the task that was provided when the task was created.
+  --      -- @param Wrapper.Unit#UNIT TaskUnit The unit (client) of the player that has deployed the cargo.
+  --      -- @param Cargo.Cargo#CARGO Cargo The cargo object that has been deployed. Note that this can be a CARGO_GROUP, CARGO_CRATE or CARGO_SLINGLOAD object!
+  --      -- @param Core.Zone#ZONE DeployZone The zone wherein the cargo is deployed. This can be any zone type, like a ZONE, ZONE_GROUP, ZONE_AIRBASE.
+  --      function CLASS:OnAfterCargoDeployed( From, Event, To, Task, TaskPrefix, TaskUnit, Cargo, DeployZone )
+  --      
+  --        -- Write here your own code.
+  --      
+  --      end
+  -- 
+  -- 
   -- 
   -- @field #TASK_CARGO_DISPATCHER
   TASK_CARGO_DISPATCHER = {
@@ -90912,6 +98052,8 @@ do -- TASK_CARGO_DISPATCHER
     self.Mission = Mission
     
     self:AddTransition( "Started", "Assign", "Started" )
+    self:AddTransition( "Started", "CargoPickedUp", "Started" )
+    self:AddTransition( "Started", "CargoDeployed", "Started" )
     
     --- OnAfter Transition Handler for Event Assign.
     -- @function [parent=#TASK_CARGO_DISPATCHER] OnAfterAssign
@@ -91086,6 +98228,7 @@ do -- TASK_CARGO_DISPATCHER
     self.CSAR[CSARTaskName].PilotGroup = CSARGroup
     self.CSAR[CSARTaskName].Briefing = CSARBriefing
     self.CSAR[CSARTaskName].Task = nil
+    self.CSAR[CSARTaskName].TaskPrefix = CSARTaskPrefix
     
     return CSARTaskName
   end
@@ -91171,16 +98314,17 @@ do -- TASK_CARGO_DISPATCHER
   --  -- Here we set a TransportDeployZone. We use the WorkplaceTask as the reference, and provide a ZONE object.
   --  TaskDispatcher:SetTransportDeployZone( WorkplaceTask, ZONE:New( "Workplace" ) )
   --  
-  function TASK_CARGO_DISPATCHER:AddTransportTask( TaskName, SetCargo, Briefing )
+  function TASK_CARGO_DISPATCHER:AddTransportTask( TaskPrefix, SetCargo, Briefing )
 
     self.TransportCount = self.TransportCount + 1
     
-    local TaskName = string.format( ( TaskName or "Transport" ) .. ".%03d", self.TransportCount )
+    local TaskName = string.format( ( TaskPrefix or "Transport" ) .. ".%03d", self.TransportCount )
     
     self.Transport[TaskName] = {} 
     self.Transport[TaskName].SetCargo = SetCargo
     self.Transport[TaskName].Briefing = Briefing
     self.Transport[TaskName].Task = nil
+    self.Transport[TaskName].TaskPrefix = TaskPrefix
     
     self:ManageTasks()
     
@@ -91287,6 +98431,7 @@ do -- TASK_CARGO_DISPATCHER
           -- New CSAR Task
           local SetCargo = self:EvaluateCSAR( CSAR.PilotGroup )
           CSAR.Task = TASK_CARGO_CSAR:New( Mission, self.SetGroup, CSARName, SetCargo, CSAR.Briefing )
+          CSAR.Task.TaskPrefix = CSAR.TaskPrefix -- We keep the TaskPrefix for further reference!
           Mission:AddTask( CSAR.Task )
           TaskReport:Add( CSARName )
           if CSAR.DeployZones then
@@ -91294,6 +98439,17 @@ do -- TASK_CARGO_DISPATCHER
           else
             CSAR.Task:SetDeployZones( self.DefaultDeployZones or {} )
           end
+          
+          -- Now broadcast the onafterCargoPickedUp event to the Task Cargo Dispatcher.
+          function CSAR.Task.OnAfterCargoPickedUp( Task, From, Event, To, TaskUnit, Cargo )
+            self:CargoPickedUp( Task, Task.TaskPrefix, TaskUnit, Cargo )
+          end
+
+          -- Now broadcast the onafterCargoDeployed event to the Task Cargo Dispatcher.
+          function CSAR.Task.OnAfterCargoDeployed( Task, From, Event, To, TaskUnit, Cargo, DeployZone )
+            self:CargoDeployed( Task, Task.TaskPrefix, TaskUnit, Cargo, DeployZone )
+          end
+          
         end
       end
       
@@ -91304,6 +98460,7 @@ do -- TASK_CARGO_DISPATCHER
         if not Transport.Task then
           -- New Transport Task
           Transport.Task = TASK_CARGO_TRANSPORT:New( Mission, self.SetGroup, TransportName, Transport.SetCargo, Transport.Briefing )
+          Transport.Task.TaskPrefix = Transport.TaskPrefix -- We keep the TaskPrefix for further reference!
           Mission:AddTask( Transport.Task )
           TaskReport:Add( TransportName )
           function Transport.Task.OnEnterSuccess( Task, From, Event, To )
@@ -91321,6 +98478,17 @@ do -- TASK_CARGO_DISPATCHER
           function Transport.Task.OnEnterAborted( Task, From, Event, To )
             self:Aborted( Task )
           end
+
+          -- Now broadcast the onafterCargoPickedUp event to the Task Cargo Dispatcher.
+          function Transport.Task.OnAfterCargoPickedUp( Task, From, Event, To, TaskUnit, Cargo )
+            self:CargoPickedUp( Task, Task.TaskPrefix, TaskUnit, Cargo )
+          end
+
+          -- Now broadcast the onafterCargoDeployed event to the Task Cargo Dispatcher.
+          function Transport.Task.OnAfterCargoDeployed( Task, From, Event, To, TaskUnit, Cargo, DeployZone )
+            self:CargoDeployed( Task, Task.TaskPrefix, TaskUnit, Cargo, DeployZone )
+          end
+          
         end
         
         if Transport.DeployZones then
