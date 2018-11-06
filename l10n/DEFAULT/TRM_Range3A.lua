@@ -165,15 +165,15 @@ IFV_BTR_section_R3A:InitRandomizePosition(true,20,5):SpawnFromUnit(RedSpawnerR3A
 end
 
  function _ON_DEMAND_2_IFV_M113_vehicle_R3A ()
-IFV_BTR_vehicle_R3A:OnSpawnGroup(function(group)
+IFV_M113_vehicle_R3A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
-IFV_BTR_vehicle_R3A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR3A)
+IFV_M113_vehicle_R3A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR3A)
 end
 
  function _ON_DEMAND_2_IFV_M113_section_R3A ()
-IFV_BTR_section_R3A:OnSpawnGroup(function(group)
+IFV_M113_section_R3A:OnSpawnGroup(function(group)
 group:OptionDisperseOff()end)
-IFV_BTR_section_R3A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR3A)
+IFV_M113_section_R3A:InitRandomizePosition(true,20,5):SpawnFromUnit(BlueSpawnerR3A)
 end
 
  function _ON_DEMAND_3_MBT_T72_vehicle_R3A ()
