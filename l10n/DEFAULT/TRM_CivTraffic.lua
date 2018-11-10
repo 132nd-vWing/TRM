@@ -28,18 +28,23 @@
  CivA320:ExcludedAirports("Soganlug")
   
  -- We also change the livery of these groups. If a table of liveries is given, each spawned group gets a random livery.
- Civ737:Livery({"Air France", "airBaltic", 
- "British Airways", "UPS","Ukraine Airlines" , "TNT",
-  "easyJet", "ThomsonFly", "HARIBO", "Lufthansa BA",
-  "Lufthansa KR" ,"OMAN AIR","Polskie Linie Lotnicze LOT", "Air Algerie"  })
+ Civ737:Livery({"Air Algerie", "Air France", "airBaltic", "Airzena", "American_Airlines", "British Airways", "Disney", "EA",
+  "easyjet", "FINNAIR", "HARIBO", "JA", "Jet2", "kulula", "LH", "OMAN AIR", "Polskie Linie Lotnicze LOT", "QANTAS", "RYANAIR",
+   "SouthWest Lone Star", "ThomsonFly", "TNT",  "Ukraine Airlines", "UPS"})
   
- Civ747:Livery({"Air France", "Lufthansa", "Royal Durch Airlines KLM", "Cathay Pacific Hong Kong" })
+ Civ747:Livery({"AF", "AI", "CP", "IM", "KLM", "LH", "NW", "QA", "TA"})
  
- CivA380:Livery({"Air France", "British Airways", "China Southern", "Emirates", "Lufthansa", "Singapore Airlines" })
+ CivA380:Livery({"Air France", "BA", "China Southern", "Emirates", "KA", "LH", "Qantas Airways", "QTR", "SA", "TA" })
    
- Civ757:Livery({"British Airways", "Delta Airlines", "DHL Cargo", "easyjet", "Swiss", "Thomson TUI" })
+ Civ757:Livery({"AA", "BA", "Delta", "DHL", "easyJet", "Swiss", "Thomson"})
  
- CivA320:Livery({"CONDOR", "Easy Jet", "German Wings" })
+CivA320:Livery({"Aeroflot", "Air Asia", "Air France", "Air Moldova", "Airbug Neo", "Al Maha", "Alitalia", "American Airlines", "British Airlines",
+  "Condor", "Delta Airlines", "Easy Jet", "Emirates", "Etihad", "Eurowings", "Eurowings Europa Park", "Fly Georgia", "Fly Niki", "Frontier", "German Wings",
+  "Gulf Air", "Iberia", "Iran Air", "Jet Blue NY", "Kish Air", "Kuweit Airways","Lufthansa New", "MEA", "Qatar", "S7", "SAS", "Saudi Gulf", "Saudia",
+  "Small Planet", "Star Alliance", "SWISS", "Thomas Cook", "Tunis Air", "Turkish Airlines", "United", "Ural Airlines", "US Airways", "Vietnam Airlines",
+  "Virgin", "WiZZ", "WiZZ Budapest", "WOW"})
+     
+ CivA380:Livery({"Air France", "BA", "China Southern", "Emirates", "KA", "LH", "Qantas Airways", "QTR", "SA", "TA"})
   
   
  -- This makes aircraft respawn at their destination airport instead of another random airport.
