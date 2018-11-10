@@ -32,20 +32,15 @@
   "easyjet", "FINNAIR", "HARIBO", "JA", "Jet2", "kulula", "LH", "OMAN AIR", "Polskie Linie Lotnicze LOT", "QANTAS", "RYANAIR",
    "SouthWest Lone Star", "ThomsonFly", "TNT",  "Ukraine Airlines", "UPS"})
   
- Civ747:Livery({"AF", "AI", "CP", "IM", "KLM", "LH", "NW", "QA", "TA"})
+ Civ747:Livery({"AF", "AI", "KLM", "LH", "TA"})
  
- CivA380:Livery({"Air France", "BA", "China Southern", "Emirates", "KA", "LH", "Qantas Airways", "QTR", "SA", "TA" })
+ CivA380:Livery({"Air France", "China Southern", "Emirates", "LH" })
    
- Civ757:Livery({"AA", "BA", "Delta", "DHL", "easyJet", "Swiss", "Thomson"})
+ Civ757:Livery({ "DHL", "easyJet", "Swiss", "Thomson"})
  
-CivA320:Livery({"Aeroflot", "Air Asia", "Air France", "Air Moldova", "Airbug Neo", "Al Maha", "Alitalia", "American Airlines", "British Airlines",
-  "Condor", "Delta Airlines", "Easy Jet", "Emirates", "Etihad", "Eurowings", "Eurowings Europa Park", "Fly Georgia", "Fly Niki", "Frontier", "German Wings",
-  "Gulf Air", "Iberia", "Iran Air", "Jet Blue NY", "Kish Air", "Kuweit Airways","Lufthansa New", "MEA", "Qatar", "S7", "SAS", "Saudi Gulf", "Saudia",
-  "Small Planet", "Star Alliance", "SWISS", "Thomas Cook", "Tunis Air", "Turkish Airlines", "United", "Ural Airlines", "US Airways", "Vietnam Airlines",
-  "Virgin", "WiZZ", "WiZZ Budapest", "WOW"})
+CivA320:Livery({"Alitalia", "Condor", "Eurowings Europa Park", "Fly Georgia","Star Alliance", "Turkish Airlines"})
      
- CivA380:Livery({"Air France", "BA", "China Southern", "Emirates", "KA", "LH", "Qantas Airways", "QTR", "SA", "TA"})
-  
+
   
  -- This makes aircraft respawn at their destination airport instead of another random airport.
  Civ737:ContinueJourney()
