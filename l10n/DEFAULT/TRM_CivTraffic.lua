@@ -1,4 +1,5 @@
 -- Create RAT object. Additionally, to the template group name we give the group an alias to be able to distinguish to another group created from this template.
+
  Civ737=RAT:New("Civ737")
  Civ747=RAT:New("Civ747")
  CivA380=RAT:New("CivA380")
@@ -51,6 +52,7 @@ CivA320:Livery({"Alitalia", "Condor", "Eurowings Europa Park", "Fly Georgia","St
  
 
 Civ737:StatusReports(false)
+Civ737:ATC_Messages(false)
 Civ737:Spawn(math.random(1,3))
 
 CivA320:StatusReports(false)
