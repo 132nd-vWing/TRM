@@ -14,10 +14,6 @@ Menu_Threat_Options = MENU_MISSION:New("Threat Sites")
 -- Threat Options --
 
 -- AWACS --
-
-
-
-
 awacs1 = SPAWN:NewWithAlias("BLUE AWACS #1","BLUE AWACS1 #IFF:1204FR")
 function awacs1spawn()
   awacs1:OnSpawnGroup(
@@ -112,14 +108,14 @@ SCHEDULER:New(nil,function()
 end,{},400,330,0,0)
 
 
--- ARK-UD BEACONS -- 
+--- ARK-UD BEACONS -- 
+
 --SCHEDULER:New(nil,function()
 --STENNIS = GROUP:FindByName("CVN STENNIS")
 --STENNIS_Radio = STENNIS:GetBeacon()
 --STENNIS_Radio:RadioBeacon("beacon.ogg",114.583,radio.modulation.AM,150)--preset3
 --env.info('Stennis beacons refreshed')
 --end,{},5,60)
-
 --SCHEDULER:New(nil,function()
 --Tarawa = GROUP:FindByName("LHA-1 Tarawa")
 --Tarawa_Radio = Tarawa:GetBeacon()
@@ -127,7 +123,16 @@ end,{},400,330,0,0)
 --env.info('Tarawa beacons refreshed')
 --end,{},35,60)
 
--- DISPERSE UNDER FIRE OFF
+
+
+--- DISPERSE UNDER FIRE OFF
+
+function CONTROLLABLE:OptionDisperseOff()
+-- this is currently disabled. if you want to enable it, check the next paragraph below
+end
+
+
+
 --search for this line in moose:
 --function CONTROLLABLE:OptionROEOpenFirePossible()
 --
@@ -149,10 +154,12 @@ end,{},400,330,0,0)
 --end
 
 
-AllGroundUnits = SET_GROUP:New():FilterCategoryGround()
-AllGroundUnits:FilterOnce()
-AllGroundUnits:ForEachGroup(function (allgroups)
-  allgroups:OptionDisperseOff() end)
-env.info("We iterated over each Ground Group and set their option to disperse under fire to off")
--- this will iterate over all existing ground units at mission start and will set the disperse off function that we added to moose
+
+---- this will iterate over all existing ground units at mission start and will set the disperse off function that we added to moose, probably not needed anymore
+
+--AllGroundUnits = SET_GROUP:New():FilterCategoryGround()
+--AllGroundUnits:FilterOnce()
+--AllGroundUnits:ForEachGroup(function (allgroups)
+--  allgroups:OptionDisperseOff() end)
+--env.info("We iterated over each Ground Group and set their option to disperse under fire to off")
 
