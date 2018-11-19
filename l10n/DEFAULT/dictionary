@@ -8,6 +8,7 @@ dictionary =
     ["DictKey_ActionRadioText_5125"] = "Activate Range 3A",
     ["DictKey_ActionRadioText_5126"] = "Activate Range 3B",
     ["DictKey_ActionRadioText_5127"] = "Activate Range 10",
+    ["DictKey_ActionRadioText_5879"] = "Activate S-3 Tanker",
     ["DictKey_ActionText_1691"] = "",
     ["DictKey_ActionText_1722"] = "--- T1.1 ---\
 \
@@ -1513,6 +1514,10 @@ end,...)",
     ["DictKey_GroupName_5862"] = "",
     ["DictKey_GroupName_5867"] = "F18 Stennis #5",
     ["DictKey_GroupName_5870"] = "F18 Stennis #6",
+    ["DictKey_GroupName_5873"] = "TEXACO 2",
+    ["DictKey_GroupName_5880"] = "",
+    ["DictKey_GroupName_5883"] = "F18 Stennis #7",
+    ["DictKey_GroupName_5886"] = "F18 Stennis #8",
     ["DictKey_UnitName_7"] = "Unit #1",
     ["DictKey_UnitName_10"] = "",
     ["DictKey_UnitName_13"] = "New Static Object",
@@ -3227,6 +3232,10 @@ end,...)",
     ["DictKey_UnitName_5863"] = "",
     ["DictKey_UnitName_5868"] = "F18 Stennis #5",
     ["DictKey_UnitName_5871"] = "F18 Stennis #6",
+    ["DictKey_UnitName_5874"] = "TEXACO 2",
+    ["DictKey_UnitName_5881"] = "",
+    ["DictKey_UnitName_5884"] = "F18 Stennis #7",
+    ["DictKey_UnitName_5887"] = "F18 Stennis #8",
     ["DictKey_WptName_8"] = "",
     ["DictKey_WptName_11"] = "",
     ["DictKey_WptName_14"] = "",
@@ -5360,6 +5369,13 @@ end,...)",
     ["DictKey_WptName_5866"] = "",
     ["DictKey_WptName_5869"] = "",
     ["DictKey_WptName_5872"] = "",
+    ["DictKey_WptName_5875"] = "",
+    ["DictKey_WptName_5876"] = "",
+    ["DictKey_WptName_5877"] = "",
+    ["DictKey_WptName_5878"] = "",
+    ["DictKey_WptName_5882"] = "",
+    ["DictKey_WptName_5885"] = "",
+    ["DictKey_WptName_5888"] = "",
     ["DictKey_descriptionBlueTask_3"] = "",
     ["DictKey_descriptionNeutralsTask_4"] = "",
     ["DictKey_descriptionRedTask_2"] = "",
@@ -5379,6 +5395,10 @@ KC-130 Tanker B (ARCO):\
 \
 AGGRESSOR IL-78 (C/S 401)\
 18000ft, speed 336, TACAN 09Y, Freq: 244.25\
+\
+S-3 VIKING Carrier alert Tanker (TEXACO 2)\
+26000ft, speed 380kts, TACAN 10Y, Freq: 242.0 (CHERRY 3)\
+Tanker will be activated with F10 menu, and need 11 minutes from activation until it is on-station.\
 \
 CARRIER CVN STENNIS\
 TACAN 74X   BRC 090° / 270°\
