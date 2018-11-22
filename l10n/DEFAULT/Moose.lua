@@ -1,4 +1,4 @@
-env.info( '*** MOOSE GITHUB Commit Hash ID: 2018-11-09T06:48:22.0000000Z-dac0d09a05a0a1442084c2b4163a33fda6cd2b71 ***' )
+env.info( '*** MOOSE GITHUB Commit Hash ID: 2018-11-14T20:29:28.0000000Z-972307519bf27ba70907df0682cac6da7caa5a55 ***' )
 env.info( '*** MOOSE STATIC INCLUDE START *** ' )
 
 --- Various routines
@@ -12081,9 +12081,9 @@ do -- SET_BASE
     for ObjectID, ObjectData in pairs( self.Set ) do
       if NearestObject == nil then
         NearestObject = ObjectData
-        ClosestDistance = PointVec2:DistanceFromVec2( ObjectData:GetVec2() )
+        ClosestDistance = PointVec2:DistanceFromPointVec2( ObjectData:GetVec2() )
       else
-        local Distance = PointVec2:DistanceFromVec2( ObjectData:GetVec2() )
+        local Distance = PointVec2:DistanceFromPointVec2( ObjectData:GetVec2() )
         if Distance < ClosestDistance then
           NearestObject = ObjectData
           ClosestDistance = Distance
@@ -33899,6 +33899,39 @@ function STATIC:ReSpawnAt( Coordinate, Heading )
   
   SpawnStatic:ReSpawnAt( Coordinate, Heading )
 end
+
+
+--- Returns true if the unit is within a @{Zone}.
+-- @param #STATIC self
+-- @param Core.Zone#ZONE_BASE Zone The zone to test.
+-- @return #boolean Returns true if the unit is within the @{Core.Zone#ZONE_BASE}
+function STATIC:IsInZone( Zone )
+  self:F2( { self.StaticName, Zone } )
+
+  if self:IsAlive() then
+    local IsInZone = Zone:IsVec3InZone( self:GetVec3() )
+  
+    return IsInZone 
+  end
+  return false
+end
+
+--- Returns true if the unit is not within a @{Zone}.
+-- @param #STATIC self
+-- @param Core.Zone#ZONE_BASE Zone The zone to test.
+-- @return #boolean Returns true if the unit is not within the @{Core.Zone#ZONE_BASE}
+function STATIC:IsNotInZone( Zone )
+  self:F2( { self.StaticName, Zone } )
+
+  if self:IsAlive() then
+    local IsInZone = not Zone:IsVec3InZone( self:GetVec3() )
+    
+    self:T( { IsInZone } )
+    return IsInZone 
+  else
+    return false
+  end
+end
 --- **Wrapper** -- AIRBASE is a wrapper class to handle the DCS Airbase objects.
 -- 
 -- ===
@@ -48237,9 +48270,9 @@ do -- DESIGNATE
   --   * The status report can be automatically flashed by selecting "Status" -> "Flash Status On".
   --   * The automatic flashing of the status report can be deactivated by selecting "Status" -> "Flash Status Off".
   --   * The flashing of the status menu is disabled by default.
-  --   * The method @{#DESIGNATE.FlashStatusMenu}() can be used to enable or disable to flashing of the status menu.
+  --   * The method @{#DESIGNATE.SetFlashStatusMenu}() can be used to enable or disable to flashing of the status menu.
   --   
-  --     Designate:FlashStatusMenu( true )
+  --     Designate:SetFlashStatusMenu( true )
   --     
   -- The example will activate the flashing of the status menu for this Designate object.
   -- 
@@ -48959,9 +48992,9 @@ do -- DESIGNATE
         if string.find( Designating, "L", 1, true ) == nil then
           MENU_GROUP_COMMAND_DELAYED:New( AttackGroup, "Search other target", DetectedMenu, self.MenuForget, self, DesignateIndex ):SetTime( MenuTime ):SetTag( self.DesignateName )
           for LaserCode, MenuText in pairs( self.MenuLaserCodes ) do
-            MENU_GROUP_COMMAND_DELAYED:New( AttackGroup, string.format( MenuText, LaserCode ), DetectedMenu, self.MenuLaseCode, self, DesignateIndex, 60, LaserCode ):SetTime( MenuTime ):SetTag( self.DesignateName )
+            MENU_GROUP_COMMAND_DELAYED:New( AttackGroup, string.format( MenuText, LaserCode ), DetectedMenu, self.MenuLaseCode, self, DesignateIndex, self.LaseDuration, LaserCode ):SetTime( MenuTime ):SetTag( self.DesignateName )
           end
-          MENU_GROUP_COMMAND_DELAYED:New( AttackGroup, "Lase with random laser code(s)", DetectedMenu, self.MenuLaseOn, self, DesignateIndex, 60 ):SetTime( MenuTime ):SetTag( self.DesignateName )
+          MENU_GROUP_COMMAND_DELAYED:New( AttackGroup, "Lase with random laser code(s)", DetectedMenu, self.MenuLaseOn, self, DesignateIndex, self.LaseDuration ):SetTime( MenuTime ):SetTag( self.DesignateName )
         else
           MENU_GROUP_COMMAND_DELAYED:New( AttackGroup, "Stop lasing", DetectedMenu, self.MenuLaseOff, self, DesignateIndex ):SetTime( MenuTime ):SetTag( self.DesignateName )
         end
@@ -49119,10 +49152,10 @@ do -- DESIGNATE
   
     if string.find( self.Designating[Index], "L", 1, true ) == nil then
       self.Designating[Index] = self.Designating[Index] .. "L"
+      self.LaseStart = timer.getTime()
+      self.LaseDuration = Duration
+      self:Lasing( Index, Duration, LaserCode )
     end
-    self.LaseStart = timer.getTime()
-    self.LaseDuration = Duration
-    self:Lasing( Index, Duration, LaserCode )
   end
   
 
@@ -49281,7 +49314,7 @@ do -- DESIGNATE
       local MarkedLaserCodesText = ReportLaserCodes:Text(', ')
       self.CC:GetPositionable():MessageToSetGroup( "Marking " .. MarkingCount .. " x "  .. MarkedTypesText .. ", code " .. MarkedLaserCodesText .. ".", 5, self.AttackSet, self.DesignateName )
   
-      self:__Lasing( -30, Index, Duration, LaserCodeRequested )
+      self:__Lasing( -self.LaseDuration, Index, Duration, LaserCodeRequested )
       
       self:SetDesignateMenu()
 
@@ -58825,6 +58858,10 @@ do -- ZONE_CAPTURE_COALITION
     -- @param #ZONE_CAPTURE_COALITION self
     -- @param #number Delay
 
+    -- We check if a unit within the zone is hit.
+    -- If it is, then we must move the zone to attack state.
+    self:HandleEvent( EVENTS.Hit, self.OnEventHit )
+
     return self
   end
   
@@ -59068,6 +59105,21 @@ do -- ZONE_CAPTURE_COALITION
       self:ScheduleStop( self.ScheduleStatusZone )
     end
   end
+  
+  --- @param #ZONE_CAPTURE_COALITION self
+  -- @param Core.Event#EVENTDATA EventData The event data.
+  function ZONE_CAPTURE_COALITION:OnEventHit( EventData )
+  
+    local UnitHit = EventData.TgtUnit
+    
+    if UnitHit then
+      if UnitHit:IsInZone( self.Zone ) then
+        self:Attack()
+      end
+    end
+  
+  end
+  
   
 end
 
