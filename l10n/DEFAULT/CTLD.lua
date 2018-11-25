@@ -195,6 +195,8 @@ ctld.transportPilotNames = {
     "259 #5",
     "259 #6 w/o hardpoints",
     "259 #7 w/o hardpoints",
+	"259 PERTH #1",
+	"259 PERTH #2",
     "JTAC T2B_4",
 
     -- *** AI transports names (different names only to ease identification in mission) ***
