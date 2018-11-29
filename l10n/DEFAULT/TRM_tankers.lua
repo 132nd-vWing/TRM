@@ -39,6 +39,7 @@ _TANKER_UNITS = {
   {NAME='KC-135_SHELL',  TACAN=6},
   {NAME='KC-135_TEXACO', TACAN=5 },
   {NAME='AGGRESSOR_Il78M', TACAN=9},
+  {NAME='TEXACO 2', TACAN=10},
 }
 
 -- Minimum fuel
