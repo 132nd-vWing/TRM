@@ -1,5 +1,6 @@
 mapResource = 
 {
+    [""] = "TRM_Config.lua",
     ["ResKey_Action_2868"] = "beacon.ogg",
     ["ResKey_Action_2894"] = "mist_4_3_74.lua",
     ["ResKey_Action_2897"] = "beacon.ogg",
@@ -12,10 +13,9 @@ mapResource =
     ["ResKey_Action_5707"] = "TRM_Range3B.lua",
     ["ResKey_Action_5759"] = "TRM_Range2A.lua",
     ["ResKey_Action_5838"] = "TRM_Range1.lua",
-    ["ResKey_Action_5847"] = "TRM_Config.lua",
     ["ResKey_Action_5849"] = "TRM_Range2B.lua",
     ["ResKey_Action_5861"] = "TRM_CivTraffic.lua",
     ["ResKey_Action_5890"] = "CTLD.lua",
-    ["ResKey_Action_5892"] = "Moose.lua",
     ["ResKey_Action_5893"] = "TRM_tankers.lua",
+    ["ResKey_Action_6337"] = "Moose.lua",
 } -- end of mapResource

@@ -5,8 +5,8 @@ _SETTINGS:SetPlayerMenuOff()
 
 
 -- Missile Trainer
-Trainer = MISSILETRAINER:New( 700, "Missile Trainer is active, ONLY if you see this message when entering an Aircraft, Missiles will be intercepted!" )
-Trainer:InitMessagesOnOff(true):InitAlertsToAll(true):InitAlertsHitsOnOff(true):InitAlertsLaunchesOnOff(true):InitBearingOnOff(false):InitRangeOnOff(false):InitTrackingOnOff(false):InitTrackingToAll(false):InitMenusOnOff(false)
+Trainer = MISSILETRAINER:New(0, "Missile Trainer is active!" )
+Trainer:InitMessagesOnOff(true):InitAlertsToAll(true):InitAlertsHitsOnOff(false):InitAlertsLaunchesOnOff(true):InitBearingOnOff(false):InitRangeOnOff(false):InitTrackingOnOff(false):InitTrackingToAll(false):InitMenusOnOff(false)
 -- Missile Trainer
 
 -- Threat Options --
