@@ -5,8 +5,8 @@ _SETTINGS:SetPlayerMenuOff()
 
 
 -- Missile Trainer
-Trainer = MISSILETRAINER:New(0, "Missile Trainer is active!" )
-Trainer:InitMessagesOnOff(true):InitAlertsToAll(true):InitAlertsHitsOnOff(false):InitAlertsLaunchesOnOff(true):InitBearingOnOff(false):InitRangeOnOff(false):InitTrackingOnOff(false):InitTrackingToAll(false):InitMenusOnOff(false)
+Trainer = MISSILETRAINER:New(70, "Missile Trainer is active!" )
+Trainer:InitMessagesOnOff(true):InitAlertsToAll(true):InitAlertsHitsOnOff(true):InitAlertsLaunchesOnOff(true):InitBearingOnOff(false):InitRangeOnOff(false):InitTrackingOnOff(false):InitTrackingToAll(false):InitMenusOnOff(false)
 -- Missile Trainer
 
 -- Threat Options --
