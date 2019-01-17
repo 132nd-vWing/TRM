@@ -2,6 +2,13 @@
 _SETTINGS:SetPlayerMenuOff()
 -- command center off
 
+airboss_stennis = AIRBOSS:New("CVN STENNIS")
+airboss_stennis:SetICLS(1,'CVN')
+airboss_stennis:SetTACAN(47,X,'CVN')
+airboss_stennis:Start()
+
+ 
+
 
 
 -- Missile Trainer
@@ -12,6 +19,9 @@ Trainer:InitMessagesOnOff(true):InitAlertsToAll(true):InitAlertsHitsOnOff(true):
 -- Threat Options --
 Menu_Threat_Options = MENU_MISSION:New("Threat Sites")
 -- Threat Options --
+
+
+
 
 -- AWACS --
 awacs1 = SPAWN:NewWithAlias("BLUE AWACS #1","BLUE AWACS1 #IFF:1204FR")
