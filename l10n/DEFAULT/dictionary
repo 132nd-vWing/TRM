@@ -63,6 +63,7 @@ end,...)",
     ["DictKey_ActionText_5215"] = "",
     ["DictKey_ActionText_5224"] = "",
     ["DictKey_ActionText_5522"] = "CTLD loaded",
+    ["DictKey_ActionText_6696"] = "",
     ["DictKey_GroupName_6"] = "New Vehicle Group",
     ["DictKey_GroupName_9"] = "New Static Object",
     ["DictKey_GroupName_12"] = "New Static Object #001",
@@ -1745,6 +1746,9 @@ end,...)",
     ["DictKey_GroupName_6676"] = "494th #16",
     ["DictKey_GroupName_6679"] = "494th #17",
     ["DictKey_GroupName_6682"] = "494th #18",
+    ["DictKey_GroupName_6746"] = "Stennis_Rescue",
+    ["DictKey_GroupName_6749"] = "Stennis_Rescue",
+    ["DictKey_GroupName_6756"] = "Stennis_Rescue2",
     ["DictKey_UnitName_7"] = "Unit #1",
     ["DictKey_UnitName_10"] = "",
     ["DictKey_UnitName_13"] = "New Static Object",
@@ -3709,6 +3713,11 @@ end,...)",
     ["DictKey_UnitName_6677"] = "494th #16",
     ["DictKey_UnitName_6680"] = "494th #17",
     ["DictKey_UnitName_6683"] = "494th #18",
+    ["DictKey_UnitName_6747"] = "Pilot #022",
+    ["DictKey_UnitName_6750"] = "Stennis_Rescue #001",
+    ["DictKey_UnitName_6752"] = "Perry",
+    ["DictKey_UnitName_6753"] = "Normandy",
+    ["DictKey_UnitName_6757"] = "Stennis_Rescue2",
     ["DictKey_WptName_8"] = "",
     ["DictKey_WptName_11"] = "",
     ["DictKey_WptName_14"] = "",
@@ -6152,6 +6161,9 @@ end,...)",
     ["DictKey_WptName_6678"] = "",
     ["DictKey_WptName_6681"] = "",
     ["DictKey_WptName_6684"] = "",
+    ["DictKey_WptName_6748"] = "",
+    ["DictKey_WptName_6751"] = "",
+    ["DictKey_WptName_6758"] = "",
     ["DictKey_descriptionBlueTask_3"] = "",
     ["DictKey_descriptionNeutralsTask_4"] = "",
     ["DictKey_descriptionRedTask_2"] = "",
@@ -6174,22 +6186,19 @@ AGGRESSOR IL-78 (C/S 401)\
 \
 S-3 VIKING Carrier alert Tanker (TEXACO 2)\
 26000ft, speed 380kts, TACAN 10Y, Freq: 242.0 (CHERRY 3)\
-Tanker will be activated with F10 menu, and need 11 minutes from activation until it is on-station.\
+\
 \
 CARRIER CVN STENNIS\
 TACAN 74X   BRC 090° / 270°\
 ICLS Channel 1\
 Frequency: 247.750 AM (AQUA 6)\
+Marshal Frequency: 305.000\
+LSO Frequency: 264.000\
 \
 LHA-1 Tarawa\
 LHA-1  TACAN 01X.\
 LHA frequncy: 241.250 (LEMON 6)\
 Callsign: TBD (Use TARAWA CONTROL for now)\
-\
-ARK-UD BEACONS (currently inactive)\
-FARP KUTAISI     preset 1\
-FARP LONDON   preset 2\
-CVN STENNIS     preset 3\
-LHA-1 TARAWA  preset 4",
+",
     ["DictKey_sortie_5"] = "132nd Wing Training Mission",
 } -- end of dictionary
