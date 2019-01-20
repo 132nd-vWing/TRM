@@ -17,7 +17,6 @@ mapResource =
     ["ResKey_Action_5861"] = "TRM_CivTraffic.lua",
     ["ResKey_Action_5890"] = "CTLD.lua",
     ["ResKey_Action_6741"] = "TRM_tankers.lua",
-    ["ResKey_Action_6773"] = "TRM_Config.lua",
     ["ResKey_Action_6774"] = "LSO-BolterBolter.ogg",
     ["ResKey_Action_6775"] = "LSO-CallTheBall.ogg",
     ["ResKey_Action_6776"] = "LSO-ComeLeft.ogg",
@@ -56,4 +55,5 @@ mapResource =
     ["ResKey_Action_6809"] = "MARSHAL-RadioCheck.ogg",
     ["ResKey_Action_6810"] = "MARSHAL-SayNeedles.ogg",
     ["ResKey_Action_6817"] = "Moose.lua",
+    ["ResKey_Action_6818"] = "TRM_Config.lua",
 } -- end of mapResource

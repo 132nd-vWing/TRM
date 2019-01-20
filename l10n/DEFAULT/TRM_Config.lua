@@ -2,10 +2,10 @@
 _SETTINGS:SetPlayerMenuOff()
 -- command center off
 
---stennis_rescuehelo1=RESCUEHELO:New("CVN STENNIS", "Stennis_Rescue")
---stennis_rescuehelo1:SetHomeBase(AIRBASE:FindByName("Perry"))
---stennis_rescuehelo1:SetTakeoffAir()
---stennis_rescuehelo1:Start()
+stennis_rescuehelo1=RESCUEHELO:New("CVN STENNIS", "Stennis_Rescue")
+stennis_rescuehelo1:SetHomeBase(AIRBASE:FindByName("Perry"))
+stennis_rescuehelo1:SetTakeoffHot()
+stennis_rescuehelo1:Start()
 
 airboss_stennis_tanker= RECOVERYTANKER:New("CVN STENNIS", "TEXACO 2")
 airboss_stennis_tanker:SetTakeoffHot()
