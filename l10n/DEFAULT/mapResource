@@ -55,5 +55,5 @@ mapResource =
     ["ResKey_Action_6809"] = "MARSHAL-RadioCheck.ogg",
     ["ResKey_Action_6810"] = "MARSHAL-SayNeedles.ogg",
     ["ResKey_Action_6824"] = "TRM_Config.lua",
-    ["ResKey_Action_6825"] = "Moose.lua",
+    ["ResKey_Action_6826"] = "Moose.lua",
 } -- end of mapResource
