@@ -1780,6 +1780,10 @@ end,...)",
     ["DictKey_GroupName_6929"] = "RescueParty",
     ["DictKey_GroupName_6940"] = "New Helicopter Group",
     ["DictKey_GroupName_6960"] = "Rescue_Cargo",
+    ["DictKey_GroupName_6966"] = "Activate Range_1 #001",
+    ["DictKey_GroupName_6974"] = "New Static Object #033",
+    ["DictKey_GroupName_6977"] = "FARP LONDON vehicles #001",
+    ["DictKey_GroupName_6982"] = "New Helicopter Group",
     ["DictKey_UnitName_7"] = "Unit #1",
     ["DictKey_UnitName_10"] = "",
     ["DictKey_UnitName_13"] = "New Static Object",
@@ -3784,6 +3788,10 @@ end,...)",
     ["DictKey_UnitName_6958"] = "Unit #257",
     ["DictKey_UnitName_6959"] = "Unit #258",
     ["DictKey_UnitName_6961"] = "",
+    ["DictKey_UnitName_6967"] = "Unit #259",
+    ["DictKey_UnitName_6975"] = "",
+    ["DictKey_UnitName_6978"] = "Unit #260",
+    ["DictKey_UnitName_6983"] = "Pilot #024",
     ["DictKey_WptName_8"] = "",
     ["DictKey_WptName_11"] = "",
     ["DictKey_WptName_14"] = "",
@@ -6291,6 +6299,10 @@ end,...)",
     ["DictKey_WptName_6935"] = "",
     ["DictKey_WptName_6942"] = "",
     ["DictKey_WptName_6962"] = "",
+    ["DictKey_WptName_6968"] = "",
+    ["DictKey_WptName_6976"] = "",
+    ["DictKey_WptName_6979"] = "",
+    ["DictKey_WptName_6984"] = "",
     ["DictKey_descriptionBlueTask_3"] = "",
     ["DictKey_descriptionNeutralsTask_4"] = "",
     ["DictKey_descriptionRedTask_2"] = "",
@@ -6330,8 +6342,17 @@ LHA-1 Tarawa\
 LHA-1  TACAN 01X.\
 LHA frequncy: 241.250 (LEMON 6)\
 Callsign: TBD (Use TARAWA CONTROL for now)\
-",
+\
+\
+ARK-UD BEACONS\
+FARP KUTAISI AIRPORT            PRESET 1\
+SITE of ACCIDENT                   PRESET 2\
+FARP LONDON (RANGE 2B)     PRESET 3\
+Hospital KUTASIS                    PRESET 4",
     ["DictKey_sortie_5"] = "132nd Wing Training Mission",
     ["DictKey_subtitle_6938"] = "",
     ["DictKey_subtitle_6946"] = "",
+    ["DictKey_subtitle_6969"] = "",
+    ["DictKey_subtitle_6972"] = "",
+    ["DictKey_subtitle_6980"] = "",
 } -- end of dictionary

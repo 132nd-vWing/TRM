@@ -2,6 +2,8 @@
 _SETTINGS:SetPlayerMenuOff()
 -- command center off
 
+
+
 stennis_rescuehelo1=RESCUEHELO:New("CVN STENNIS", "Stennis_Rescue")
 stennis_rescuehelo1:SetHomeBase(AIRBASE:FindByName("Perry"))
 stennis_rescuehelo1:SetTakeoffHot()
@@ -23,6 +25,7 @@ airboss_stennis:AddRecoveryWindow("21:00", "09:00", 3)
 airboss_stennis:SetMarshalRadio(305,FM)
 airboss_stennis:SetLSORadio(264,FM)
 airboss_stennis:SetRecoveryTanker(airboss_stennis_tanker)
+airboss_stennis:SetSoundfilesFolder("Airboss Soundfiles/")
 
 airboss_stennis:Start()
 
