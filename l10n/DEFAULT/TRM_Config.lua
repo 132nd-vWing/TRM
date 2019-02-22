@@ -134,6 +134,30 @@ end,{},400,330,0,0)
 
 
 --- ARK-UD BEACONS -- 
+-- creates a medic hummer at a random position within the TMA. The unit will broadcast an ARK-UD Beacon on preset 1
+RW_Training_Zone= ZONE_POLYGON:New(RW_Training_Zone,GROUP:FindByName("RW_Training_Zone"))
+RescueParty = SPAWN:New("RescueParty"):SpawnInZone(RW_Training_Zone,true)
+RescuePartyLocation = RescueParty:GetCoordinate()
+RescueCargo = SPAWNSTATIC:NewFromStatic("Rescue_Cargo",country.id.GERMANY)
+RescueCargo:SpawnFromCoordinate(RescuePartyLocation)
+ToCoord = RescuePartyLocation:Translate( 15, math.random(359) )
+RescueParty:TaskRouteToVec2( ToCoord:GetVec2() )
+RescueParty:SetTask( RouteTask, 1 )
+SCHEDULER:New(nil,function()
+  if RescueParty ~= nil
+  then
+    BEACON1_Radio = RescueParty:GetBeacon()
+    BEACON1_Radio:RadioBeacon("beacon.ogg",114.333,radio.modulation.AM,150,55)--preset2
+  end end,{},5,60)
+
+--CH1: 114.166
+--CH2: 114.333
+--CH3: 114.583
+--CH4: 121.500
+--CH5: 123.100
+--CH6: 124.100
+
+
 
 --SCHEDULER:New(nil,function()
 --STENNIS = GROUP:FindByName("CVN STENNIS")
@@ -147,44 +171,4 @@ end,{},400,330,0,0)
 --Tarawa_Radio:RadioBeacon("beacon.ogg",121.500,radio.modulation.AM,150)--preset4
 --env.info('Tarawa beacons refreshed')
 --end,{},35,60)
-
-
-
---- DISPERSE UNDER FIRE OFF
-
-function CONTROLLABLE:OptionDisperseOff()
--- this is currently disabled. if you want to enable it, check the next paragraph below
-end
-
-
-
---search for this line in moose:
---function CONTROLLABLE:OptionROEOpenFirePossible()
---
---then paste the following code at the end of the function
---
---function CONTROLLABLE:OptionDisperseOff()
---  self:F2( { self.ControllableName } )
---
---  local DCSControllable = self:GetDCSObject()
---  if DCSControllable then
---    local Controller = self:_GetController()
---
---      Controller:setOption( 8,0 )
---
---    return self
---  end
---
---  return nil
---end
-
-
-
----- this will iterate over all existing ground units at mission start and will set the disperse off function that we added to moose, probably not needed anymore
-
---AllGroundUnits = SET_GROUP:New():FilterCategoryGround()
---AllGroundUnits:FilterOnce()
---AllGroundUnits:ForEachGroup(function (allgroups)
---  allgroups:OptionDisperseOff() end)
---env.info("We iterated over each Ground Group and set their option to disperse under fire to off")
 
