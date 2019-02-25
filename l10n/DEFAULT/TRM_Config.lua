@@ -3,7 +3,6 @@ _SETTINGS:SetPlayerMenuOff()
 -- command center off
 
 
-
 stennis_rescuehelo1=RESCUEHELO:New("CVN STENNIS", "Stennis_Rescue")
 stennis_rescuehelo1:SetHomeBase(AIRBASE:FindByName("Perry"))
 stennis_rescuehelo1:SetTakeoffHot()
@@ -143,15 +142,18 @@ RescueParty = SPAWN:New("RescueParty"):SpawnInZone(RW_Training_Zone,true)
 RescuePartyLocation = RescueParty:GetCoordinate()
 RescueCargo = SPAWNSTATIC:NewFromStatic("Rescue_Cargo",country.id.GERMANY)
 RescueCargo:SpawnFromCoordinate(RescuePartyLocation)
-ToCoord = RescuePartyLocation:Translate( 15, math.random(359) )
-RescueParty:TaskRouteToVec2( ToCoord:GetVec2() )
-RescueParty:SetTask( RouteTask, 1 )
+ToCoord = RescuePartyLocation:Translate( 3, math.random(359) )
+RescueParty_Task = RescueParty:TaskRouteToVec2( ToCoord:GetVec2() )
+
+
+
 SCHEDULER:New(nil,function()
   if RescueParty ~= nil
   then
     BEACON1_Radio = RescueParty:GetBeacon()
     BEACON1_Radio:RadioBeacon("beacon.ogg",114.333,radio.modulation.AM,150,55)--preset2
-  end end,{},5,60)
+  end end,{},15,60)
+
 
 --CH1: 114.166
 --CH2: 114.333
