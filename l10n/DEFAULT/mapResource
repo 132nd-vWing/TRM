@@ -1,5 +1,6 @@
 mapResource = 
 {
+    [""] = "HeloTasks.lua",
     ["ResKey_Action_2868"] = "beacon.ogg",
     ["ResKey_Action_2894"] = "mist_4_3_74.lua",
     ["ResKey_Action_2899"] = "beaconsilent.ogg",
@@ -16,8 +17,9 @@ mapResource =
     ["ResKey_Action_5890"] = "CTLD.lua",
     ["ResKey_Action_6741"] = "TRM_tankers.lua",
     ["ResKey_Action_6954"] = "beacon.ogg",
-    ["ResKey_Action_7101"] = "Moose.lua",
-    ["ResKey_Action_7116"] = "TRM_Config.lua",
+    ["ResKey_Action_7117"] = "Moose.lua",
+    ["ResKey_Action_7194"] = "TRM_Config.lua",
+    ["ResKey_Action_7203"] = "HeloTasks.lua",
     ["ResKey_advancedFile_6970"] = "beacon.ogg",
     ["ResKey_advancedFile_6973"] = "beacon.ogg",
     ["ResKey_advancedFile_6981"] = "beacon.ogg",

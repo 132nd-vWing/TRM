@@ -135,32 +135,7 @@ SCHEDULER:New(nil,function()
 end,{},400,330,0,0)
 
 
---- ARK-UD BEACONS -- 
--- creates a medic hummer at a random position within the TMA. The unit will broadcast an ARK-UD Beacon on preset 1
-RW_Training_Zone= ZONE_POLYGON:New(RW_Training_Zone,GROUP:FindByName("RW_Training_Zone"))
-RescueParty = SPAWN:New("RescueParty"):SpawnInZone(RW_Training_Zone,true)
-RescuePartyLocation = RescueParty:GetCoordinate()
-RescueCargo = SPAWNSTATIC:NewFromStatic("Rescue_Cargo",country.id.GERMANY)
-RescueCargo:SpawnFromCoordinate(RescuePartyLocation)
-ToCoord = RescuePartyLocation:Translate( 3, math.random(359) )
-RescueParty_Task = RescueParty:TaskRouteToVec2( ToCoord:GetVec2() )
 
-
-
-SCHEDULER:New(nil,function()
-  if RescueParty ~= nil
-  then
-    BEACON1_Radio = RescueParty:GetBeacon()
-    BEACON1_Radio:RadioBeacon("beacon.ogg",114.333,radio.modulation.AM,150,55)--preset2
-  end end,{},15,60)
-
-
---CH1: 114.166
---CH2: 114.333
---CH3: 114.583
---CH4: 121.500
---CH5: 123.100
---CH6: 124.100
 
 
 
