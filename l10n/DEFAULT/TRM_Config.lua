@@ -2,6 +2,13 @@
 _SETTINGS:SetPlayerMenuOff()
 -- command center off
 
+function CONTROLLABLE:OptionDisperseOff()
+env.info("Group Spawned")
+end
+
+
+
+
 
 stennis_rescuehelo1=RESCUEHELO:New("CVN STENNIS", "Stennis_Rescue")
 stennis_rescuehelo1:SetHomeBase(AIRBASE:FindByName("Perry"))

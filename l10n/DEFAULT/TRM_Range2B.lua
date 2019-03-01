@@ -772,11 +772,22 @@ spawn_menu_R2B_4 = MENU_MISSION_COMMAND:New("Set up Range 2B.4 dynamically",Menu
 
 
 
+--- Range 2B Mobile Threats  --
+R2B_Mobile_Threat_Zone_South = ZONE_POLYGON:New("R2B_Mobile_Threat_Zone1",GROUP:FindByName("Range2B_Mobilethreat_zone1"))
+R2B_Mobile_Threat_Zone_North = ZONE_POLYGON:New("R2B_Mobile_Threat_Zone2",GROUP:FindByName("Range2B_Mobilethreat_zone2"))
+R2B_Mobile_Threat_Table = { "Mobilethreat1_SA9", "Mobilethreat2_SA13", "Mobilethreat3_SA8","Mobilethreat4_Manpad"  } -- table for mobile threats
+
+function SpawnMobileThreats_R2B_South()
+R2B_Threat1 = SPAWN:NewWithAlias("Mobile_Threat_Spawner", "SpawnMobileThreats_R2B_South"):InitRandomizeTemplate(R2B_Mobile_Threat_Table)
+R2B_Threat1:SpawnInZone(R2B_Mobile_Threat_Zone_South,true)
+  end
+ 
+function SpawnMobileThreats_R2B_North()
+R2B_Threat2 = SPAWN:NewWithAlias("Mobile_Threat_Spawner", "SpawnMobileThreats_R2B_South"):InitRandomizeTemplate(R2B_Mobile_Threat_Table)
+R2B_Threat2:SpawnInZone(R2B_Mobile_Threat_Zone_North,true)
+  end
 
 
-
-
-
-   
-  
+R2B_Mobile_Threat_Zone_South_Menu = MENU_MISSION_COMMAND:New("Add Mobile Air-Defense Threat at Range 2B4",Menu_Range_R2B_SOUTH,SpawnMobileThreats_R2B_South)
+R2B_Mobile_Threat_Zone_South_Menu = MENU_MISSION_COMMAND:New("Add Mobile Air-Defense Threat at Range 2B2",Menu_Range_R2B,SpawnMobileThreats_R2B_North)
 
