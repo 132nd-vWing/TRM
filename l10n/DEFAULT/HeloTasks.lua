@@ -1,32 +1,41 @@
+function accident(_accidentnumber)
+  local accident = SPAWN:New(_accidentnumber):Spawn()
+  --local fire = SPAWNSTATIC:NewFromStatic("accident1_fire",country.id.GERMANY)
+  local crashunit = accident:GetUnit(15)
+  crashunit:Explode(1,5)
+  --local firelocation = crashunit:GetCoordinate()
+  --fire:SpawnFromCoordinate(firelocation)
+  --STATIC:FindByName("accident1_fire",false):Destroy(false)
 
+  function ctld.createRadioBeaconAtGROUP(accident, _beaconname)
+    local _zonePos = accident:GetVec3()
+    --  local _grouplocation = _group:GetCoordinate()
+    --  local _ToCoord = _grouplocation:Translate( 1, 90 )
+    --  _group:TaskRouteToVec2( _ToCoord:GetVec2() )
 
-Accident1 = SPAWN:New("Accident1"):Spawn()
---local fire = SPAWNSTATIC:NewFromStatic("accident1_fire",country.id.GERMANY)
-local crashunit = Accident1:GetUnit(15)
-crashunit:Explode(1,5)
---local firelocation = crashunit:GetCoordinate()
---fire:SpawnFromCoordinate(firelocation)
---STATIC:FindByName("accident1_fire",false):Destroy(false)
+    ctld.beaconCount = ctld.beaconCount + 1
 
-function ctld.createRadioBeaconAtGROUP(_group, _beaconname)
-  local _zonePos = _group:GetVec3()
-  --  local _grouplocation = _group:GetCoordinate()
-  --  local _ToCoord = _grouplocation:Translate( 1, 90 )
-  --  _group:TaskRouteToVec2( _ToCoord:GetVec2() )
-
-  ctld.beaconCount = ctld.beaconCount + 1
-
-  if _name == nil or _name == "" then
-    _name = "Beacon #" .. ctld.beaconCount
+    if _name == nil or _name == "" then
+      _name = "Beacon #" .. ctld.beaconCount
+    end
+    ctld.createRadioBeacon(_zonePos, 2, 2, _beaconname, 1440)
   end
-
-
-  ctld.createRadioBeacon(_zonePos, 2, 2, _beaconname, 1440)
-
+  ctld.createRadioBeaconAtGROUP(accident,"Car-Accident")
 end
 
-ctld.createRadioBeaconAtGROUP(Accident1,"Car-Accident")
-
+accidentnumer = math.random(3)
+if accidentnumer == 1
+then
+  accident("Accident1")  -- _accidentnumber is the string of the groupname in the ME
+end
+if accidentnumer == 2
+then
+  accident("Accident2")
+end
+if accidentnumer == 3
+then
+  accident("Accident3")
+end
 
 --- ARK-UD BEACONS -- 
 -- creates a medic hummer at a random position within the TMA. The unit will broadcast an ARK-UD Beacon on preset 1
