@@ -597,5 +597,14 @@ local menu_ON_DEMAND_4_MISC_SA13_vehicle_R3B_North = MENU_MISSION_COMMAND:New("S
 local menu_ON_DEMAND_4_MISC_SA19_vehicle_R3B_North = MENU_MISSION_COMMAND:New("Spawn SA19 Vehicle",spawn_menu_OD_MISC_R3B_North,_ON_DEMAND_4_MISC_SA19_vehicle_R3B_North)
 
 
+
+--- Range 3B Mobile Threats  --
+R3B_Mobile_Threat_Zone = ZONE_POLYGON:New("R3B_Mobile_Threat_Zone",GROUP:FindByName("Range3B_Mobilethreat_zone"))
+R3B_Mobile_Threat_Table = { "Mobilethreat1_SA9", "Mobilethreat2_SA13", "Mobilethreat3_SA8","Mobilethreat4_Manpad"  } -- table for mobile threats
+R3B_Threat = SPAWN:NewWithAlias("Mobile_Threat_Spawner", "SpawnMobileThreats_RBB"):InitRandomizeTemplate(R3B_Mobile_Threat_Table)
+
+function SpawnMobileThreats_R3B()
+ R3B_Threat:SpawnInZone(R3B_Mobile_Threat_Zone,true)
+end
  
- 
+R3B_Mobile_Threat_Zone_Menu = MENU_MISSION_COMMAND:New("Add Mobile Air-Defense Threat at Range 3B",Menu_Range_R3B,SpawnMobileThreats_R3B)

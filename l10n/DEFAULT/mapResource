@@ -1,6 +1,5 @@
 mapResource = 
 {
-    [""] = "HeloTasks.lua",
     ["ResKey_Action_2868"] = "beacon.ogg",
     ["ResKey_Action_2894"] = "mist_4_3_74.lua",
     ["ResKey_Action_2899"] = "beaconsilent.ogg",
@@ -9,7 +8,6 @@ mapResource =
     ["ResKey_Action_5179"] = "TRM_Basic Ranges.lua",
     ["ResKey_Action_5513"] = "TRM_ThreatSites.lua",
     ["ResKey_Action_5706"] = "TRM_Range3A.lua",
-    ["ResKey_Action_5707"] = "TRM_Range3B.lua",
     ["ResKey_Action_5759"] = "TRM_Range2A.lua",
     ["ResKey_Action_5838"] = "TRM_Range1.lua",
     ["ResKey_Action_5861"] = "TRM_CivTraffic.lua",
@@ -18,8 +16,10 @@ mapResource =
     ["ResKey_Action_6954"] = "beacon.ogg",
     ["ResKey_Action_7241"] = "HeloTasks.lua",
     ["ResKey_Action_7242"] = "Moose.lua",
-    ["ResKey_Action_7250"] = "TRM_Range2B.lua",
     ["ResKey_Action_7252"] = "TRM_Config.lua",
+    ["ResKey_Action_7263"] = "TRM_Range4B.lua",
+    ["ResKey_Action_7264"] = "TRM_Range2B.lua",
+    ["ResKey_Action_7265"] = "TRM_Range3B.lua",
     ["ResKey_advancedFile_6970"] = "beacon.ogg",
     ["ResKey_advancedFile_6973"] = "beacon.ogg",
     ["ResKey_advancedFile_6981"] = "beacon.ogg",
