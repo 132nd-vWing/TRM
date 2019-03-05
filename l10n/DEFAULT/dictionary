@@ -553,7 +553,7 @@ end,...)",
     ["DictKey_GroupName_1572"] = "KC-130_TANKER_B_backup",
     ["DictKey_GroupName_1576"] = "AGGRESSOR_KC-130_backup",
     ["DictKey_GroupName_1581"] = "BLUE AWACS #2",
-    ["DictKey_GroupName_1585"] = "KC-135_TEXACO",
+    ["DictKey_GroupName_1585"] = "TEX_KC-135_TEXACO",
     ["DictKey_GroupName_1589"] = "Template 1.1: Recon vehicle",
     ["DictKey_GroupName_1592"] = "Template 1.2: Recon section",
     ["DictKey_GroupName_1596"] = "Template 1.3: Recon platoon",
@@ -927,10 +927,10 @@ end,...)",
     ["DictKey_GroupName_3154"] = "R2A_2_red_MBT",
     ["DictKey_GroupName_3159"] = "R2A_2_red_AAA",
     ["DictKey_GroupName_3164"] = "R2A_2_red_recon",
-    ["DictKey_GroupName_3207"] = "KC-135_SHELL",
-    ["DictKey_GroupName_3218"] = "KC-130_TANKER_B",
-    ["DictKey_GroupName_3226"] = "IL-78_TANKER_A",
-    ["DictKey_GroupName_3235"] = "AGGRESSOR_Il78M",
+    ["DictKey_GroupName_3207"] = "SHL_KC-135_SHELL",
+    ["DictKey_GroupName_3218"] = "ARO_KC-130_ARCO",
+    ["DictKey_GroupName_3226"] = "SHL_KC-135_MPRS_SHELL",
+    ["DictKey_GroupName_3235"] = "AGR_AGGRESSOR_Il78M",
     ["DictKey_GroupName_3241"] = "External_A-10C#1",
     ["DictKey_GroupName_3244"] = "External_A-10C#2",
     ["DictKey_GroupName_3247"] = "External_A-10C#3",
@@ -2362,7 +2362,7 @@ end,...)",
     ["DictKey_UnitName_1573"] = "KC-130_TANKER_B_backup",
     ["DictKey_UnitName_1577"] = "AGGRESSOR_KC-130_backup",
     ["DictKey_UnitName_1582"] = "BLUE AWACS #2",
-    ["DictKey_UnitName_1586"] = "KC-135_TEXACO #IFF:1201FR",
+    ["DictKey_UnitName_1586"] = "TEX_KC-135_TEXACO #IFF:1201FR",
     ["DictKey_UnitName_1590"] = "Unit #037",
     ["DictKey_UnitName_1593"] = "Unit #038",
     ["DictKey_UnitName_1595"] = "Unit #039",
@@ -2825,10 +2825,10 @@ end,...)",
     ["DictKey_UnitName_3155"] = "R2A_2_red_MBT",
     ["DictKey_UnitName_3160"] = "R2A_2_red_AAA",
     ["DictKey_UnitName_3165"] = "R2A_2_red_recon",
-    ["DictKey_UnitName_3208"] = "KC-135_SHELL #IFF:1204FR",
-    ["DictKey_UnitName_3219"] = "KC-130_TANKER_B #IFF:1205FR",
-    ["DictKey_UnitName_3227"] = "IL-78_TANKER_A #IFF:1203FR",
-    ["DictKey_UnitName_3236"] = "AGGRESSOR_Il78M #IFF:1302UN",
+    ["DictKey_UnitName_3208"] = "SHL_KC-135_SHELL #IFF:1204FR",
+    ["DictKey_UnitName_3219"] = "ARO_KC-130_ARCO #IFF:1205FR",
+    ["DictKey_UnitName_3227"] = "SHL_KC-135_MPRS_SHELL #IFF:1203FR",
+    ["DictKey_UnitName_3236"] = "AGR_AGGRESSOR_Il78M #IFF:1302UN",
     ["DictKey_UnitName_3242"] = "External_A-10C#1",
     ["DictKey_UnitName_3245"] = "External_A-10C#2",
     ["DictKey_UnitName_3248"] = "External_A-10C#3",
@@ -6579,17 +6579,17 @@ KC-135 TEXACO:\
 KC-135 SHELL:\
 12000ft, speed 270kts, TACAN 06Y, Freq: 149.0\
 \
-IL-78 Tanker A (Shell):\
-24000ft, speed 380kts, TACAN 07Y, Freq: 230.750\
+KC-135_MPRS (Shell):\
+24000ft, speed 380kts, TACAN 38Y, Freq: 230.750\
 \
-KC-130 Tanker B (ARCO):\
-18000ft, speed 336kts, TACAN 08Y, Freq: 235.500\
+KC-130 (ARCO):\
+18000ft, speed 336kts, TACAN 39Y, Freq: 235.500\
 \
 AGGRESSOR IL-78 (C/S 401)\
-18000ft, speed 336, TACAN 09Y, Freq: 244.25\
+18000ft, speed 336, TACAN 37Y, Freq: 244.25\
 \
 S-3 VIKING Carrier alert Tanker (TEXACO 2)\
-8000ft, speed 380kts, TACAN 10Y, Freq: 242.0 (CHERRY 3)\
+8000ft, speed 380kts, TACAN 40Y, Freq: 242.0 (CHERRY 3)\
 \
 \
 CARRIER CVN STENNIS\
