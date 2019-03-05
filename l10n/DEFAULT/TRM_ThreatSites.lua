@@ -35,7 +35,7 @@ ThreatSite_8 = GROUP:FindByName("THREAT SITE 8")
 ThreatSite_9 = GROUP:FindByName("THREAT SITE 9")
 ThreatSite_10 = GROUP:FindByName("THREAT SITE 10")
 ThreatSite_11 = GROUP:FindByName("THREAT SITE 11")
-
+ThreatSite_12 = GROUP:FindByName("THREAT SITE 12")
 
 ThreatSite_1:SetAIOff()
 ThreatSite_2:SetAIOff()
@@ -48,7 +48,7 @@ ThreatSite_8:SetAIOff()
 ThreatSite_9:SetAIOff()
 ThreatSite_10:SetAIOff()
 ThreatSite_11:SetAIOff()
-
+ThreatSite_12:SetAIOff()
 
 
 
@@ -204,10 +204,22 @@ function ThreatSite_11_threat_off()
   ThreatSite_11:SetAIOff()
   Menu_ThreatSite_11_Off:Remove()
   Menu_ThreatSite_11_On = MENU_MISSION_COMMAND:New("Activate Threat Site 11",Menu_Threat_Options_MOAs,ThreatSite_11_threat_on)
-  InactiveThreadSites(ActiveThreatSites, "Threatsite12")
+  InactiveThreadSites(ActiveThreatSites, "Threatsite11")
 end
 
+function ThreatSite_12_threat_on()
+  ThreatSite_12:SetAIOn()
+  Menu_ThreatSite_12_On:Remove()
+  Menu_ThreatSite_12_Off = MENU_MISSION_COMMAND:New("Deactivate Threat Site 12",Menu_Threat_Options_Ranges1_4,ThreatSite_12_threat_off)
+  table.insert(ActiveThreatSites,"Threatsite12")
+end
 
+function ThreatSite_12_threat_off()
+  ThreatSite_12:SetAIOff()
+  Menu_ThreatSite_12_Off:Remove()
+  Menu_ThreatSite_12_On = MENU_MISSION_COMMAND:New("Activate Threat Site 12",Menu_Threat_Options_Ranges1_4,ThreatSite_12_threat_on)
+  InactiveThreadSites(ActiveThreatSites, "Threatsite12")
+end
 
 
 Menu_Threat_Options_Ranges = MENU_MISSION:New("Ranges", Menu_Threat_Options)
@@ -227,7 +239,7 @@ Menu_ThreatSite_8_On = MENU_MISSION_COMMAND:New("Activate Threat Site 8",Menu_Th
 Menu_ThreatSite_9_On = MENU_MISSION_COMMAND:New("Activate Threat Site 9",Menu_Threat_Options_MOAs,ThreatSite_9_threat_on)
 Menu_ThreatSite_10_On = MENU_MISSION_COMMAND:New("Activate Threat Site 10",Menu_Threat_Options_MOAs,ThreatSite_10_threat_on)
 Menu_ThreatSite_11_On = MENU_MISSION_COMMAND:New("Activate Threat Site 11",Menu_Threat_Options_MOAs,ThreatSite_11_threat_on)
-
+Menu_ThreatSite_12_On = MENU_MISSION_COMMAND:New("Activate Threat Site 12",Menu_Threat_Options_Ranges1_4,ThreatSite_12_threat_on)
 
 
   
