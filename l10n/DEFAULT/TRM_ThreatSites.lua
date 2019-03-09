@@ -36,6 +36,7 @@ ThreatSite_9 = GROUP:FindByName("THREAT SITE 9")
 ThreatSite_10 = GROUP:FindByName("THREAT SITE 10")
 ThreatSite_11 = GROUP:FindByName("THREAT SITE 11")
 ThreatSite_12 = GROUP:FindByName("THREAT SITE 12")
+ThreatSite_13 = GROUP:FindByName("THREAT SITE 13")
 
 ThreatSite_1:SetAIOff()
 ThreatSite_2:SetAIOff()
@@ -49,7 +50,7 @@ ThreatSite_9:SetAIOff()
 ThreatSite_10:SetAIOff()
 ThreatSite_11:SetAIOff()
 ThreatSite_12:SetAIOff()
-
+ThreatSite_13:SetAIOff()
 
 
 
@@ -221,6 +222,20 @@ function ThreatSite_12_threat_off()
   InactiveThreadSites(ActiveThreatSites, "Threatsite12")
 end
 
+function ThreatSite_13_threat_on()
+  ThreatSite_13:SetAIOn()
+  Menu_ThreatSite_13_On:Remove()
+  Menu_ThreatSite_13_Off = MENU_MISSION_COMMAND:New("Deactivate Threat Site 13",Menu_Threat_Options_MOAs,ThreatSite_13_threat_off)
+  table.insert(ActiveThreatSites,"Threatsite13")
+end
+
+function ThreatSite_13_threat_off()
+  ThreatSite_13:SetAIOff()
+  Menu_ThreatSite_13_Off:Remove()
+  Menu_ThreatSite_13_On = MENU_MISSION_COMMAND:New("Activate Threat Site 13",Menu_Threat_Options_MOAs,ThreatSite_13_threat_on)
+  InactiveThreadSites(ActiveThreatSites, "Threatsite13")
+end
+
 
 Menu_Threat_Options_Ranges = MENU_MISSION:New("Ranges", Menu_Threat_Options)
 Menu_Threat_Options_Ranges1_4 = MENU_MISSION:New("Threat Sites 1-4", Menu_Threat_Options_Ranges)
@@ -240,6 +255,6 @@ Menu_ThreatSite_9_On = MENU_MISSION_COMMAND:New("Activate Threat Site 9",Menu_Th
 Menu_ThreatSite_10_On = MENU_MISSION_COMMAND:New("Activate Threat Site 10",Menu_Threat_Options_MOAs,ThreatSite_10_threat_on)
 Menu_ThreatSite_11_On = MENU_MISSION_COMMAND:New("Activate Threat Site 11",Menu_Threat_Options_MOAs,ThreatSite_11_threat_on)
 Menu_ThreatSite_12_On = MENU_MISSION_COMMAND:New("Activate Threat Site 12",Menu_Threat_Options_Ranges1_4,ThreatSite_12_threat_on)
-
+Menu_ThreatSite_13_On = MENU_MISSION_COMMAND:New("Activate Threat Site 13",Menu_Threat_Options_MOAs,ThreatSite_13_threat_on)
 
   
