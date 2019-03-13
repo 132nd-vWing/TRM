@@ -10,11 +10,11 @@
 
     See https://github.com/ciribob/DCS-CTLD for a user manual and the latest version
 
-	Contributors:
-	    - Steggles - https://github.com/Bob7heBuilder
-	    - mvee - https://github.com/mvee
-	    - jmontleon - https://github.com/jmontleon
-	    - emilianomolina - https://github.com/emilianomolina
+  Contributors:
+      - Steggles - https://github.com/Bob7heBuilder
+      - mvee - https://github.com/mvee
+      - jmontleon - https://github.com/jmontleon
+      - emilianomolina - https://github.com/emilianomolina
 
     Version: 1.72 - 18/02/2018
       - Bug fix for crate spam
@@ -53,7 +53,7 @@ ctld.maximumSearchDistance = 5 -- max distance for troops to search for enemy
 ctld.maximumMoveDistance = 5 -- max distance for troops to move from drop point if no enemy is nearby
 
 ctld.numberOfTroops = 10 -- default number of troops to load on a transport heli or C-130 
-							-- also works as maximum size of group that'll fit into a helicopter unless overridden
+              -- also works as maximum size of group that'll fit into a helicopter unless overridden
 ctld.enableFastRopeInsertion = true -- allows you to drop troops by fast rope
 ctld.fastRopeMaximumHeight = 18.28 -- in meters which is 60 ft max fast rope (not rappell) safe height
 
@@ -173,7 +173,7 @@ ctld.pickupZones = {
 
 -- dropOffZones = {"name","smoke colour",0,side 1 = Red or 2 = Blue or 0 = Both sides}
 ctld.dropOffZones = {
-    { "dropzone1", "green", 2 },
+    { "Hospital", "none", 0 },
 }
 
 
@@ -195,8 +195,8 @@ ctld.transportPilotNames = {
     "259 #5",
     "259 #6 w/o hardpoints",
     "259 #7 w/o hardpoints",
-	"259 PERTH #1",
-	"259 PERTH #2",
+  "259 PERTH #1",
+  "259 PERTH #2",
     "JTAC T2B_4",
 
     -- *** AI transports names (different names only to ease identification in mission) ***
@@ -223,7 +223,6 @@ ctld.extractableGroups = {
     "R2A_SOF_TEAM",
     "RW Training Area Troops1",
     "RW Training Area Troops2",
-    
 }
 
 -- ************** Logistics UNITS FOR CRATE SPAWNING ******************
@@ -1260,48 +1259,48 @@ function ctld.spawnCrateStatic(_country, _unitId, _point, _name, _weight,_side)
         
 --[[ Placeholder for different type of cargo containers. Let's say pipes and trunks, fuel for FOB building
                         ["shape_name"] = "ab-212_cargo",
-			["type"] = "uh1h_cargo" --new type for the container previously used
-			
-			["shape_name"] = "ammo_box_cargo",
+      ["type"] = "uh1h_cargo" --new type for the container previously used
+      
+      ["shape_name"] = "ammo_box_cargo",
                         ["type"] = "ammo_cargo",
-			
-			["shape_name"] = "barrels_cargo",
+      
+      ["shape_name"] = "barrels_cargo",
                         ["type"] = "barrels_cargo",
 
                         ["shape_name"] = "bw_container_cargo",
                         ["type"] = "container_cargo",
-			
+      
                         ["shape_name"] = "f_bar_cargo",
                         ["type"] = "f_bar_cargo",
-			
-			["shape_name"] = "fueltank_cargo",
+      
+      ["shape_name"] = "fueltank_cargo",
                         ["type"] = "fueltank_cargo",
-			
-			["shape_name"] = "iso_container_cargo",
-			["type"] = "iso_container",
-			
-			["shape_name"] = "iso_container_small_cargo",
-			["type"] = "iso_container_small",
-			
-			["shape_name"] = "oiltank_cargo",
+      
+      ["shape_name"] = "iso_container_cargo",
+      ["type"] = "iso_container",
+      
+      ["shape_name"] = "iso_container_small_cargo",
+      ["type"] = "iso_container_small",
+      
+      ["shape_name"] = "oiltank_cargo",
                         ["type"] = "oiltank_cargo",
                         
-			["shape_name"] = "pipes_big_cargo",
-                        ["type"] = "pipes_big_cargo",			
-			
-			["shape_name"] = "pipes_small_cargo",
-			["type"] = "pipes_small_cargo",
-			
-			["shape_name"] = "tetrapod_cargo",
-			["type"] = "tetrapod_cargo",
-			
-			["shape_name"] = "trunks_long_cargo",
-			["type"] = "trunks_long_cargo",
-			
-			["shape_name"] = "trunks_small_cargo",
-			["type"] = "trunks_small_cargo",
+      ["shape_name"] = "pipes_big_cargo",
+                        ["type"] = "pipes_big_cargo",     
+      
+      ["shape_name"] = "pipes_small_cargo",
+      ["type"] = "pipes_small_cargo",
+      
+      ["shape_name"] = "tetrapod_cargo",
+      ["type"] = "tetrapod_cargo",
+      
+      ["shape_name"] = "trunks_long_cargo",
+      ["type"] = "trunks_long_cargo",
+      
+      ["shape_name"] = "trunks_small_cargo",
+      ["type"] = "trunks_small_cargo",
 ]]--
-	else	
+  else  
             _crate = {
                 ["shape_name"] = "GeneratorF",
                 ["type"] = "GeneratorF",

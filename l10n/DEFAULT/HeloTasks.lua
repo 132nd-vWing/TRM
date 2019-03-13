@@ -1,18 +1,17 @@
 function accident(_accidentnumber)
   local accident = SPAWN:New(_accidentnumber):Spawn()
-  --local fire = SPAWNSTATIC:NewFromStatic("accident1_fire",country.id.GERMANY)
   local crashunit = accident:GetUnit(15)
-  crashunit:Explode(1,5)
-  --local firelocation = crashunit:GetCoordinate()
-  --fire:SpawnFromCoordinate(firelocation)
-  --STATIC:FindByName("accident1_fire",false):Destroy(false)
-
+  local crashunit2 = accident:GetUnit(10)
+  local crashunit_location = crashunit2:GetVec3()
+  local crashunit_coord = crashunit2:GetCoordinate()
+  local injured = SPAWN:New("Injured")
+  local injuredgroup= injured:SpawnFromVec3(crashunit_location)
+  local ToCoord_injured = crashunit_coord:Translate( 1, math.random(359) )
+  table.insert(ctld.droppedTroopsBLUE,injuredgroup:GetName())
+  local move_injured = injuredgroup:TaskRouteToVec2( ToCoord_injured:GetVec2() )
+  crashunit:Explode(1,20)
   function ctld.createRadioBeaconAtGROUP(accident, _beaconname)
     local _zonePos = accident:GetVec3()
-    --  local _grouplocation = _group:GetCoordinate()
-    --  local _ToCoord = _grouplocation:Translate( 1, 90 )
-    --  _group:TaskRouteToVec2( _ToCoord:GetVec2() )
-
     ctld.beaconCount = ctld.beaconCount + 1
 
     if _name == nil or _name == "" then
@@ -23,7 +22,7 @@ function accident(_accidentnumber)
   ctld.createRadioBeaconAtGROUP(accident,"Car-Accident")
 end
 
-accidentnumer = math.random(3)
+accidentnumer =  3 --math.random(3)
 if accidentnumer == 1
 then
   accident("Accident1")  -- _accidentnumber is the string of the groupname in the ME
@@ -37,17 +36,21 @@ then
   accident("Accident3")
 end
 
---- ARK-UD BEACONS -- 
+--- ARK-UD BEACONS --
 -- creates a medic hummer at a random position within the TMA. The unit will broadcast an ARK-UD Beacon on preset 1
 RW_Training_Zone= ZONE_POLYGON:New(RW_Training_Zone,GROUP:FindByName("RW_Training_Zone"))
 RescueParty = SPAWN:New("RescueParty"):SpawnInZone(RW_Training_Zone,true)
-RescuePartyLocation = RescueParty:GetCoordinate()
-RescueCargo = SPAWNSTATIC:NewFromStatic("Rescue_Cargo",country.id.GERMANY)
-RescueCargo:SpawnFromCoordinate(RescuePartyLocation)
-ToCoord = RescuePartyLocation:Translate( 3, math.random(359) )
-RescueParty_Task = RescueParty:TaskRouteToVec2( ToCoord:GetVec2() )
 
+local RescuePartyLocation = RescueParty:GetCoordinate()
+local RescueCargo = SPAWNSTATIC:NewFromStatic("Rescue_Cargo",country.id.GERMANY)
+RescueCargo:SpawnFromCoordinate(RescuePartyLocation)
+local ToCoord = RescuePartyLocation:Translate( 3, math.random(359) )
+local ToCoord_vec2 = ToCoord:GetVec2()
+local RescueParty_Task = RescueParty:TaskRouteToVec2( ToCoord_vec2 )
+local RescueParty_Pickup = SPAWN:New("RescueParty_Pickup")
+local RescueParty_Pickup_Group = RescueParty_Pickup:SpawnFromVec2(ToCoord_vec2)
 STATIC:FindByName("Rescue_Cargo",false):Destroy(false)
+table.insert(ctld.droppedTroopsBLUE, RescueParty_Pickup_Group:GetName())
 
 
 
@@ -59,9 +62,17 @@ SCHEDULER:New(nil,function()
   end end,{},15,60)
 
 
+
+
+
 --CH1: 114.166
+
 --CH2: 114.333
+
 --CH3: 114.583
+
 --CH4: 121.500
+
 --CH5: 123.100
+
 --CH6: 124.100
