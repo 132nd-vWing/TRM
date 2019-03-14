@@ -6,35 +6,6 @@ function CONTROLLABLE:OptionDisperseOff()
 env.info("Group Spawned")
 end
 
-
-
-
-
-stennis_rescuehelo1=RESCUEHELO:New("CVN STENNIS", "Stennis_Rescue")
-stennis_rescuehelo1:SetHomeBase(AIRBASE:FindByName("Perry"))
-stennis_rescuehelo1:SetTakeoffHot()
-stennis_rescuehelo1:Start()
-
-airboss_stennis_tanker= RECOVERYTANKER:New("CVN STENNIS", "TEXACO 2")
-airboss_stennis_tanker:SetTakeoffHot()
-airboss_stennis_tanker:SetRadio(242)
-airboss_stennis_tanker:SetTACAN(40, "S-3")
-airboss_stennis_tanker:SetAltitude(8000)
-airboss_stennis_tanker:SetSpeed(350)
-airboss_stennis_tanker:Start()
-
-airboss_stennis = AIRBOSS:New("CVN STENNIS")
-airboss_stennis:SetICLS(1,'CVN')
-airboss_stennis:SetTACAN(74,X,'CVN')
-airboss_stennis:AddRecoveryWindow("9:01",  "20:59", 1)
-airboss_stennis:AddRecoveryWindow("21:00", "09:00", 3)
-airboss_stennis:SetMarshalRadio(305,FM)
-airboss_stennis:SetLSORadio(264,FM)
-airboss_stennis:SetRecoveryTanker(airboss_stennis_tanker)
-airboss_stennis:SetSoundfilesFolder("Airboss Soundfiles/")
-
-airboss_stennis:Start()
-
 -- Missile Trainer
 Trainer = MISSILETRAINER:New(70, "Missile Trainer is active!" )
 Trainer:InitMessagesOnOff(true):InitAlertsToAll(true):InitAlertsHitsOnOff(true):InitAlertsLaunchesOnOff(true):InitBearingOnOff(false):InitRangeOnOff(false):InitTrackingOnOff(false):InitTrackingToAll(false):InitMenusOnOff(false)
@@ -43,6 +14,31 @@ Trainer:InitMessagesOnOff(true):InitAlertsToAll(true):InitAlertsHitsOnOff(true):
 -- Threat Options --
 Menu_Threat_Options = MENU_MISSION:New("Threat Sites")
 -- Threat Options --
+
+FARP_KUTAISI = GROUP:FindByName("FARP KUTAISI Tanker")
+SCHEDULER:New(nil,function()
+  if FARP_KUTAISI ~= nil
+  then
+    BEACON1_Radio = FARP_KUTAISI:GetBeacon()
+    BEACON1_Radio:RadioBeacon("beacon.ogg",114.166,radio.modulation.AM,150,55)--preset1
+  end end,{},1,60)
+  
+  
+  FARP_London = GROUP:FindByName("FARP LONDON vehicles")
+SCHEDULER:New(nil,function()
+  if FARP_London ~= nil
+  then
+    BEACON3_Radio = FARP_London:GetBeacon()
+    BEACON3_Radio:RadioBeacon("beacon.ogg",114.583,radio.modulation.AM,150,55)--preset3
+  end end,{},31,60)
+
+  Hospital_Kutaisi = GROUP:FindByName("Hospital Kutaisi")
+SCHEDULER:New(nil,function()
+  if Hospital_Kutaisi ~= nil
+  then
+    BEACON4_Radio = Hospital_Kutaisi:GetBeacon()
+    BEACON4_Radio:RadioBeacon("beacon.ogg",121.500,radio.modulation.AM,150,55)--preset4
+  end end,{},46,60)
 
 
 
@@ -140,22 +136,4 @@ SCHEDULER:New(nil,function()
     end
   end)
 end,{},400,330,0,0)
-
-
-
-
-
-
---SCHEDULER:New(nil,function()
---STENNIS = GROUP:FindByName("CVN STENNIS")
---STENNIS_Radio = STENNIS:GetBeacon()
---STENNIS_Radio:RadioBeacon("beacon.ogg",114.583,radio.modulation.AM,150)--preset3
---env.info('Stennis beacons refreshed')
---end,{},5,60)
---SCHEDULER:New(nil,function()
---Tarawa = GROUP:FindByName("LHA-1 Tarawa")
---Tarawa_Radio = Tarawa:GetBeacon()
---Tarawa_Radio:RadioBeacon("beacon.ogg",121.500,radio.modulation.AM,150)--preset4
---env.info('Tarawa beacons refreshed')
---end,{},35,60)
 
