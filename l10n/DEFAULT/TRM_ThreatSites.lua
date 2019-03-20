@@ -1,3 +1,82 @@
+SEAD_script = true                 -- set to TRUE if you want to enable SEAD Evasion of SAMs
+SEAD_enabled_Sams = {"THREAT SITE 5 #005", "THREAT SITE 6 #003", "THREAT SITE 8", "THREAT SITE 12","THREAT SITE 12 #002"}      -- insert the UNIT Names as they are set in the mission editor to activate SEAD Evasion for the Groups listed
+Target_Smoke = false               -- set to TRUE if you want red smoke deployed from the Target SAM  (mainly used for debugging)
+radar_delay = math.random(20,40)   -- time in seconds until the unit will turn its radar back on (random number between the two)
+move_distance =  math.random(50,200)-- meters the unit will move before stopping (random number between the two)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function SEAD_active()
+  BASE:HandleEvent(EVENTS.Shot)
+  function BASE:OnEventShot(EventData)
+    local clientplane = EventData.IniPlayerName
+    if clientplane ~= nil
+    then
+      env.info("a missile has been shot by "..clientplane)
+      local SEAD_Weapon_Name = EventData.Weapon:getTypeName()
+      if SEAD_Weapon_Name == "weapons.missiles.AGM_88" then
+        local SEAD_Target = EventData.Weapon:getTarget()
+        local SEAD_Target_Name = Unit.getName(SEAD_Target)
+        local SEAD_Target_Unit = UNIT:FindByName(SEAD_Target_Name)
+        local SEAD_Target_GROUP = SEAD_Target_Unit:GetGroup()
+        local SEAD_Shooter_Unit = EventData.IniUnit
+        local SEAD_Shooter_Name = SEAD_Shooter_Unit:GetName()
+        if #SEAD_enabled_Sams ~= 0
+        then
+          for _,Sead_enabled_Sam in ipairs(SEAD_enabled_Sams) do
+            if Sead_enabled_Sam == SEAD_Target_Name
+            then
+              env.info(SEAD_Shooter_Name.." has fired "..SEAD_Weapon_Name.." at "..SEAD_Target_Name)
+              env.info("AGM_88 shot detected from  "..SEAD_Shooter_Name.." on "..SEAD_Target_Name)
+              SEAD_evade(SEAD_Target_GROUP)
+            end
+          end
+        end
+      end
+    end
+  end
+end
+
+
+if SEAD_script == true
+then SEAD_active()
+end
+
+
+
+  
+function SEAD_evade(_group) -- define the evasive action of the SAMsite when shot at by a HARM
+  local _unit = _group:GetUnit(1)
+  if Target_Smoke == true then
+    _unit:SmokeRed() end
+  _group:OptionAlarmStateGreen()
+  local _groupcoordinate = _group:GetCoordinate()
+  local _tocoordinate = _groupcoordinate:Translate( move_distance, math.random(359) )
+  local _ToCoord_vec2 = _tocoordinate:GetVec2()
+  _group:TaskRouteToVec2( _ToCoord_vec2 )
+  _group:OptionAlarmStateGreen()
+  radarbackon = SCHEDULER:New(nil,function()_group:OptionAlarmStateRed()
+    env.info("radar back on")
+    radarbackon:Stop()
+  end,{},radar_delay,360,0,380)
+  
+end
+
+
+
+
 --- Threat Sites---
 ActiveThreatSites = {}
 local function Sam_Footprints()
@@ -256,5 +335,6 @@ Menu_ThreatSite_10_On = MENU_MISSION_COMMAND:New("Activate Threat Site 10",Menu_
 Menu_ThreatSite_11_On = MENU_MISSION_COMMAND:New("Activate Threat Site 11",Menu_Threat_Options_MOAs,ThreatSite_11_threat_on)
 Menu_ThreatSite_12_On = MENU_MISSION_COMMAND:New("Activate Threat Site 12",Menu_Threat_Options_Ranges1_4,ThreatSite_12_threat_on)
 Menu_ThreatSite_13_On = MENU_MISSION_COMMAND:New("Activate Threat Site 13",Menu_Threat_Options_MOAs,ThreatSite_13_threat_on)
+
 
   
