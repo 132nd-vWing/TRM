@@ -1,7 +1,7 @@
 SEAD_script = true                 -- set to TRUE if you want to enable SEAD Evasion of SAMs
 SEAD_enabled_Sams = {"THREAT SITE 5 #005", "THREAT SITE 6 #003", "THREAT SITE 8", "THREAT SITE 12","THREAT SITE 12 #002"}      -- insert the UNIT Names as they are set in the mission editor to activate SEAD Evasion for the Groups listed
 Target_Smoke = false               -- set to TRUE if you want red smoke deployed from the Target SAM  (mainly used for debugging)
-radar_delay = math.random(20,40)   -- time in seconds until the unit will turn its radar back on (random number between the two)
+radar_delay = math.random(120,300)   -- time in seconds until the unit will turn its radar back on (random number between the two)
 move_distance =  math.random(50,200)-- meters the unit will move before stopping (random number between the two)
 
 
