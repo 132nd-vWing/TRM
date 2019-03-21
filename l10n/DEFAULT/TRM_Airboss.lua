@@ -6,7 +6,7 @@ stennis_rescuehelo1:SetModex(42)
 stennis_rescuehelo1:Start()
 
 --tanker
-airboss_stennis_tanker= RECOVERYTANKER:New("CVN STENNIS", "TEXACO 2")
+airboss_stennis_tanker= RECOVERYTANKER:New("CVN STENNIS", "TEXACO 2 #IFF:5112FR")
 airboss_stennis_tanker:SetTakeoffHot()
 airboss_stennis_tanker:SetRadio(242)
 airboss_stennis_tanker:SetTACAN(40, "S-3")

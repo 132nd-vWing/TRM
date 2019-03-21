@@ -44,7 +44,7 @@ SCHEDULER:New(nil,function()
 
 
 -- AWACS --
-awacs1 = SPAWN:NewWithAlias("BLUE AWACS #1","BLUE AWACS1 #IFF:1204FR")
+awacs1 = SPAWN:New("BLUE AWACS #1")
 function awacs1spawn()
   awacs1:OnSpawnGroup(
     function (awacs1_group)
@@ -70,7 +70,7 @@ function awacs1spawn()
 end
 awacs1spawn()
 
-awacs2 = SPAWN:NewWithAlias("BLUE AWACS #2","BLUE AWACS2 #IFF:1205FR")
+awacs2 = SPAWN:New("BLUE AWACS #2")
 function awacs2spawn()
   awacs2:OnSpawnGroup(
     function (awacs2_group)
@@ -98,7 +98,7 @@ awacs2spawn()
 
 
 
-awacs3 = SPAWN:NewWithAlias("RED AGGRESSOR AWACS","RED AGGRESSOR AWACS #IFF:2207HO")
+awacs3 = SPAWN:New("RED AGGRESSOR AWACS")
 function awacs3spawn()
   awacs3:OnSpawnGroup(
     function (awacs3_group)
@@ -125,7 +125,7 @@ end
 awacs3spawn()
 
 
-AWACS_Tankers  = SET_GROUP:New():FilterPrefixes({"BLUE AWACS", 'IL-78_TANKER_A', "RED AGGRESSOR", 'KC-130_TANKER_B', 'KC-135_SHELL','KC-135_TEXACO','AGGRESSOR_Il78M'}):FilterStart()
+AWACS_Tankers  = SET_GROUP:New():FilterPrefixes({"BLUE AWACS", 'ARO_KC', "SHL_KC", 'TEX_KC', 'AGR_AGGRESSOR','RED AGGRESSOR'}):FilterStart()
 SCHEDULER:New(nil,function()
   AWACS_Tankers:ForEachGroupAlive(function(_group)
     local _unit = _group:GetUnit(1)
