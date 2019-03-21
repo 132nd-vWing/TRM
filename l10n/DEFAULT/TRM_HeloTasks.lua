@@ -22,7 +22,7 @@ function accident(_accidentnumber)
   ctld.createRadioBeaconAtGROUP(accident,"Car-Accident")
 end
 
-accidentnumer =  3 --math.random(3)
+accidentnumer =  math.random(3)
 if accidentnumer == 1
 then
   accident("Accident1")  -- _accidentnumber is the string of the groupname in the ME
