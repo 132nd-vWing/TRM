@@ -36,4 +36,48 @@ airboss_stennis:SetDespawnOnEngineShutdown()
 airboss_stennis:Start()
 
 
+---------------------------------
+--- Define LSO/Marshal Shifts ---
+---------------------------------
+
+-- Current shift.
+local shift=1
+
+local function ChangeShift(airboss)
+  local airboss=airboss --Ops.Airboss#AIRBOSS
+
+  -- Next shift.
+  shift=shift+1
+
+  -- One cycle done. Next will be first shift.
+  if shift==4 then
+    shift=1
+  end
+
+  -- Set sound folder and voice over timings. 
+  if shift==1 then
+    env.info("Starting LSO/Marshal Shift 1: LSO Raynor, Marshal Raynor")
+    airboss:SetSoundfilesFolder("Airboss Soundfiles/")
+    airboss:SetVoiceOversLSOByRaynor()
+    airboss:SetVoiceOversMarshalByRaynor()
+  elseif shift==2 then
+    env.info("Starting LSO/Marshal Shift 2: LSO FF, Marshal Raynor")
+    airboss:SetSoundfilesFolder("Airboss Soundfiles Shift 2/")
+    airboss:SetVoiceOversLSOByFF()
+    airboss:SetVoiceOversMarshalByRaynor()  
+  elseif shift==3 then
+    env.info("Starting LSO/Marshal Shift 3: LSO Raynor, Marshal FF")
+    airboss:SetSoundfilesFolder("Airboss Soundfiles Shift 3/")
+    airboss:SetVoiceOversLSOByRaynor()
+    airboss:SetVoiceOversMarshalByFF()    
+  end
+ 
+end
+
+-- Length of shift in minutes.
+local L=30
+
+-- Start shift scheduler to change shift every L minutes.
+SCHEDULER:New(nil, ChangeShift, {AirbossStennis}, L*60, L*60)
+
 
