@@ -65,7 +65,7 @@ function awacs1spawn()
           awacs1spawn()
         end
       end
-      ,{},5,30)
+      ,{},5,300)
     end):Spawn()
 end
 awacs1spawn()
@@ -91,7 +91,7 @@ function awacs2spawn()
           awacs2spawn()
         end
       end
-      ,{},5,30)
+      ,{},5,300)
     end):Spawn()
 end
 awacs2spawn()
@@ -119,7 +119,7 @@ function awacs3spawn()
           awacs3spawn()
         end
       end
-      ,{},5,30)
+      ,{},5,300)
     end):Spawn()
 end
 awacs3spawn()
