@@ -34,11 +34,11 @@
 -- Comma separated list of groups that are to be managed by the script.
 -- note, TACAN are on channel Y 
 _TANKER_UNITS = {
-  {NAME='SHL_KC-135_MPRS_SHELL',   TACAN=38 },
-  {NAME='ARO_KC-130_ARCO',  TACAN=39 },
-  {NAME='SHL_KC-135_SHELL',  TACAN=42},
-  {NAME='TEX_KC-135_TEXACO', TACAN=41 },
-  {NAME='AGR_AGGRESSOR_Il78M', TACAN=37},
+  {NAME='SHL_KC-135_MPRS_SHELL #IFF:5132FR',   TACAN=38 },
+  {NAME='ARO_KC-130_ARCO #IFF:5121FR',  TACAN=39 },
+  {NAME='SHL_KC-135_SHELL #IFF:5132FR',  TACAN=42},
+  {NAME='TEX_KC-135_TEXACO #IFF:5111FR', TACAN=41 },
+  {NAME='AGR_AGGRESSOR_Il78M #IFF:1302EN', TACAN=37},
 }
 
 -- Minimum fuel

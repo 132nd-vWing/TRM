@@ -44,7 +44,7 @@ SCHEDULER:New(nil,function()
 
 
 -- AWACS --
-awacs1 = SPAWN:New("BLUE AWACS #1")
+awacs1 = SPAWN:New("BLUE AWACS #1 #IFF:5211FR")
 function awacs1spawn()
   awacs1:OnSpawnGroup(
     function (awacs1_group)
@@ -70,7 +70,7 @@ function awacs1spawn()
 end
 awacs1spawn()
 
-awacs2 = SPAWN:New("BLUE AWACS #2")
+awacs2 = SPAWN:New("BLUE AWACS #2 #IFF:5212FR")
 function awacs2spawn()
   awacs2:OnSpawnGroup(
     function (awacs2_group)
@@ -98,7 +98,7 @@ awacs2spawn()
 
 
 
-awacs3 = SPAWN:New("RED AGGRESSOR AWACS")
+awacs3 = SPAWN:New("RED AGGRESSOR AWACS #IFF:1301EN")
 function awacs3spawn()
   awacs3:OnSpawnGroup(
     function (awacs3_group)
