@@ -15,9 +15,9 @@ mapResource =
     ["ResKey_Action_7265"] = "TRM_Range3B.lua",
     ["ResKey_Action_7420"] = "TRM_CTLD.lua",
     ["ResKey_Action_7520"] = "TRM_HeloTasks.lua",
-    ["ResKey_Action_7549"] = "TRM_Airboss.lua",
     ["ResKey_Action_7578"] = "TRM_ThreatSites.lua",
     ["ResKey_Action_7579"] = "TRM_tankers.lua",
     ["ResKey_Action_7580"] = "TRM_Config.lua",
-    ["ResKey_Action_9118"] = "Moose.lua",
+    ["ResKey_Action_9119"] = "Moose.lua",
+    ["ResKey_Action_9120"] = "TRM_Airboss.lua",
 } -- end of mapResource

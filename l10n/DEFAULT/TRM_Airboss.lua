@@ -26,9 +26,11 @@ airboss_stennis:SetTACAN(74,X,'CVN')
 
 local window1=airboss_stennis:AddRecoveryWindow( "8:00", "14:00", 1, nil, true, 25)
 -- Case II with +15 degrees holding offset from 15:00 for 60 min.
-local window2=airboss_stennis:AddRecoveryWindow("15:00", "20:00", 2,  15, true, 23)
+local window2=airboss_stennis:AddRecoveryWindow("15:00", "20:00", 2,  20, true, 23)
 -- Case III with +30 degrees holding offset from 2100 to 2200.
-local window3=airboss_stennis:AddRecoveryWindow("21:00", "22:00", 3,  30, true, 21)
+local window3=airboss_stennis:AddRecoveryWindow("21:00", "22:00", 3,  20, true, 21)
+local window3=airboss_stennis:AddRecoveryWindow("23:00", "03:00", 3,  20, true, 21)
+local window3=airboss_stennis:AddRecoveryWindow("05:00", "07:00", 3,  20, true, 21)
 
 
 
