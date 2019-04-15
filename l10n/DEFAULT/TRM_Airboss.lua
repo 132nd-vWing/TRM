@@ -1,4 +1,5 @@
-local Traffic=false
+
+
 
 --helo
 stennis_rescuehelo1=RESCUEHELO:New("CVN STENNIS", "Stennis_Rescue")
@@ -18,19 +19,18 @@ airboss_stennis_tanker:Start()
 
 --airboss
 airboss_stennis = AIRBOSS:New("CVN STENNIS")
+
+
+
+
 airboss_stennis:SetMenuSingleCarrier(Single)
 airboss_stennis:SetSoundfilesFolder("Airboss Soundfiles/")
 
 airboss_stennis:SetICLS(1,'CVN')
 airboss_stennis:SetTACAN(74,X,'CVN')
 
-local window1=airboss_stennis:AddRecoveryWindow( "8:00", "14:00", 1, nil, true, 25)
--- Case II with +15 degrees holding offset from 15:00 for 60 min.
-local window2=airboss_stennis:AddRecoveryWindow("15:00", "20:00", 2,  20, true, 23)
--- Case III with +30 degrees holding offset from 2100 to 2200.
-local window3=airboss_stennis:AddRecoveryWindow("21:00", "22:00", 3,  20, true, 21)
-local window3=airboss_stennis:AddRecoveryWindow("23:00", "03:00", 3,  20, true, 21)
-local window3=airboss_stennis:AddRecoveryWindow("05:00", "07:00", 3,  20, true, 21)
+
+
 
 
 
@@ -43,6 +43,38 @@ airboss_stennis:SetRecoveryTanker(airboss_stennis_tanker)
 airboss_stennis:SetDespawnOnEngineShutdown()
 
 airboss_stennis:Start()
+
+---------------------------------
+--- Define Recovery Windows ---
+---------------------------------
+
+function airboss_stennis:OnAfterStart(From,Event,To)
+  self:DeleteAllRecoveryWindows()
+end
+
+-- Start recovery function.
+local function StartRecovery(case)
+
+  -- Recovery staring in 5 min for 30 min.
+  local t0=timer.getAbsTime()+5*60
+  local t9=t0+120*60
+  local C0=UTILS.SecondsToClock(t0)
+  local C9=UTILS.SecondsToClock(t9)
+
+  -- Carrier will turn into the wind. Wind on deck 25 knots. U-turn on.
+  airboss_stennis:AddRecoveryWindow(C0, C9,case, 30, true, 25, true)
+end
+
+-- Stop recovery function.
+local function StopRecovery()
+  airboss_stennis:RecoveryStop()
+end
+
+local menucarriercontrol=MENU_COALITION:New(airboss_stennis:GetCoalition(), "Carrier Control")
+MENU_COALITION_COMMAND:New(airboss_stennis:GetCoalition(), "Start CASE I",   menucarriercontrol, StartRecovery, 1)
+MENU_COALITION_COMMAND:New(airboss_stennis:GetCoalition(), "Start CASE II",  menucarriercontrol, StartRecovery, 2)
+MENU_COALITION_COMMAND:New(airboss_stennis:GetCoalition(), "Start CASE III", menucarriercontrol, StartRecovery, 3)
+MENU_COALITION_COMMAND:New(airboss_stennis:GetCoalition(), "Stop Recovery",  menucarriercontrol, StopRecovery)
 
 
 
@@ -94,31 +126,9 @@ SCHEDULER:New(nil, ChangeShift, {airboss_stennis}, L*60, L*60)
 
 --- Function called when recovery starts.
 function airboss_stennis:OnAfterRecoveryStart(Event, From, To, Case, Offset)
-  env.info(string.format("Starting Recovery Case %d ops.", Case))
+local recoverymessage = string.format("Starting Recovery Case %d ops.", Case)
+  env.info(recoverymessage)
+  MessageToAll(recoverymessage,15)
 end
 
-
--- Spawn some AI flights as additional traffic.
-if Traffic then
-  local F181=SPAWN:New("FA18 Group 1"):InitModex(101) -- Coming in from NW after  ~6 min
-  local F182=SPAWN:New("FA18 Group 2"):InitModex(201) -- Coming in from NW after ~20 min
-  local F183=SPAWN:New("FA18 Group 3"):InitModex(301) -- Coming in from W  after ~18 min
-  local F14=SPAWN:New("F-14B 2ship"):InitModex(401)   -- Coming in from SW after  ~4 min
-  local E2D=SPAWN:New("E-2D Group"):InitModex(501)    -- Coming in from NE after ~10 min
-  local S3B=SPAWN:New("S-3B Group"):InitModex(601)    -- Coming in from S  after ~16 min
-  
-  -- Spawn always 9 min before the recovery window opens.
-  local spawntimes={"7:51", "14:51", "20:51"}
-  for _,spawntime in pairs(spawntimes) do
-    local _time=UTILS.ClockToSeconds(spawntime)-timer.getAbsTime()
-    if _time>0 then
-      SCHEDULER:New(nil, F181.Spawn, {F181}, _time)
-      SCHEDULER:New(nil, F182.Spawn, {F182}, _time)
-      SCHEDULER:New(nil, F183.Spawn, {F183}, _time)
-      SCHEDULER:New(nil, F14.Spawn,  {F14},  _time)
-      SCHEDULER:New(nil, E2D.Spawn,  {E2D},  _time)
-      SCHEDULER:New(nil, S3B.Spawn,  {S3B},  _time)
-    end
-  end  
-end
 

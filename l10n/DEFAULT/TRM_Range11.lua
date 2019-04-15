@@ -1,10 +1,8 @@
 -- Range 11 --
---Range11_Groups = SET_GROUP:New():FilterCategoryGround():FilterPrefixes("Range11 Target"):FilterStart()
-
 
 -- ON DEMAND SPAWNING --
 BlueSpawnerR111 = UNIT:FindByName("BlueInfantryR11")
-RedSpawnerR111 = UNIT:FindByName("REDInfantryR11")
+RedSpawnerR111 = UNIT:FindByName("RedInfantryR11")
 Recon_HMMWV_vehicle_R11 = SPAWN:NewWithAlias("_ON_DEMAND_1: Recon_HMMWV_vehicle", "Range11 Target1")
 Recon_HMMWV_section_R11 = SPAWN:NewWithAlias("_ON_DEMAND_1: Recon_HMMWV_section", "Range11 Target2")
 Recon_BRDM_vehicle_R11 = SPAWN:NewWithAlias("_ON_DEMAND_1: Recon_BRDM_vehicle", "Range11 Target3")
