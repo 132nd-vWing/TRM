@@ -1,12 +1,9 @@
 
-
-
 --helo
 stennis_rescuehelo1=RESCUEHELO:New("CVN STENNIS", "Stennis_Rescue")
-stennis_rescuehelo1:SetHomeBase(AIRBASE:FindByName("Perry"))
 stennis_rescuehelo1:SetTakeoffHot()
 stennis_rescuehelo1:SetModex(42)
-stennis_rescuehelo1:Start()
+
 
 --tanker
 airboss_stennis_tanker= RECOVERYTANKER:New("CVN STENNIS", "TEXACO 2 #IFF:5112FR")
@@ -20,24 +17,16 @@ airboss_stennis_tanker:Start()
 --airboss
 airboss_stennis = AIRBOSS:New("CVN STENNIS")
 
-
-
-
 airboss_stennis:SetMenuSingleCarrier(Single)
 airboss_stennis:SetSoundfilesFolder("Airboss Soundfiles/")
 
 airboss_stennis:SetICLS(1,'CVN')
 airboss_stennis:SetTACAN(74,X,'CVN')
 
-
-
-
-
-
 airboss_stennis:SetMarshalRadio(305)
 airboss_stennis:SetLSORadio(264)
-airboss_stennis:SetRadioRelayLSO(stennis_rescuehelo1:GetUnitName())
-airboss_stennis:SetRadioRelayMarshal(stennis_rescuehelo1:GetUnitName())
+--airboss_stennis:SetRadioRelayLSO(stennis_rescuehelo1:GetUnitName())
+--airboss_stennis:SetRadioRelayMarshal(stennis_rescuehelo1:GetUnitName())
 
 airboss_stennis:SetRecoveryTanker(airboss_stennis_tanker)
 airboss_stennis:SetDespawnOnEngineShutdown()
@@ -63,12 +52,15 @@ local function StartRecovery(case)
 
   -- Carrier will turn into the wind. Wind on deck 25 knots. U-turn on.
   airboss_stennis:AddRecoveryWindow(C0, C9,case, 30, true, 25, true)
+  stennis_rescuehelo1:Start()
+  MessageToAll("Carrier turning into the Wind, Case "..case.." Recovery Window open from time "..C0.." until "..C9,20)
 end
 
 -- Stop recovery function.
 local function StopRecovery()
   airboss_stennis:RecoveryStop()
-end
+  stennis_rescuehelo1:Stop()
+  end
 
 local menucarriercontrol=MENU_COALITION:New(airboss_stennis:GetCoalition(), "Carrier Control")
 MENU_COALITION_COMMAND:New(airboss_stennis:GetCoalition(), "Start CASE I",   menucarriercontrol, StartRecovery, 1)
