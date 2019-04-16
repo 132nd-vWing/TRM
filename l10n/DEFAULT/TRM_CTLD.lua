@@ -16,15 +16,8 @@
       - jmontleon - https://github.com/jmontleon
       - emilianomolina - https://github.com/emilianomolina
 
-    Version: 1.72 - 18/02/2018
-      - Bug fix for crate spam
-      - Improved JTAC Performance - priority & targeting
-      - Added JTAC report for in view
-      - Added ability to set maximum group size that can be carried
-      - Added new sling load crates
-      - Fixed bug where crates and / or groups would disappear
-      - Fixed bug where count in zone wouldn't work for mission crates
-      - Delayed config of F10 menu and other scheduled functions so they can be overwritten by mission if a user wants
+    Version: 1.73 - 15/04/2018
+      - Allow minimum distance from friendly logistics to be set
  ]]
 
 ctld = {} -- DONT REMOVE!
@@ -51,6 +44,8 @@ ctld.maxExtractDistance = 125 -- max distance from vehicle to troops to allow a 
 ctld.maximumDistanceLogistic = 200 -- max distance from vehicle to logistics to allow a loading or spawning operation
 ctld.maximumSearchDistance = 5 -- max distance for troops to search for enemy
 ctld.maximumMoveDistance = 5 -- max distance for troops to move from drop point if no enemy is nearby
+
+ctld.minimumDeployDistance = 1000 -- minimum distance from a friendly pickup zone where you can deploy a crate
 
 ctld.numberOfTroops = 10 -- default number of troops to load on a transport heli or C-130 
               -- also works as maximum size of group that'll fit into a helicopter unless overridden
@@ -116,20 +111,20 @@ ctld.AASystemLimitBLUE = 20 -- Blue side limit
 
 -- ***************** JTAC CONFIGURATION *****************
 
-ctld.JTAC_LIMIT_RED = 0 -- max number of JTAC Crates for the RED Side
-ctld.JTAC_LIMIT_BLUE = 0 -- max number of JTAC Crates for the BLUE Side
+ctld.JTAC_LIMIT_RED = 10 -- max number of JTAC Crates for the RED Side
+ctld.JTAC_LIMIT_BLUE = 10 -- max number of JTAC Crates for the BLUE Side
 
-ctld.JTAC_dropEnabled = false -- allow JTAC Crate spawn from F10 menu
+ctld.JTAC_dropEnabled = true -- allow JTAC Crate spawn from F10 menu
 
 ctld.JTAC_maxDistance = 10000 -- How far a JTAC can "see" in meters (with Line of Sight)
 
-ctld.JTAC_smokeOn_RED = true -- enables marking of target with smoke for RED forces
-ctld.JTAC_smokeOn_BLUE = true -- enables marking of target with smoke for BLUE forces
+ctld.JTAC_smokeOn_RED = false -- enables marking of target with smoke for RED forces
+ctld.JTAC_smokeOn_BLUE = false -- enables marking of target with smoke for BLUE forces
 
 ctld.JTAC_smokeColour_RED = 4 -- RED side smoke colour -- Green = 0 , Red = 1, White = 2, Orange = 3, Blue = 4
 ctld.JTAC_smokeColour_BLUE = 1 -- BLUE side smoke colour -- Green = 0 , Red = 1, White = 2, Orange = 3, Blue = 4
 
-ctld.JTAC_jtacStatusF10 = false -- enables F10 JTAC Status menu
+ctld.JTAC_jtacStatusF10 = true -- enables F10 JTAC Status menu
 
 ctld.JTAC_location = true -- shows location of target in JTAC message
 
@@ -168,13 +163,17 @@ ctld.pickupZones = {
           { "R3A_Storage", "none", -1, "yes", 0 },
            { "R2A_Storage", "none", -1, "yes", 0 },
            { "T3B_Storage_NORTH", "none", -1, "yes", 0 },
-       
+        { "R11_Storage_North", "none", -1, "yes", 0 },
+      { "R11_Storage_South", "none", -1, "yes", 0 },       
 }
+
+
 
 -- dropOffZones = {"name","smoke colour",0,side 1 = Red or 2 = Blue or 0 = Both sides}
 ctld.dropOffZones = {
     { "Hospital", "none", 0 },
 }
+
 
 
 --wpZones = { "Zone name", "smoke color",  "ACTIVE (yes/no)", "side (0 = Both sides / 1 = Red / 2 = Blue )", }
@@ -245,6 +244,8 @@ ctld.logisticUnits = {
     "R2A_Storage,",
     "R2B_Storage_SOUTH",
     "T3B_Storage_NORTH",
+  "R11_Storage_South",
+  "R11_Storage_North",
 }
 
 -- ************** UNITS ABLE TO TRANSPORT VEHICLES ******************
@@ -385,7 +386,7 @@ ctld.spawnableCrates = {
 
 -- if the unit is on this list, it will be made into a JTAC when deployed
 ctld.jtacUnitTypes = {
-    "SKP", "Hummer" -- there are some wierd encoding issues so if you write SKP-11 it wont match as the - sign is encoded differently...
+    "Hummer M242" -- there are some wierd encoding issues so if you write SKP-11 it wont match as the - sign is encoded differently...
 }
 
 
@@ -2746,6 +2747,16 @@ function ctld.unpackCrates(_arguments)
             local _crates = ctld.getCratesAndDistance(_heli)
             local _crate = ctld.getClosestCrate(_heli, _crates)
 
+
+            if ctld.inLogisticsZone(_heli) == true  or  ctld.farEnoughFromLogisticZone(_heli) == false then
+
+                ctld.displayMessageToGroup(_heli, "You can't unpack that here! Take it to where it's needed!", 20)
+
+                return
+            end
+
+
+
             if _crate ~= nil and _crate.dist < 750
                     and (_crate.details.unit == "FOB" or _crate.details.unit == "FOB-SMALL") then
 
@@ -2754,13 +2765,6 @@ function ctld.unpackCrates(_arguments)
                 return
 
             elseif _crate ~= nil and _crate.dist < 200 then
-
-                if ctld.inLogisticsZone(_heli) == true then
-
-                    ctld.displayMessageToGroup(_heli, "You can't unpack that here! Take it to where it's needed!", 20)
-
-                    return
-                end
 
                 if ctld.forceCrateToBeMoved and ctld.crateMove[_crate.crateUnit:getName()] then
                     ctld.displayMessageToGroup(_heli,"Sorry you must move this crate before you unpack it!", 20)
@@ -4243,6 +4247,37 @@ function ctld.inLogisticsZone(_heli)
     return false
 end
 
+
+-- are far enough from a friendly logistics zone
+function ctld.farEnoughFromLogisticZone(_heli)
+
+    if ctld.inAir(_heli) then
+        return false
+    end
+
+    local _heliPoint = _heli:getPoint()
+
+    local _farEnough = true
+
+    for _, _name in pairs(ctld.logisticUnits) do
+
+        local _logistic = StaticObject.getByName(_name)
+
+        if _logistic ~= nil and _logistic:getCoalition() == _heli:getCoalition() then
+
+            --get distance
+            local _dist = ctld.getDistance(_heliPoint, _logistic:getPoint())
+            -- env.info("DIST ".._dist)
+            if _dist <= ctld.minimumDeployDistance then
+                -- env.info("TOO CLOSE ".._dist)
+                _farEnough = false
+            end
+        end
+    end
+
+    return _farEnough
+end
+
 function ctld.refreshSmoke()
 
     if ctld.disableAllSmoke == true then
@@ -4849,9 +4884,9 @@ function ctld.JTACAutoLase(_jtacGroupName, _laserCode, _smoke, _lock, _colour)
         local _tempUnit = Unit.getByName(_tempUnitInfo.name)
 
         if _tempUnit ~= nil and _tempUnit:getLife() > 0 and _tempUnit:isActive() == true then
-            ctld.notifyCoalition(_jtacGroupName .. " target " .. _tempUnitInfo.unitType .. " lost. Scanning for Targets. ", 10, _jtacUnit:getCoalition())
+            -- ctld.notifyCoalition(_jtacGroupName .. " target " .. _tempUnitInfo.unitType .. " lost. Scanning for Targets. ", 10, _jtacUnit:getCoalition())
         else
-            ctld.notifyCoalition(_jtacGroupName .. " target " .. _tempUnitInfo.unitType .. " KIA. Good Job! Scanning for Targets. ", 10, _jtacUnit:getCoalition())
+            -- ctld.notifyCoalition(_jtacGroupName .. " target " .. _tempUnitInfo.unitType .. " KIA. Good Job! Scanning for Targets. ", 10, _jtacUnit:getCoalition())
         end
 
         --remove from smoke list
@@ -4873,7 +4908,7 @@ function ctld.JTACAutoLase(_jtacGroupName, _laserCode, _smoke, _lock, _colour)
             -- store current target for easy lookup
             ctld.jtacCurrentTargets[_jtacGroupName] = { name = _enemyUnit:getName(), unitType = _enemyUnit:getTypeName(), unitId = _enemyUnit:getID() }
 
-            ctld.notifyCoalition(_jtacGroupName .. " lasing new target " .. _enemyUnit:getTypeName() .. '. CODE: ' .. _laserCode .. ctld.getPositionString(_enemyUnit), 10, _jtacUnit:getCoalition())
+            -- ctld.notifyCoalition(_jtacGroupName .. " lasing new target " .. _enemyUnit:getTypeName() .. '. CODE: ' .. _laserCode .. ctld.getPositionString(_enemyUnit), 10, _jtacUnit:getCoalition())
 
             -- create smoke
             if _smoke == true then

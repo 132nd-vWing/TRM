@@ -1,4 +1,9 @@
 -- Range 11 --
+Range_11_JTAC = GROUP:FindByName("JTAC_Range11")
+
+if Range_11_JTAC then
+ctld.JTACAutoLase(Range_11_JTAC:GetName(), math.random(1575,1579), false,"vehicle")
+end
 
 -- ON DEMAND SPAWNING --
 BlueSpawnerR111 = UNIT:FindByName("BlueInfantryR11")
