@@ -3,7 +3,7 @@
 stennis_rescuehelo1=RESCUEHELO:New("CVN STENNIS", "Stennis_Rescue")
 stennis_rescuehelo1:SetTakeoffHot()
 stennis_rescuehelo1:SetModex(42)
-
+stennis_rescuehelo1:SetHomeBase(AIRBASE:FindByName("Oliver Hazzard Perry class"))
 
 --tanker
 airboss_stennis_tanker= RECOVERYTANKER:New("CVN STENNIS", "TEXACO 2 #IFF:5112FR")
@@ -59,8 +59,13 @@ end
 -- Stop recovery function.
 local function StopRecovery()
   airboss_stennis:RecoveryStop()
-  stennis_rescuehelo1:Stop()
+  stennis_rescuehelo1:RTB()
+  function stennis_rescuehelo1:OnEventLand(EventData)
+    SCHEDULER:New(nil,function () stennis_rescuehelo1:Stop()
+      end,{},10)
   end
+end
+
 
 local menucarriercontrol=MENU_COALITION:New(airboss_stennis:GetCoalition(), "Carrier Control")
 MENU_COALITION_COMMAND:New(airboss_stennis:GetCoalition(), "Start CASE I",   menucarriercontrol, StartRecovery, 1)
