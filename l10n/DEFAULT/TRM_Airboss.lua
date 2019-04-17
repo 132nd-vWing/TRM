@@ -1,3 +1,4 @@
+AIRBOSS.MenuF10Root=MENU_MISSION:New("Carrier Control").MenuPath
 
 --helo
 stennis_rescuehelo1=RESCUEHELO:New("CVN STENNIS", "Stennis_Rescue")
@@ -67,11 +68,11 @@ local function StopRecovery()
 end
 
 
-local menucarriercontrol=MENU_COALITION:New(airboss_stennis:GetCoalition(), "Carrier Control")
-MENU_COALITION_COMMAND:New(airboss_stennis:GetCoalition(), "Start CASE I",   menucarriercontrol, StartRecovery, 1)
-MENU_COALITION_COMMAND:New(airboss_stennis:GetCoalition(), "Start CASE II",  menucarriercontrol, StartRecovery, 2)
-MENU_COALITION_COMMAND:New(airboss_stennis:GetCoalition(), "Start CASE III", menucarriercontrol, StartRecovery, 3)
-MENU_COALITION_COMMAND:New(airboss_stennis:GetCoalition(), "Stop Recovery",  menucarriercontrol, StopRecovery)
+local menucarriercontrol_root=MENU_MISSION:New("Carrier Control")
+local menucarriercontrol = MENU_MISSION:New("Open / Close Deck for Recovery", menucarriercontrol_root)
+MENU_MISSION_COMMAND:New("Start CASE I",menucarriercontrol,StartRecovery,1)
+MENU_MISSION_COMMAND:New("Start CASE II",menucarriercontrol,StartRecovery,2)
+MENU_MISSION_COMMAND:New("Start CASE III",menucarriercontrol,StartRecovery,3)
 
 
 
