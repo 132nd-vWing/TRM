@@ -73,6 +73,8 @@ local menucarriercontrol = MENU_MISSION:New("Open / Close Deck for Recovery", me
 MENU_MISSION_COMMAND:New("Start CASE I",menucarriercontrol,StartRecovery,1)
 MENU_MISSION_COMMAND:New("Start CASE II",menucarriercontrol,StartRecovery,2)
 MENU_MISSION_COMMAND:New("Start CASE III",menucarriercontrol,StartRecovery,3)
+MENU_MISSION_COMMAND:New("Stop Recovery",menucarriercontrol,StopRecovery)
+
 
 
 
