@@ -1,4 +1,6 @@
 
+RANGE.MenuF10Root=MENU_MISSION:New("Basic Ranges Range 3B/ Range 10").MenuPath
+
  -- Strafe pits. Each pit can consist of multiple targets. Here we have two pits and each of the pits has two targets. These are names of the corresponding units defined in the ME.
  RangeT3B_13_Strafepit_Table={"T3B.13_Strafepit1", "T3B.13_Strafepit2"}
 

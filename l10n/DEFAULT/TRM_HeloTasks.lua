@@ -1,3 +1,4 @@
+
 function accident(_accidentnumber)
   local accident = SPAWN:New(_accidentnumber):Spawn()
   local crashunit = accident:GetUnit(15)
