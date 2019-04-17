@@ -1,9 +1,63 @@
--- Range 11 --
-Range_11_JTAC = GROUP:FindByName("JTAC_Range11")
+--Range 11--
 
-if Range_11_JTAC then
-ctld.JTACAutoLase(Range_11_JTAC:GetName(), math.random(1575,1579), false,"vehicle")
+-- gets the JTAC status
+function getJTACStatus()
+  local _jtacGroupName = nil
+  local _jtacUnit = nil
+  local _message = "JTAC STATUS: \n\n"
+  for _jtacGroupName, _jtacDetails in pairs(ctld.jtacUnits) do
+    --look up units
+    _jtacUnit = Unit.getByName(_jtacDetails.name)
+    if _jtacUnit ~= nil and _jtacUnit:getLife() > 0 and _jtacUnit:isActive() == true then
+      local _enemyUnit = ctld.getCurrentUnit(_jtacUnit, _jtacGroupName)
+      local _laserCode = ctld.jtacLaserPointCodes[_jtacGroupName]
+      if _laserCode == nil then
+        _laserCode = "UNKNOWN"
+      end
+      if _enemyUnit ~= nil and _enemyUnit:getLife() > 0 and _enemyUnit:isActive() == true then
+        _message = _message .. "" .. _jtacGroupName .. " targeting " .. _enemyUnit:getTypeName() .. " CODE: " .. _laserCode .. ctld.getPositionString(_enemyUnit) .. "\n"
+        local _list = ctld.listNearbyEnemies(_jtacUnit)
+        if _list then
+          _message = _message.."Visual On: "
+          for _,_type in pairs(_list) do
+            _message = _message.._type.." "
+          end
+          _message = _message.."\n"
+        end
+      else
+        _message = _message .. "" .. _jtacGroupName .. " searching for targets" .. ctld.getPositionString(_jtacUnit) .. "\n"
+      end
+    end
+  end
+  if _message == "JTAC STATUS: \n\n" then
+    _message = "No Active JTACs"
+  end
+  MessageToAll(_message,15)
 end
+
+function range11_enableJTAC()
+  JTAC_R11_menu_off_R11 = MENU_MISSION_COMMAND:New("Stop Target Designation",JTAC_R11,range11_disableJTAC)
+  JTAC_R11_menu_status_R11 = MENU_MISSION_COMMAND:New("Target Report",JTAC_R11,getJTACStatus)
+
+  JTAC_R11_menu_on_R11:Remove()
+  Range_11_JTAC = GROUP:FindByName("JTAC_Range11")
+  if Range_11_JTAC then
+    ctld.JTACAutoLase(Range_11_JTAC:GetName(), math.random(1575,1579), false,"vehicle")
+  end
+end
+
+function range11_disableJTAC()
+
+  Range_11_JTAC = GROUP:FindByName("JTAC_Range11")
+  if Range_11_JTAC then
+    ctld.JTACAutoLaseStop(Range_11_JTAC:GetName())
+    ctld.cleanupJTAC(Range_11_JTAC:GetName())
+    JTAC_R11_menu_on_R11 = MENU_MISSION_COMMAND:New("Enable Target Marking by Laser and Sparkle",JTAC_R11,range11_enableJTAC)
+    JTAC_R11_menu_off_R11:Remove()
+    JTAC_R11_menu_status_R11:Remove()
+  end
+end
+
 
 -- ON DEMAND SPAWNING --
 BlueSpawnerR111 = UNIT:FindByName("BlueInfantryR11")
@@ -276,7 +330,7 @@ end
 -- Range Options --
 
 Menu_Range_R11 = MENU_MISSION:New("Range 11", Menu_Range_Options)
-
+JTAC_R11 = MENU_MISSION:New("Target Designation",Menu_Range_R11)
 spawn_menu_OD_R11 = MENU_MISSION:New("On Demand Spawning",Menu_Range_R11)
 spawn_menu_OD_Recon_R11 = MENU_MISSION:New("On Demand - RECON",spawn_menu_OD_R11)
 spawn_menu_OD_IFV_R11 = MENU_MISSION:New("On Demand - IFV",spawn_menu_OD_R11)
@@ -291,9 +345,10 @@ spawn_menu_OD_MBT_R11_T72 = MENU_MISSION:New("On Demand - MBT- T72",spawn_menu_O
 spawn_menu_OD_MBT_R11_T80 = MENU_MISSION:New("On Demand - MBT -T80",spawn_menu_OD_MBT_R11)
 spawn_menu_OD_MBT_R11_ABRAMS = MENU_MISSION:New("On Demand - MBT - Abrams",spawn_menu_OD_MBT_R11)
 spawn_menu_OD_MBT_R11_LEO2 = MENU_MISSION:New("On Demand - MBT - Leopard2",spawn_menu_OD_MBT_R11)
-spawn_menu_OD_MISC_R11 = MENU_MISSION:New("On Demand - MISC",spawn_menu_OD_R11)   
+spawn_menu_OD_MISC_R11 = MENU_MISSION:New("On Demand - MISC",spawn_menu_OD_R11)
+JTAC_R11_menu_on_R11 = MENU_MISSION_COMMAND:New("Enable Target Marking by Laser and Sparkle",JTAC_R11,range11_enableJTAC)
 
--- ON DEMAND SPAWNING -- 
+-- ON DEMAND SPAWNING --
 
 
 --local menu_ON_DEMAND_1_Recon_HMMWV_vehicle_R11 = MENU_MISSION_COMMAND:New("Spawn Recon HMMWV Vehicle",spawn_menu_OD_Recon_R11,_ON_DEMAND_1_Recon_HMMWV_vehicle_R11)

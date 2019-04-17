@@ -19,6 +19,6 @@ mapResource =
     ["ResKey_Action_7580"] = "TRM_Config.lua",
     ["ResKey_Action_9529"] = "TRM_Airboss.lua",
     ["ResKey_Action_9530"] = "Moose.lua",
-    ["ResKey_Action_9542"] = "TRM_CTLD.lua",
-    ["ResKey_Action_9543"] = "TRM_Range11.lua",
+    ["ResKey_Action_9578"] = "TRM_CTLD.lua",
+    ["ResKey_Action_9579"] = "TRM_Range11.lua",
 } -- end of mapResource
