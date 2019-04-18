@@ -44,8 +44,7 @@ end
 
 -- Start recovery function.
 local function StartRecovery(case)
-
-  -- Recovery staring in 5 min for 30 min.
+  -- Recovery staring in 5 min for 120 min.
   local t0=timer.getAbsTime()+5*60
   local t9=t0+120*60
   local C0=UTILS.SecondsToClock(t0)
@@ -60,6 +59,7 @@ end
 -- Stop recovery function.
 local function StopRecovery()
   airboss_stennis:RecoveryStop()
+  airboss_stennis:DeleteAllRecoveryWindows()
   stennis_rescuehelo1:RTB()
   function stennis_rescuehelo1:OnEventLand(EventData)
     SCHEDULER:New(nil,function () stennis_rescuehelo1:Stop()
