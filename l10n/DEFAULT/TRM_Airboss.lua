@@ -46,6 +46,10 @@ airboss_nimitz_awacs:Start(40)
 airboss_stennis = AIRBOSS:New("CVN STENNIS")
 airboss_nimitz = AIRBOSS:New("CVN68 NIMITZ")
 
+airboss_stennis:Load()
+airboss_nimitz:Load()
+
+
 airboss_stennis:SetMaxFlightsPerStack(1)
 airboss_nimitz:SetMaxFlightsPerStack(1)
 
@@ -69,6 +73,9 @@ airboss_stennis:SetDespawnOnEngineShutdown()
 
 airboss_nimitz:SetRecoveryTanker(airboss_nimitz_tanker)
 airboss_nimitz:SetDespawnOnEngineShutdown()
+
+airboss_stennis:SetAutoSave()
+airboss_nimitz:SetAutoSave()
 
 airboss_stennis:Start()
 airboss_nimitz:Start()
