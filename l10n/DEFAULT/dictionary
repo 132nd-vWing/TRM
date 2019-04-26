@@ -9173,6 +9173,9 @@ Transition Altitude (TA): 7 500 ft \
 Transition Level (TL): FL090 \
 Kutaisi TMA: GND to FL180\
 \
+Get Weather: \
+Place Marker on the map and label it: weather report\
+this will output weather in imperial units and local QNH\
 \
 KC-135 TEXACO:\
 11500ft, speed 270kts,TACAN 41Y.Freq: 151.0\
