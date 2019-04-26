@@ -120,7 +120,7 @@ function _TANKER.Tanker:New( group )
             self
         )
     end 
-    
+
     self:Debug('hullo? Am I a tanker now?')
     
     --- Send the tanker back to its homeplate
@@ -131,14 +131,15 @@ function _TANKER.Tanker:New( group )
             self:Debug('screw you guys, I\' going home') -- let the world know
         
             -- Send the tanker to its last waypoint
-            local command = self:CommandSwitchWayPoint( 2, 1 )
+            local command = self:CommandSwitchWayPoint( 2, 3 )
             self:SetCommand( command )
             
             -- Create a 5km radius zone around the home plate
-            local last_wp = self.route[1]
+             local rtb_route =  self:CopyRoute(0,0)
+             local last_waypoint = #rtb_route
             self.rtb_zone = ZONE_RADIUS:New(
                 'rtb_'..self:GetName(),
-                {x=last_wp.x, y=last_wp.y},
+                {x=last_waypoint.x, y=last_waypoint.y},
                 20000
             )
             
