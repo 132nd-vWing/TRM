@@ -46,8 +46,8 @@ airboss_nimitz_awacs:Start(40)
 airboss_stennis = AIRBOSS:New("CVN STENNIS")
 airboss_nimitz = AIRBOSS:New("CVN68 NIMITZ")
 
-airboss_stennis:Load("C:\Users\132nd\Saved Games\DCS.openbeta","132nd_Carrier_Landing_Stats")
-airboss_nimitz:Load("C:\Users\132nd\Saved Games\DCS.openbeta","132nd_Carrier_Landing_Stats")
+airboss_stennis:Load("C:\\Users\\132nd\\Saved Games\\DCS.openbeta","132nd_Carrier_Landing_Stats.csv")
+airboss_nimitz:Load("C:\\Users\\132nd\\Saved Games\\DCS.openbeta","132nd_Carrier_Landing_Stats.csv")
 
 
 airboss_stennis:SetMaxFlightsPerStack(1)
@@ -74,8 +74,8 @@ airboss_stennis:SetDespawnOnEngineShutdown()
 airboss_nimitz:SetRecoveryTanker(airboss_nimitz_tanker)
 airboss_nimitz:SetDespawnOnEngineShutdown()
 
-airboss_stennis:SetAutoSave("C:\Users\132nd\Saved Games\DCS.openbeta","132nd_Carrier_Landing_Stats")
-airboss_nimitz:SetAutoSave("C:\Users\132nd\Saved Games\DCS.openbeta","132nd_Carrier_Landing_Stats")
+airboss_stennis:SetAutoSave("C:\\Users\\132nd\\Saved Games\\DCS.openbeta","132nd_Carrier_Landing_Stats.csv")
+airboss_nimitz:SetAutoSave("C:\\Users\\132nd\\Saved Games\\DCS.openbeta","132nd_Carrier_Landing_Stats.csv")
 
 airboss_stennis:Start()
 airboss_nimitz:Start()
