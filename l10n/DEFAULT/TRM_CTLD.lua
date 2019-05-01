@@ -244,8 +244,17 @@ ctld.logisticUnits = {
     "R2A_Storage,",
     "R2B_Storage_SOUTH",
     "T3B_Storage_NORTH",
-  "R11_Storage_South",
-  "R11_Storage_North",
+	"R11_Storage_South",
+	"R11_Storage_North",
+	"R11_FARP_Group1"
+	"R11_FARP_Group2"
+	"R11_FARP_Group3"
+	"R11_FARP_Group4"
+	"R11_LZ1_Group1"
+	"R11_LZ1_Group2"
+	"R11_LZ4_Group1"
+	"R11_LZ4_Group2"
+	"R11_LZ4_Group3"
 }
 
 -- ************** UNITS ABLE TO TRANSPORT VEHICLES ******************
