@@ -151,20 +151,20 @@ ctld.JTAC_lock = "all" -- "vehicle" OR "troop" OR "all" forces JTAC to only lock
 --pickupZones = { "Zone name or Ship Unit Name", "smoke color", "limit (-1 unlimited)", "ACTIVE (yes/no)", "side (0 = Both sides / 1 = Red / 2 = Blue )", flag number (optional) }
 ctld.pickupZones = {
     { "Kobuleti", "none", -1, "yes", 0 },
-     { "Kutaisi", "none", -1, "yes", 0 },
-      { "Senaki", "none", -1, "yes", 0 },
-       { "Batumi", "none", -1, "yes", 0 },
-        { "Blue aggressors", "none", -1, "yes", 0 },
-         { "RED aggressors + Red AWACS and RED tanker", "none", -1, "yes", 0 },
-          { "Farp London", "none", -1, "yes", 0 },
-          { "Farp KUTAISI", "none", -1, "yes", 0 },
-          { "R1_Storage", "none", -1, "yes", 0 },
-          { "T3B_Storage_CENTER", "none", -1, "yes", 0 },
-          { "R3A_Storage", "none", -1, "yes", 0 },
-           { "R2A_Storage", "none", -1, "yes", 0 },
-           { "T3B_Storage_NORTH", "none", -1, "yes", 0 },
-        { "R11_Storage_North", "none", -1, "yes", 0 },
-      { "R11_Storage_South", "none", -1, "yes", 0 },       
+    { "Kutaisi", "none", -1, "yes", 0 },
+    { "Senaki", "none", -1, "yes", 0 },
+    { "Batumi", "none", -1, "yes", 0 },
+    { "Blue aggressors", "none", -1, "yes", 0 },
+    { "RED aggressors + Red AWACS and RED tanker", "none", -1, "yes", 0 },
+    { "Farp London", "none", -1, "yes", 0 },
+    { "Farp KUTAISI", "none", -1, "yes", 0 },
+    { "R1_Storage", "none", -1, "yes", 0 },
+    { "T3B_Storage_CENTER", "none", -1, "yes", 0 },
+    { "R3A_Storage", "none", -1, "yes", 0 },
+    { "R2A_Storage", "none", -1, "yes", 0 },
+    { "T3B_Storage_NORTH", "none", -1, "yes", 0 },
+    { "R11_Storage_North", "none", -1, "yes", 0 },
+    { "R11_Storage_South", "none", -1, "yes", 0 },
 }
 
 
@@ -194,15 +194,17 @@ ctld.transportPilotNames = {
     "259 #5",
     "259 #6 w/o hardpoints",
     "259 #7 w/o hardpoints",
-  "259 PERTH #1",
-  "259 PERTH #2",
+    "259 PERTH #1",
+    "259 PERTH #2",
+    "259 WARSAW #1",
+    "259 WARSAW #2",
+    "259 WARSAW #3",
+    "259 WARSAW #4",
     "JTAC T2B_4",
 
     -- *** AI transports names (different names only to ease identification in mission) ***
 
     -- Use any of the predefined names or set your own ones
-
-    "transport1",
 
 }
 
@@ -222,6 +224,16 @@ ctld.extractableGroups = {
     "R2A_SOF_TEAM",
     "RW Training Area Troops1",
     "RW Training Area Troops2",
+    "R11_FARP_Group1",
+    "R11_FARP_Group2",
+    "R11_FARP_Group3",
+    "R11_FARP_Group4",
+    "R11_LZ1_Group1",
+    "R11_LZ1_Group2",
+    "R11_LZ4_Group1",
+    "R11_LZ4_Group2",
+    "R11_LZ4_Group3",
+
 }
 
 -- ************** Logistics UNITS FOR CRATE SPAWNING ******************
@@ -240,21 +252,12 @@ ctld.logisticUnits = {
     "T3B_Storage_CENTER",
     "R3A_Storage",
     "logistic10",
-    "Dallas Storage", 
+    "Dallas Storage",
     "R2A_Storage,",
     "R2B_Storage_SOUTH",
     "T3B_Storage_NORTH",
-	"R11_Storage_South",
-	"R11_Storage_North",
-	"R11_FARP_Group1",
-	"R11_FARP_Group2",
-	"R11_FARP_Group3",
-	"R11_FARP_Group4",
-	"R11_LZ1_Group1",
-	"R11_LZ1_Group2",
-	"R11_LZ4_Group1",
-	"R11_LZ4_Group2",
-	"R11_LZ4_Group3",
+    "R11_Storage_South",
+    "R11_Storage_North",
 }
 
 -- ************** UNITS ABLE TO TRANSPORT VEHICLES ******************
