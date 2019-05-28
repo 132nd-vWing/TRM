@@ -1,3 +1,6 @@
+
+
+
 --command center off
 _SETTINGS:SetPlayerMenuOff()
 -- command center off
@@ -6,10 +9,17 @@ function CONTROLLABLE:OptionDisperseOff()
 env.info("Group Spawned")
 end
 
--- Missile Trainer
-Trainer = MISSILETRAINER:New(70, "Missile Trainer is active!" )
-Trainer:InitMessagesOnOff(true):InitAlertsToAll(true):InitAlertsHitsOnOff(true):InitAlertsLaunchesOnOff(true):InitBearingOnOff(false):InitRangeOnOff(false):InitTrackingOnOff(false):InitTrackingToAll(false):InitMenusOnOff(false)
--- Missile Trainer
+-- FOX script (replaces Missiletrainer)
+fox=FOX:New()
+fox:AddSafeZone(ZONE:New("global_save"))
+fox:AddLaunchZone(ZONE:New("global_launch"))
+fox:Start()
+
+
+---- Missile Trainer
+--Trainer = MISSILETRAINER:New(70, "Missile Trainer is active!" )
+--Trainer:InitMessagesOnOff(true):InitAlertsToAll(true):InitAlertsHitsOnOff(true):InitAlertsLaunchesOnOff(true):InitBearingOnOff(false):InitRangeOnOff(false):InitTrackingOnOff(false):InitTrackingToAll(false):InitMenusOnOff(false)
+---- Missile Trainer
 
 -- Threat Options --
 Menu_Threat_Options = MENU_MISSION:New("Threat Sites")

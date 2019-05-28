@@ -12,7 +12,6 @@ mapResource =
     ["ResKey_Action_7264"] = "TRM_Range2B.lua",
     ["ResKey_Action_7265"] = "TRM_Range3B.lua",
     ["ResKey_Action_7578"] = "TRM_ThreatSites.lua",
-    ["ResKey_Action_7580"] = "TRM_Config.lua",
     ["ResKey_Action_9579"] = "TRM_Range11.lua",
     ["ResKey_Action_9588"] = "TRM_CTLD.lua",
     ["ResKey_Action_9592"] = "TRM_Basic Ranges.lua",
@@ -21,5 +20,6 @@ mapResource =
     ["ResKey_Action_10112"] = "TRM_tankers.lua",
     ["ResKey_Action_10113"] = "TRM_WeatherMark.lua",
     ["ResKey_Action_10150"] = "TRM_Range1.lua",
-    ["ResKey_Action_10151"] = "Moose.lua",
+    ["ResKey_Action_10152"] = "Moose.lua",
+    ["ResKey_Action_10153"] = "TRM_Config.lua",
 } -- end of mapResource
