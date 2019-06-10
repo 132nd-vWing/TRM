@@ -46,6 +46,9 @@ airboss_nimitz_awacs:Start(40)
 airboss_stennis = AIRBOSS:New("CVN STENNIS")
 airboss_nimitz = AIRBOSS:New("CVN68 NIMITZ")
 
+airboss_stennis:SetMenuRecovery(30, 20, true)
+airboss_nimitz:SetMenuRecovery(30, 20, true)
+
 airboss_stennis:Load("C:\\Users\\132nd\\Saved Games\\DCS.openbeta","132nd_Carrier_Landing_Stats.csv")
 airboss_nimitz:Load("C:\\Users\\132nd\\Saved Games\\DCS.openbeta","132nd_Carrier_Landing_Stats.csv")
 
@@ -93,72 +96,72 @@ function airboss_nimitz:OnAfterStart(From,Event,To)
 end
 
 
--- Start recovery function.
-local function StartRecovery(case)
-  -- Recovery staring in 5 min for 120 min.
-  local t0=timer.getAbsTime()+5*60
-  local t9=t0+120*60
-  local C0=UTILS.SecondsToClock(t0)
-  local C9=UTILS.SecondsToClock(t9)
-
-  -- Carrier will turn into the wind. Wind on deck 25 knots. U-turn on.
-  airboss_stennis:AddRecoveryWindow(C0, C9,case, 30, true, 25, true)
-  stennis_rescuehelo1:Start()
-  MessageToAll("Carrier CVN STENNIS turning into the Wind, Case "..case.." Recovery Window open from time "..C0.." until "..C9,20)
-end
-
-local function StartRecovery_nimitz(case)
-  -- Recovery staring in 5 min for 120 min.
-  local t0=timer.getAbsTime()+5*60
-  local t9=t0+120*60
-  local C0=UTILS.SecondsToClock(t0)
-  local C9=UTILS.SecondsToClock(t9)
-
-  -- Carrier will turn into the wind. Wind on deck 25 knots. U-turn on.
-  airboss_nimitz:AddRecoveryWindow(C0, C9,case, 30, true, 25, true)
-  nimitz_rescuehelo1:Start()
-  MessageToAll("Carrier CVN NIMITZ turning into the Wind, Case "..case.." Recovery Window open from time "..C0.." until "..C9,20)
-end
-
-
-
--- Stop recovery function.
-local function StopRecovery()
-  airboss_stennis:RecoveryStop()
-  stennis_rescuehelo1:RTB()
-  function stennis_rescuehelo1:OnEventLand(EventData)
-    SCHEDULER:New(nil,function () stennis_rescuehelo1:Stop()
-      end,{},10)
-  end
-end
-
-local function StopRecovery_nimitz()
-  airboss_nimitz:RecoveryStop()
-  nimitz_rescuehelo1:RTB()
-  function nimitz_rescuehelo1:OnEventLand(EventData)
-    SCHEDULER:New(nil,function () nimitz_rescuehelo1:Stop()
-      end,{},10)
-  end
-end
-
-
-
-local menucarriercontrol_root=MENU_MISSION:New("Carrier Control")
-local menucarriercontrol_root_manual=MENU_MISSION:New("Recovery Window Control",menucarriercontrol_root)
-
-local menucarriercontrol_stennis = MENU_MISSION:New("CVN STENNIS Open / Close Deck for Recovery", menucarriercontrol_root_manual)
-MENU_MISSION_COMMAND:New("Start CASE I",menucarriercontrol_stennis,StartRecovery,1)
-MENU_MISSION_COMMAND:New("Start CASE II",menucarriercontrol_stennis,StartRecovery,2)
-MENU_MISSION_COMMAND:New("Start CASE III",menucarriercontrol_stennis,StartRecovery,3)
-MENU_MISSION_COMMAND:New("Stop Recovery",menucarriercontrol_stennis,StopRecovery)
-
-local menucarriercontrol_nimitz = MENU_MISSION:New("CVN NIMITZ Open / Close Deck for Recovery", menucarriercontrol_root_manual)
-MENU_MISSION_COMMAND:New("Start CASE I",menucarriercontrol_nimitz,StartRecovery_nimitz,1)
-MENU_MISSION_COMMAND:New("Start CASE II",menucarriercontrol_nimitz,StartRecovery_nimitz,2)
-MENU_MISSION_COMMAND:New("Start CASE III",menucarriercontrol_nimitz,StartRecovery_nimitz,3)
-MENU_MISSION_COMMAND:New("Stop Recovery",menucarriercontrol_nimitz,StopRecovery_nimitz)
-
-
+---- Start recovery function.
+--local function StartRecovery(case)
+--  -- Recovery staring in 5 min for 120 min.
+--  local t0=timer.getAbsTime()+5*60
+--  local t9=t0+120*60
+--  local C0=UTILS.SecondsToClock(t0)
+--  local C9=UTILS.SecondsToClock(t9)
+--
+--  -- Carrier will turn into the wind. Wind on deck 25 knots. U-turn on.
+--  airboss_stennis:AddRecoveryWindow(C0, C9,case, 30, true, 25, true)
+--  stennis_rescuehelo1:Start()
+--  MessageToAll("Carrier CVN STENNIS turning into the Wind, Case "..case.." Recovery Window open from time "..C0.." until "..C9,20)
+--end
+--
+--local function StartRecovery_nimitz(case)
+--  -- Recovery staring in 5 min for 120 min.
+--  local t0=timer.getAbsTime()+5*60
+--  local t9=t0+120*60
+--  local C0=UTILS.SecondsToClock(t0)
+--  local C9=UTILS.SecondsToClock(t9)
+--
+--  -- Carrier will turn into the wind. Wind on deck 25 knots. U-turn on.
+--  airboss_nimitz:AddRecoveryWindow(C0, C9,case, 30, true, 25, true)
+--  nimitz_rescuehelo1:Start()
+--  MessageToAll("Carrier CVN NIMITZ turning into the Wind, Case "..case.." Recovery Window open from time "..C0.." until "..C9,20)
+--end
+--
+--
+--
+---- Stop recovery function.
+--local function StopRecovery()
+--  airboss_stennis:RecoveryStop()
+--  stennis_rescuehelo1:RTB()
+--  function stennis_rescuehelo1:OnEventLand(EventData)
+--    SCHEDULER:New(nil,function () stennis_rescuehelo1:Stop()
+--      end,{},10)
+--  end
+--end
+--
+--local function StopRecovery_nimitz()
+--  airboss_nimitz:RecoveryStop()
+--  nimitz_rescuehelo1:RTB()
+--  function nimitz_rescuehelo1:OnEventLand(EventData)
+--    SCHEDULER:New(nil,function () nimitz_rescuehelo1:Stop()
+--      end,{},10)
+--  end
+--end
+--
+--
+--
+--local menucarriercontrol_root=MENU_MISSION:New("Carrier Control")
+--local menucarriercontrol_root_manual=MENU_MISSION:New("Recovery Window Control",menucarriercontrol_root)
+--
+--local menucarriercontrol_stennis = MENU_MISSION:New("CVN STENNIS Open / Close Deck for Recovery", menucarriercontrol_root_manual)
+--MENU_MISSION_COMMAND:New("Start CASE I",menucarriercontrol_stennis,StartRecovery,1)
+--MENU_MISSION_COMMAND:New("Start CASE II",menucarriercontrol_stennis,StartRecovery,2)
+--MENU_MISSION_COMMAND:New("Start CASE III",menucarriercontrol_stennis,StartRecovery,3)
+--MENU_MISSION_COMMAND:New("Stop Recovery",menucarriercontrol_stennis,StopRecovery)
+--
+--local menucarriercontrol_nimitz = MENU_MISSION:New("CVN NIMITZ Open / Close Deck for Recovery", menucarriercontrol_root_manual)
+--MENU_MISSION_COMMAND:New("Start CASE I",menucarriercontrol_nimitz,StartRecovery_nimitz,1)
+--MENU_MISSION_COMMAND:New("Start CASE II",menucarriercontrol_nimitz,StartRecovery_nimitz,2)
+--MENU_MISSION_COMMAND:New("Start CASE III",menucarriercontrol_nimitz,StartRecovery_nimitz,3)
+--MENU_MISSION_COMMAND:New("Stop Recovery",menucarriercontrol_nimitz,StopRecovery_nimitz)
+--
+--
 
 
 
