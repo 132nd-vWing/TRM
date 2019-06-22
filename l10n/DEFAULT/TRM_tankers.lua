@@ -124,42 +124,47 @@ function _TANKER.Tanker:New( group )
     self:Debug('hullo? Am I a tanker now?')
     
     --- Send the tanker back to its homeplate
-    function self:RTB()
-    
-        if not self.going_home then -- check that the tanker isn't already going home
-      
-            self:Debug('screw you guys, I\' going home') -- let the world know
+function self:RTB()
+
+    if not self.going_home then -- check that the tanker isn't already going home
+
+      self:Debug('screw you guys, I\' going home') -- let the world know
+
+      -- Send the tanker to its last waypoint
+
+      local rtb_route =  self:CopyRoute(0,0)
+      local last_waypoint = #rtb_route
+      local last_waypoint_location = self.route[last_waypoint]
+      local gohome = self:CommandSwitchWayPoint(last_waypoint-1,last_waypoint)
+      self:SetCommand( gohome )
+
+      -- Create a 20 km radius zone around the home plate
+
+
+      self.rtb_zone = ZONE_RADIUS:New(
+        'rtb_'..self:GetName(),
+        {x=last_waypoint_location.x, y=last_waypoint_location.y},
+        20000
+      )
+
+      -- Wait for the tanker to enter the zone; when it's in, remove all tasks, and force it to land
+      self.rtb_scheduler = SCHEDULER:New(
+        self,
+        function()
+          self:Debug('daddy, is it far yet ?')
+          if self and self:IsAlive() then
+            if self:IsCompletelyInZone(self.rtb_zone) then
+              self:Debug('no place like home')
+              self:ClearTasks()
+              self.rtb_scheduler:Stop()
+              if self.remove_debug_menu ~= nil then
+                self:remove_debug_menu()
+              end
+            end
+          end
+        end,
+        {}, 10, 10, 0, 0 )
         
-            -- Send the tanker to its last waypoint
-            local command = self:CommandSwitchWayPoint( 2, 3 )
-            self:SetCommand( command )
-            
-            -- Create a 5km radius zone around the home plate
-             local rtb_route =  self:CopyRoute(0,0)
-             local last_waypoint = #rtb_route
-            self.rtb_zone = ZONE_RADIUS:New(
-                'rtb_'..self:GetName(),
-                {x=last_waypoint.x, y=last_waypoint.y},
-                20000
-            )
-            
-            -- Wait for the tanker to enter the zone; when it's in, remove all tasks, and force it to land
-            self.rtb_scheduler = SCHEDULER:New(
-                self,
-                function()
-                    self:Debug('daddy, is it far yet ?')
-                    if self and self:IsAlive() then
-                        if self:IsCompletelyInZone(self.rtb_zone) then
-                            self:Debug('no place like home')
-                            self:ClearTasks()
-                            self.rtb_scheduler:Stop()
-                            if self.remove_debug_menu ~= nil then
-                              self:remove_debug_menu()
-                            end
-                        end
-                    end
-                end,
-                {}, 10, 10, 0, 0 )
 
             -- Wait for the tanker to stop, and remove it from the game once it has
             self.despawn_scheduler = SCHEDULER:New(self,
