@@ -61,7 +61,7 @@ _TANKER_MIN_FUEL = 0.6
 --------
 -- If this is set to "true", then additional information about the current
 -- tankers' status will be printed in the log file
-_TANKER_DEBUG = false
+_TANKER_DEBUG = true
 
 -- Reinforcement zone radius
 ----------------------------
