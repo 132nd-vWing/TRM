@@ -6,20 +6,12 @@ _SETTINGS:SetPlayerMenuOff()
 -- command center off
 
 function CONTROLLABLE:OptionDisperseOff()
-env.info("Group Spawned")
+  env.info("Group Spawned")
 end
 
 -- FOX script (replaces Missiletrainer)
 fox=FOX:New()
-fox:AddSafeZone(ZONE:New("global_save"))
-fox:AddLaunchZone(ZONE:New("global_launch"))
 fox:Start()
-
-
----- Missile Trainer
---Trainer = MISSILETRAINER:New(70, "Missile Trainer is active!" )
---Trainer:InitMessagesOnOff(true):InitAlertsToAll(true):InitAlertsHitsOnOff(true):InitAlertsLaunchesOnOff(true):InitBearingOnOff(false):InitRangeOnOff(false):InitTrackingOnOff(false):InitTrackingToAll(false):InitMenusOnOff(false)
----- Missile Trainer
 
 -- Threat Options --
 Menu_Threat_Options = MENU_MISSION:New("Threat Sites")
@@ -32,9 +24,9 @@ SCHEDULER:New(nil,function()
     BEACON1_Radio = FARP_KUTAISI:GetBeacon()
     BEACON1_Radio:RadioBeacon("beacon.ogg",114.166,radio.modulation.AM,150,55)--preset1
   end end,{},1,60)
-  
-  
-  FARP_London = GROUP:FindByName("FARP LONDON vehicles")
+
+
+FARP_London = GROUP:FindByName("FARP LONDON vehicles")
 SCHEDULER:New(nil,function()
   if FARP_London ~= nil
   then
@@ -42,7 +34,7 @@ SCHEDULER:New(nil,function()
     BEACON3_Radio:RadioBeacon("beacon.ogg",114.583,radio.modulation.AM,150,55)--preset3
   end end,{},31,60)
 
-  Hospital_Kutaisi = GROUP:FindByName("Hospital Kutaisi")
+Hospital_Kutaisi = GROUP:FindByName("Hospital Kutaisi")
 SCHEDULER:New(nil,function()
   if Hospital_Kutaisi ~= nil
   then
