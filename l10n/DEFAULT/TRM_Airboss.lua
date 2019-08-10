@@ -205,7 +205,7 @@ local function ChangeShift(airboss_stennis)
 end
 
 -- Length of shift in minutes.
-local L=30
+local L=90
 
 -- Start shift scheduler to change shift every L minutes.
 SCHEDULER:New(nil, ChangeShift, {airboss_stennis}, L*60, L*60)
