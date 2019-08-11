@@ -46,8 +46,8 @@ airboss_nimitz_awacs:Start(40)
 airboss_stennis = AIRBOSS:New("CVN STENNIS")
 airboss_nimitz = AIRBOSS:New("CVN68 NIMITZ")
 
-airboss_stennis:SetMenuRecovery(30, 20, true)
-airboss_nimitz:SetMenuRecovery(30, 20, true)
+airboss_stennis:SetMenuRecovery(90, 15, true)
+airboss_nimitz:SetMenuRecovery(90, 15, true)
 
 airboss_stennis:Load("C:\\Users\\132nd\\Saved Games\\DCS.openbeta","132nd_Carrier_Landing_Stats.csv")
 airboss_nimitz:Load("C:\\Users\\132nd\\Saved Games\\DCS.openbeta","132nd_Carrier_Landing_Stats.csv")
@@ -205,7 +205,7 @@ local function ChangeShift(airboss_stennis)
 end
 
 -- Length of shift in minutes.
-local L=90
+local L=30
 
 -- Start shift scheduler to change shift every L minutes.
 SCHEDULER:New(nil, ChangeShift, {airboss_stennis}, L*60, L*60)
