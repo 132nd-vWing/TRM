@@ -60,14 +60,14 @@ weathermark={}
 
 --- Set default unit system. Possible values:
 -- "metric"   ==> Pressure in hPa and mmHg, Temperature in Celsius, Wind speed in meters per second, altitude in meters.
--- "imperial" ==> Pressure in hPa and inHg, Temperature in Fahrenheit, Wind speed in knots, altitude in feet. --- commentet out line 324, hence Temp is in Celsius
-weathermark.unitsystem="imperial"
+-- "imperial" ==> Pressure in hPa and inHg, Temperature in Fahrenheit, Wind speed in knots, altitude in feet.
+weathermark.unitsystem="metric"
 
 --- Key phrase to look for in the mark text which triggers the weather report.
 weathermark.keyphrase="weather"
 
 --- DCS bug regarding wrong marker vector components was fixed. If so, set to true! 
-weathermark.DCSbugfixed=false
+weathermark.DCSbugfixed=true
 
 --- Enable debug mode ==> give more output to DCS log file.
 weathermark.Debug=false
@@ -298,8 +298,7 @@ function weathermark._WeatherReport(vec3, alt, unitsystem)
     T,Pqfe=atmosphere.getTemperatureAndPressure({x=vec3.x, y=alt, z=vec3.z})
   else
     -- One meter above the surface.
-    --T,Pqfe=atmosphere.getTemperatureAndPressure(vec3)
-    T,Pqfe=atmosphere.getTemperatureAndPressure({x=vec3.x, y=0, z=vec3.z})
+    T,Pqfe=atmosphere.getTemperatureAndPressure(vec3)
   end
   
   -- Get pressure at sea level.
@@ -321,9 +320,9 @@ function weathermark._WeatherReport(vec3, alt, unitsystem)
   -- Temperature unit conversion: Kelvin to Celsius or Fahrenheit.
   T=T-273.15
   local _T=string.format('%d°C', T)
---  if unitsystem=="imperial" then
---    _T=string.format('%d°F', weathermark._CelsiusToFahrenheit(T))
---  end
+  if unitsystem=="imperial" then
+    _T=string.format('%d°F', weathermark._CelsiusToFahrenheit(T))
+  end
 
   -- Get wind direction and speed.
   local Dir,Vel=weathermark._GetWind(vec3, alt)
@@ -353,7 +352,7 @@ function weathermark._WeatherReport(vec3, alt, unitsystem)
   -- This happens always when you have 5 or more \n or even with just 4 \n and for example one long line which alse breaks the text into another line.
   local text="" 
   text=text..string.format("Altitude %s ASL\n",_Alt)
-  text=text..string.format("QNH  %.1f hPa = %s\n", Pqfe,_Pqfe)
+  text=text..string.format("QFE  %.1f hPa = %s\n", Pqfe,_Pqfe)
   --text=text..string.format("QNH %.1f hPa = %s\n", Pqnh,_Pqnh)
   text=text..string.format("Temperature %s\n",_T)
   text=text..string.format("Wind from %s at %s (%s)", Ds, Vs, Bd)
