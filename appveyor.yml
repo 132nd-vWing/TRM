@@ -1,4 +1,4 @@
-version: 5.4.5.{build}
+version: 5.4.9.{build}
 skip_branch_with_pr: true
 skip_tags: false
 environment:
