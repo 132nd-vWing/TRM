@@ -66,10 +66,10 @@ airboss_nimitz:SetICLS(2,'C_N')
 airboss_nimitz:SetTACAN(68,X,'C_N')
 
 airboss_stennis:SetMarshalRadio(305)
-airboss_stennis:SetLSORadio(264)
+airboss_stennis:SetLSORadio(247.750)
 
 airboss_nimitz:SetMarshalRadio(308)
-airboss_nimitz:SetLSORadio(238)
+airboss_nimitz:SetLSORadio(245.500)
 
 airboss_stennis:SetRecoveryTanker(airboss_stennis_tanker)
 airboss_stennis:SetDespawnOnEngineShutdown()

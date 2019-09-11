@@ -9587,16 +9587,15 @@ S-3 VIKING Carrier alert Tanker (SHELL 2)\
 CARRIER CVN STENNIS\
 TACAN 74X  \"C_S\"\
 ICLS Channel 1\
-Frequency: 247.750 AM (AQUA 6)\
+LSO and Tower Frequency: 247.750 AM (AQUA 6)\
 Marshal Frequency: 305.000\
-LSO Frequency: 264.000\
+\
 \
 CARRIER CVN68 NIMITZ\
 TACAN 68X \"C_N\"\
 ICLS Channel 2\
-Frequency: 247.500 AM (LIME 11)\
+LSO and Tower Frequency: 247.500 AM (LIME 11)\
 Marshal Frequency: 308.000\
-LSO Frequency: 238.000\
 \
 LHA-1 Tarawa\
 LHA-1  TACAN 75X.\
