@@ -11,6 +11,8 @@ end
 
 -- FOX script (replaces Missiletrainer)
 fox=FOX:New()
+fox:SetExplosionDistance(500)
+fox:SetDisableF10Menu(false)
 fox:Start()
 
 -- Threat Options --

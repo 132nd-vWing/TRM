@@ -7,11 +7,13 @@ stennis_rescuehelo1=RESCUEHELO:New("CVN STENNIS", "Stennis_Rescue")
 stennis_rescuehelo1:SetTakeoffHot()
 stennis_rescuehelo1:SetModex(42)
 stennis_rescuehelo1:SetHomeBase(AIRBASE:FindByName("Oliver Hazzard Perry class"))
+stennis_rescuehelo1:Start()
 
 nimitz_rescuehelo1=RESCUEHELO:New("CVN68 NIMITZ", "Nimitz_Rescue")
 nimitz_rescuehelo1:SetTakeoffHot()
 nimitz_rescuehelo1:SetModex(44)
 nimitz_rescuehelo1:SetHomeBase(AIRBASE:FindByName("Nimitz Escort Perry"))
+
 
 --tanker
 airboss_stennis_tanker= RECOVERYTANKER:New("CVN STENNIS", "TEXACO 2 #IFF:5112FR")
